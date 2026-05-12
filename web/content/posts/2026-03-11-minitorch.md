@@ -5,7 +5,7 @@ date: 2026-03-11 14:06:04 +0530
 categories: tech
 tokens: "~18k"
 math: true
-description: "Building pytorch from scratch in ~1300 lines - reverse-mode autograd, conv2d, optimizers. Trains MNIST. No C++, no CUDA, just closures and numpy."
+description: "Building PyTorch from scratch in ~1300 lines - reverse-mode autograd, conv2d, optimizers. Trains MNIST. No C++, no CUDA, just closures and NumPy."
 ---
 
 > **TL;DR:** PyTorch operations build a computation graph by attaching _backward closures to tensors. .backward() topologically sorts the graph and fires each closure in reverse. 

@@ -238,7 +238,7 @@ export default function HomePage() {
               Practice Problems
             </h2>
             <p className="text-[13px] text-muted-foreground mb-5">
-              Built to pair with the course - each module has matching problems so you can implement what you just learned. {PROBLEMS.length} problems &mdash; {codingCount} coding &middot; {quizCount} quizzes &middot; {designCount} system design.
+              Built to pair with the course - each module has matching problems so you can implement what you just learned.
             </p>
             <div className="space-y-2 mb-6">
               {sampleProblems.map((p) => (
