@@ -4,7 +4,7 @@ title: "the philosophy of agent frameworks"
 date: 2026-05-03 00:00:00 +0530
 categories: [tech]
 tokens: "~25k"
-description: "every agent framework is just a disagreement about how much to trust the model. here's how to actually think about the landscape."
+description: "Every agent framework is just a disagreement about how much to trust the model. Here's how to actually think about the landscape."
 ---
 
 <style>

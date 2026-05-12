@@ -4,7 +4,7 @@ title:  "what happens when you press 'submit' on chatgpt"
 date:   2026-03-27 00:00:00 +0530
 categories: [tech]
 tokens: "~12k"
-description: "from raw internet text to a streaming response in your browser - pretraining, alignment, inference, and everything in between"
+description: "From raw internet text to a streaming response in your browser - pretraining, alignment, inference, and everything in between."
 ---
 
 <style>

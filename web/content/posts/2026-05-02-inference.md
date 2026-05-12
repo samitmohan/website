@@ -5,7 +5,7 @@ date: 2026-05-02 00:00:00 +0530
 categories: [tech]
 tokens: "~15k"
 math: true
-description: "your GPU is mostly idle during text generation. the entire inference stack exists to fix that."
+description: "Your GPU is mostly idle during text generation. The entire inference stack exists to fix that."
 ---
 
 <style>
