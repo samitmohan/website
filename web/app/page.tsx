@@ -76,7 +76,7 @@ export default function HomePage() {
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4 leading-[1.1]">
                 Samit Mohan
               </h1>
-              <p className="text-[16px] text-muted-foreground max-w-xl mb-2 leading-relaxed">
+              <p className="text-[16px] text-muted-foreground max-w-xl mb-1 leading-relaxed">
                 ML/AI engineer at{" "}
                 <a
                   href="https://beltech.ai"
@@ -86,7 +86,10 @@ export default function HomePage() {
                 >
                   beltech.ai
                 </a>
-                , building CV systems for city infrastructure. I learn by implementing from first principles & teach the same.
+                , building CV systems for city infrastructure.
+              </p>
+              <p className="text-[16px] text-muted-foreground max-w-xl mb-2 leading-relaxed">
+                I learn by implementing from first principles & teach the same.
               </p>
               <p className="text-[13px] font-mono text-muted-foreground/40 mb-5">
                 probably doing matrix multiplications
