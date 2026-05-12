@@ -5,7 +5,7 @@ date:   2025-01-01 14:06:04 +0530
 categories: fun
 tokens: "~150"
 description: "A curated list of things I like - books, music, tools, and more."
-published: false
+published: true
 ---
 in no particular order,
 
