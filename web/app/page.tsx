@@ -86,7 +86,7 @@ export default function HomePage() {
                 >
                   beltech.ai
                 </a>
-                , building CV systems for city infrastructure. I learn by implementing things from first principles and try to teach the same.
+                , building CV systems for city infrastructure. I learn by implementing from first principles & teach the same.
               </p>
               <p className="text-[13px] font-mono text-muted-foreground/40 mb-5">
                 probably doing matrix multiplications
