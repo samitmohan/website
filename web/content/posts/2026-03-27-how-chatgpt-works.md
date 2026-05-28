@@ -441,6 +441,18 @@ window._anims = window._anims || {};
 }
 </style>
 
+### the modern decoder stack
+
+The transformer above is the 2017 design. Production models (Llama, Qwen, DeepSeek, Gemma) keep the skeleton - attention, MLP, residuals - but swap almost every component for something cheaper or more stable:
+
+- **RMSNorm instead of LayerNorm**, applied *before* each block (pre-norm). It normalizes by root-mean-square without re-centering: fewer ops, and pre-norm keeps gradients flowing in deep stacks.
+- **RoPE instead of learned position embeddings.** Position rotates the query and key vectors by an angle proportional to where the token sits, so relative distance falls straight out of the dot product. YaRN stretches those frequencies to push context past the trained length.
+- **GQA instead of full multi-head attention.** Query heads share key/value heads in groups, shrinking the KV cache - the same lever the inference post leans on, decided here at architecture time.
+- **GeGLU / SwiGLU instead of a plain MLP.** The feed-forward block gates one projection by a GELU/SiLU of another (`W2 @ (gelu(W0 @ x) * (W1 @ x))`), which lets it represent sign flips a single ReLU layer can't.
+- **Hybrid attention.** Most layers attend only to a local window of a few thousand tokens for speed; a handful of global layers see the whole sequence. Long-context reach without paying full quadratic cost on every layer.
+
+Aleksa Gordić's [life of a token](https://www.aleksagordic.com/blog/transformer) traces one vector through all of this end to end - a good next read once the base transformer clicks.
+
 ### when does generation stop?
 
 Three stopping conditions:
@@ -1874,8 +1886,6 @@ Human evaluation (annotators rating outputs on helpfulness rubrics) is what RLHF
 
 ## the full picture
 
-From a URL in a web crawl to a token in your browser: crawl the web, clean it, tokenize it, train a transformer to predict next tokens, fine-tune it to follow instructions, serve it through a layered production system, and stream each token back as it's generated.
-
 Pretraining costs $50-100M+ and runs for months on thousands of GPUs. SFT and RLHF run for a few weeks and cost a few million at most. The ongoing engineering challenge is inference: routing, batching, caching, safety, streaming, and observability for millions of concurrent users.
 
 Next-token prediction on 13 trillion tokens is a simple objective. The weights that result encode facts, reasoning patterns, and enough of a world model to pass the bar exam. The model generates the most probable continuation regardless of truth.
@@ -1888,6 +1898,7 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
 - [LLaMA 3](https://arxiv.org/abs/2407.21783) (training at scale)
 - [vLLM/PagedAttention](https://arxiv.org/abs/2309.06180) (inference at scale)
 - [FlashAttention-2](https://arxiv.org/abs/2307.08691) (memory-efficient attention)
+- [Inside the transformer](https://www.aleksagordic.com/blog/transformer) (a token's journey through a modern decoder)
 - [Quantization explained](https://ngrok.com/blog/quantization) (ngrok - INT4/INT8 quantization in practice)
 - [Karpathy - Zero to Hero](https://www.youtube.com/playlist?list=PLAqhIrjkxruWIwMSOWxAywIRyoiOWHaXY)
 - [ChatGPT in 200 lines](https://karpathy.github.io/2026/02/12/microgpt/)

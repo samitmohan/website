@@ -74,7 +74,7 @@ At `batch=1`, an H100 pushes ~200 tok/s from an 8B model. At `batch=128`: ~25,00
 
 ## 2. GPU 101 - the hardware vocab
 
-You don't need to understand GPU internals. You need a few terms because every optimization below is just moving data between different kinds of memory. Skim this and refer back.
+A few terms, because every optimization below is just moving data between different kinds of memory.
 
 ### VRAM and HBM - same thing, two names
 
@@ -246,7 +246,7 @@ $ genai-perf profile \
 
 ## 5. the KV cache
 
-The central data structure of LLM inference. If you only learn one thing from this post, make it this.
+The central data structure of LLM inference.
 
 ### why it exists
 
@@ -330,7 +330,7 @@ This is why Llama 3 70B and DeepSeek V3 (671B) have similar serving costs. DeepS
 
 ## 6. FlashAttention
 
-You'll never write this yourself. But it's why long-context inference works at all.
+This is why long-context inference works at all.
 
 ### the problem
 
@@ -794,4 +794,35 @@ Latency bad. Throughput bad. Bill bad. Where to start? This order:
 <strong>5. KV cache quantization.</strong> <code>kv_cache_dtype="fp8"</code> - doubles effective batch size.<br><br>
 <strong>6. Speculative decoding.</strong> 2-3x for predictable outputs. Skip for creative generation.<br><br>
 <strong>7. Disaggregate prefill/decode.</strong> Different GPU pools per phase. Worth it at 100+ GPUs.
+</div>
+
+---
+
+## 12. watching the real ceiling
+
+The playbook tells you what to turn on. This tells you when you've hit the wall.
+
+Section 5 showed the KV cache eats VRAM. Here's the consequence in production: compute is almost never the limit, the KV cache is. On an 80GB A100 serving a 7B model at 4K context, the FLOPS budget covers ~141 concurrent requests. The KV cache runs out at ~13. That order-of-magnitude gap is the real ceiling. ([source](https://trunghjieu2506.github.io/writing/llm-inference-throughput.html))
+
+<div class="inf-insight">
+<strong>arithmetic intensity, per phase:</strong> prefill runs at ~4500 FLOPs/byte (compute-saturated), decode at ~1 FLOP/byte. On an A100 the roofline crossover sits at ~156 FLOPs/byte, so decode leaves the compute cores nearly idle. Same prefill/decode split as section 3, now with the numbers.
+</div>
+
+### preemption: the cliff
+
+vLLM admits requests until the KV cache fills. Push past 100% and it evicts running requests to make room: their KV cache gets dropped and recomputed when they resume, and latency roughly doubles. The sweet spot sits just below 100% cache utilization. Full enough to keep the batch busy, not so full that a burst tips you over.
+
+<div class="inf-card" style="border-color: var(--inf-red);">
+<strong>two numbers to watch (both in vLLM's <code>/metrics</code>):</strong><br>
+- <code>kv_cache_usage_pct</code> - your headroom. Tune <code>--max-num-seqs</code> so this sits high but stable.<br>
+- <code>num_preemptions</code> - should hover near zero. A climbing count means you crossed the line and you're paying 2x latency for it.
+</div>
+
+One more, from the same teardown: across both phases the MLP block is ~71% of the compute. Hunting for a kernel to optimize? Start there, not attention.
+
+<div class="inf-card" style="border-color: var(--inf-blue);">
+<strong>further reading</strong> - three posts that go a level deeper than this one:<br>
+- <a href="https://trunghjieu2506.github.io/writing/llm-inference-throughput.html">LLM inference throughput</a> - the roofline and KV-ceiling math above, worked out.<br>
+- <a href="https://www.aleksagordic.com/blog/vllm">inside vLLM</a> - the scheduler, paged attention, and prefix caching read at source level.<br>
+- <a href="https://www.aleksagordic.com/blog/matmul">fast matmul</a> - why the GPU sits idle one level down: coalesced loads, SMEM tiling, tensor cores, wave quantization.
 </div>

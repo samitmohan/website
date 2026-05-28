@@ -37,7 +37,7 @@ function formatDate(raw: string): string {
   const d = new Date(raw);
   return d.toLocaleDateString("en-US", {
     year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
   });
 }
@@ -72,14 +72,10 @@ export function getAllPosts(): PostMeta[] {
   return posts;
 }
 
-// Rewrite Jekyll-relative asset/link paths to work on this site.
 // Strip Liquid tags. Rewrite internal Jekyll post links to /blog/[slug].
+// Images live in /public/assets and are served locally (no rewrite needed).
 function preprocessContent(content: string): string {
   return content
-    // Images: src="/assets/..." → absolute Jekyll URL
-    .replace(/src="\/assets\//g, 'src="https://samitmohan.github.io/assets/')
-    // Markdown images: ![alt](/assets/...) → absolute
-    .replace(/\(\/assets\//g, "(https://samitmohan.github.io/assets/")
     // Internal Jekyll post links: /tech/YYYY/MM/DD/slug.html → /blog/slug
     .replace(/\(\/tech\/\d{4}\/\d{2}\/\d{2}\/([^).]+)\.html\)/g, "(/blog/$1)")
     // Href versions
