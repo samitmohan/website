@@ -1,8 +1,13 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { PythonEditor } from "@/components/editor/python-editor";
+
+const PythonEditor = dynamic(
+  () => import("@/components/editor/python-editor").then((m) => m.PythonEditor),
+  { ssr: false, loading: () => <div className="h-full bg-card" /> }
+);
 import { Button } from "@/components/ui/button";
 import ProblemVisualization from "@/components/problem/ProblemVisualization";
 import ProblemPreview from "@/components/problem/ProblemPreview";

@@ -102,6 +102,9 @@ function ProblemsContent() {
     <div className="max-w-[720px] mx-auto px-6 py-10">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-foreground">Problems</h1>
+        <p className="text-sm text-muted-foreground mt-2">
+          200+ ML implementation problems I wrote for an AI engineering cohort.
+        </p>
       </div>
 
       {/* Search */}
