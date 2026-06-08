@@ -4,19 +4,25 @@ import { PublicNav, PublicFooter } from "@/components/public-nav";
 
 export default function BlogPage() {
   const posts = getAllPosts();
+  const searchEntries = posts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    date: p.date,
+    description: p.description,
+  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <PublicNav />
+      <PublicNav searchEntries={searchEntries} />
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
+      <main id="main" className="max-w-3xl mx-auto px-6 py-12 md:py-16">
         <div className="mb-12">
           <h1 className="text-4xl font-bold tracking-tight text-foreground mb-3">
             Posts
           </h1>
         </div>
 
-        <div className="space-y-10">
+        <div className="space-y-12">
           {posts.map((post) => (
             <Link
               key={post.slug}
@@ -24,15 +30,15 @@ export default function BlogPage() {
               className="group block"
             >
               <div className="flex items-baseline justify-between mb-2 gap-6">
-                <h2 className="text-[16px] font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+                <h2 className="text-[20px] md:text-[22px] font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors leading-snug">
                   {post.title}
                 </h2>
                 <span className="shrink-0 text-[12px] text-muted-foreground/60 font-mono whitespace-nowrap">
-                  {formatPostDate(post.date)} · {post.readingTime} min
+                  {formatPostDate(post.date)}
                 </span>
               </div>
               {post.description && (
-                <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2">
+                <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-2">
                   {post.description}
                 </p>
               )}

@@ -14,16 +14,17 @@ const EXPERIENCE = [
     role: "Computer Vision Engineer",
     period: "Jun 2025 — Present",
     location: "Bangalore",
-    stack: "CV infra startup · PyTorch · YOLO · PARSeq · Triton · TensorRT · FastAPI · Kubernetes · Docker",
+    stack: "PyTorch · YOLO · PARSeq · DeepStream · Triton · TensorRT · FastAPI · Kubernetes · Docker",
     bullets: [
-      "Designed and deployed an end-to-end vision system processing live RTSP streams across 10+ detection modules (LPR, phone, helmet, wrong-way, PUCC) at 0.9+ F1 on Indian CCTV infrastructure.",
-      "Cut inference latency by 54% to ≤10 ms on edge by replacing anchor-based detection with NMS-free YOLOv10 and tuning Triton / TensorRT serving. Sustained 0.90+ mAP across 8 classes.",
-      "Rebuilt the license-plate pipeline: swapped the CRAFT text detector for YOLOv11s and the BiLSTM recognizer for a PARSeq ViT, then exported to TensorRT FP16 for edge. Dropped latency from 150 ms to 40 ms (~100 MB GPU per 100 images) while raising read accuracy.",
-      "Built a PUCC pollution-certificate module as a FastAPI service: YOLO confirms the emission probe is inserted in the vehicle, LPR reads the plate, and the detected testing-center name is validated against the government registry of authorized centers.",
-      "Built a continuous-learning pipeline that ingests live misclassifications on a 2-week cadence, retrains, validates via mAP50 quality gate, and hot-swaps on Triton with zero downtime.",
-      "Shipped vehicle-attribute microservices (color, type) at 0.92+ Macro-F1 with Grafana monitoring, structured logging, and A/B testing for rollouts.",
-      "Owned managed deployment of 10 real-time models across T4 GPUs: scheduling which model runs on which card and autoscaling pods to prevent OOM and crashes under load.",
-      "Automated agent-driven research to find the optimal image size per model, cutting weights to 1.2 MB and inference to 30 ms/frame across all production models.",
+      "Shipped a 10+ module CV system (LPR, PUCC, helmet, phone, wrong-way) over live RTSP at 0.9+ F1 on Indian CCTV.",
+      "Wrote a custom-C DeepStream pipeline that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Scaled per-server capacity to 100+ cameras on multi-GPU.",
+      "Cut detection latency 54% to ≤10 ms by replacing anchor-based heads with NMS-free YOLOv10 on Triton + TensorRT. 0.90+ mAP across 8 classes.",
+      "PUCC pollution-certificate FastAPI service: YOLO verifies probe insertion, LPR reads the plate, OCR'd testing-center name validated against the government registry.",
+      "Rebuilt LPR end-to-end: YOLOv11s for text detection, PARSeq ViT for recognition, TensorRT FP16 on edge. 150 ms → 40 ms with higher read accuracy.",
+      "Continuous-learning loop on a 2-week cadence: live misclassifications → retrain → mAP50 gate → hot-swap on Triton with zero downtime.",
+      "Vehicle-attribute microservices (color, type) at 0.92+ Macro-F1 with Grafana SLOs and A/B rollout.",
+      "Owned T4 fleet scheduling for 10 production models: per-card placement and pod autoscaling to prevent OOM under load.",
+      "Agent-driven sweep on input size per model: cut weights to 1.2 MB and inference to 30 ms/frame across all prod models.",
     ],
   },
   {
@@ -34,45 +35,33 @@ const EXPERIENCE = [
     stack: "Scala · Redis · MySQL · Kafka · AWS",
     bullets: [
       "Personalization API using multi-armed bandits (ε-greedy, Thompson Sampling, UCB) for homepage engagement. Benchmarked variants and shipped the best to production.",
-      "NLP-based resume screening using text similarity and keyword extraction for Data team hiring.",
+      "Trained an RLHF reward model on annotated user-preference data to rank itinerary recommendations; integrated into the bandit policy for online A/B.",
+      "NLP-based resume screening using text similarity and keyword extraction for the Data team's hiring pipeline.",
     ],
   },
 ];
 
 const TEACHING = [
   {
-    company: "InterviewReady",
-    role: "Teaching Assistant",
+    company: "aiengg.dev",
+    role: "AI Cohort TA",
     period: "Dec 2025 — May 2026",
-    stack: "Python · PyTorch · LLMs",
+    stack: "Python · PyTorch · LLMs · RAG · Agents",
+    href: "https://aiengg.dev/",
     bullets: [
-      "Designed and taught an AI engineering curriculum for 200+ engineers in a live cohort. Restructured content for 10k+ subscribers; technical posts reached 20k+ readers.",
+      "TA'd a 16-week live AI engineering cohort: ran weekly classes on RAG, agents, fine-tuning, and inference for 200+ engineers. Designed assignments, debugged student projects, took office hours.",
+      "Parent platform: InterviewReady. Restructured content for 10k+ subscribers; technical posts reached 20k+ readers.",
     ],
   },
   {
-    company: "ML Interview Practice",
-    role: "Side project",
+    company: "TensorTonic",
+    role: "Contributor",
     period: "Ongoing",
-    stack: "Python · PyTorch · Markdown",
-    href: "/problems",
+    stack: "Python · PyTorch · ML systems",
+    href: "https://www.tensortonic.com/ml-math",
     bullets: [
-      "200+ implementation problems on gradients, optimizers, attention, and ML systems. Paired with the AI engineering cohort so each module has matching problems.",
+      "Contributed 300+ implementation problems, ML system-design problems, interactive quizzes, paper-implementation questions, and the study plan for pro users. Platform serves 40k+ users.",
     ],
-  },
-];
-
-const STACK = [
-  {
-    label: "ML / DL",
-    items: ["PyTorch", "NumPy", "ONNX", "YOLO", "CNNs", "Transformers", "LLMs", "RAG", "Embeddings", "Reranking", "LoRA", "QLoRA", "PEFT", "MCP", "Function calling", "HuggingFace", "OpenCV", "CUDA", "Quantization", "Scikit-learn"],
-  },
-  {
-    label: "Infra",
-    items: ["Triton Inference Server", "TensorRT", "vLLM", "SGLang", "MetaFlow", "MLflow", "Docker", "Kubernetes", "Grafana", "CI/CD"],
-  },
-  {
-    label: "Tools",
-    items: ["Python", "C/C++", "SQL", "FastAPI", "gRPC", "Redis", "FAISS", "Linux", "Git"],
   },
 ];
 
@@ -81,7 +70,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PublicNav />
 
-      <main className="max-w-3xl mx-auto px-6">
+      <main id="main" className="max-w-3xl mx-auto px-6">
         {/* Hero */}
         <section className="py-12 md:py-16">
           <div>
@@ -107,10 +96,6 @@ export default function AboutPage() {
                   .
                 </p>
                 <p>
-                  Innately passionate about intelligent systems, understanding
-                  them, implementing them and writing about them.
-                </p>
-                <p>
                   Reach me at{" "}
                   <a
                     href="mailto:samitmohan@gmail.com"
@@ -126,7 +111,7 @@ export default function AboutPage() {
         </section>
 
         {/* Experience */}
-        <section className="py-10">
+        <section className="py-12">
           <h2 className="text-[13px] font-mono uppercase tracking-wider text-muted-foreground mb-6">
             Experience
           </h2>
@@ -151,7 +136,7 @@ export default function AboutPage() {
                   {job.bullets.map((b) => (
                     <li
                       key={b}
-                      className="text-[14px] text-foreground/80 leading-relaxed flex gap-3"
+                      className="text-[15px] text-foreground/80 leading-relaxed flex gap-3"
                     >
                       <span className="text-muted-foreground/40 shrink-0">·</span>
                       <span>{b}</span>
@@ -164,7 +149,7 @@ export default function AboutPage() {
         </section>
 
         {/* Teaching */}
-        <section className="py-10">
+        <section className="py-12">
           <h2 className="text-[13px] font-mono uppercase tracking-wider text-muted-foreground mb-6">
             Teaching &amp; Writing
           </h2>
@@ -204,7 +189,7 @@ export default function AboutPage() {
                     {job.bullets.map((b) => (
                       <li
                         key={b}
-                        className="text-[14px] text-foreground/80 leading-relaxed flex gap-3"
+                        className="text-[15px] text-foreground/80 leading-relaxed flex gap-3"
                       >
                         <span className="text-muted-foreground/40 shrink-0">·</span>
                         <span>{b}</span>
@@ -218,7 +203,7 @@ export default function AboutPage() {
         </section>
 
         {/* Education */}
-        <section className="py-10">
+        <section className="py-12 pb-20">
           <h2 className="text-[13px] font-mono uppercase tracking-wider text-muted-foreground mb-6">
             Education
           </h2>
@@ -238,7 +223,7 @@ export default function AboutPage() {
               CGPA 9.4 / 10 · Bangalore
             </p>
             <ul className="space-y-1.5">
-              <li className="text-[14px] text-foreground/80 leading-relaxed flex gap-3">
+              <li className="text-[15px] text-foreground/80 leading-relaxed flex gap-3">
                 <span className="text-muted-foreground/40 shrink-0">·</span>
                 <span>Founder, Coding Club NHCE.</span>
               </li>
@@ -246,27 +231,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Stack */}
-        <section className="py-10 pb-16">
-          <h2 className="text-[13px] font-mono uppercase tracking-wider text-muted-foreground mb-6">
-            Stack
-          </h2>
-          <div className="space-y-4">
-            {STACK.map((s) => (
-              <div
-                key={s.label}
-                className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-6"
-              >
-                <div className="text-[12px] font-mono text-muted-foreground/70 md:w-[140px] md:shrink-0">
-                  {s.label}
-                </div>
-                <p className="text-[14px] text-foreground/80 leading-relaxed flex-1">
-                  {s.items.join(", ")}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
       </main>
 
       <PublicFooter />
