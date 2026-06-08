@@ -1,0 +1,92 @@
+#lru-fib {
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 24px 0;
+  background: var(--card, #18181b);
+  font-family: var(--font-jetbrains-mono, ui-monospace, SFMono-Regular, monospace);
+  font-size: 12px;
+  color: var(--foreground, #e5e7eb);
+}
+#lru-fib .lf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+#lru-fib .lf-title { font-size: 13px; }
+#lru-fib .lf-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 12px;
+  color: var(--muted-foreground, #9ca3af);
+}
+#lru-fib .lf-controls input[type="number"] {
+  background: transparent;
+  border: 1px solid var(--border, #2a2a2a);
+  color: var(--foreground, #e5e7eb);
+  font-family: inherit;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  width: 50px;
+}
+#lru-fib button {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border, #2a2a2a);
+  color: var(--muted-foreground, #9ca3af);
+  border-radius: 4px;
+  cursor: pointer;
+}
+#lru-fib button:hover:not(:disabled) {
+  color: var(--foreground, #e5e7eb);
+  border-color: var(--primary, #60a5fa);
+}
+#lru-fib button.lf-active {
+  color: var(--foreground, #e5e7eb);
+  border-color: var(--primary, #60a5fa);
+  background: rgba(96, 165, 250, 0.08);
+}
+#lru-fib .lf-meta {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-family: var(--font-space-grotesk, sans-serif);
+  color: var(--muted-foreground, #9ca3af);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+#lru-fib .lf-meta b {
+  color: var(--foreground, #e5e7eb);
+  font-weight: 600;
+}
+#lru-fib .lf-tree {
+  display: block;
+  width: 100%;
+  height: 280px;
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: 4px;
+}
+#lru-fib .lf-legend {
+  display: flex;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--muted-foreground, #9ca3af);
+  margin-top: 10px;
+  font-family: var(--font-space-grotesk, sans-serif);
+}
+#lru-fib .lf-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 6px;
+}

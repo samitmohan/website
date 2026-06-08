@@ -4,8 +4,8 @@ title:  "some python tricks"
 date:   2025-10-25 14:06:04 +0530
 categories: tech
 tokens: "~3.5k"
-description: "Random things I've learnt over the years which transform Python from 'it works' to 'it's beautiful.'"
-published: false
+description: "Random Python tricks I've picked up."
+published: true
 ---
 
 How to write more pythonic (god I hate this word) code
@@ -129,6 +129,12 @@ print(fib_fast(40))  # Runs instantly instead of taking forever
   <source src="/assets/images/python/lru_cache.mp4" type="video/mp4">
 </video>
 *Left: naive fib explodes into duplicate calls. Right: cached fib computes each value once.*
+
+Play with `n`. Toggle `@lru_cache`. Watch the tree collapse from O(2ⁿ) to O(n).
+
+<link rel="stylesheet" href="/widgets/lru-fib.css">
+<div id="lru-fib"></div>
+<script src="/widgets/lru-fib.js" defer></script>
 
 ---
 

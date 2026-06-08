@@ -1,28 +1,23 @@
 import { MetadataRoute } from "next";
-import { getAllSlugs } from "@/lib/blog";
-import { courses } from "@/config/courses";
+import { getAllPosts } from "@/lib/blog";
 
-const BASE = "https://samitmohan.vercel.app";
+const BASE = "https://samitmohan.in";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const blogSlugs = getAllSlugs().map((slug) => ({
-    url: `${BASE}/blog/${slug}`,
+  const posts = getAllPosts();
+  const blogEntries = posts.map((p) => ({
+    url: `${BASE}/blog/${p.slug}`,
+    lastModified: p.date ? new Date(p.date) : undefined,
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  const courseSlugs = courses.map((c) => ({
-    url: `${BASE}/courses/${c.slug}`,
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const newest = posts[0]?.date ? new Date(posts[0].date) : new Date();
 
   return [
-    { url: BASE, changeFrequency: "weekly" as const, priority: 1.0 },
-    { url: `${BASE}/blog`, changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${BASE}/courses`, changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${BASE}/problems`, changeFrequency: "weekly" as const, priority: 0.7 },
-    ...blogSlugs,
-    ...courseSlugs,
+    { url: BASE, lastModified: newest, changeFrequency: "weekly", priority: 1.0 },
+    { url: `${BASE}/about`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/blog`, lastModified: newest, changeFrequency: "weekly", priority: 0.8 },
+    ...blogEntries,
   ];
 }

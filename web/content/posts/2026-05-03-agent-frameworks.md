@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "the philosophy of agent frameworks"
+title: "every agent framework, ranked"
 date: 2026-05-03 00:00:00 +0530
 categories: [tech]
 tokens: "~25k"
-description: "Every agent framework is just a disagreement about how much to trust the model. Here's how to actually think about the landscape."
+description: "Every agent framework is a disagreement about how much to trust the model."
 ---
 
 <style>
@@ -36,9 +36,8 @@ description: "Every agent framework is just a disagreement about how much to tru
 }
 </style>
 
-> **TL;DR:** An agent is an LLM in a loop with tools. Every framework disagrees about how much of that loop to hard-code vs. let the model decide. The landscape went from chains (2022) to stateful graphs (2024) to model-driven harnesses (2025). MCP won as the integration standard. Pick your framework based on how much you trust the model and how much you need to debug.
 
-A reading guide to LangChain, LangGraph, n8n, Agno, and the broader agent landscape in 2026.
+LangChain, LangGraph, n8n, Agno, and the broader agent landscape in 2026.
 
 ## table of contents
 
@@ -54,7 +53,7 @@ A reading guide to LangChain, LangGraph, n8n, Agno, and the broader agent landsc
 
 ## what "agent" actually means in this conversation
 
-Before any framework makes sense, you have to settle the word. In this post, an agent is an LLM running in a loop with access to tools, deciding for itself what to do next. The minimum viable agent is the ReAct pattern from 2022: model produces a thought, picks a tool, sees the tool result, picks the next tool, and so on until it decides it's done. That is the whole idea. Everything else, every framework, every architecture diagram, every "multi-agent system," is disagreement about how much of that loop you should hard-code versus how much you should let the model decide.
+An agent is an LLM in a loop with tools, picking what to do next. The first version was ReAct (2022): think, pick a tool, see the result, repeat until done. Every framework since is a different answer to the same question: how much of that loop do you hard-code, how much do you let the model decide.
 
 <div class="agent-video">
 <video autoplay loop muted playsinline preload="none" poster="/assets/images/agents/agents_react_loop_poster.jpg">
@@ -62,7 +61,7 @@ Before any framework makes sense, you have to settle the word. In this post, an 
 </video>
 </div>
 
-That single axis, how much control the developer keeps versus how much the developer cedes to the model, is the most useful lens for understanding the space. On one end, you have rigid pipelines where the developer writes every step and the LLM is just a smart string transformer at each node. On the other end, you have a single big "do the thing" call where the model is trusted to plan, decompose, retry, and finish on its own. Every framework you've heard of sits somewhere on that axis, and most have moved along it as models got better. When a smarter model can replace the framework, the team behind it has to keep redefining what value they add.
+One axis explains the whole space: how much control you hand to the model. Rigid pipeline on one end (LLM is a string transformer at each node), one big "do the thing" call on the other (model plans, retries, finishes). Every framework sits somewhere on that line. As models get smarter, the line moves and the frameworks have to keep justifying themselves.
 
 <svg width="100%" viewBox="0 0 680 150" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width: 680px; display: block; margin: 1.5rem auto;">
   <title>Control spectrum of agent architectures</title>
@@ -110,13 +109,13 @@ That single axis, how much control the developer keeps versus how much the devel
 
 ## how we got here
 
-The pre-history is short and worth knowing. Before late 2022, "agents" mostly meant reinforcement learning agents in research labs, which is a different field. The current usage of the word starts with the ReAct paper (Yao et al., late 2022) and explodes in early 2023 with AutoGPT and BabyAGI, neither of which were good but both of which planted the meme that you could let GPT-4 loop on itself with tools and have it do real things. Most of those early systems failed the same way: they would get into loops, lose the plot, or burn through tokens chasing a hallucinated subgoal.
+Before late 2022, "agent" meant RL agents in research labs. The current usage starts with ReAct (Yao et al., late 2022). AutoGPT and BabyAGI showed up in early 2023, neither great, both planting the meme that you could let GPT-4 loop on itself with tools and have it do real things. Early systems failed the same way: loops, lost plots, tokens burned chasing hallucinated subgoals.
 
-LangChain shows up in this period as the first widely used Python library that gave you primitives for chaining LLM calls together, plugging in tools, doing retrieval, and so on. It became the dominant library because it was the easiest way to go from "I have an OpenAI key" to "I have a working RAG system." Senior engineers criticized it for hiding prompts behind layers of abstraction. By mid-2023 many had concluded that calling the API direct was simpler than wrestling with LangChain's wrappers. The team rewrote it in 2025 to be leaner.
+LangChain showed up as the first widely-used Python library for chaining LLM calls, plugging in tools, doing retrieval. It became dominant because it was the shortest path from "I have an API key" to "I have a working RAG system." Senior engineers complained it hid prompts behind layers. By mid-2023 many concluded calling the API directly was simpler. The team rewrote LangChain in 2025 to be leaner.
 
-The second wave, late 2023 through 2024, was the realization that real agents need state, not just chains. A chain is acyclic: input goes in, output comes out, no loops, no memory between runs. A real agent needs to be able to revisit a step, retry on failure, wait for a human, persist conversation history, and maintain typed state across many tool calls. Chains can't do this cleanly. LangGraph was the LangChain team's answer. CrewAI took a different bet: instead of explicit state graphs, model agents as specialists in a team. AutoGen, from Microsoft Research, took a third bet: model the system as a multi-turn conversation between agents.
+Wave two (late 2023 - 2024): agents need state, not just chains. A chain is acyclic - no loops, no memory across runs. Real agents revisit steps, retry, wait for humans, persist history, hold typed state across many tool calls. LangGraph was the LangChain team's answer. CrewAI bet on "team of specialists" instead. AutoGen (Microsoft) bet on multi-agent conversation.
 
-The third wave, 2025 into 2026, is the one we're in now. Once Claude 3.5/4 and GPT-4o/5 became reliable enough at tool use that you could give them tools and let them loop, Anthropic, OpenAI, AWS, and LangChain each shipped "agent harness" frameworks that don't try to control the loop at all: Claude Agent SDK, Agents SDK (replacing Swarm), Strands Agents, and deepagents. All four bet that the model is now good enough that you should hand it the keys and focus on what tools and memory it has access to. At the same time, the protocol layer matured: MCP, introduced by Anthropic in November 2024, became the closest thing the field has to a universal standard.
+Wave three (2025 - 2026): Claude 3.5/4 and GPT-4o/5 got reliable enough at tool use that you could just hand them tools and let them loop. Anthropic, OpenAI, AWS, and LangChain each shipped a harness: Claude Agent SDK, Agents SDK (replacing Swarm), Strands Agents, deepagents. Meanwhile MCP (Anthropic, Nov 2024) became the closest thing the field has to a universal protocol.
 
 <svg width="100%" viewBox="0 0 680 270" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width: 680px; display: block; margin: 1.5rem auto;">
   <title>Three generations of agent frameworks</title>
@@ -199,17 +198,17 @@ The third wave, 2025 into 2026, is the one we're in now. Once Claude 3.5/4 and G
 
 ## the core mental models
 
-A handful of architectural metaphors cover the entire space.
+Six metaphors cover the space.
 
-The first is the **chain or pipeline**. You wire up a directed acyclic graph of LLM calls and other operations, and data flows through. The developer specifies the structure, and the LLM is just the smart bit at each step. This is what early LangChain was. It works for fixed pipelines but doesn't qualify as agentic.
+**Chain / pipeline.** A DAG of LLM calls and ops. Data flows through, you specify the structure, the LLM is the smart bit at each step. Early LangChain. Fine for fixed pipelines, not really agentic.
 
-The second is the **stateful graph or state machine**. Same idea as a chain, but you allow cycles, conditional edges, and explicit shared state that flows through the graph and gets updated at each node. Now the LLM can decide, at certain nodes, which edge to take next. The developer still defines the topology, but the LLM steers within it. LangGraph is the example. This is the dominant mental model for production systems where you need to know exactly what your agent did and why.
+**Stateful graph / state machine.** Chain with cycles, conditional edges, and a shared state object. The LLM decides which edge to take at certain nodes; you still define the topology. LangGraph. Dominant for production where you need to know what the agent did and why.
 
-The third is the **role-based team**. You define agents as specialists with roles, goals, backstories, and tools, and you give them tasks. The framework handles delegation, communication, and result aggregation. You don't think about graphs; you think about a marketing team or a research crew. CrewAI is the example. This makes the common case fast to prototype and the uncommon case painful, because the abstraction is rigid.
+**Role-based team.** Agents are specialists with roles, goals, and tools. You give them tasks; the framework handles delegation, communication, aggregation. CrewAI. Fast for problems that fit the metaphor, painful when they don't.
 
-The fourth is the **multi-agent conversation**. Multiple agents, each with their own system prompt and tools, interact through a shared dialogue. An orchestrator decides who speaks next. AutoGen (now AG2) is built on this. It's good for problems where you want emergent behavior from agents debating, refining each other's outputs, or specializing through dialogue, and most agentic research happens here.
+**Multi-agent conversation.** Multiple agents share a dialogue, an orchestrator picks who speaks next. AutoGen / AG2. Good for emergent behavior from debate, refinement, specialization. Most research happens here.
 
-The fifth is the **agent harness or tool-calling loop**. A harness here means a thin wrapper around the model: it handles the plumbing (streaming, retries, tool dispatch) but makes zero decisions about what the agent does next. There is no graph, no team, no conversation: just one LLM in a loop, with a curated set of tools and a long-context memory, trusted to drive. The framework makes that loop production-grade: streaming, persistence, observability, sub-agents on demand, file-system-as-memory, planning guides. Claude Agent SDK, OpenAI Agents SDK, deepagents, and Strands all live here. This is the bet on capability: as models improve, less scaffolding is needed.
+**Agent harness / tool-calling loop.** Thin wrapper around the model: handles streaming, retries, tool dispatch, makes no decisions about what to do next. One LLM, curated tools, long-context memory, trusted to drive. Sub-agents on demand. Claude Agent SDK, OpenAI Agents SDK, deepagents, Strands. As models improve, less scaffolding earns its keep.
 
 <div class="agent-video">
 <video autoplay loop muted playsinline preload="none" poster="/assets/images/agents/agents_chain_graph_harness_poster.jpg">
@@ -217,15 +216,15 @@ The fifth is the **agent harness or tool-calling loop**. A harness here means a 
 </video>
 </div>
 
-The sixth is the **visual workflow builder**. You drag nodes onto a canvas, connect them with arrows, and the canvas itself is the program. AI agents are just one type of node alongside HTTP calls, database queries, conditionals, and so on. n8n, Make, Zapier, and similar tools live here. The philosophy is that most real-world automations are mostly deterministic with AI sprinkled in, and a visual interface meets that reality better than code.
+**Visual workflow builder.** Drag nodes on a canvas, wire them, the canvas is the program. AI agents are one node type next to HTTP, DB, conditionals. n8n, Make, Zapier. Most automations are mostly deterministic with AI sprinkled in; a canvas matches that.
 
-These are not mutually exclusive. LangGraph can run inside an n8n node. An OpenAI Agents SDK agent can be a sub-agent in a CrewAI crew.
+These aren't exclusive. LangGraph runs inside n8n nodes. An OpenAI Agents SDK agent can be a sub-agent in a CrewAI crew.
 
 ---
 
 ## one task, three frameworks
 
-The mental models above are easier to feel when you see the same task implemented three ways. Take a simple agent that answers questions by searching the web and then synthesizing a response. Here it is in LangGraph, Agno, and the Claude Agent SDK.
+Same agent in three frameworks: answer a question by searching the web, then synthesize. LangGraph, Agno, Claude Agent SDK.
 
 **LangGraph: you draw the graph**
 
@@ -322,19 +321,17 @@ LangChain started as a chain library, became an ecosystem, and is currently rebr
 
 The mistake people make about LangChain is treating it as a single thing. Think of it as three layers stacked. At the bottom is langchain-core, which gives you common abstractions for messages, models, tools, and runnables. In the middle is langchain itself, the integration layer with hundreds of model providers, vector stores, and tools. On top sits langgraph for actual agent control flow, langsmith for observability, and langserve for deployment. When people say "LangChain is bloated," they usually mean the integration layer. When people say "LangChain is the most powerful framework," they usually mean the whole stack including LangGraph and LangSmith. Both are true.
 
-The current value proposition is breadth. If you need to talk to 100 different models, 50 different vector stores, and 200 different APIs, nobody else has anything close. The cost is that every abstraction you adopt is one more layer between you and the actual prompt being sent. For a senior engineer, that's often a worse tradeoff than just calling the model API directly and writing your own thin wrapper.
+It's still the widest integration layer in the field: 100+ models, 50+ vector stores, 200+ APIs, all under one roof. The price is layers between you and the actual prompt. Most senior engineers I know skip the abstractions and hit the model API directly with a thin wrapper.
 
 ---
 
 ### LangGraph
 
-LangGraph is the part of the LangChain world that most production teams care about. The model is simple and worth understanding precisely: your agent is a directed graph; nodes are functions (which can call LLMs, tools, or anything else); edges are control flow (which can be conditional based on state); and a single typed State object flows through the graph and is updated by nodes. Cycles are allowed, so an agent can loop. Checkpointing is built in, so every state transition is persisted, which gives you time-travel debugging, human-in-the-loop pauses, and crash recovery.
+LangGraph is the part of the LangChain world that production teams actually use. Your agent is a directed graph: nodes are functions (LLM calls, tools, anything), edges are control flow (can be conditional on state), and a typed `State` object threads through. Cycles allowed. Checkpointing is built in, so you get time-travel debugging, human-in-the-loop pauses, and crash recovery.
 
-LangGraph won as the production default because it makes the control flow explicit. When something goes wrong in production, you can look at the graph, look at the state at each transition, and reason about what the agent did. With a "trust the model" harness, you have to read traces and try to figure out why the model made a given decision, which is harder. LangGraph's bet is that for high-stakes systems, the cost of explicitness is lower than the cost of opacity.
+It wins because the control flow is explicit. When something breaks in prod, you look at the graph and the state at each transition. With a harness you're reading traces and guessing.
 
-The downside is that explicitness. You write more code than you would in CrewAI or Agno for the same prototype. The learning curve is real. And as models improve, some of the structure you encoded in your graph becomes structure the model could have figured out on its own, meaning you've over-engineered. The LangChain team's answer is deepagents, which is a higher-level abstraction built on top of langgraph's runtime that gives you the "harness" feel without giving up the underlying durability and statefulness. It's LangChain's equivalent to Claude Agent SDK.
-
-If you only learn one framework for production work, LangGraph is the choice today. It is model-agnostic & open-sourced.
+The cost is verbosity. More code than CrewAI or Agno for the same prototype, real learning curve, and as models improve you end up over-engineering structure the model could have figured out. LangChain's answer is deepagents - a harness API on top of LangGraph's runtime. Pick LangGraph if you can only learn one. Model-agnostic, open source.
 
 ---
 
@@ -342,65 +339,61 @@ If you only learn one framework for production work, LangGraph is the choice tod
 
 n8n is the odd one in the list, because it is not an agent framework. It is a general-purpose workflow automation platform, like Zapier or Make, that has added AI agent nodes. The philosophy is the inverse of code-first frameworks: most real-world automations are deterministic plumbing with AI in a few key places, and a visual builder is the right abstraction for that reality.
 
-The architecture matters. n8n is a TypeScript application, and its AI agent nodes are built on LangChain.js underneath. So when you drop an "AI Agent" node onto an n8n canvas and wire up a chat model, a memory, and some tools, you are configuring a LangChain agent through a GUI. This is why n8n's own internal AI Workflow Builder, the feature that generates workflows from natural language prompts, is itself a LangGraph multi-agent system under the hood. The visual layer sits on top of code-first frameworks; it doesn't replace them.
+Underneath, n8n is a TypeScript app and its AI agent nodes wrap LangChain.js. Drop an "AI Agent" node, wire a chat model, memory, and tools, and you're configuring a LangChain agent through a GUI. n8n's own internal AI Workflow Builder is a LangGraph multi-agent system. The visual layer sits on top of the code-first frameworks, it doesn't replace them.
 
-The right way to think about n8n is as a hybrid runtime. You get deterministic nodes (HTTP calls, database queries, scheduling, branching, error handling) for the boring parts of any automation, and you get AI agent nodes for the parts that need a model. The model isn't doing everything; it's doing the part that has to be smart, while the deterministic graph around it handles auth, retries, error paths, and integration.
-
-It also means n8n's sweet spot is the workflows where you need both reliability and AI: the right move is often to keep the heavy reasoning inside a LangGraph or Agno agent and call it from n8n as a single node.
+Use n8n as a hybrid runtime. Deterministic nodes (HTTP, DB, scheduling, branching, error handling) for the boring plumbing, AI nodes for the parts that need a model. Heavy reasoning belongs inside a LangGraph or Agno agent that n8n calls as one node.
 
 ---
 
 ### Agno
 
-Agno (formerly Phi Data, rebranded in 2024) is a reaction against what its authors saw as overengineering in LangChain and LangGraph. Its pitch is "pure Python, no graphs, no chains, just agents that work and run fast."
+Agno (formerly Phi Data) is the anti-LangChain pitch: pure Python, no graphs, no chains, just agents that run fast.
 
-The Agent class encapsulates the entire reasoning loop in a single object. You construct it with a model, tools, memory, knowledge sources, and storage; you call it; it runs the loop and returns a result. There is no graph to define, no edges to wire. For multi-agent systems, Agno gives you Teams (with four coordination modes: route, coordinate, collaborate, and a couple of variants) and Workflows for sequenced execution. Each team member can itself be an agent or a sub-team, so you get composition for free.
+The `Agent` class wraps the whole loop in one object. Pass it a model, tools, memory, knowledge sources, storage. Call it. It loops and returns. Multi-agent comes via Teams (route, coordinate, collaborate modes) and Workflows for sequenced runs. Teams nest.
 
-The technical bet that distinguishes it is performance and statelessness. Agno claims agent instantiation in around 3 microseconds and a tiny memory footprint, achieved by treating agents as lightweight, stateless, session-scoped objects rather than long-lived stateful processes. This is the right design for horizontal scaling: spin up an agent per request, do the work, throw it away. State lives in the storage layer (Postgres, SQLite, Mongo, vector stores) rather than in the agent. This is a different model from LangGraph, where agents are graph runtimes that maintain state internally and rely on checkpointing for durability.
+The interesting part is statelessness. Agno claims ~3μs agent instantiation and a tiny footprint by treating agents as throwaway session-scoped objects. State lives in storage (Postgres, SQLite, Mongo, vector stores), not the agent. Spin up, do the work, drop it. Different from LangGraph, where the agent is a stateful graph runtime.
 
-AgentOS, the runtime layer, exposes agents, teams, and workflows as REST endpoints with built-in OpenAPI documentation, session management, streaming, and observability hooks. You write an Agent in Python; AgentOS gives you a deployable service. There's also an Agno-Go port that brings the same design to Go for teams who need real concurrency.
+AgentOS exposes agents/teams/workflows as REST endpoints with OpenAPI, sessions, streaming, observability. Agno-Go is the same design in Go for real concurrency.
 
-Where Agno makes sense over LangGraph is when you want the developer experience of pure Python, you don't need the visual graph abstraction, you care about cold-start latency and per-agent cost, and the integration ecosystem you need is already covered (it has 100+ integrations and supports MCP). Where LangGraph still wins is when your control flow is genuinely complex and you want it visible, when you need the durability guarantees of explicit checkpointing, or when you're already in the LangChain ecosystem and the migration cost is high.
+Pick Agno over LangGraph when you want pure-Python ergonomics, don't need a visual graph, and care about cold-start cost. Pick LangGraph when control flow is genuinely complex, you want it visible, or you need explicit checkpoint durability.
 
 ---
 
 ### CrewAI
 
-CrewAI's single big idea is that multi-agent problems map onto teams of human specialists, so just code that metaphor directly. You define agents as specialists with a role ("Senior Researcher") and a set of tools. You define tasks. You assemble them into a Crew. You run it. The framework handles delegation, agent-to-agent context passing, and final aggregation.
+CrewAI codes the "team of specialists" metaphor directly. Define agents with a role ("Senior Researcher") and tools, define tasks, assemble a Crew, run it. The framework handles delegation, context passing, and aggregation.
 
-This is fast for the common case and frustrating for the uncommon case. If your problem fits the metaphor (research, writing, analysis pipelines, content generation, anything you might describe as "a small team of people each doing their part"), you're in production in an afternoon. If your problem doesn't fit, the framework gets in your way. CrewAI's recent versions have added MCP support.
-
-It's the right pick for fast prototyping of business agents and for teams who want to ship without learning graph theory.
+Fast when your problem fits the metaphor (research, writing, analysis pipelines, content generation). Painful when it doesn't. Recent versions added MCP support. Good for prototyping business agents without learning graph theory.
 
 ---
 
 ### AutoGen and AG2
 
-AutoGen came out of Microsoft Research and was always more research-oriented than production-oriented. The original v0.2 introduced the idea of agents talking to each other in a multi-turn conversation, with agents debating and refining each other's outputs. The v0.4 rewrite, now branded AG2, rearchitected the system to be event-driven, async-first, and with pluggable orchestration strategies. The key abstraction is GroupChat: multiple agents in a shared conversation, with a selector function that decides who speaks next.
+AutoGen came out of Microsoft Research, always more research than production. v0.2 introduced agents debating in a multi-turn conversation. The v0.4 rewrite (now AG2) made it event-driven and async-first. The main abstraction is `GroupChat`: multiple agents share a conversation, a selector function picks who speaks next.
 
-AutoGen's bet is that emergent intelligence comes from agent dialogue. Agents specialize through their roles, the conversation history is the shared state, and the selector is the control flow. This is a different bet from CrewAI's task-based delegation: in AutoGen, the conversation is the orchestration. AutoGen Studio gives you a low-code interface on top, but most serious AutoGen users write code.
+AutoGen's bet is that emergent intelligence comes from dialogue - roles specialize, conversation is the shared state, the selector is the control flow. AutoGen Studio gives you a low-code interface; serious users still write code.
 
-It remains the framework of choice for research-style multi-agent experiments, code-generation systems where you want a coder agent and a critic agent going back and forth, and anywhere you want maximum flexibility for orchestration patterns. In production it requires more DIY infrastructure than LangGraph or Agno.
+Use it for research-style multi-agent work, coder/critic loops, and anywhere you want maximum orchestration flexibility. Production needs more DIY infrastructure than LangGraph or Agno.
 
 ---
 
 ### OpenAI Agents SDK
 
-OpenAI's Agents SDK launched in March 2025 as a production-grade replacement for their experimental Swarm framework. The key abstraction is the handoff: agents transfer control to each other explicitly, carrying conversation context through the transition. Each agent declares its instructions, model, tools, and the list of agents it can hand off to. The runtime handles the routing.
+OpenAI's Agents SDK shipped March 2025 as the production replacement for Swarm. The main primitive is the handoff: agents transfer control explicitly, carrying context. Each agent declares instructions, model, tools, and the agents it can hand off to. The runtime does the routing.
 
-This is a minimalist framework. Compared to LangGraph's typed-state graphs or CrewAI's role-based crews, the Agents SDK gives you few primitives: agents, handoffs, tools, guardrails. The bet is that good models turn simple primitives into rich behavior, and the framework should stay out of the way. It's tightly integrated with OpenAI's models (though it supports other providers), and it ships with good tracing and observability out of the box.
+Minimalist by design. Compared to LangGraph or CrewAI it gives you only agents, handoffs, tools, guardrails. The thesis is that good models turn small primitives into rich behavior. Tight integration with OpenAI models (other providers supported), tracing and observability out of the box.
 
-It's a strong choice if you're already on OpenAI infrastructure. It's not a strong choice if you need cross-provider portability.
+Pick it if you're already on OpenAI. Skip it if you need cross-provider portability.
 
 ---
 
 ### Claude Agent SDK and deepagents
 
-Claude Agent SDK (Anthropic, 2025) and LangChain's deepagents are the clearest examples of the agent-harness philosophy. The frame is: don't try to encode the control flow at all. Instead, give the agent a strong system prompt, a curated set of tools, a file system as scratch memory, and a planning structure. Then run the LLM in a loop and let it drive. Sub-agents are spawned on demand by the main agent, not pre-wired by the developer.
+Claude Agent SDK (Anthropic, 2025) and LangChain's deepagents are the clearest harness examples. Don't encode the control flow. Give the agent a strong system prompt, a curated tool set, a filesystem for scratch memory, and a planning structure. Run the LLM in a loop and let it drive. Sub-agents spawn on demand.
 
-This works now because Claude 4 and GPT-5 are far better at long-horizon planning, tool selection, and self-correction than their predecessors. The framework's job shifted from "prop the model into reliability" to "remove obstacles so the model can be reliable on its own." File-system-as-memory, in particular, is a clever trick: instead of stuffing everything into the context window, the agent reads and writes files, which lets it work over arbitrarily long horizons without context pressure.
+Works now because Claude 4 and GPT-5 are good enough at long-horizon planning, tool selection, and self-correction. The framework's job stopped being "prop the model up" and became "stay out of its way." Filesystem-as-memory is the clever trick - reads/writes instead of context stuffing, so the agent operates over arbitrarily long horizons.
 
-This is the most "bullish on models" position in the field, and it's the right philosophy for agent tasks where you don't know what control flow is needed in advance: open-ended research, code generation, complex debugging. It's the wrong philosophy when you do know the control flow, because hard-coding it is cheaper, more debuggable, and more reliable.
+Most "bullish on models" position in the field. Right answer when you don't know the control flow up front (open-ended research, code generation, complex debugging). Wrong answer when you do - hard-coding it is cheaper, easier to debug, more reliable.
 
 ---
 
@@ -417,7 +410,7 @@ These frameworks matter but don't need the long-form treatment. Each occupies a 
 | **LlamaIndex** | LlamaIndex | RAG + agents | Retrieval-heavy problems where getting the right context matters most |
 | **Semantic Kernel** | Microsoft | Enterprise harness | .NET ecosystem, Azure-integrated deployments |
 
-Two things worth noting from this table. Smolagents' "agents think in code" approach is significant: instead of producing JSON tool calls, the agent generates Python that runs in a sandbox. This compresses both input tokens (no tool schemas) and intermediate state (results flow through variables, not context). Anthropic has been writing about the same idea under "code execution with MCP." And LlamaIndex's retrieval primitives remain best-in-class if your problem is fundamentally about getting the right information into the model.
+Two things stand out. Smolagents' "agents think in code" approach is the interesting one: instead of producing JSON tool calls, the agent generates Python that runs in a sandbox. Compresses both input tokens (no schemas) and intermediate state (results flow through variables, not context). Anthropic has been writing about the same idea under "code execution with MCP." And LlamaIndex's retrieval primitives are still the best if retrieval is your bottleneck.
 
 ---
 
@@ -495,23 +488,21 @@ MCP, the Model Context Protocol, was introduced by Anthropic in November 2024 to
 
 The adoption curve was unusually fast for a standard. By March 2025, OpenAI added MCP support to ChatGPT. By Q3 2025, Microsoft shipped MCP servers for GitHub, Azure, and Microsoft 365. By Q1 2026, Google added MCP to Gemini and Vertex AI. In December 2025, Anthropic donated MCP to the Linux Foundation's new Agentic AI Foundation, jointly governed with Block, OpenAI, AWS, Google, and Microsoft, which removed the last political reason for non-Anthropic players to resist it. The public registry now lists thousands of servers. SDK downloads cross 97 million per month. It is, at this point, the integration standard.
 
-You don't write custom integrations for Slack, GitHub, Postgres, or Google Drive anymore; you point your agent at the appropriate MCP server. Frameworks compete on agent control flow, observability, and developer experience, while the integration layer becomes commodity infrastructure. This is what happened with HTTP for the web and JDBC for databases.
+No more custom Slack/GitHub/Postgres/Drive integrations. Point your agent at the MCP server. Frameworks compete on control flow, observability, and DX; integration becomes commodity. Same path HTTP took for the web, JDBC for databases.
 
-A2A, Agent-to-Agent, is the complement. Where MCP lets an agent talk to tools and data, A2A lets agents talk to other agents across framework boundaries. A LangGraph agent can invoke a CrewAI agent through A2A's standardized task interface. Adoption is still earlier than MCP but trending similarly, and Google's ADK ships with native support.
+A2A (Agent-to-Agent) is the complement. MCP lets an agent talk to tools and data; A2A lets agents talk to other agents across framework boundaries. A LangGraph agent invokes a CrewAI agent through A2A's task interface. Earlier in adoption than MCP, trending the same way. Google's ADK ships with native support.
 
-A second important development at this layer is what Anthropic has been calling "code execution with MCP" and what smolagents has done from the start. The insight is that as the number of available tools grows into the hundreds or thousands, loading every tool definition into the context window becomes prohibitively expensive in tokens. Instead, you expose tools as code on a virtual filesystem, give the agent a search-tools function and a code execution sandbox, and let it pull in only the tools it needs. The agent generates and runs a small script that calls the tools, instead of producing JSON for each tool call. This compresses both the input (tool definitions) and the intermediate state (tool outputs flow through code variables, not through the model's context), and it's how production agents at the high end will increasingly work.
+Related: "code execution with MCP" (Anthropic) and how smolagents has worked from day one. When you have hundreds or thousands of tools, dumping all the definitions into context is brutal on tokens. Better: expose tools as code on a virtual filesystem, give the agent a search-tools function and a sandbox, let it pull in only what it needs. The agent writes and runs a small script instead of producing JSON for every call. Compresses both the input (definitions) and the intermediate state (outputs flow through variables, not context). This is where the high end is heading.
 
 ---
 
 ## where things actually are right now
 
-Four things define the field right now.
+**The harness philosophy is winning.** LangChain ships deepagents (harness API on top of LangGraph) while keeping the graph layer for when you need it. As models improve, more orchestration moves into the model. Top production frameworks today: LangGraph, Claude Agent SDK, OpenAI Agents SDK, Strands. CrewAI for role-based. Agno for pure-Python performance.
 
-**The harness philosophy is winning.** LangChain itself is now shipping deepagents, an explicitly harness-style API on top of langgraph, while keeping the graph layer underneath for cases where you do need it. As models get better, more orchestration moves into the model and out of the framework. The four most-cited production frameworks are now LangGraph, Claude Agent SDK, OpenAI Agents SDK, and Strands, with CrewAI as the role-based alternative and Agno as the pure-Python performance play.
+**MCP won.** Designing a new agent system? Assume MCP is the integration layer.
 
-**MCP won.** If you are designing a new agent system today, assume MCP is your integration layer, not an option you add later.
-
-**Most multi-agent hype was wrong.** Most problems people thought needed multi-agent systems turned out to work better with a single well-equipped agent, good tools, and clear instructions. Multi-agent makes sense for independent specializations (a planner and an executor, or a generator and a critic) and for parallel exploration. LangChain's own published guidance: 80% of real applications work better as a single agent.
+**Most multi-agent hype was wrong.** Most problems people thought needed multi-agent work better as one well-equipped agent with good tools and clear instructions. Multi-agent earns its keep for independent specializations (planner + executor, generator + critic) and parallel exploration. LangChain's own guidance: 80% of apps work better as a single agent.
 
 <svg width="100%" viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width: 780px; display: block; margin: 1.5rem auto;">
   <title>Single agent vs multi-agent: the 80/20 rule</title>
@@ -595,9 +586,17 @@ Four things define the field right now.
 
 ## how to actually choose
 
-You usually don't pick one. Real systems combine multiple frameworks: a LangGraph control flow calling MCP tools, embedded inside an n8n workflow for the integration plumbing, with observability through LangSmith or OpenTelemetry. The frameworks are not competing for the same slot in your stack; they're competing for different slots.
+You usually don't pick one. Real systems combine: a LangGraph control flow calling MCP tools, embedded inside an n8n workflow, observed by LangSmith or OpenTelemetry. These aren't competing for the same slot; they're filling different ones.
 
-That said, if forced to pick a single axis: pick LangGraph if you want maximum control and your problem has a real, knowable control flow structure; pick Agno if you want pure-Python ergonomics, fast iteration, and stateless scaling; pick Claude Agent SDK or deepagents if your problem is open-ended and you want to bet on the model; pick CrewAI if you have a team-of-specialists mental model and want to ship a prototype this week; pick n8n if your problem is mostly deterministic plumbing with AI in a few spots and a visual builder helps you reason about it; pick OpenAI Agents SDK if you're already deep in OpenAI's stack and want the path of least resistance. Skip AutoGen unless you're doing research or specifically need multi-agent dialogue.
+If you must pick one:
+
+- **LangGraph** - your control flow is known and you want it explicit.
+- **Agno** - pure-Python ergonomics, fast iteration, stateless scaling.
+- **Claude Agent SDK / deepagents** - the problem is open-ended and you trust the model.
+- **CrewAI** - team-of-specialists fits, you want to ship this week.
+- **n8n** - mostly deterministic plumbing with AI in a few spots, visual builder helps.
+- **OpenAI Agents SDK** - already on OpenAI, want the shortest path.
+- **AutoGen** - skip unless you need multi-agent dialogue or you're doing research.
 
 <svg width="100%" viewBox="0 0 820 520" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width: 820px; display: block; margin: 1.5rem auto;">
   <title>Which agent framework should you pick?</title>

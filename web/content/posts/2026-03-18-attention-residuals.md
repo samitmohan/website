@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "from residual connections to attention residuals"
+title: "attention residuals"
 date:   2026-03-18 18:00:00 +0530
 categories: tech
 tokens: "~9k"
@@ -8,7 +8,6 @@ math: true
 description: "The residual connection solved deep learning in 2015. Ten years later, Moonshot AI noticed it's been sabotaging deep networks the whole time. The fix is 30 lines of PyTorch."
 ---
 
-> **TL;DR:** ResNet's skip connections fixed vanishing gradients in 2015 by having layers learn the residual F(x) = H(x) - x instead of the full mapping. In deep transformers, that same additive pattern dilutes the attention signal as the network scales. Moonshot AI's fix rescales the residual branch - a small code change with a measurable gain on deep models.
 
 Quick context about resnets: neural networks learn by [backpropagating](/tech/2025/10/25/nn.html) gradients through layers. The deeper the network, the more times those gradients get multiplied by small numbers (sigmoid derivatives, weight matrices). After enough layers, [gradients shrink to zero](/tech/2026/01/21/math.html) - early layers stop learning entirely. This is the vanishing gradient problem, and it's why stacking more layers didn't work for a long time.
 
@@ -35,7 +34,7 @@ In 2015, He et al. trained plain (no skip connections) convolutional networks of
 
 More layers, *worse* accuracy. And this isn't overfitting - the training error is also higher for deeper networks. Gradients vanish as they backpropagate through dozens of layers, and the optimizer can't find a good solution.
 
-![Side by side comparison of plain vs residual networks during training](/assets/images/attn_res/side_by_side.png)
+![Side by side comparison of plain vs residual networks during training](/assets/images/attn_res/side_by_side.webp)
 
 The degradation problem: theoretical capacity is there, but the optimizer can't reach it.
 
@@ -86,7 +85,7 @@ That `out += self.shortcut(x)` is the entire idea. One line. When dimensions mat
 
 Same architectures, same training setup - just add skip connections:
 
-![Plain vs residual network accuracy comparison](/assets/images/attn_res/plain_vs_residual.png)
+![Plain vs residual network accuracy comparison](/assets/images/attn_res/plain_vs_residual.webp)
 
 | Model | Test Error |
 |-------|-----------|
@@ -118,6 +117,12 @@ Moonshot thought about it.
 ## three problems with `x = x + Layer(x)`
 
 ### 1. magnitude growth
+
+Slide the depth. Watch the hidden norm explode under vanilla residuals.
+
+<link rel="stylesheet" href="/widgets/residual-growth.css">
+<div id="residual-growth"></div>
+<script src="/widgets/residual-growth.js" defer></script>
 
 64-layer transformer. After all layers, your hidden state is:
 
@@ -455,7 +460,7 @@ The line `x = x + self.attn(self.norm1(x))` stays the same. The change is one le
 
 ## what else are we not questioning?
 
-The residual weight was 1.0 for a decade. Softmax temperature is always 1/sqrt(d). Positional encodings are always added, never concatenated. Layer count is always uniform across the model. Somewhere in there is another 30-line patch worth +7.5 on GPQA. These frontier labs and their stanford smartass kids are looking at this in a much smarter way than I do.
+The residual weight was 1.0 for a decade. Softmax temperature is always 1/sqrt(d). Positional encodings are always added, never concatenated. Layer count is always uniform across the model. Somewhere in there is another 30-line patch worth +7.5 on GPQA.
 
 ---
 

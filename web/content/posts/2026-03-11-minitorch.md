@@ -8,9 +8,8 @@ math: true
 description: "Building PyTorch from scratch in ~1300 lines - reverse-mode autograd, conv2d, optimizers. Trains MNIST. No C++, no CUDA, just closures and NumPy."
 ---
 
-> **TL;DR:** PyTorch operations build a computation graph by attaching _backward closures to tensors. .backward() topologically sorts the graph and fires each closure in reverse. 
 
-This started when I wanted to learn deep learning, first step was to learn PyTorch; only way to learn something is to build it from scratch.
+The goal: understand PyTorch by building it from scratch.
 
 *Prerequisites:* python, calculus (chain rule), some pytorch. if not, read [neural networks](/tech/2025/10/25/nn.html), [tensor library](/tech/2026/01/07/torch.html), and [backprop math](/tech/2026/01/21/math.html) first.
 
@@ -59,7 +58,7 @@ Docs: [minitorch documentation, examples and source code](https://samitmohan.git
 - `data.py` (27 lines) - DataLoader
 - `backend.py` (33 lines) - optional CuPy GPU support
 
-~1,300 lines total. This can be fairly reduced but I am too lazy. Let's walk through it.
+~1,300 lines total.
 
 ---
 
@@ -125,7 +124,7 @@ class no_grad:
         _grad_enabled = self._prev
 ```
 
-When you write `with no_grad():`, it flips the global to `False`. Now any new tensor created inside the block has `requires_grad=False` regardless of what you asked for, because of the `requires_grad and _grad_enabled` check in `__init__`. On exit, it restores the previous state. Smart no? I could never come up with this elegance myself; this is exactly what PyTorch does.
+When you write `with no_grad():`, it flips the global to `False`. Any new tensor created inside the block gets `requires_grad=False` regardless of what you asked for, because of the `requires_grad and _grad_enabled` check in `__init__`. On exit, it restores the previous state. This is exactly what PyTorch does.
 
 ---
 
@@ -279,7 +278,7 @@ def _sum_to_shape(grad, shape):
 
 Why does summing undo broadcasting? Broadcasting copies a value to multiple positions in the forward pass. That single value *contributed* to multiple outputs. In the backward pass, we sum those contributions back into one gradient. Multi-variable chain rule.
 
-My first version didn't handle broadcasting at all - gradients just passed through with whatever shape they had. Training "worked" in the sense that loss went down, but the gradients were wrong. No error, just silently wrong numbers. The model would converge to mediocre accuracy and I couldn't figure out why. It wasn't until I ran gradient checking (section 11) that I saw the shapes were mismatched. The fix is three lines of code but an entire evening for me. Should've used claude.
+My first version didn't handle broadcasting at all - gradients passed through with whatever shape they had. Training "worked" in the sense that loss went down, but the gradients were wrong. No error, just silently wrong numbers. The model converged to mediocre accuracy with no obvious cause. Gradient checking (section 11) revealed the shape mismatches. The fix is three lines of code; finding it took an entire evening.
 
 ### three operators in detail
 
@@ -958,7 +957,7 @@ Test Accuracy: 96.40%
 
 96.4% with a CNN on only 2,000 training samples. The convolutions are doing real work - same accuracy the MLP needs 10k samples to reach.
 
-The training loop is the standard five-line pattern, and evaluation uses `no_grad()` to skip graph building. The API is intentionally PyTorch-compatible - if you know one, you know the other.
+The training loop is the standard five-line pattern, and evaluation uses `no_grad()` to skip graph building. The API mirrors PyTorch.
 
 ---
 
@@ -1079,7 +1078,7 @@ minitorch gets 96% on MNIST. Real PyTorch trains GPT-4. Here's the gap:
 
 **Distributed training, mixed precision, JIT** - each of these is its own project. Distributed needs NCCL and gradient all-reduce. Mixed precision needs loss scaling. JIT needs a tracer and compiler.
 
-There's no magic anywhere; just well-organized linear algebra and the chain rule, all the way down.
+It's linear algebra and the chain rule, organized carefully.
 
 ---
 

@@ -1,0 +1,142 @@
+#vllm-batching {
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 24px 0;
+  background: var(--card, #18181b);
+  font-family: var(--font-jetbrains-mono, ui-monospace, SFMono-Regular, monospace);
+  font-size: 12px;
+  color: var(--foreground, #e5e7eb);
+}
+#vllm-batching .vb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+#vllm-batching .vb-title {
+  font-size: 13px;
+}
+#vllm-batching .vb-step {
+  color: var(--muted-foreground, #9ca3af);
+  font-size: 11px;
+}
+#vllm-batching .vb-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+#vllm-batching button {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border, #2a2a2a);
+  color: var(--muted-foreground, #9ca3af);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+#vllm-batching button:hover:not(:disabled) {
+  color: var(--foreground, #e5e7eb);
+  border-color: var(--primary, #60a5fa);
+}
+#vllm-batching button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+#vllm-batching .vb-meta {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-family: var(--font-space-grotesk, sans-serif);
+  color: var(--muted-foreground, #9ca3af);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+#vllm-batching .vb-meta b {
+  color: var(--foreground, #e5e7eb);
+  font-weight: 600;
+}
+#vllm-batching .vb-kv {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border, #2a2a2a);
+  overflow: hidden;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+#vllm-batching .vb-kv-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary, #60a5fa), #a78bfa);
+  transition: width 0.25s;
+}
+#vllm-batching .vb-grid {
+  display: grid;
+  gap: 8px;
+}
+#vllm-batching .vb-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 70px;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+#vllm-batching .vb-rowlabel {
+  color: var(--muted-foreground, #9ca3af);
+}
+#vllm-batching .vb-track {
+  height: 22px;
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+#vllm-batching .vb-tick {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  border-radius: 2px;
+  transition: left 0.2s, width 0.2s;
+}
+#vllm-batching .vb-tick.waiting { background: rgba(156, 163, 175, 0.3); }
+#vllm-batching .vb-tick.prefill { background: rgba(167, 139, 250, 0.55); }
+#vllm-batching .vb-tick.decode { background: rgba(96, 165, 250, 0.55); }
+#vllm-batching .vb-tick.done { background: rgba(74, 222, 128, 0.45); }
+#vllm-batching .vb-rowstate {
+  font-size: 10px;
+  text-align: right;
+  color: var(--muted-foreground, #9ca3af);
+  font-variant-numeric: tabular-nums;
+}
+#vllm-batching .vb-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--muted-foreground, #9ca3af);
+  margin-top: 14px;
+  font-family: var(--font-space-grotesk, sans-serif);
+}
+#vllm-batching .vb-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+#vllm-batching .vb-explain {
+  color: var(--muted-foreground, #9ca3af);
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 12px;
+  line-height: 1.55;
+  margin-top: 12px;
+  border-top: 1px solid var(--border, #2a2a2a);
+  padding-top: 10px;
+}
+#vllm-batching .vb-explain b {
+  color: var(--foreground, #e5e7eb);
+}

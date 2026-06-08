@@ -43,7 +43,7 @@ where *N* = number of parameters, *D* = dataset size (tokens), *C* = compute bud
 
 **Maybe intelligence -> lot of compute applied to lot of data having lot of parameters.**
 
-Scaling relationships between model size and performance have been observed since the early days of neural networks, but Kaplan et al. (2020) was the first rigorous quantification for large language models.
+Kaplan et al. (2020) was the first rigorous quantification of this for large language models.
 
 - Training on enough data matters: GPT-3 was undertrained.
 - Chinchilla (half parameter size of GPT3 (70b) but 4x data -> performed better)
@@ -92,7 +92,6 @@ lazyWidget('chinchilla-calc', function(){
   var kaplanEl = document.getElementById('cc-kaplan');
   var chinchillaEl = document.getElementById('cc-chinchilla');
   var summaryEl = document.getElementById('cc-summary');
-
   function fmt(n){
     if(n>=1e15) return (n/1e15).toFixed(1)+'Q';
     if(n>=1e12) return (n/1e12).toFixed(1)+'T';
@@ -101,13 +100,11 @@ lazyWidget('chinchilla-calc', function(){
     if(n>=1e3) return (n/1e3).toFixed(1)+'K';
     return n.toFixed(0);
   }
-
   function fmtFlops(n){
     var exp = Math.floor(Math.log10(n));
     var mantissa = n / Math.pow(10, exp);
     return mantissa.toFixed(1) + 'e' + exp;
   }
-
   function compute(C){
     // Chinchilla: equal allocation in log space
     // C ~ 6 * N * D, with N_opt ~ C^0.5, D_opt ~ C^0.5
@@ -115,13 +112,11 @@ lazyWidget('chinchilla-calc', function(){
     // so that 6*N*D = C
     var chinN = Math.pow(C / 6, 0.5);
     var chinD = Math.pow(C / 6, 0.5);
-
     // Kaplan: params-heavy allocation
     // Kaplan suggested N scales faster: N ~ C^0.73, D ~ C^0.27
     // Using C = 6*N*D constraint: N = (C/6)^0.73, D = C/(6*N)
     var kapN = Math.pow(C / 6, 0.73);
     var kapD = C / (6 * kapN);
-
     kaplanEl.innerHTML = 'N = ' + fmt(kapN) + ' params<br>D = ' + fmt(kapD) + ' tokens <span>(params-heavy)</span>';
     chinchillaEl.innerHTML = 'N = ' + fmt(chinN) + ' params<br>D = ' + fmt(chinD) + ' tokens <span>(balanced)</span>';
     summaryEl.innerHTML = 'With C = ' + fmtFlops(C) + ' FLOPs:<br>' +
@@ -129,7 +124,6 @@ lazyWidget('chinchilla-calc', function(){
       'Kaplan would use ' + fmt(kapN) + ' params but only ' + fmt(kapD) + ' tokens<br>' +
       'Ratio: Chinchilla uses ' + (chinD/kapD).toFixed(1) + 'x more data with ' + (kapN/chinN).toFixed(1) + 'x fewer params';
   }
-
   presets.forEach(function(p){
     var btn = document.createElement('button');
     btn.textContent = '10^' + Math.log10(p);
@@ -141,13 +135,11 @@ lazyWidget('chinchilla-calc', function(){
     };
     presetContainer.appendChild(btn);
   });
-
   input.addEventListener('input', function(){
     document.querySelectorAll('#chinchilla-calc .presets button').forEach(function(b){b.classList.remove('active')});
     var v = parseFloat(input.value);
     if(!isNaN(v) && v > 0) compute(v);
   });
-
   compute(1e21);
   input.value = '1e21';
 });
@@ -255,10 +247,6 @@ Hence: Big models need big data.
 > Compute ∝ Parameters ∝ Training ∝ Tokens
 
 ### recap
-
-- Scaling laws describe how LLM performance improves predictably as you increase parameters, dataset size, or training compute.
-- Scale parameters without also scaling data and compute and you hit diminishing returns. Each factor depends on the others.
-- The shift to GPUs let researchers scale both model size and dataset size simultaneously. Transformers made that even more efficient.
 
 You’re always budget-constrained, so you pick which of the three knobs to turn: parameters, data, or compute. You can turn all three - there’s no impossibility theorem - but nobody has infinite money. The Chinchilla paper showed most labs were turning the wrong knob. They were making models too big and not training them on enough data. Chinchilla (70B params, 4x the data of GPT-3) outperformed the much larger GPT-3 by allocating the compute budget more wisely.
 

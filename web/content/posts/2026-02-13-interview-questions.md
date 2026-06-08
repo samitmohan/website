@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "favourite interview questions"
+title: "my favourite interview questions"
 date: 2026-02-13 14:06:04 +0530
 categories: tech
 tokens: "~6.5k"
-description: "Five questions I'd rather ask than 'derive Kadane's algorithm in 30 minutes pretending you've never seen it.'"
+description: "Five questions I actually ask ML candidates."
 ---
 
-These are some of my favourite questions to ask in interviews and I wish we move forward and have these questions in interview rounds instead of cramming algorithmic questions and deriving kadane's algorithm in 30 minutes, pretending we have never seen it before.
+Five questions worth asking in interviews instead of making candidates derive Kadane's algorithm in 30 minutes while pretending they've never seen it.
 
 ---
 
@@ -161,7 +161,7 @@ Three stdlib imports and you've just done DNS resolution, a TCP handshake, a TLS
 </video>
 *DNS, TCP handshake, TLS, HTTP request/response - the full flow.*
 
-I like explanations that start from first principles at the hardware level, what happens from the moment you press Enter: the keyboard controller fires a hardware interrupt, the CPU jumps to the interrupt handler, the OS processes the keycode, and so on up the stack
+The best answers start from the hardware: keyboard controller fires a hardware interrupt, CPU jumps to the interrupt handler, OS processes the keycode, and so on up the stack.
 
 ---
 
@@ -209,16 +209,16 @@ Same triple loop. The CPU does N^2 iterations of the outer two loops sequentiall
 
 > ~200 lines. No `nn.Module`, no `loss.backward()`, no CUDA kernels.
 
-I put together a [visual walkthrough](/assets/images/interview/microgpt_config.png) of MicroGPT. The diagrams below are from that document.
+I put together a [visual walkthrough](/assets/images/interview/microgpt_config.webp) of MicroGPT. The diagrams below are from that document.
 
-<img src="/assets/images/interview/microgpt_architecture.png" alt="MicroGPT GPT Architecture - decoder-only transformer pipeline from token input to next-token prediction" style="max-width:100%">
+<img src="/assets/images/interview/microgpt_architecture.webp" alt="MicroGPT GPT Architecture - decoder-only transformer pipeline from token input to next-token prediction" style="max-width:100%">
 *The `gpt()` function as a pipeline: embedding lookup, RMSNorm, multi-head attention with residual, MLP with residual, lm_head projection, softmax.*
 
 ### autograd: why it matters
 
-Autograd - automatic differentiation - is the engine that makes neural networks trainable. The core idea: every mathematical operation you perform during the forward pass gets recorded in a computational graph. When you're done and you have a loss value, you walk that graph backwards to compute how much each parameter contributed to the error. That's backpropagation, and it's nothing more than the chain rule applied systematically.
+Every op in the forward pass gets recorded in a graph. You hit `loss.backward()` and walk the graph in reverse, multiplying local derivatives. That's it. That's the chain rule.
 
-In PyTorch, this is hidden behind `loss.backward()`. You never see the graph. You never see the gradients flowing. MicroGPT rips that abstraction away by implementing autograd at the scalar level.
+PyTorch hides this behind one method call. MicroGPT does it at the scalar level so you can see every gradient as it flows.
 
 ### the value class: building the computational graph
 
@@ -242,15 +242,15 @@ In PyTorch, we write `x = torch.randn(10, 10, requires_grad=True)`. In MicroGPT,
 
 ### the chain rule and DAG traversal
 
-Here is the key insight. If you have a chain of operations like `loss = f(g(h(w)))`, then:
+For a chain `loss = f(g(h(w)))`:
 
 ```
 d(loss)/d(w) = d(loss)/d(f) * d(f)/d(g) * d(g)/d(h) * d(h)/d(w)
 ```
 
-Each factor in that product is a "local gradient" - the derivative of one operation with respect to its immediate input. The chain rule says: to get the gradient of the loss with respect to any parameter, multiply all the local gradients along the path from that parameter to the loss.
+Each factor is a local gradient. Multiply the local gradients along the path and you get the total.
 
-But in a real network, the graph is not a simple chain. It's a DAG with fan-out (one value feeds into multiple operations) and fan-in (one operation takes multiple inputs). So `backward()` does two things:
+Real networks aren't chains, they're DAGs - one value feeds many ops (fan-out), one op takes many inputs (fan-in). So `backward()` does two things:
 
 1. **Topological sort** - it orders every node so that a node always comes after all the nodes that depend on it. This is done with a simple recursive DFS.
 2. **Reverse traversal** - starting from the loss (whose gradient is seeded at 1.0, because d(loss)/d(loss) = 1), it walks backwards through the sorted list. For each node, it pushes `local_grad * node.grad` into each child's `.grad` field.
@@ -259,7 +259,7 @@ The `+=` is critical. When a value feeds into multiple downstream operations, it
 
 That's the entire backward pass. No magic. Just: sort the graph, walk it backwards, multiply and accumulate local gradients.
 
-<img src="/assets/images/interview/microgpt_autograd.png" alt="Autograd Value class - scalar computation graph with backward() chain rule, showing L=(a*b)+c example with gradient flow" style="max-width:100%">
+<img src="/assets/images/interview/microgpt_autograd.webp" alt="Autograd Value class - scalar computation graph with backward() chain rule, showing L=(a*b)+c example with gradient flow" style="max-width:100%">
 *Every operation builds a DAG node. backward() walks it in reverse, multiplying local gradients by the chain rule.*
 
 <video autoplay loop muted playsinline style="max-width:100%" preload="none" poster="/assets/images/interview/comp_graph_poster.jpg">
@@ -282,14 +282,14 @@ MicroGPT doesn't use `nn.Module`. Instead, it uses raw Python list comprehension
 
 ### sequential training and the KV cache
 
-This is the most significant departure from standard PyTorch training.
+Biggest break from how PyTorch trains.
 
-- **PyTorch Way**: We train on sequences in **parallel**. We pass a batch of `[Batch, Seq_Len]` and use a **Causal Mask** (a triangular matrix of $-\infty$) to hide future tokens.
-- **MicroGPT Way**: It processes tokens **one by one** (`for pos_id in range(n)`). It appends keys and values to a list (a **KV Cache**) as it goes.
+- **PyTorch:** sequences trained in parallel - batch of `[Batch, Seq_Len]` and a causal mask (triangular $-\infty$) to hide future tokens.
+- **MicroGPT:** one token at a time (`for pos_id in range(n)`), keys and values appended to a list (the KV cache) as you go.
 
-**Why?** Implementing a 2D causal mask and matrix multiplication using scalar `Value` objects would be catastrophically slow. By using a KV cache during training, Karpathy makes "causality" (not looking ahead) implicit and the code much easier to read.
+A 2D causal mask plus matmul over scalar `Value`s would be punishingly slow. The KV cache makes "no peeking ahead" implicit, and the code is easier to read.
 
-<img src="/assets/images/interview/microgpt_attention.png" alt="Multi-head attention - Q,K,V projections split into 4 heads, scaled dot-product attention with KV cache" style="max-width:100%">
+<img src="/assets/images/interview/microgpt_attention.webp" alt="Multi-head attention - Q,K,V projections split into 4 heads, scaled dot-product attention with KV cache" style="max-width:100%">
 *4 heads x 4 dimensions = 16 total. Each head independently attends over the KV cache, then results are concatenated and projected through Wo.*
 
 ### Adam from scratch
@@ -302,7 +302,7 @@ In PyTorch, we call `optimizer.step()`. MicroGPT manually tracks:
 
 It then updates `param.data` directly. This proves that Adam is just an adaptive learning rate that scales every single weight update based on its own history.
 
-<img src="/assets/images/interview/microgpt_training.png" alt="Training loop - tokenize, forward pass, cross-entropy loss, backward pass, Adam optimizer update, zero gradients" style="max-width:100%">
+<img src="/assets/images/interview/microgpt_training.webp" alt="Training loop - tokenize, forward pass, cross-entropy loss, backward pass, Adam optimizer update, zero gradients" style="max-width:100%">
 *One complete training step: tokenize name, forward through gpt(), compute cross-entropy loss, backward(), Adam update with LR decay, zero gradients.*
 
 ### the gradient journey
@@ -328,12 +328,12 @@ The exponential function `e^x` grows catastrophically fast. If a logit is `100`,
 
 ### embedding + positional encoding
 
-<img src="/assets/images/interview/microgpt_embedding.png" alt="Embedding and positional encoding - wte token lookup table and wpe position lookup table, element-wise addition" style="max-width:100%">
+<img src="/assets/images/interview/microgpt_embedding.webp" alt="Embedding and positional encoding - wte token lookup table and wpe position lookup table, element-wise addition" style="max-width:100%">
 *wte (27x16) encodes what the token IS, wpe (16x16) encodes where the token SITS. Both are learnable - no sin/cos here.*
 
 ### the code (200 lines)
 
-The code below is my own implementation, clocking in at just over 200 lines. It is designed to be read line-by-line, without the abstraction of modern deep learning frameworks. If you can walk through this code and explain every gradient, you know how a transformer works.
+My own implementation, just over 200 lines. Read it line-by-line. Walk through it and explain every gradient - that's the bar for knowing how a transformer works.
 
 Check out Andrej's original blog [here](https://karpathy.github.io/2026/02/12/microgpt/) for the high-level context.
 
@@ -558,7 +558,7 @@ for _ in range(10):
     print(generated_name)
 ```
 
-<img src="/assets/images/interview/microgpt_cheatsheet.png" alt="MicroGPT quick reference cheat sheet - architecture flow, parameter count breakdown, key functions, training recipe, attention math, Adam update" style="max-width:100%">
+<img src="/assets/images/interview/microgpt_cheatsheet.webp" alt="MicroGPT quick reference cheat sheet - architecture flow, parameter count breakdown, key functions, training recipe, attention math, Adam update" style="max-width:100%">
 *The complete MicroGPT architecture on one page. Every concept maps 1:1 to a line in the code above.*
 
 > I also sometimes ask silly questions like speed of light, what is 13 in binary etc.. just to check their fluency with these numbers and in general fluency with computers is what gets you hired, not passion.

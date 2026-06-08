@@ -4,7 +4,7 @@ title:  "what happens when you press 'submit' on chatgpt"
 date:   2026-03-27 00:00:00 +0530
 categories: [tech]
 tokens: "~12k"
-description: "From raw internet text to a streaming response in your browser - pretraining, alignment, inference, and everything in between."
+description: "From raw internet text to a streaming response: pretraining, alignment, inference."
 ---
 
 <style>
@@ -42,7 +42,6 @@ description: "From raw internet text to a streaming response in your browser - p
 }
 </style>
 
-> **TL;DR:** Pretraining on 13T tokens produces a next-token predictor. SFT redirects it to follow instructions. RLHF aligns it to human preference. At inference: KV cache, continuous batching, and token sampling turn a probability distribution into a streaming response.
 
 You press Enter. Between that and the first token appearing in your browser: 13 trillion tokens of training data, 96 transformer layers, a reward model trained on human rankings, a KV cache growing token by token in GPU VRAM, and a continuous batching scheduler keeping H100s at 85% utilization.
 
@@ -146,7 +145,7 @@ print(tokens)         # [4438, 1587, 91985, 990, 30]
 print(len(tokens))    # 5
 ```
 
-![Training phase tokenization](/assets/images/chatgpt/trainingPhasetoken.png){: loading="lazy"}
+![Training phase tokenization](/assets/images/chatgpt/trainingPhasetoken.webp){: loading="lazy"}
 
 ![Inference phase tokenization](/assets/images/chatgpt/inferencetokenisation.png){: loading="lazy"}
 
@@ -443,15 +442,15 @@ window._anims = window._anims || {};
 
 ### the modern decoder stack
 
-The transformer above is the 2017 design. Production models (Llama, Qwen, DeepSeek, Gemma) keep the skeleton - attention, MLP, residuals - but swap almost every component for something cheaper or more stable:
+The transformer above is 2017. Llama, Qwen, DeepSeek, Gemma keep the skeleton and swap almost every component:
 
-- **RMSNorm instead of LayerNorm**, applied *before* each block (pre-norm). It normalizes by root-mean-square without re-centering: fewer ops, and pre-norm keeps gradients flowing in deep stacks.
-- **RoPE instead of learned position embeddings.** Position rotates the query and key vectors by an angle proportional to where the token sits, so relative distance falls straight out of the dot product. YaRN stretches those frequencies to push context past the trained length.
-- **GQA instead of full multi-head attention.** Query heads share key/value heads in groups, shrinking the KV cache - the same lever the inference post leans on, decided here at architecture time.
-- **GeGLU / SwiGLU instead of a plain MLP.** The feed-forward block gates one projection by a GELU/SiLU of another (`W2 @ (gelu(W0 @ x) * (W1 @ x))`), which lets it represent sign flips a single ReLU layer can't.
-- **Hybrid attention.** Most layers attend only to a local window of a few thousand tokens for speed; a handful of global layers see the whole sequence. Long-context reach without paying full quadratic cost on every layer.
+- **RMSNorm, pre-norm.** Cheaper than LayerNorm, gradients survive deeper stacks.
+- **RoPE.** Rotates Q and K by an angle that scales with position, so distance falls out of the dot product. YaRN stretches it past the trained length.
+- **GQA.** Query heads share KV heads in groups. Shrinks the KV cache - same lever the [inference post](/blog/inference) leans on, decided at architecture time.
+- **SwiGLU MLP.** `W2 @ (silu(W0 @ x) * (W1 @ x))`. Gated, two projections instead of one, beats plain ReLU.
+- **Hybrid attention.** Most layers go local, a few stay global. Long context without paying quadratic everywhere.
 
-Aleksa Gordić's [life of a token](https://www.aleksagordic.com/blog/transformer) traces one vector through all of this end to end - a good next read once the base transformer clicks.
+[life of a token](https://www.aleksagordic.com/blog/transformer) walks one vector through all of this if you want the longer read.
 
 ### when does generation stop?
 
@@ -625,7 +624,7 @@ loss = cross_entropy(model(x), y)
 
 Problem: "ideal" is subjective. Different annotators write different ideal responses. The loss treats every output token equally - no signal for tone, helpfulness, or avoiding harmful content.
 
-![SFT data preparation](/assets/images/chatgpt/data_prep_sft.png){: loading="lazy"}
+![SFT data preparation](/assets/images/chatgpt/data_prep_sft.webp){: loading="lazy"}
 
 ### RLHF (reinforcement learning from human feedback)
 
@@ -715,7 +714,7 @@ Four steps:
 | SFT | Follow instructions | (instruction, response) pairs | Supervised loss |
 | RLHF | Align to human preference | Ranked responses | Maximize reward |
 
-![Summary](/assets/images/chatgpt/summary.png){: loading="lazy"}
+![Summary](/assets/images/chatgpt/summary.webp){: loading="lazy"}
 
 ### DPO: a simpler alternative to PPO
 
@@ -856,7 +855,7 @@ window._anims = window._anims || {};
 
 Always pick the highest-probability token. Deterministic. Fast. Gets stuck in repetitive loops.
 
-![Greedy search](/assets/images/chatgpt/greedy.png){: loading="lazy"}
+![Greedy search](/assets/images/chatgpt/greedy.webp){: loading="lazy"}
 
 ### beam search
 
@@ -882,7 +881,7 @@ Pick the smallest set of tokens whose cumulative probability exceeds p (typicall
 
 ![Top-P sampling distribution](/assets/images/chatgpt/topp.png){: loading="lazy"}
 
-![Top-P results comparison](/assets/images/chatgpt/topPresults.png){: loading="lazy"}
+![Top-P results comparison](/assets/images/chatgpt/topPresults.webp){: loading="lazy"}
 
 ```python
 import numpy as np
@@ -1099,7 +1098,7 @@ One request, start to finish.
 .ps-arrow:nth-child(12) { animation-delay: 1.75s; }
 </style>
 
-![System design overview](/assets/images/chatgpt/sysDesign.png){: loading="lazy"}
+![System design overview](/assets/images/chatgpt/sysDesign.webp){: loading="lazy"}
 
 | Step | Component | What it does | Latency |
 |------|-----------|--------------|---------|
@@ -1743,7 +1742,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 ```
 
-![Inference optimization overview](/assets/images/chatgpt/llminference.png){: loading="lazy"}
+![Inference optimization overview](/assets/images/chatgpt/llminference.webp){: loading="lazy"}
 
 ![Memory movements in GPU inference](/assets/images/chatgpt/memory_movements.png){: loading="lazy"}
 
@@ -1903,26 +1902,6 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
 - [Karpathy - Zero to Hero](https://www.youtube.com/playlist?list=PLAqhIrjkxruWIwMSOWxAywIRyoiOWHaXY)
 - [ChatGPT in 200 lines](https://karpathy.github.io/2026/02/12/microgpt/)
 
----
-
-## summary
-
-Pretraining predicts the next token on trillions of tokens of internet text. The supervision signal is the text itself. The weights that emerge encode language, facts, and reasoning patterns, because those are what make text predictable. Models hallucinate for the same reason: they generate the most plausible continuation, and plausible is not the same as true.
-
-Post-training shapes how the model uses what it learned. SFT teaches response format using (instruction, response) pairs. RLHF uses a reward model trained on human preference rankings to steer behavior via PPO. DPO does the same thing without the reward model or RL loop - directly maximizing the likelihood of preferred responses relative to rejected ones.
-
-Attention computes dot products between query and key vectors, applies softmax to get weights, then takes a weighted sum of value vectors. Every token attends to every previous token. Multi-head attention runs this in parallel with different projections, letting different heads specialize on syntax, coreference, and other relationship types.
-
-The KV cache saves the key and value vectors for all previous tokens so decode doesn't recompute them each step. Without it, decode is O(n^2) in sequence length. With it, O(n) per step. GQA groups heads to share K/V matrices, shrinking the cache by 4-8x with minimal quality loss.
-
-Quantization stores weights in INT8 or INT4 instead of FP32. A 7B model in INT4 fits in 3.5GB instead of 14GB. PTQ rounds after training; GPTQ/AWQ calibrate per-layer to minimize output error. QLoRA fine-tunes quantized models by training low-rank adapters in higher precision while keeping the base frozen.
-
-Flash Attention tiles the Q/K/V computation to stay in fast on-chip SRAM rather than writing the full NxN attention matrix to slow HBM. Mathematically identical output. O(N) memory instead of O(N^2). 2-4x faster for sequences above 4k tokens.
-
-Speculative decoding runs a small draft model to generate candidate tokens, then verifies all of them with the large model in a single forward pass via rejection sampling. 2-3x speedup with no quality change, because text is predictable enough that the small model gets most tokens right.
-
-TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that determine perceived quality. Prefill time and queue wait drive TTFT. Model size and GPU memory bandwidth drive TPS. Streaming hides most of the total latency by delivering the first token in ~100-200ms while generation continues in the background.
-
 <style>
 .anim-replay-btn {
   position: absolute;
@@ -1953,7 +1932,6 @@ TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that 
 <script>
 (function(){
   window._anims = window._anims || {};
-
   window._anims.kvcache = function(){
     var c=document.getElementById("dtokens");
     var n=document.getElementById("kvnote");
@@ -1969,7 +1947,6 @@ TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that 
       },800*(i+1));
     });
   };
-
   function resetCSS(container){
     var items=[];
     container.querySelectorAll('*').forEach(function(el){
@@ -1979,7 +1956,6 @@ TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that 
     void container.offsetWidth;
     items.forEach(function(el){ el.style.animation=''; });
   }
-
   var fnMap={
     'autogen-viz': function(){ if(window._anims.autogen) window._anims.autogen(); },
     'ctx-win-viz': function(){ if(window._anims.ctxwin)  window._anims.ctxwin();  },
@@ -1987,12 +1963,10 @@ TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that 
     'flash-viz':   function(){ if(window._anims.flash)   window._anims.flash();   },
     'kv-viz':      function(){ if(window._anims.kvcache) window._anims.kvcache(); },
   };
-
   function getReplayFn(el){
     for(var k in fnMap){ if(el.classList.contains(k)) return fnMap[k]; }
     return null;
   }
-
   function addReplayBtn(container, fn){
     if(container.querySelector('.anim-replay-btn')) return;
     var btn=document.createElement('button');
@@ -2005,11 +1979,9 @@ TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that 
     });
     container.appendChild(btn);
   }
-
   function init(){
     var sel='.token-animation,.attn-viz,.rlhf-loop,.topp-viz,.pipeline-viz,.spec-viz,.cbatch-viz,.autogen-viz,.ctx-win-viz,.moe-viz,.flash-viz,.kv-viz';
     var containers=document.querySelectorAll(sel);
-
     if('IntersectionObserver' in window){
       var triggered=new Set();
       var obs=new IntersectionObserver(function(entries){
@@ -2026,12 +1998,10 @@ TTFT (Time to First Token) and TPS (Tokens Per Second) are the two metrics that 
     } else {
       containers.forEach(function(c){ var fn=getReplayFn(c); if(fn) fn(); });
     }
-
     containers.forEach(function(c){
       addReplayBtn(c, getReplayFn(c) || function(){ resetCSS(c); });
     });
   }
-
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',init);
   } else {

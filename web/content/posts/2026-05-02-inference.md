@@ -38,7 +38,6 @@ description: "Your GPU is mostly idle during text generation. The entire inferen
 }
 </style>
 
-> **TL;DR:** Training teaches a model to think. Inference runs it thousands of times per second under a GPU budget. The whole stack exists to fight one problem: during token-by-token generation, your GPU is mostly idle waiting for memory. Every optimization below is a different way of fixing that.
 
 ---
 
@@ -168,11 +167,9 @@ Two phases, completely different bottlenecks. This split is the single most impo
   <text x="195" y="165" text-anchor="middle" font-family="monospace" font-size="14" fill="var(--inf-green)" font-weight="700">COMPUTE-BOUND</text>
   <text x="195" y="185" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">tensor cores saturated</text>
   <text x="195" y="200" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">drives TTFT</text>
-
   <line x1="370" y1="115" x2="425" y2="115" stroke="var(--inf-orange)" stroke-width="2" marker-end="url(#inf-arrow)"/>
   <text x="398" y="100" text-anchor="middle" font-family="monospace" font-size="13" fill="var(--inf-orange)" font-weight="700">KV cache</text>
   <text x="398" y="137" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">built here</text>
-
   <rect x="440" y="20" width="340" height="190" rx="10" fill="var(--inf-red)" opacity="0.12" stroke="var(--inf-red)" stroke-width="2.5"/>
   <text x="610" y="50" text-anchor="middle" font-family="monospace" font-size="20" font-weight="700" fill="var(--inf-red)">DECODE</text>
   <text x="610" y="75" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-muted)">one token at a time, in a loop</text>
@@ -351,9 +348,7 @@ The naive algorithm writes the full matrix to HBM, reads it back, applies softma
   <text x="170" y="118" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-red)">full N x N matrix</text>
   <text x="170" y="136" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-red)">in HBM (slow)</text>
   <text x="170" y="154" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-red)">O(N^2) memory</text>
-
   <text x="380" y="125" text-anchor="middle" font-family="monospace" font-size="24" fill="var(--inf-muted)" font-weight="700">vs</text>
-
   <text x="580" y="20" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="var(--inf-green)">FlashAttention</text>
   <rect x="480" y="35" width="200" height="180" rx="6" fill="none" stroke="var(--inf-muted)" stroke-width="1" stroke-dasharray="5,4"/>
   <rect x="490" y="45" width="40" height="38" rx="3" fill="var(--inf-green)" opacity="0.7"/>
@@ -416,9 +411,7 @@ If you've taken an OS class, you know this story:
   <rect x="20" y="72" width="260" height="35" rx="5" fill="none" stroke="var(--inf-purple)" stroke-width="1.5"/>
   <text x="35" y="94" font-family="monospace" font-size="12" fill="var(--inf-purple)">Req 2: B0 -> B3 -> B5 -> B8</text>
   <text x="150" y="130" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-green)">B0, B3 shared (copy-on-write)</text>
-
   <line x1="295" y1="65" x2="365" y2="65" stroke="var(--inf-muted)" stroke-width="1.5" marker-end="url(#inf-arrow)"/>
-
   <text x="560" y="18" text-anchor="middle" font-family="monospace" font-size="14" font-weight="700" fill="var(--inf-text)">physical VRAM</text>
   <rect x="380" y="35" width="50" height="35" rx="4" fill="var(--inf-green)" opacity="0.5" stroke="var(--inf-green)"/><text x="405" y="57" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B0</text>
   <rect x="438" y="35" width="50" height="35" rx="4" fill="var(--inf-blue)" opacity="0.3" stroke="var(--inf-blue)"/><text x="463" y="57" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B1</text>
@@ -426,12 +419,10 @@ If you've taken an OS class, you know this story:
   <rect x="554" y="35" width="50" height="35" rx="4" fill="var(--inf-green)" opacity="0.5" stroke="var(--inf-green)"/><text x="579" y="57" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B3</text>
   <rect x="612" y="35" width="50" height="35" rx="4" fill="var(--inf-purple)" opacity="0.3" stroke="var(--inf-purple)"/><text x="637" y="57" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B5</text>
   <rect x="670" y="35" width="50" height="35" rx="4" fill="var(--inf-border)" opacity="0.5" stroke="var(--inf-muted)"/><text x="695" y="57" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">free</text>
-
   <rect x="380" y="78" width="50" height="35" rx="4" fill="var(--inf-purple)" opacity="0.3" stroke="var(--inf-purple)"/><text x="405" y="100" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B8</text>
   <rect x="438" y="78" width="50" height="35" rx="4" fill="var(--inf-blue)" opacity="0.3" stroke="var(--inf-blue)"/><text x="463" y="100" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B7</text>
   <rect x="496" y="78" width="50" height="35" rx="4" fill="var(--inf-blue)" opacity="0.3" stroke="var(--inf-blue)"/><text x="521" y="100" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">B9</text>
   <rect x="554" y="78" width="50" height="35" rx="4" fill="var(--inf-border)" opacity="0.5" stroke="var(--inf-muted)"/><text x="579" y="100" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">free</text>
-
   <text x="560" y="140" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">scattered, not contiguous - near-zero waste</text>
 </svg>
 <div class="diag-caption">PagedAttention: a block table maps logical positions to scattered physical blocks. Shared prefixes use copy-on-write.</div>
@@ -460,7 +451,6 @@ Static batching: collect N requests, pad to same length, process as one batch, r
   <rect x="140" y="106" width="220" height="20" rx="3" fill="var(--inf-border)" opacity="0.4"/>
   <text x="420" y="55" font-family="monospace" font-size="12" fill="var(--inf-muted)">grey = idle (padding)</text>
   <text x="420" y="75" font-family="monospace" font-size="12" fill="var(--inf-muted)">all wait for slowest</text>
-
   <text x="20" y="160" font-family="monospace" font-size="14" fill="var(--inf-green)" font-weight="700">continuous batching (good)</text>
   <rect x="20" y="170" width="280" height="20" rx="3" fill="var(--inf-blue)" opacity="0.6"/>
   <rect x="300" y="170" width="100" height="20" rx="3" fill="var(--inf-teal)" opacity="0.7"/>
@@ -482,6 +472,12 @@ Static batching: collect N requests, pad to same length, process as one batch, r
 <div class="inf-insight">
 <strong>SWE analogy:</strong> Static batching = thread-per-request server waiting for the slowest connection. Continuous batching = event loop. Admit new work as soon as a slot opens.
 </div>
+
+Watch it run. Eleven requests arrive over time; the scheduler admits up to 6 at once into the KV cache. Prefill is one step, decode is many.
+
+<link rel="stylesheet" href="/widgets/vllm-batching.css">
+<div id="vllm-batching"></div>
+<script src="/widgets/vllm-batching.js" defer></script>
 
 On by default. You don't configure it; you benefit from it.
 
@@ -625,9 +621,7 @@ Split each weight matrix across GPUs. Each GPU holds 1/N of every weight. At inf
   <text x="100" y="50" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-muted)">full weight matrix W</text>
   <rect x="40" y="58" width="120" height="70" fill="var(--inf-blue)" opacity="0.4" stroke="var(--inf-blue)" stroke-width="2" rx="4"/>
   <text x="100" y="98" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-text)">[M x N]</text>
-
   <line x1="175" y1="93" x2="225" y2="93" stroke="var(--inf-muted)" stroke-width="2" marker-end="url(#inf-arrow)"/>
-
   <text x="400" y="50" text-anchor="middle" font-family="monospace" font-size="12" fill="var(--inf-muted)">split across 4 GPUs (column-wise)</text>
   <rect x="240" y="58" width="55" height="70" fill="var(--inf-green)" opacity="0.4" stroke="var(--inf-green)" stroke-width="2" rx="4"/>
   <text x="267" y="98" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">GPU 0</text>
@@ -637,11 +631,9 @@ Split each weight matrix across GPUs. Each GPU holds 1/N of every weight. At inf
   <text x="387" y="98" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">GPU 2</text>
   <rect x="420" y="58" width="55" height="70" fill="var(--inf-red)" opacity="0.4" stroke="var(--inf-red)" stroke-width="2" rx="4"/>
   <text x="447" y="98" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-text)">GPU 3</text>
-
   <line x1="490" y1="93" x2="540" y2="93" stroke="var(--inf-red)" stroke-width="2" marker-end="url(#inf-arrow)"/>
   <text x="630" y="88" text-anchor="middle" font-family="monospace" font-size="16" fill="var(--inf-red)" font-weight="700">AllReduce</text>
   <text x="630" y="108" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">(every layer)</text>
-
   <text x="360" y="155" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">needs NVLink between GPUs (inside one server box)</text>
 </svg>
 <div class="diag-caption">TP splits weight matrices column-wise. An AllReduce synchronizes results on every layer.</div>
@@ -701,34 +693,26 @@ $ vllm serve Qwen/Qwen3-8B-AWQ \
 <div class="diag">
 <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg">
   <text x="380" y="20" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="var(--inf-text)">how a request flows through vLLM</text>
-
   <rect x="20" y="70" width="100" height="55" rx="8" fill="var(--inf-blue)" opacity="0.2" stroke="var(--inf-blue)" stroke-width="1.5"/>
   <text x="70" y="93" text-anchor="middle" font-family="monospace" font-size="13" fill="var(--inf-text)" font-weight="700">your app</text>
   <text x="70" y="112" text-anchor="middle" font-family="monospace" font-size="10" fill="var(--inf-muted)">openai SDK</text>
-
   <line x1="125" y1="97" x2="180" y2="97" stroke="var(--inf-muted)" stroke-width="1.5" marker-end="url(#inf-arrow)"/>
   <text x="153" y="85" text-anchor="middle" font-family="monospace" font-size="10" fill="var(--inf-muted)">HTTP POST</text>
-
   <rect x="185" y="70" width="100" height="55" rx="8" fill="var(--inf-orange)" opacity="0.2" stroke="var(--inf-orange)" stroke-width="1.5"/>
   <text x="235" y="93" text-anchor="middle" font-family="monospace" font-size="13" fill="var(--inf-text)" font-weight="700">queue</text>
   <text x="235" y="112" text-anchor="middle" font-family="monospace" font-size="10" fill="var(--inf-muted)">scheduler</text>
-
   <line x1="290" y1="97" x2="345" y2="97" stroke="var(--inf-muted)" stroke-width="1.5" marker-end="url(#inf-arrow)"/>
-
   <rect x="350" y="55" width="180" height="85" rx="8" fill="var(--inf-green)" opacity="0.15" stroke="var(--inf-green)" stroke-width="1.5"/>
   <text x="440" y="73" text-anchor="middle" font-family="monospace" font-size="13" fill="var(--inf-green)" font-weight="700">GPU batch</text>
   <rect x="365" y="82" width="150" height="12" rx="3" fill="var(--inf-blue)" opacity="0.5"/>
   <rect x="365" y="98" width="150" height="12" rx="3" fill="var(--inf-purple)" opacity="0.5"/>
   <rect x="365" y="114" width="150" height="12" rx="3" fill="var(--inf-orange)" opacity="0.5"/>
   <text x="440" y="138" text-anchor="middle" font-family="monospace" font-size="10" fill="var(--inf-muted)">continuous batching</text>
-
   <line x1="535" y1="97" x2="590" y2="97" stroke="var(--inf-red)" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#inf-arrow)"/>
   <text x="563" y="85" text-anchor="middle" font-family="monospace" font-size="10" fill="var(--inf-red)">SSE stream</text>
-
   <rect x="595" y="70" width="120" height="55" rx="8" fill="var(--inf-blue)" opacity="0.2" stroke="var(--inf-blue)" stroke-width="1.5"/>
   <text x="655" y="93" text-anchor="middle" font-family="monospace" font-size="13" fill="var(--inf-text)" font-weight="700">your app</text>
   <text x="655" y="112" text-anchor="middle" font-family="monospace" font-size="10" fill="var(--inf-muted)">tokens flow in</text>
-
   <text x="380" y="175" text-anchor="middle" font-family="monospace" font-size="11" fill="var(--inf-muted)">first token = TTFT. each next token = TPOT later.</text>
 </svg>
 </div>
@@ -802,27 +786,27 @@ Latency bad. Throughput bad. Bill bad. Where to start? This order:
 
 The playbook tells you what to turn on. This tells you when you've hit the wall.
 
-Section 5 showed the KV cache eats VRAM. Here's the consequence in production: compute is almost never the limit, the KV cache is. On an 80GB A100 serving a 7B model at 4K context, the FLOPS budget covers ~141 concurrent requests. The KV cache runs out at ~13. That order-of-magnitude gap is the real ceiling. ([source](https://trunghjieu2506.github.io/writing/llm-inference-throughput.html))
+Compute is almost never the limit. The KV cache is. 80GB A100, 7B model, 4K context: FLOPS cover ~141 concurrent requests, KV cache runs out at ~13. Order of magnitude. ([source](https://trunghjieu2506.github.io/writing/llm-inference-throughput.html))
 
 <div class="inf-insight">
-<strong>arithmetic intensity, per phase:</strong> prefill runs at ~4500 FLOPs/byte (compute-saturated), decode at ~1 FLOP/byte. On an A100 the roofline crossover sits at ~156 FLOPs/byte, so decode leaves the compute cores nearly idle. Same prefill/decode split as section 3, now with the numbers.
+<strong>arithmetic intensity:</strong> prefill ~4500 FLOPs/byte (compute-bound), decode ~1 FLOP/byte. A100 roofline crossover is ~156. Decode leaves the cores idle.
 </div>
 
 ### preemption: the cliff
 
-vLLM admits requests until the KV cache fills. Push past 100% and it evicts running requests to make room: their KV cache gets dropped and recomputed when they resume, and latency roughly doubles. The sweet spot sits just below 100% cache utilization. Full enough to keep the batch busy, not so full that a burst tips you over.
+vLLM admits requests until the KV cache fills. Past 100%, it evicts running requests: their KV gets dropped, recomputed on resume, latency roughly doubles. Sweet spot sits just under 100% - full enough to keep the batch busy, not so full a burst tips you over.
 
 <div class="inf-card" style="border-color: var(--inf-red);">
-<strong>two numbers to watch (both in vLLM's <code>/metrics</code>):</strong><br>
-- <code>kv_cache_usage_pct</code> - your headroom. Tune <code>--max-num-seqs</code> so this sits high but stable.<br>
-- <code>num_preemptions</code> - should hover near zero. A climbing count means you crossed the line and you're paying 2x latency for it.
+<strong>two numbers in vLLM's <code>/metrics</code>:</strong><br>
+- <code>kv_cache_usage_pct</code> - headroom. Tune <code>--max-num-seqs</code> so this sits high but stable.<br>
+- <code>num_preemptions</code> - should be near zero. Climbing means you crossed the line.
 </div>
 
-One more, from the same teardown: across both phases the MLP block is ~71% of the compute. Hunting for a kernel to optimize? Start there, not attention.
+MLP is ~71% of the compute across both phases. Optimizing a kernel? Start there, not attention.
 
 <div class="inf-card" style="border-color: var(--inf-blue);">
-<strong>further reading</strong> - three posts that go a level deeper than this one:<br>
-- <a href="https://trunghjieu2506.github.io/writing/llm-inference-throughput.html">LLM inference throughput</a> - the roofline and KV-ceiling math above, worked out.<br>
-- <a href="https://www.aleksagordic.com/blog/vllm">inside vLLM</a> - the scheduler, paged attention, and prefix caching read at source level.<br>
-- <a href="https://www.aleksagordic.com/blog/matmul">fast matmul</a> - why the GPU sits idle one level down: coalesced loads, SMEM tiling, tensor cores, wave quantization.
+<strong>further reading:</strong><br>
+- <a href="https://trunghjieu2506.github.io/writing/llm-inference-throughput.html">LLM inference throughput</a> - the math above, worked out.<br>
+- <a href="https://www.aleksagordic.com/blog/vllm">inside vLLM</a> - scheduler, paged attention, prefix caching at source level.<br>
+- <a href="https://www.aleksagordic.com/blog/matmul">fast matmul</a> - coalesced loads, SMEM tiling, tensor cores, wave quantization.
 </div>

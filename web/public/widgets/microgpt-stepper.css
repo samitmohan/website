@@ -1,0 +1,99 @@
+#microgpt-stepper {
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 24px 0;
+  background: var(--card, #18181b);
+  font-family: var(--font-jetbrains-mono, ui-monospace, SFMono-Regular, monospace);
+  font-size: 12px;
+  color: var(--foreground, #e5e7eb);
+}
+#microgpt-stepper .mg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+#microgpt-stepper .mg-step {
+  font-size: 13px;
+}
+#microgpt-stepper .mg-controls {
+  display: flex;
+  gap: 6px;
+}
+#microgpt-stepper .mg-controls button {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border, #2a2a2a);
+  color: var(--muted-foreground, #9ca3af);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+#microgpt-stepper .mg-controls button:hover:not(:disabled) {
+  color: var(--foreground, #e5e7eb);
+  border-color: var(--primary, #60a5fa);
+}
+#microgpt-stepper .mg-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+#microgpt-stepper .mg-desc {
+  color: var(--muted-foreground, #9ca3af);
+  margin-bottom: 14px;
+  line-height: 1.55;
+  font-size: 13px;
+  font-family: var(--font-space-grotesk, -apple-system, sans-serif);
+}
+#microgpt-stepper .mg-tensors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+#microgpt-stepper .mg-tensor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#microgpt-stepper .mg-tname {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+#microgpt-stepper .mg-shape {
+  color: var(--muted-foreground, #9ca3af);
+  font-weight: normal;
+}
+#microgpt-stepper .mg-grid {
+  display: grid;
+  gap: 2px;
+}
+#microgpt-stepper .mg-cell {
+  padding: 4px 2px;
+  text-align: center;
+  border-radius: 2px;
+  font-size: 10px;
+  min-width: 36px;
+}
+#microgpt-stepper .mg-hint {
+  color: var(--muted-foreground, #9ca3af);
+  font-size: 10.5px;
+  font-style: italic;
+  margin-top: 2px;
+  max-width: 380px;
+}
+#microgpt-stepper .mg-progress {
+  height: 2px;
+  background: var(--border, #2a2a2a);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+#microgpt-stepper .mg-progress-fill {
+  height: 100%;
+  background: var(--primary, #60a5fa);
+  transition: width 0.2s;
+}

@@ -1,10 +1,15 @@
 import { ImageResponse } from "next/og";
-import { getPost } from "@/lib/blog";
+import { getPost, getAllSlugs } from "@/lib/blog";
 
 export const runtime = "nodejs";
+export const dynamic = "force-static";
 export const alt = "Blog post";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+export async function generateStaticParams() {
+  return getAllSlugs().map((slug) => ({ slug }));
+}
 
 export default async function OGImage({
   params,
@@ -69,11 +74,12 @@ export default async function OGImage({
           </div>
           <div
             style={{
+              display: "flex",
               fontSize: "22px",
               color: "#9CA3AF",
             }}
           >
-            {date ? `${date} · ` : ""}Samit Mohan
+            {`${date ? `${date} · ` : ""}Samit Mohan`}
           </div>
         </div>
       </div>

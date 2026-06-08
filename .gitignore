@@ -7,3 +7,5 @@ dist/
 .DS_Store
 .superpowers/
 server/.env
+.vercel
+.env*.local
