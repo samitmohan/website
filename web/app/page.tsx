@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts, formatPostDate } from "@/lib/blog";
+import { getViews, formatViews } from "@/lib/views";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
+
+export const dynamic = "force-dynamic";
 
 const FEATURED_SLUGS = [
   "minitorch",
@@ -38,11 +41,12 @@ const PROJECTS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
   const allPosts = getAllPosts();
   const featuredPosts = FEATURED_SLUGS
     .map((slug) => allPosts.find((p) => p.slug === slug))
     .filter(Boolean) as typeof allPosts;
+  const views = await getViews(featuredPosts.map((p) => p.slug));
   const searchEntries = allPosts.map((p) => ({
     slug: p.slug,
     title: p.title,
@@ -101,17 +105,24 @@ export default function HomePage() {
             {featuredPosts.map((post) => (
               <li
                 key={post.slug}
-                className="text-[15px] leading-relaxed flex gap-4"
+                className="text-[15px] leading-relaxed flex gap-4 items-baseline"
               >
                 <span className="font-mono text-[12px] text-muted-foreground/60 w-24 shrink-0 pt-1 whitespace-nowrap">
                   {formatPostDate(post.date)}
                 </span>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="text-foreground/80 hover:text-primary hover:underline underline-offset-2 transition-transform inline-block hover:translate-x-0.5"
+                  className="flex-1 text-foreground/80 hover:text-primary hover:underline underline-offset-2 transition-transform inline-block hover:translate-x-0.5"
                 >
                   {post.title}
                 </Link>
+                <span
+                  className="font-mono text-[11px] text-muted-foreground/60 shrink-0 whitespace-nowrap tabular-nums"
+                  aria-label={`${views[post.slug] ?? 0} views`}
+                  title={`${views[post.slug] ?? 0} views`}
+                >
+                  ◉ {formatViews(views[post.slug] ?? 0)}
+                </span>
               </li>
             ))}
           </ul>

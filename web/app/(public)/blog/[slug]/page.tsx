@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPost, getAllPosts, getAllSlugs, formatPostDate } from "@/lib/blog";
+import { getView, formatViews } from "@/lib/views";
 import { markdownToHtml } from "@/lib/markdown";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { BlogContent } from "@/components/blog-content";
 import { ReadingProgress, BackToTop, PostKeyboardNav, PostTOC } from "@/components/blog-post-chrome";
+import { ViewBeacon } from "@/components/view-beacon";
 import "katex/dist/katex.min.css";
 
 export async function generateStaticParams() {
@@ -45,6 +47,7 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const html = await markdownToHtml(post.content, post.math);
+  const views = await getView(slug);
 
   const allPosts = getAllPosts();
   const currentIndex = allPosts.findIndex((p) => p.slug === slug);
@@ -78,6 +81,7 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
+      <ViewBeacon slug={slug} />
       <ReadingProgress />
       <BackToTop />
       <PostTOC scope="article" />
@@ -104,8 +108,12 @@ export default async function BlogPostPage({
               {post.description}
             </p>
           )}
-          <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
-            <time className="font-mono">{formatPostDate(post.date)}</time>
+          <div className="flex items-center gap-3 text-[13px] text-muted-foreground font-mono">
+            <time>{formatPostDate(post.date)}</time>
+            <span className="text-muted-foreground/40">·</span>
+            <span className="tabular-nums" aria-label={`${views} views`}>
+              ◉ {formatViews(views)}
+            </span>
           </div>
         </header>
 

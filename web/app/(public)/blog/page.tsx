@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { getAllPosts, formatPostDate } from "@/lib/blog";
+import { getViews, formatViews } from "@/lib/views";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 
-export default function BlogPage() {
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
   const posts = getAllPosts();
+  const views = await getViews(posts.map((p) => p.slug));
   const searchEntries = posts.map((p) => ({
     slug: p.slug,
     title: p.title,
@@ -33,9 +37,12 @@ export default function BlogPage() {
                 <h2 className="text-[20px] md:text-[22px] font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors leading-snug">
                   {post.title}
                 </h2>
-                <span className="shrink-0 text-[12px] text-muted-foreground/60 font-mono whitespace-nowrap">
-                  {formatPostDate(post.date)}
-                </span>
+                <div className="shrink-0 flex items-baseline gap-3 font-mono text-[12px] text-muted-foreground/60 whitespace-nowrap tabular-nums">
+                  <span aria-label={`${views[post.slug] ?? 0} views`}>
+                    ◉ {formatViews(views[post.slug] ?? 0)}
+                  </span>
+                  <span>{formatPostDate(post.date)}</span>
+                </div>
               </div>
               {post.description && (
                 <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-2">
