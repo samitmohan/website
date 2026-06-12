@@ -1,13 +1,23 @@
 import { notFound } from "next/navigation";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { getPost, getAllPosts, getAllSlugs, formatPostDate } from "@/lib/blog";
 import { getView, formatViews } from "@/lib/views";
 import { markdownToHtml } from "@/lib/markdown";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { BlogContent } from "@/components/blog-content";
-import { ReadingProgress, BackToTop, PostKeyboardNav, PostTOC } from "@/components/blog-post-chrome";
+import { ReadingProgress } from "@/components/blog-post-chrome";
 import { ViewBeacon } from "@/components/view-beacon";
-import "katex/dist/katex.min.css";
+
+const BackToTop = dynamic(() =>
+  import("@/components/blog-post-chrome").then((m) => m.BackToTop)
+);
+const PostKeyboardNav = dynamic(() =>
+  import("@/components/blog-post-chrome").then((m) => m.PostKeyboardNav)
+);
+const PostTOC = dynamic(() =>
+  import("@/components/blog-post-chrome").then((m) => m.PostTOC)
+);
 
 export const revalidate = 30;
 
@@ -79,6 +89,9 @@ export default async function BlogPostPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {post.math && (
+        <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
