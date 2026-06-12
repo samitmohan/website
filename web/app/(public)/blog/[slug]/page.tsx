@@ -126,6 +126,8 @@ export default async function BlogPostPage({
           <div className="flex items-center gap-3 text-[13px] text-muted-foreground font-mono">
             <time>{formatPostDate(post.date)}</time>
             <span className="text-muted-foreground/40">·</span>
+            <span>{post.readingTime} min read</span>
+            <span className="text-muted-foreground/40">·</span>
             <span className="tabular-nums" aria-label={`${views} views`}>
               ◉ {formatViews(views)}
             </span>

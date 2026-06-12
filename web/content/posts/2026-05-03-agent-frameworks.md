@@ -5,6 +5,7 @@ date: 2026-05-03 00:00:00 +0530
 categories: [tech]
 tokens: "~25k"
 description: "Every agent framework is a disagreement about how much to trust the model."
+tags: [agents]
 ---
 
 <style>

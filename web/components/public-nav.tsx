@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Sun, Moon } from "lucide-react";
 import { SearchPalette } from "@/components/search-palette";
 
 type SearchEntry = { slug: string; title: string; date: string; description: string };
@@ -12,8 +10,6 @@ type SearchEntry = { slug: string; title: string; date: string; description: str
 export function PublicNav({ searchEntries }: { searchEntries?: SearchEntry[] }) {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   const links = [
     { href: "/about", label: "About" },
@@ -67,11 +63,31 @@ export function PublicNav({ searchEntries }: { searchEntries?: SearchEntry[] }) 
             className="ml-1 p-1.5 rounded-md text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Toggle theme"
           >
-            {mounted && theme === "dark" ? (
-              <Sun className="w-4 h-4" strokeWidth={1.75} />
-            ) : (
-              <Moon className="w-4 h-4" strokeWidth={1.75} />
-            )}
+            {/* Both icons render; the .dark class picks one at first paint
+                (no hydration flash, no lucide-react in the bundle) */}
+            <svg
+              className="w-4 h-4 hidden dark:block"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.75}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+            <svg
+              className="w-4 h-4 dark:hidden"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.75}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+            </svg>
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ date: 2026-02-13 14:06:04 +0530
 categories: tech
 tokens: "~6.5k"
 description: "Five questions I actually ask ML candidates."
+tags: [interviews]
 ---
 
 Five questions worth asking in interviews instead of making candidates derive Kadane's algorithm in 30 minutes while pretending they've never seen it.

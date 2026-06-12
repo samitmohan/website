@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts, formatPostDate } from "@/lib/blog";
 import { getViews, formatViews } from "@/lib/views";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 
 export const revalidate = 30;
+
+export const metadata: Metadata = {
+  title: "Posts — Samit Mohan",
+  description: "Writing on ML, computer vision, and rebuilding things from scratch.",
+};
 
 export default async function BlogPage() {
   const posts = getAllPosts();
@@ -38,6 +44,7 @@ export default async function BlogPage() {
                   {post.title}
                 </h2>
                 <div className="shrink-0 flex items-baseline gap-3 font-mono text-[12px] text-muted-foreground/60 whitespace-nowrap tabular-nums">
+                  <span>{post.readingTime} min</span>
                   <span aria-label={`${views[post.slug] ?? 0} views`}>
                     ◉ {formatViews(views[post.slug] ?? 0)}
                   </span>
@@ -47,6 +54,11 @@ export default async function BlogPage() {
               {post.description && (
                 <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-2">
                   {post.description}
+                </p>
+              )}
+              {post.tags.length > 0 && (
+                <p className="mt-1.5 font-mono text-[11px] text-muted-foreground/60">
+                  {post.tags.map((t) => `#${t}`).join("  ")}
                 </p>
               )}
             </Link>

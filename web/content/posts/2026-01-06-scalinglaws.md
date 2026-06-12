@@ -5,6 +5,7 @@ date:   2026-01-06 14:06:04 +0530
 categories: tech
 tokens: "~1.2k"
 description: "Maybe intelligence is just a lot of compute applied to a lot of data having a lot of parameters. OpenAI wrote a paper on this."
+tags: [llm, papers]
 ---
 
 OpenAI wrote a paper on what happens to model performance as you scale parameters, data, and compute. It's called [**Scaling Laws for Neural Language Models**](https://arxiv.org/pdf/2001.08361), 2020.

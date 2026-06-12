@@ -35,12 +35,16 @@ export function SearchPalette({ entries }: { entries: Entry[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (open) {
+      restoreFocusRef.current = document.activeElement as HTMLElement | null;
       setTimeout(() => inputRef.current?.focus(), 10);
       setActive(0);
     } else {
       setQ("");
+      restoreFocusRef.current?.focus();
+      restoreFocusRef.current = null;
     }
   }, [open]);
 
@@ -67,8 +71,18 @@ export function SearchPalette({ entries }: { entries: Entry[] }) {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search posts"
       className="fixed inset-0 z-[100] flex items-start justify-center pt-[12vh] px-4 bg-background/85"
       onClick={() => setOpen(false)}
+      onKeyDown={(e) => {
+        // Keep focus inside the palette; arrow keys handle result navigation
+        if (e.key === "Tab") {
+          e.preventDefault();
+          inputRef.current?.focus();
+        }
+      }}
     >
       <div
         className="w-full max-w-xl rounded-lg border border-border bg-card shadow-xl overflow-hidden"

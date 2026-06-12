@@ -20,12 +20,11 @@ export default function OGImage() {
           background: "#0C111D",
         }}
       >
-        {/* Purple accent line */}
         <div
           style={{
             width: "48px",
             height: "3px",
-            background: "#7F56D9",
+            background: "#0EA5E9",
             marginBottom: "32px",
           }}
         />
@@ -61,7 +60,7 @@ export default function OGImage() {
             fontFamily: "monospace",
           }}
         >
-          samitmohan.dev
+          samitmohan.in
         </div>
       </div>
     ),

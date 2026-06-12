@@ -5,6 +5,7 @@ date:   2026-03-27 00:00:00 +0530
 categories: [tech]
 tokens: "~12k"
 description: "From raw internet text to a streaming response: pretraining, alignment, inference."
+tags: [llm]
 ---
 
 <style>

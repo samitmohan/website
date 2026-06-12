@@ -6,6 +6,7 @@ categories: tech
 tokens: "~9k"
 math: true
 description: "The residual connection solved deep learning in 2015. Ten years later, Moonshot AI noticed it's been sabotaging deep networks the whole time. The fix is 30 lines of PyTorch."
+tags: [llm, papers]
 ---
 
 

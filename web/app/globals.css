@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Theme is toggled via .dark class (next-themes attribute="class"),
+   not prefers-color-scheme, so the dark: variant must key off the class */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #FAFAF9;
   --foreground: #1A1A1A;
@@ -95,6 +99,15 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Aliases referenced by inline widget CSS in posts (microgpt, inference,
+   agent-frameworks). Without these the posts fall back to hard-coded dark
+   colors and render dark cards in light mode. */
+:root {
+  --color-background-secondary: var(--muted);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -107,18 +120,7 @@ body {
   color: var(--primary-foreground);
 }
 
-/* Snappier route crossfade. Browser default ~250ms feels sluggish. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 140ms;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;

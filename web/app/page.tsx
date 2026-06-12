@@ -80,9 +80,10 @@ export default async function HomePage() {
                 Bangalore · ML engineer at Beltech AI
               </p>
               <p className="text-[15px] text-foreground/80 max-w-xl leading-relaxed">
-                <span className="font-semibold text-foreground">≤10ms</span> CV inference at{" "}
-                <span className="font-semibold text-foreground">0.9+ F1</span> on city CCTV. I write
-                and rebuild things from scratch.
+                I build computer-vision systems for city traffic at Beltech AI: live CCTV,{" "}
+                <span className="font-semibold text-foreground">≤10ms</span> inference,{" "}
+                <span className="font-semibold text-foreground">0.9+ F1</span> in production.
+                I write about rebuilding ML from scratch.
               </p>
             </div>
           </div>
@@ -101,7 +102,7 @@ export default async function HomePage() {
               all posts →
             </Link>
           </div>
-          <ul className="space-y-2.5">
+          <ul className="space-y-4">
             {featuredPosts.map((post) => (
               <li
                 key={post.slug}
@@ -110,12 +111,19 @@ export default async function HomePage() {
                 <span className="font-mono text-[12px] text-muted-foreground/60 w-24 shrink-0 pt-1 whitespace-nowrap">
                   {formatPostDate(post.date)}
                 </span>
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="flex-1 text-foreground/80 hover:text-primary hover:underline underline-offset-2 transition-transform inline-block hover:translate-x-0.5"
-                >
-                  {post.title}
-                </Link>
+                <div className="flex-1 min-w-0">
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="text-foreground/80 hover:text-primary hover:underline underline-offset-2 transition-transform inline-block hover:translate-x-0.5"
+                  >
+                    {post.title}
+                  </Link>
+                  {post.description && (
+                    <p className="text-[13px] text-muted-foreground/70 leading-snug line-clamp-1">
+                      {post.description}
+                    </p>
+                  )}
+                </div>
                 <span
                   className="font-mono text-[11px] text-muted-foreground/60 shrink-0 whitespace-nowrap tabular-nums"
                   aria-label={`${views[post.slug] ?? 0} views`}

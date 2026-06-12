@@ -11,6 +11,7 @@ export interface PostMeta {
   description: string;
   math: boolean;
   readingTime: number;
+  tags: string[];
 }
 
 export interface Post extends PostMeta {
@@ -63,6 +64,7 @@ export function getAllPosts(): PostMeta[] {
         description: (data.description as string) || "",
         math: Boolean(data.math),
         readingTime: readingTime(content),
+        tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
         published: data.published !== false,
       };
     })
@@ -108,6 +110,7 @@ export function getPost(slug: string): Post | null {
     description: (data.description as string) || "",
     math: Boolean(data.math),
     readingTime: readingTime(content),
+    tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
     content: preprocessContent(content),
   };
 }

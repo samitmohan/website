@@ -6,6 +6,7 @@ categories: tech
 tokens: "~3.5k"
 description: "Random Python tricks I've picked up."
 published: true
+tags: [python]
 ---
 
 How to write more pythonic (god I hate this word) code

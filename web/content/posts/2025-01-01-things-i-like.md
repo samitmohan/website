@@ -5,6 +5,7 @@ date:   2025-01-01 14:06:04 +0530
 categories: fun
 tokens: "~150"
 published: true
+tags: [fun]
 ---
 in no particular order,
 

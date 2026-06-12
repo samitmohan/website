@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getAllPosts } from "@/lib/blog";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 
 export const metadata: Metadata = {
@@ -16,15 +17,15 @@ const EXPERIENCE = [
     location: "Bangalore",
     stack: "PyTorch · YOLO · PARSeq · DeepStream · Triton · TensorRT · FastAPI · Kubernetes · Docker",
     bullets: [
-      "Shipped a 10+ module CV system (LPR, PUCC, helmet, phone, wrong-way) over live RTSP at 0.9+ F1 on Indian CCTV.",
-      "Wrote a custom-C DeepStream pipeline that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Scaled per-server capacity to 100+ cameras on multi-GPU.",
-      "Cut detection latency 54% to ≤10 ms by replacing anchor-based heads with NMS-free YOLOv10 on Triton + TensorRT. 0.90+ mAP across 8 classes.",
+      "Shipped a 10+ module CV system (LPR, PUCC, helmet, phone, wrong-way) over live RTSP at **0.9+ F1** on Indian CCTV.",
+      "Wrote a custom-C DeepStream pipeline that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Scaled per-server capacity to **100+ cameras** on multi-GPU.",
+      "Cut detection latency **54% to ≤10 ms** by replacing anchor-based heads with NMS-free YOLOv10 on Triton + TensorRT. 0.90+ mAP across 8 classes.",
       "PUCC pollution-certificate FastAPI service: YOLO verifies probe insertion, LPR reads the plate, OCR'd testing-center name validated against the government registry.",
-      "Rebuilt LPR end-to-end: YOLOv11s for text detection, PARSeq ViT for recognition, TensorRT FP16 on edge. 150 ms → 40 ms with higher read accuracy.",
-      "Continuous-learning loop on a 2-week cadence: live misclassifications → retrain → mAP50 gate → hot-swap on Triton with zero downtime.",
-      "Vehicle-attribute microservices (color, type) at 0.92+ Macro-F1 with Grafana SLOs and A/B rollout.",
-      "Owned T4 fleet scheduling for 10 production models: per-card placement and pod autoscaling to prevent OOM under load.",
-      "Agent-driven sweep on input size per model: cut weights to 1.2 MB and inference to 30 ms/frame across all prod models.",
+      "Rebuilt LPR end-to-end: YOLOv11s for text detection, PARSeq ViT for recognition, TensorRT FP16 on edge. **150 ms → 40 ms** with higher read accuracy.",
+      "Continuous-learning loop on a 2-week cadence: live misclassifications → retrain → mAP50 gate → hot-swap on Triton with **zero downtime**.",
+      "Vehicle-attribute microservices (color, type) at **0.92+ Macro-F1** with Grafana SLOs and A/B rollout.",
+      "Owned T4 fleet scheduling for **10 production models**: per-card placement and pod autoscaling to prevent OOM under load.",
+      "Agent-driven sweep on input size per model: cut weights to **1.2 MB** and inference to **30 ms/frame** across all prod models.",
     ],
   },
 ];
@@ -37,8 +38,8 @@ const TEACHING = [
     stack: "Python · PyTorch · LLMs · RAG · Agents",
     href: "https://aiengg.dev/",
     bullets: [
-      "TA'd a 16-week live AI engineering cohort: ran weekly classes on RAG, agents, fine-tuning, and inference for 200+ engineers. Designed assignments, debugged student projects, took office hours.",
-      "Parent platform: InterviewReady. Restructured content for 10k+ subscribers; technical posts reached 20k+ readers.",
+      "TA'd a 16-week live AI engineering cohort: ran weekly classes on RAG, agents, fine-tuning, and inference for **200+ engineers**. Designed assignments, debugged student projects, took office hours.",
+      "Parent platform: InterviewReady. Restructured content for 10k+ subscribers; technical posts reached **20k+ readers**.",
     ],
   },
   {
@@ -48,15 +49,35 @@ const TEACHING = [
     stack: "Python · PyTorch · ML systems",
     href: "https://www.tensortonic.com/ml-math",
     bullets: [
-      "Contributed 300+ implementation problems, ML system-design problems, interactive quizzes, paper-implementation questions, and the study plan for pro users. Platform serves 40k+ users.",
+      "Contributed **300+ implementation problems**, ML system-design problems, interactive quizzes, paper-implementation questions, and the study plan for pro users. Platform serves **40k+ users**.",
     ],
   },
 ];
 
+// Renders **text** segments in bullet strings as bold foreground spans
+function emphasize(text: string) {
+  return text.split("**").map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="font-medium text-foreground">
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  );
+}
+
 export default function AboutPage() {
+  const searchEntries = getAllPosts().map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    date: p.date,
+    description: p.description,
+  }));
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <PublicNav />
+      <PublicNav searchEntries={searchEntries} />
 
       <main id="main" className="max-w-3xl mx-auto px-6">
         {/* Hero */}
@@ -127,7 +148,7 @@ export default function AboutPage() {
                       className="text-[15px] text-foreground/80 leading-relaxed flex gap-3"
                     >
                       <span className="text-muted-foreground/40 shrink-0">·</span>
-                      <span>{b}</span>
+                      <span>{emphasize(b)}</span>
                     </li>
                   ))}
                 </ul>

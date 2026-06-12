@@ -6,6 +6,7 @@ categories: [tech]
 tokens: "~15k"
 math: true
 description: "Your GPU is mostly idle during text generation. The entire inference stack exists to fix that."
+tags: [llm]
 ---
 
 <style>

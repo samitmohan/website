@@ -6,6 +6,7 @@ categories: tech
 tokens: "~18k"
 math: true
 description: "Building PyTorch from scratch in ~1300 lines - reverse-mode autograd, conv2d, optimizers. Trains MNIST. No C++, no CUDA, just closures and NumPy."
+tags: [ml, from-scratch]
 ---
 
 
