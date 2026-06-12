@@ -3,7 +3,7 @@ import { getAllPosts, formatPostDate } from "@/lib/blog";
 import { getViews, formatViews } from "@/lib/views";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function BlogPage() {
   const posts = getAllPosts();

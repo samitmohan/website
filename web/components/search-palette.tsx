@@ -67,7 +67,7 @@ export function SearchPalette({ entries }: { entries: Entry[] }) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center pt-[12vh] px-4 bg-background/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-start justify-center pt-[12vh] px-4 bg-background/85"
       onClick={() => setOpen(false)}
     >
       <div

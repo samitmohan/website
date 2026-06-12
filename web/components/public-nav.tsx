@@ -29,7 +29,7 @@ export function PublicNav({ searchEntries }: { searchEntries?: SearchEntry[] }) 
   return (
     <>
     {searchEntries && <SearchPalette entries={searchEntries} />}
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
+    <nav className="sticky top-0 z-50 border-b border-border bg-[var(--nav-bg)]">
       <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
         <Link
           href="/"

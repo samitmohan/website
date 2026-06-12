@@ -1,27 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Heading = { id: string; text: string; level: number };
 
 export function ReadingProgress() {
-  const [pct, setPct] = useState(0);
+  const barRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const el = barRef.current;
+      if (!el) return;
       const doc = document.documentElement;
       const max = doc.scrollHeight - doc.clientHeight;
-      setPct(max > 0 ? Math.min(100, (doc.scrollTop / max) * 100) : 0);
+      const pct = max > 0 ? Math.min(1, doc.scrollTop / max) : 0;
+      el.style.transform = `scaleX(${pct})`;
     };
-    onScroll();
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] h-[2px] bg-transparent pointer-events-none">
       <div
-        className="h-full bg-primary transition-[width] duration-75"
-        style={{ width: `${pct}%` }}
+        ref={barRef}
+        className="h-full bg-primary origin-left will-change-transform"
+        style={{ transform: "scaleX(0)" }}
       />
     </div>
   );
@@ -41,7 +54,7 @@ export function BackToTop() {
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
-      className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full border border-border bg-background/90 backdrop-blur-sm shadow-sm text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+      className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full border border-border bg-background shadow-sm text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
     >
       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />

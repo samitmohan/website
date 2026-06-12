@@ -9,6 +9,8 @@ import { ReadingProgress, BackToTop, PostKeyboardNav, PostTOC } from "@/componen
 import { ViewBeacon } from "@/components/view-beacon";
 import "katex/dist/katex.min.css";
 
+export const revalidate = 30;
+
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
 }
