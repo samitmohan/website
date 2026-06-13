@@ -58,7 +58,7 @@ const TEACHING = [
 function emphasize(text: string) {
   return text.split("**").map((part, i) =>
     i % 2 === 1 ? (
-      <strong key={i} className="font-medium text-foreground">
+      <strong key={i} className="font-semibold text-foreground">
         {part}
       </strong>
     ) : (
