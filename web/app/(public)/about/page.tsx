@@ -201,7 +201,7 @@ export default function AboutPage() {
                         className="text-[15px] text-foreground/80 leading-relaxed flex gap-3"
                       >
                         <span className="text-muted-foreground/40 shrink-0">·</span>
-                        <span>{b}</span>
+                        <span>{emphasize(b)}</span>
                       </li>
                     ))}
                   </ul>
