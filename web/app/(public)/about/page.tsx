@@ -28,6 +28,18 @@ const EXPERIENCE = [
       "Agent-driven sweep on input size per model: cut weights to **1.2 MB** and inference to **30 ms/frame** across all prod models.",
     ],
   },
+  {
+    company: "MakeMyTrip",
+    role: "Machine Learning Intern",
+    period: "Aug 2022 — Oct 2022",
+    location: "Gurgaon",
+    stack: "Scala · Redis · MySQL · Kafka · AWS",
+    bullets: [
+      "Personalization API using multi-armed bandits (ε-greedy, Thompson Sampling, UCB) for homepage engagement. Benchmarked variants.",
+      "Trained an RLHF reward model on annotated user-preference data to rank itinerary recommendations.",
+      "NLP-based resume screening using text similarity and keyword extraction for the Data team's hiring pipeline.",
+    ],
+  },
 ];
 
 const TEACHING = [
