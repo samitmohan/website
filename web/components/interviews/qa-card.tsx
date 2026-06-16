@@ -28,32 +28,35 @@ export function QACard({
   tags: Tag[];
   children: React.ReactNode;
 }) {
-  const { isCardVisible, queryActive } = useInterviews();
-  const [expanded, setExpanded] = useState(false);
+  const { isCardVisible, queryActive, allExpanded, flashId } = useInterviews();
+  const [localOpen, setLocalOpen] = useState(false);
 
-  // Auto-expand to reveal matching answers while a search query is active;
-  // collapse again once the query is cleared.
+  // Collapse local state when a query clears so cards return to drill-ready.
   useEffect(() => {
-    setExpanded(queryActive);
+    if (!queryActive) setLocalOpen(false);
   }, [queryActive]);
 
   if (!isCardVisible(id)) return null;
 
+  const open = localOpen || queryActive || allExpanded;
   const isKey = tags.includes("key");
+  const flashing = flashId === id;
   const specialTags = tags.filter((t): t is keyof typeof SPECIAL_TAGS => t in SPECIAL_TAGS);
 
   return (
     <div
       id={id}
-      className={`bg-card border rounded-md mb-1.5 overflow-hidden ${
+      className={`bg-card border rounded-md mb-1.5 overflow-hidden scroll-mt-32 transition-shadow ${
+        flashing ? "ring-2 ring-primary" : ""
+      } ${
         isKey ? "border-l-2 border-l-[#ca8a04] border-y-border border-r-border" : "border-border"
       }`}
     >
       <button
         type="button"
-        onClick={() => setExpanded((e) => !e)}
+        onClick={() => setLocalOpen((e) => !e)}
         className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left hover:bg-muted/30 transition-colors"
-        aria-expanded={expanded}
+        aria-expanded={open}
       >
         <span
           className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${DIFFICULTY_DOT[difficulty]}`}
@@ -73,13 +76,13 @@ export function QACard({
         </span>
         <span
           className={`text-muted-foreground/50 text-[9px] flex-shrink-0 transition-transform ${
-            expanded ? "rotate-90" : ""
+            open ? "rotate-90" : ""
           }`}
         >
           ▶
         </span>
       </button>
-      {expanded && (
+      {open && (
         <div className="interviews-prose px-3.5 pb-3.5 pt-2 border-t border-border">{children}</div>
       )}
     </div>

@@ -20,6 +20,8 @@ export type SectionMeta = {
 export interface InterviewsCtx {
   queryActive: boolean;
   searchActive: boolean;
+  allExpanded: boolean;
+  flashId: string | null;
   isCardVisible: (id: string) => boolean;
   isSectionVisible: (sectionId: string) => boolean;
   isSubVisible: (sectionId: string, subKey: string) => boolean;

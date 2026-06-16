@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Tag } from "@/lib/interviews-data";
 import {
   InterviewsContext,
@@ -30,13 +30,15 @@ export function InterviewsShell({
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Tag | "all">("all");
   const [activeSection, setActiveSection] = useState(sections[0]?.id);
+  const [allExpanded, setAllExpanded] = useState(false);
+  const [flashId, setFlashId] = useState<string | null>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const lowerQuery = query.trim().toLowerCase();
   const queryActive = lowerQuery.length > 0;
   const searchActive = queryActive || filter !== "all";
 
-  // Compute visible card ids and the sections/subsections that still have at
-  // least one visible card, given the current query + filter.
   const { visibleCards, visibleSections, visibleSubs, matchCount } = useMemo(() => {
     const cards = new Set<string>();
     const subs = new Set<string>();
@@ -50,7 +52,6 @@ export function InterviewsShell({
         secs.add(e.sectionId);
       }
     }
-    // Info / papers sections only show when no filtering is active.
     if (!searchActive) {
       for (const s of sections) if (s.kind !== "qa") secs.add(s.id);
     }
@@ -61,12 +62,14 @@ export function InterviewsShell({
     () => ({
       queryActive,
       searchActive,
+      allExpanded,
+      flashId,
       isCardVisible: (id: string) => visibleCards.has(id),
       isSectionVisible: (sectionId: string) => visibleSections.has(sectionId),
       isSubVisible: (sectionId: string, subKey: string) =>
         visibleSubs.has(subKeyOf(sectionId, subKey)),
     }),
-    [queryActive, searchActive, visibleCards, visibleSections, visibleSubs]
+    [queryActive, searchActive, allExpanded, flashId, visibleCards, visibleSections, visibleSubs]
   );
 
   // Scroll-spy over the server-rendered section elements.
@@ -88,6 +91,47 @@ export function InterviewsShell({
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // Active recall: jump to a random visible question, highlight it, leave it
+  // collapsed so you answer in your head before revealing.
+  const drill = useCallback(() => {
+    const ids = [...visibleCards];
+    if (ids.length === 0) return;
+    setAllExpanded(false);
+    const pick = ids[Math.floor(Math.random() * ids.length)];
+    const el = document.getElementById(pick);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setFlashId(pick);
+    if (flashTimer.current) clearTimeout(flashTimer.current);
+    flashTimer.current = setTimeout(() => setFlashId(null), 1400);
+  }, [visibleCards]);
+
+  // Keyboard: "/" focus search, "r" random drill, "e" expand/collapse all,
+  // Escape clears the search.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
+      if (e.key === "Escape") {
+        setQuery("");
+        searchRef.current?.blur();
+        return;
+      }
+      if (typing) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key === "r") {
+        e.preventDefault();
+        drill();
+      } else if (e.key === "e") {
+        e.preventDefault();
+        setAllExpanded((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [drill]);
+
   const noResults = searchActive && matchCount === 0;
 
   return (
@@ -96,32 +140,52 @@ export function InterviewsShell({
         {/* Sidebar (desktop) */}
         <aside className="hidden md:flex w-[220px] flex-shrink-0 border-r border-border flex-col sticky top-14 h-[calc(100vh-56px)] overflow-y-auto bg-sidebar-bg">
           <nav className="py-4 px-3">
-            {sections.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => scrollToSection(s.id)}
-                className={`w-full text-left px-2.5 py-1.5 rounded text-[12px] mb-0.5 transition-colors truncate ${
-                  activeSection === s.id
-                    ? "text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {s.title}
-              </button>
-            ))}
+            {sections.map((s) => {
+              const active = activeSection === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => scrollToSection(s.id)}
+                  className={`w-full text-left pl-3 pr-2.5 py-1.5 rounded text-[12px] mb-0.5 transition-colors truncate border-l-2 ${
+                    active
+                      ? "text-foreground font-medium border-l-primary"
+                      : "text-muted-foreground hover:text-foreground border-l-transparent"
+                  }`}
+                >
+                  {s.title}
+                </button>
+              );
+            })}
           </nav>
         </aside>
 
         <div className="flex-1 min-w-0 flex flex-col">
-          {/* Topbar: search + filters + mobile section picker */}
+          {/* Topbar: search + filters + drill controls + mobile section picker */}
           <div className="sticky top-14 z-10 bg-background/95 backdrop-blur border-b border-border px-5 sm:px-8 py-3 flex flex-col gap-2">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search..."
-              className="w-full max-w-sm bg-transparent border-b border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none pb-1 focus:border-foreground/40 transition-colors"
-            />
+            <div className="flex items-center gap-3">
+              <input
+                ref={searchRef}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search...  ( / )"
+                className="flex-1 max-w-sm bg-transparent border-b border-border text-[13px] text-foreground placeholder:text-muted-foreground/50 outline-none pb-1 focus:border-foreground/40 transition-colors"
+              />
+              <button
+                onClick={drill}
+                className="text-[12px] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                title="Jump to a random question (r)"
+              >
+                Random
+              </button>
+              <button
+                onClick={() => setAllExpanded((v) => !v)}
+                className="text-[12px] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                title="Expand or collapse all (e)"
+              >
+                {allExpanded ? "Collapse" : "Expand"}
+              </button>
+            </div>
             <div className="flex items-center gap-4">
               <div className="flex gap-4 overflow-x-auto">
                 {FILTERS.map((f) => (
