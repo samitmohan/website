@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getAllPosts } from "@/lib/blog";
 import { PublicNav } from "@/components/public-nav";
 
 export const metadata: Metadata = {
@@ -8,14 +9,22 @@ export const metadata: Metadata = {
 };
 
 export default function LearningPage() {
+  const searchEntries = getAllPosts().map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    date: p.date,
+    description: p.description,
+  }));
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <PublicNav />
+      <PublicNav searchEntries={searchEntries} />
       <iframe
         src="/ml-guide.html"
         className="flex-1 w-full border-0"
         style={{ height: "calc(100vh - 56px)" }}
         title="ML Interview Guide"
+        sandbox="allow-same-origin allow-scripts allow-forms"
       />
     </div>
   );
