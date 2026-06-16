@@ -161,6 +161,152 @@ code[data-theme*=" "] {
   background: #4B5563;
 }
 
+/* Learning guide answer/info HTML — reskinned to use portfolio theme tokens
+   so it works in both light and dark mode (source content authored once,
+   originally for a dark-only standalone page). */
+.learning-prose {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--muted-foreground);
+}
+.learning-prose p {
+  margin-bottom: 8px;
+}
+.learning-prose p:last-child {
+  margin-bottom: 0;
+}
+.learning-prose ul,
+.learning-prose ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+.learning-prose li {
+  margin-bottom: 4px;
+}
+.learning-prose strong,
+.learning-prose b {
+  color: var(--foreground);
+  font-weight: 600;
+}
+.learning-prose code {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  color: var(--primary);
+}
+.learning-prose pre {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 13px 15px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+.learning-prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--foreground);
+  white-space: pre;
+  line-height: 1.6;
+}
+.learning-prose .anote,
+.learning-prose .rnote,
+.learning-prose .gnote {
+  border-radius: 0 5px 5px 0;
+  padding: 8px 12px;
+  margin: 10px 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.learning-prose .anote {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  border-left: 3px solid var(--primary);
+}
+.learning-prose .anote strong {
+  color: var(--primary);
+}
+.learning-prose .rnote {
+  background: color-mix(in srgb, var(--destructive) 8%, transparent);
+  border-left: 3px solid var(--destructive);
+}
+.learning-prose .rnote strong {
+  color: var(--destructive);
+}
+.learning-prose .gnote {
+  background: color-mix(in srgb, #16a34a 10%, transparent);
+  border-left: 3px solid #16a34a;
+}
+.learning-prose .gnote strong {
+  color: #16a34a;
+}
+.learning-prose .sub-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+  margin-bottom: 10px;
+}
+.learning-prose .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.learning-prose .icard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+.learning-prose .icard h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.learning-prose .icard ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+.learning-prose .icard li {
+  font-size: 12.5px;
+  padding: 2px 0 2px 14px;
+  position: relative;
+}
+.learning-prose .icard li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-size: 10px;
+  top: 3px;
+}
+.learning-prose .badge {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+.learning-prose .badge.bf {
+  background: color-mix(in srgb, #a855f7 18%, transparent);
+  color: #a855f7;
+}
+.learning-prose .badge.bs {
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--primary);
+}
+
 @media print {
   nav, footer, button, .mg-controls, [data-blog-copy], aside { display: none !important; }
   video { display: none !important; }
