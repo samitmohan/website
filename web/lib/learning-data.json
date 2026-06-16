@@ -378,6 +378,16 @@
             ]
           },
           {
+            "q": "Layer norm vs batch norm — why do transformers use layer norm?",
+            "a": "<p>Both normalise activations to zero mean and unit variance, then apply learned scale γ and shift β. What they normalise <em>over</em> differs:</p>\n<p><strong>Batch Norm:</strong> normalises over the batch dimension — for each feature, compute mean/var across all examples in the batch. Works well for CNNs (fixed spatial structure, large batches). Fails at:</p>\n<ul>\n<li>Small batches (batch=1 at inference: can't estimate statistics)</li>\n<li>Variable-length sequences (different sequence positions have different statistics)</li>\n<li>Autoregressive generation (generates one token at a time, batch=1)</li>\n</ul>\n<p><strong>Layer Norm:</strong> normalises over the feature dimension — for each example, compute mean/var across all features in that layer. Independent of batch size, works at batch=1, works for variable-length sequences.</p>\n<p><strong>Why transformers use LN:</strong> all three BN failure cases apply directly to language models. LN has no batch-size dependency and the normalisation is per-token (each position normalised independently over its d_model features).</p>\n<p><strong>Pre-LN vs Post-LN:</strong> original transformer applied LN after the residual add (Post-LN). GPT-2+ switched to Pre-LN (LN before the sublayer) — training is more stable (gradients flow better through the residual path), though Pre-LN can underfit if the final LN is omitted.</p>",
+            "difficulty": "med",
+            "tags": [
+              "dl",
+              "transformers",
+              "key"
+            ]
+          },
+          {
             "q": "Layer Norm vs Batch Norm — why do Transformers use LayerNorm?",
             "a": "<ul>\n<li><strong>BatchNorm:</strong> normalizes across the batch dimension for each feature. Mean/variance computed over (batch, spatial) dimensions. Depends on other samples in batch.</li>\n<li><strong>LayerNorm:</strong> normalizes across the feature dimension for each sample independently. Mean/variance over feature dimensions per sample.</li>\n</ul>\n<p><strong>Why Transformers use LayerNorm:</strong></p>\n<ul>\n<li>Sequence lengths vary — BatchNorm's statistics would be dominated by padding</li>\n<li>Autoregressive inference processes one token at a time (batch=1) — BatchNorm undefined</li>\n<li>LayerNorm works the same at train and inference — no running statistics needed</li>\n<li>Works for any batch size including 1</li>\n</ul>\n<p><strong>RMSNorm</strong> (LLaMA): normalizes only by RMS, no mean subtraction. y = x/RMS(x) · γ. Faster, fewer parameters, similar quality. Used in modern LLMs.</p>",
             "difficulty": "med",
@@ -697,16 +707,6 @@
             ]
           },
           {
-            "q": "What is speculative decoding?",
-            "a": "<p><strong>Problem:</strong> large LLM inference is memory-bandwidth bound. The bottleneck is loading weights, not compute. Each forward pass generates just 1 token.</p>\n<p><strong>Speculative decoding:</strong></p>\n<ol>\n<li>A small \"draft\" model generates k tokens quickly (e.g., k=4)</li>\n<li>The large \"target\" model verifies all k tokens in a single forward pass (batched via parallel prefix computation)</li>\n<li>Accept all tokens up to (and including) the first mismatch. Reject the rest.</li>\n<li>For mismatched positions, sample from a corrected distribution to maintain exact target model distribution</li>\n</ol>\n<p><strong>Speedup:</strong> 2-3x in practice. Cost = (1 draft pass × k) + (1 target pass). If draft model is fast and usually correct, you get k tokens for the price of ~1 target pass.</p>\n<p><strong>Requirements:</strong> same tokenizer, draft model much smaller. Medusa uses multiple draft heads on the same model (no separate model needed).</p>",
-            "difficulty": "hard",
-            "tags": [
-              "llm",
-              "frontier",
-              "key"
-            ]
-          },
-          {
             "q": "What is the difference between SFT and alignment training?",
             "a": "<ul>\n<li><strong>SFT (Supervised Fine-Tuning):</strong> continues pretraining on curated instruction-following data. Teaches format and style of desired responses. Loss: standard next-token prediction on (instruction, response) pairs.</li>\n<li><strong>Alignment training (RLHF/DPO/RLAIF):</strong> optimizes for human preferences among multiple possible responses. Teaches which responses are preferred, not just how they look. Requires preference data (pairs or rankings).</li>\n</ul>\n<p>SFT teaches \"what to say\"; alignment teaches \"which way of saying it is better.\"</p>\n<p>A model trained only with SFT may produce plausible-but-wrong answers confidently, refuse unnecessarily, or exhibit unsafe behaviors. Alignment training corrects this.</p>",
             "difficulty": "med",
@@ -805,22 +805,22 @@
             ]
           },
           {
-            "q": "Explain FlashAttention — why is it faster than standard attention?",
-            "a": "<p>Standard attention materializes the full N×N attention matrix (QK<sup>T</sup>, softmax, then ×V) in GPU HBM (high-bandwidth memory). HBM has high capacity but is slow to read/write compared to on-chip SRAM — and attention is <strong>memory-bandwidth bound</strong>, not compute bound, so all that HBM traffic dominates runtime.</p><p><strong>FlashAttention's idea:</strong> never materialize the full N×N matrix. Instead, <strong>tile</strong> Q, K, V into blocks small enough to fit in SRAM, and use an <strong>online softmax</strong> algorithm that incrementally rescales partial softmax sums as new blocks of K/V are streamed in — producing the mathematically exact same output as standard attention without ever writing the N×N matrix to HBM.</p><p><strong>Result:</strong> it's an IO-aware algorithm — fewer HBM reads/writes, not fewer FLOPs — which translates to large wall-clock speedups and lets attention scale to much longer context lengths since memory is no longer O(N²).</p>",
-            "difficulty": "hard",
-            "tags": [
-              "transformers",
-              "key",
-              "llm"
-            ]
-          },
-          {
             "q": "What is the KV cache? How does its memory scale, and what reduces it?",
             "a": "<p>During autoregressive generation, recomputing K and V for every previous token at every step would be wasteful — so each layer <strong>caches</strong> the K and V projections of all previously generated tokens and only computes K/V for the new token each step.</p><p><strong>Memory cost:</strong> roughly 2 · num_layers · num_heads · head_dim · seq_len · batch_size · bytes_per_value. It scales <strong>linearly with sequence length and batch size</strong> — for long contexts or large batches this often exceeds the memory used by the model weights themselves, making it the real inference bottleneck.</p><p><strong>Reduction techniques:</strong></p><ul><li><strong>Multi-Query Attention (MQA):</strong> all query heads share a single K/V head — large cache reduction, some quality loss.</li><li><strong>Grouped-Query Attention (GQA):</strong> a middle ground — groups of query heads share one K/V head (used in Llama 2/3, Mistral) — most of MQA's memory savings with much less quality degradation.</li><li><strong>PagedAttention (vLLM):</strong> manages the KV cache like OS virtual memory in fixed-size non-contiguous blocks, eliminating fragmentation so memory can be packed near-optimally across concurrent requests.</li></ul>",
             "difficulty": "med",
             "tags": [
               "transformers",
               "llm",
+              "key"
+            ]
+          },
+          {
+            "q": "What is speculative decoding?",
+            "a": "<p><strong>Problem:</strong> large LLM inference is memory-bandwidth bound. The bottleneck is loading weights, not compute. Each forward pass generates just 1 token.</p>\n<p><strong>Speculative decoding:</strong></p>\n<ol>\n<li>A small \"draft\" model generates k tokens quickly (e.g., k=4)</li>\n<li>The large \"target\" model verifies all k tokens in a single forward pass (batched via parallel prefix computation)</li>\n<li>Accept all tokens up to (and including) the first mismatch. Reject the rest.</li>\n<li>For mismatched positions, sample from a corrected distribution to maintain exact target model distribution</li>\n</ol>\n<p><strong>Speedup:</strong> 2-3x in practice. Cost = (1 draft pass × k) + (1 target pass). If draft model is fast and usually correct, you get k tokens for the price of ~1 target pass.</p>\n<p><strong>Requirements:</strong> same tokenizer, draft model much smaller. Medusa uses multiple draft heads on the same model (no separate model needed).</p>",
+            "difficulty": "hard",
+            "tags": [
+              "llm",
+              "frontier",
               "key"
             ]
           }
@@ -1229,6 +1229,15 @@
               "generative",
               "frontier"
             ]
+          },
+          {
+            "q": "What is latent diffusion? How does Stable Diffusion use it?",
+            "a": "<p>Pixel-space diffusion (DDPM, DALL-E 2 first stage) applies the denoising process directly on images — expensive because images are large (512×512×3 = 786K dimensions) and the U-Net runs at full resolution.</p>\n<p><strong>Latent diffusion (Rombach et al., 2022 — Stable Diffusion):</strong> compresses first, then diffuse.</p>\n<p><strong>Three components:</strong></p>\n<ul>\n<li><strong>VAE encoder:</strong> compresses the image into a lower-dimensional latent z (typically 64×64×4 — 48× smaller). Trained separately with reconstruction + KL regularisation loss.</li>\n<li><strong>U-Net denoiser:</strong> runs the DDPM forward/reverse process in latent space. Cross-attention layers let text conditioning (from a frozen CLIP/OpenCLIP text encoder) steer the denoising.</li>\n<li><strong>VAE decoder:</strong> maps the final clean latent z₀ back to pixel space.</li>\n</ul>\n<p><strong>Why it works:</strong> the VAE learns a perceptually meaningful compact representation — nearby points in latent space are perceptually similar. The U-Net only needs to learn the distribution of these compact codes, not raw pixels.</p>\n<p><strong>Speed gain:</strong> inference runs ~50 denoising steps on 64×64×4 tensors rather than 512×512×3 — order-of-magnitude cheaper, enabling consumer GPU generation.</p>",
+            "difficulty": "med",
+            "tags": [
+              "generative",
+              "dl"
+            ]
           }
         ]
       }
@@ -1407,6 +1416,15 @@
             "tags": [
               "llm",
               "mlops"
+            ]
+          },
+          {
+            "q": "ONNX, TorchScript, Triton Inference Server — when do you use each?",
+            "a": "<p><strong>ONNX (Open Neural Network Exchange):</strong> an IR (intermediate representation) that captures a model's computation graph in a framework-agnostic format. Export once (PyTorch → ONNX), run anywhere (TensorRT, ONNX Runtime, Core ML, OpenVINO). Use when you need to deploy to a different runtime than you trained in (e.g., ONNX Runtime for CPU serving, TensorRT for GPU).</p>\n<p><strong>TorchScript:</strong> serialises a PyTorch model into a graph format that runs without the Python interpreter — enables deployment in C++ environments (mobile, embedded, latency-critical services). Two modes: <em>tracing</em> (run once, record operations — fails with dynamic control flow) and <em>scripting</em> (compile the code — handles conditionals but requires type annotations). Use when staying in the PyTorch ecosystem but need to eliminate Python overhead.</p>\n<p><strong>Triton Inference Server (NVIDIA):</strong> a model-serving framework that sits above the model format layer — it handles HTTP/gRPC endpoints, dynamic batching, concurrent model execution, multiple model instances, and GPU/CPU scheduling. Supports ONNX, TensorRT, PyTorch, TensorFlow backends. Use when you need a production inference server with batching, multi-model serving, and SLAs — it's what powers most large-scale GPU serving at Beltech and similar shops.</p>\n<div class=\"anote\"><strong>Typical stack:</strong> PyTorch training → export to ONNX or TensorRT → serve via Triton. TorchScript is a shortcut if you're already on PyTorch everywhere and don't need TRT optimisation.</div>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "system"
             ]
           }
         ]
@@ -1641,6 +1659,14 @@
             "tags": [
               "behavioral",
               "startup"
+            ]
+          },
+          {
+            "q": "Tell me about a time you pushed back on a technical direction and were wrong. What did you learn?",
+            "a": "<p>This question tests intellectual honesty and how you update beliefs under evidence — arguably more important in ML than in most engineering domains because ML involves constant uncertainty.</p>\n<p><strong>What interviewers want to hear:</strong></p>\n<ul>\n<li>You had a clear technical opinion and stated it (not passive)</li>\n<li>You were genuinely wrong, not just deferring to authority</li>\n<li>You updated your view based on evidence (data, results, a colleague's reasoning)</li>\n<li>You extracted a durable lesson, not just \"I was wrong once\"</li>\n</ul>\n<p><strong>Structure:</strong> situation → your position → counter-evidence you encountered → how you changed course → what you now look for before pushing back on similar decisions.</p>\n<div class=\"rnote\"><strong>Trap to avoid:</strong> picking a story where you were \"wrong\" but actually right, or where the stakes were trivially low. The question is a calibration check — interviewers (especially at Anthropic, DeepMind) will probe whether you're genuinely intellectually honest or performing humility.</div>",
+            "difficulty": "easy",
+            "tags": [
+              "behavioral"
             ]
           }
         ]
@@ -1922,6 +1948,26 @@
               "classical",
               "general"
             ]
+          },
+          {
+            "q": "Walk through how you trained the RLHF reward model at MakeMyTrip. What data, what loss, what did it output?",
+            "a": "<p>The goal was to rank itinerary recommendations — so the reward model needed to capture human preference, not a proxy like click-through rate.</p>\n<p><strong>Data:</strong> pairs of itineraries annotated with user preference labels (A preferred over B). Collected from user interaction logs and manual annotation.</p>\n<p><strong>Architecture:</strong> a pretrained encoder (text representation of itinerary features) with a linear head producing a scalar reward score. Trained with <strong>Bradley-Terry pairwise ranking loss</strong>: for a preferred item A and rejected item B, maximise log σ(r_A − r_B).</p>\n<p><strong>Output:</strong> a scalar score for any itinerary — used downstream as the reward signal to rank candidates. Not a language model RM (no token-level reward), just preference ranking over structured travel items.</p>\n<div class=\"anote\"><strong>Interview hook:</strong> connect this to modern RLHF — the same Bradley-Terry pairwise loss is used in LLM reward models (InstructGPT, Claude). The difference: LLM RMs operate on token sequences, yours operated on structured item features. Same principle, different domain.</div>",
+            "difficulty": "hard",
+            "tags": [
+              "llm",
+              "startup",
+              "key"
+            ]
+          },
+          {
+            "q": "How did you build the NLP-based resume screening pipeline at MakeMyTrip? What signals did you use?",
+            "a": "<p>The goal was to help the Data team filter engineering resumes at volume — identifying candidates with relevant ML/data skills.</p>\n<p><strong>Text similarity:</strong> TF-IDF or dense embeddings (sentence-transformers) to compute cosine similarity between a resume and a target job description. Candidates above a threshold pass the first stage.</p>\n<p><strong>Keyword extraction:</strong> frequency-based or RAKE/KeyBERT to identify the most salient technical terms (frameworks, methods, tools). Matched against a curated skills dictionary for the role.</p>\n<p><strong>Pipeline:</strong> parse resume (PDF → text via pdfplumber/pdfminer), preprocess (lemmatise, remove stopwords), embed or TF-IDF, score against JD, rank candidates.</p>\n<div class=\"rnote\"><strong>Gotcha to prepare for:</strong> interviewers often ask about bias and fairness here — a keyword-matching system can penalise non-standard resume formats, unconventional career paths, or different naming conventions for the same skill. Have a sentence ready on limitations.</div>",
+            "difficulty": "med",
+            "tags": [
+              "startup",
+              "classical",
+              "llm"
+            ]
           }
         ]
       },
@@ -2087,7 +2133,7 @@
           },
           {
             "q": "What is Flash Attention? How does it reduce memory from O(n²) to O(n) without losing accuracy?",
-            "a": "<p><strong>Standard attention bottleneck:</strong> S = QK^T is an n×n matrix. At n=8192: 8192² × 2 bytes = 134MB per head. With 32 heads × 80 layers: 343 GB. Physically impossible on any current GPU.</p>\n<p><strong>The problem is not FLOPs — it's HBM writes:</strong> computing QK^T requires O(n²) FLOPs regardless. The issue is materializing the n×n matrix in HBM (slow) for the subsequent softmax and AV product.</p>\n<p><strong>Flash Attention solution (Dao et al. 2022):</strong> compute softmax(QK^T)V without ever materializing the full n×n matrix in HBM.</p>\n<ol>\n<li>Process Q, K, V in blocks that fit in SRAM</li>\n<li>Maintain running max m and running sum l to compute correct softmax incrementally across blocks (the \"online softmax\" trick)</li>\n<li>Compute partial O = A_block × V_block and correct previous partial outputs when max is updated</li>\n<li>Only current blocks reside in SRAM. Never write intermediate n×n matrix to HBM.</li>\n</ol>\n<p><strong>Result:</strong> memory O(n) not O(n²). FLOPs still O(n²) — same math, no approximation. Speed: 2-4× faster than PyTorch native attention because HBM writes dominate runtime, not FLOPs. This is IO-bound optimization.</p>\n<p><strong>In practice:</strong> <code>F.scaled_dot_product_attention()</code> in PyTorch 2.0+ uses Flash Attention automatically for BF16/FP16 with non-custom masks. For training, use <code>torch.compile()</code> + Flash Attention = fastest path.</p>",
+            "a": "<p>FlashAttention rewrites the attention algorithm to be <strong>IO-aware</strong> — it minimises reads and writes to HBM (GPU high-bandwidth memory) rather than reducing FLOPs.</p>\n<p><strong>Why standard attention is slow:</strong> it materialises the full N×N score matrix in HBM. HBM has high bandwidth in aggregate but each round-trip is expensive, and attention (for typical context lengths) is <em>memory-bandwidth bound</em>, not compute-bound — you're paying for HBM traffic, not arithmetic.</p>\n<p><strong>FlashAttention's fix:</strong> tile Q, K, V into blocks that fit in on-chip SRAM (~20MB on an A100). Use an online softmax algorithm that rescales partial sums as new K/V blocks arrive — producing the <em>exact same numerical output</em> without ever writing the N×N matrix to HBM.</p>\n<p><strong>Memory:</strong> O(N) instead of O(N²) in HBM — enables much longer contexts. <strong>Speed:</strong> 2–4× faster wall-clock on typical sequence lengths.</p>\n<div class=\"anote\"><strong>FlashAttention-2/3</strong> add warp-level parallelism and pipelining for further speedups but the core IO-tiling idea is unchanged. This is what you implement if asked to optimise attention from scratch.</div>",
             "difficulty": "hard",
             "tags": [
               "transformers",
