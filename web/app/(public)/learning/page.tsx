@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     "ML interview prep guide: 500+ questions covering math, deep learning, LLMs, CV, system design, and MLOps.",
 };
 
+export const revalidate = 30;
+
 export default function LearningPage() {
   const searchEntries = getAllPosts().map((p) => ({
     slug: p.slug,
@@ -22,7 +24,6 @@ export default function LearningPage() {
       <iframe
         src="/ml-guide.html"
         className="flex-1 w-full border-0"
-        style={{ height: "calc(100vh - 56px)" }}
         title="ML Interview Guide"
         sandbox="allow-same-origin allow-scripts allow-forms"
       />
