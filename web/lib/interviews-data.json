@@ -1,5 +1,11 @@
 [
   {
+    "id": "s0",
+    "title": "0. Cram List",
+    "type": "info",
+    "html": "\n<p>~86 questions tagged <strong>key</strong> — skim the week before an interview. Click to jump.</p>\n<p class=\"sub-title\">Math Foundations</p>\n<ul>\n<li><a href=\"#s1-0-2\">Why divide attention scores by √d_k? Derive it.</a></li>\n<li><a href=\"#s1-0-5\">What is the rank of a matrix? Why does low rank matter in LoRA?</a></li>\n<li><a href=\"#s1-0-7\">Derive why PCA is the eigendecomposition of the covariance matrix.</a></li>\n<li><a href=\"#s1-1-1\">Explain KL divergence. Is it symmetric? Forward vs reverse KL — when to use each?</a></li>\n</ul>\n<p class=\"sub-title\">Deep Learning</p>\n<ul>\n<li><a href=\"#s3-0-3\">Layer norm vs batch norm — why do transformers use layer norm?</a></li>\n<li><a href=\"#s3-0-6\">What is contrastive learning? Give an example.</a></li>\n<li><a href=\"#s3-0-10\">Derive the backward pass of BatchNorm.</a></li>\n<li><a href=\"#s3-0-11\">Derive the backward pass of LayerNorm. Why is it simpler than BatchNorm in practice?</a></li>\n</ul>\n<p class=\"sub-title\">Transformers & Attention</p>\n<ul>\n<li><a href=\"#s4-0-0\">Walk through the full Transformer architecture block-by-block.</a></li>\n<li><a href=\"#s4-0-1\">Encoder vs decoder Transformers — differences and use cases. Why are SOTA models decode…</a></li>\n<li><a href=\"#s4-0-2\">What is Flash Attention? How does it reduce memory from O(n²) to O(n)?</a></li>\n<li><a href=\"#s4-0-3\">What is KV cache? Memory scaling, speedup, and how to reduce it.</a></li>\n<li><a href=\"#s4-0-4\">Explain positional encoding — sinusoidal, learned, and RoPE.</a></li>\n<li><a href=\"#s4-0-5\">What is Grouped Query Attention (GQA)? Why does LLaMA use it?</a></li>\n<li><a href=\"#s4-0-7\">Explain scaling laws (Chinchilla). How do you decide model size vs data budget?</a></li>\n<li><a href=\"#s4-1-3\">Why is tokenization the root of most LLM weirdness?</a></li>\n</ul>\n<p class=\"sub-title\">LLMs & Modern AI</p>\n<ul>\n<li><a href=\"#s5-0-0\">Explain RLHF step by step.</a></li>\n<li><a href=\"#s5-0-1\">What is DPO? How does it simplify RLHF?</a></li>\n<li><a href=\"#s5-0-3\">Explain Constitutional AI (Anthropic's approach).</a></li>\n<li><a href=\"#s5-0-5\">Pre-training objectives: how does GPT differ from BERT?</a></li>\n<li><a href=\"#s5-0-6\">What is chain-of-thought prompting? Why does it improve reasoning?</a></li>\n<li><a href=\"#s5-0-9\">How does PPO work mechanically — clipped objective, value function, GAE?</a></li>\n<li><a href=\"#s5-1-1\">Model parallelism: tensor, pipeline, and data. When to use each?</a></li>\n<li><a href=\"#s5-1-4\">What is speculative decoding?</a></li>\n<li><a href=\"#s5-2-0\">Explain LoRA: what matrices are trained? What is the rank r?</a></li>\n<li><a href=\"#s5-2-1\">QLoRA — how does 4-bit quantization + LoRA work together?</a></li>\n<li><a href=\"#s5-2-2\">When should you choose RAG over fine-tuning?</a></li>\n<li><a href=\"#s5-2-3\">What is DoRA and how does it improve on LoRA?</a></li>\n<li><a href=\"#s5-3-0\">Explain the full RAG pipeline.</a></li>\n<li><a href=\"#s5-3-1\">Chunking strategies — fixed-size vs semantic vs recursive.</a></li>\n<li><a href=\"#s5-4-0\">Explain the ReAct (Reason + Act) agent architecture.</a></li>\n<li><a href=\"#s5-5-0\">What is perplexity? What other benchmarks do we use for LLMs?</a></li>\n<li><a href=\"#s5-5-1\">What are hallucinations? How do you detect and reduce them?</a></li>\n</ul>\n<p class=\"sub-title\">Computer Vision</p>\n<ul>\n<li><a href=\"#s6-1-0\">How does CLIP work? Why is it powerful?</a></li>\n<li><a href=\"#s6-1-1\">How does Whisper process audio? What happens to long audio?</a></li>\n<li><a href=\"#s6-1-2\">How does ViT tokenize images? Compare to CNNs.</a></li>\n<li><a href=\"#s6-2-0\">How do you use SAM at inference? Point, box, and mask prompts.</a></li>\n<li><a href=\"#s6-2-2\">Open-vocabulary detection — how do Grounding DINO and YOLO-World work?</a></li>\n<li><a href=\"#s6-2-3\">DINOv2 — why use it over supervised ImageNet pretrain?</a></li>\n<li><a href=\"#s6-2-5\">When would you fine-tune SAM vs use zero-shot prompts vs train a U-Net?</a></li>\n</ul>\n<p class=\"sub-title\">Generative Models</p>\n<ul>\n<li><a href=\"#s7-1-0\">Explain diffusion models — forward process, reverse process, training.</a></li>\n</ul>\n<p class=\"sub-title\">System Design</p>\n<ul>\n<li><a href=\"#s8-0-0\">What framework do you use for ML system design problems?</a></li>\n<li><a href=\"#s8-1-0\">Design ChatGPT end-to-end: training to serving.</a></li>\n<li><a href=\"#s8-1-1\">Design a RAG system for 1M internal documents.</a></li>\n<li><a href=\"#s8-2-0\">Design a YouTube video recommendation system.</a></li>\n</ul>\n<p class=\"sub-title\">MLOps & Production</p>\n<ul>\n<li><a href=\"#s9-0-0\">What is model drift? How do you monitor for it?</a></li>\n<li><a href=\"#s9-1-0\">TTFT vs tokens/sec — which do you optimize for, and why?</a></li>\n<li><a href=\"#s9-1-1\">vLLM vs TensorRT-LLM vs plain PyTorch serve — when to pick each?</a></li>\n<li><a href=\"#s9-1-2\">Walk through exporting a YOLO detector to TensorRT for production.</a></li>\n<li><a href=\"#s9-1-5\">Design a canary rollout for a new model version in production.</a></li>\n<li><a href=\"#s9-1-7\">Sarvam / Krutrim-style: what breaks when you serve Indic LLMs at scale?</a></li>\n<li><a href=\"#s9-1-8\">Frontier lab inference round: \"7B model, 10K concurrent users, 2s P99 latency — design …</a></li>\n<li><a href=\"#s9-1-10\">1 YOE CV/ML at a startup: what will they actually ask in a technical round?</a></li>\n</ul>\n<p class=\"sub-title\">Coding Challenges</p>\n<ul>\n<li><a href=\"#s10-0-0\">Implement softmax with numerical stability.</a></li>\n<li><a href=\"#s10-0-1\">Implement cross-entropy loss and its gradient.</a></li>\n<li><a href=\"#s10-0-5\">Implement a basic RAG pipeline in Python.</a></li>\n</ul>\n<p class=\"sub-title\">Behavioral</p>\n<ul>\n<li><a href=\"#s11-0-0\">Tell me about a challenging ML project and what you learned.</a></li>\n<li><a href=\"#s11-0-1\">How do you stay current with ML research?</a></li>\n<li><a href=\"#s11-0-2\">A model worked great in testing but failed in production. Walk me through your debugging.</a></li>\n<li><a href=\"#s11-0-4\">How do you debug a model with a flat loss curve?</a></li>\n<li><a href=\"#s11-0-9\">Describe your experience teaching AI. What's the hardest concept to explain?</a></li>\n<li><a href=\"#s11-0-10\">What interests you specifically about this company's work? (Prepare per company.)</a></li>\n</ul>\n<p class=\"sub-title\">Resume Deep Dive</p>\n<ul>\n<li><a href=\"#s14-0-0\">You replaced anchor-based YOLO with NMS-free YOLOv10 and cut latency 54%. What is NMS-f…</a></li>\n<li><a href=\"#s14-0-3\">Walk through your continuous learning pipeline. How do you handle data quality and cata…</a></li>\n<li><a href=\"#s14-1-0\">Compare epsilon-greedy, UCB, and Thompson Sampling. Which suits high-traffic personaliz…</a></li>\n<li><a href=\"#s14-1-2\">Walk through how you trained the RLHF reward model at MakeMyTrip. What data, what loss,…</a></li>\n<li><a href=\"#s14-2-0\">Explain reverse-mode autodiff. How does topological sort guarantee correct gradient com…</a></li>\n<li><a href=\"#s14-2-1\">Walk through the BPE tokenization algorithm. How does it differ from WordPiece?</a></li>\n<li><a href=\"#s14-2-2\">GQA vs MHA vs MQA — tradeoffs and KV cache memory math for LLaMA-3 70B.</a></li>\n<li><a href=\"#s14-2-4\">SFT loss masking on assistant tokens — what is it and what breaks without it?</a></li>\n</ul>\n<p class=\"sub-title\">Karpathy Questions</p>\n<ul>\n<li><a href=\"#s15-0-0\">Implement scaled dot-product attention backward pass without autograd. Given dO, comput…</a></li>\n<li><a href=\"#s15-0-1\">Build a minimal autograd engine. Value class with +, *, relu, backward() using topologi…</a></li>\n<li><a href=\"#s15-0-2\">Implement AdamW from scratch. What is the precise difference between Adam and AdamW?</a></li>\n<li><a href=\"#s15-0-4\">A 7B model in fp32 = 28GB. You have a 24GB GPU. All options for inference and fine-tuning.</a></li>\n<li><a href=\"#s15-0-6\">Walk through a nanoGPT training loop line by line: data → forward → loss → backward → s…</a></li>\n<li><a href=\"#s15-0-7\">Implement BPE (byte-pair encoding) tokenizer from scratch.</a></li>\n<li><a href=\"#s15-0-8\">Trace tensor shapes through one GPT-2 block forward pass (batch B, seq T, model dim C).</a></li>\n<li><a href=\"#s15-0-10\">Training loss is NaN after ~100 steps. Walk through your debug checklist.</a></li>\n<li><a href=\"#s15-0-11\">Implement LayerNorm forward and backward in NumPy (no autograd).</a></li>\n<li><a href=\"#s15-0-13\">Matrix multiply: O(n³) naive, then how do you actually make it fast on a GPU?</a></li>\n<li><a href=\"#s15-1-1\">Why is LLM inference memory-bandwidth bound? What optimization strategies follow from t…</a></li>\n<li><a href=\"#s15-1-2\">What is arithmetic intensity? Explain the roofline model.</a></li>\n<li><a href=\"#s15-1-3\">Estimate the tokens/sec ceiling for a 7B model on one A100. Show the arithmetic.</a></li>\n<li><a href=\"#s15-1-5\">What is MFU (Model FLOPs Utilization)? What caps training throughput?</a></li>\n</ul>\n<p class=\"sub-title\">Projects to Do</p>\n<ul>\n<li><a href=\"#s16-1-0\">Llama 3 from scratch — implement the architecture and load real weights</a></li>\n<li><a href=\"#s16-1-2\">Multimodal Vision-Language Model — code a VLM from scratch (PaliGemma-style)</a></li>\n</ul>\n"
+  },
+  {
     "id": "s1",
     "title": "1. Math Foundations",
     "type": "qa",
@@ -9,7 +15,7 @@
         "qs": [
           {
             "q": "What is an eigenvector/eigenvalue? Why do they matter in ML?",
-            "a": "<p><strong>Av = λv</strong> — multiplying matrix A by eigenvector v only scales it (by λ), never changes its direction.</p>\n<ul>\n<li><strong>PCA:</strong> eigenvectors of the covariance matrix are the principal components (directions of max variance). Eigenvalues = variance explained in each direction. Sort descending, take top-k.</li>\n<li><strong>RNN stability:</strong> a recurrent network blows up if the spectral radius (largest eigenvalue magnitude) of the weight matrix &gt; 1. Gradient clipping and orthogonal init address this.</li>\n<li><strong>Kernel SVMs:</strong> the kernel matrix must be PSD (all eigenvalues ≥ 0). Indefinite kernels break the dual formulation.</li>\n<li><strong>Covariance matrices</strong> are always PSD — all eigenvalues ≥ 0 because x<sup>T</sup>Cx = ||X x||<sup>2</sup> ≥ 0.</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> PCA on MNIST — first eigenvector captures global brightness, later ones capture strokes. Draw this connection to what each dimension \"means.\"</div>",
+            "a": "<p><strong>Av = λv</strong> — multiplying matrix A by eigenvector v only scales it (by λ), never changes its direction.</p>\n<ul>\n<li><strong>PCA:</strong> eigenvectors of the covariance matrix are the principal components (directions of max variance). Eigenvalues = variance explained in each direction. Sort descending, take top-k.</li>\n<li><strong>RNN stability:</strong> a recurrent network blows up if the spectral radius (largest eigenvalue magnitude) of the weight matrix &gt; 1. Gradient clipping and orthogonal init address this.</li>\n<li><strong>Kernel SVMs:</strong> the kernel matrix must be PSD (all eigenvalues ≥ 0). Indefinite kernels break the dual formulation.</li>\n<li><strong>Covariance matrices</strong> are always PSD — all eigenvalues ≥ 0 because x<sup>T</sup>Cx = ||X x||<sup>2</sup> ≥ 0.</li>\n</ul>\n<p><strong>Note:</strong> PCA on MNIST — first eigenvector captures global brightness, later ones capture strokes. Draw this connection to what each dimension \"means.\"</p>",
             "difficulty": "med",
             "tags": [
               "math",
@@ -27,7 +33,7 @@
           },
           {
             "q": "Why divide attention scores by √d_k? Derive it.",
-            "a": "<p>If Q and K components are drawn from N(0,1), then the dot product Q·K = Σ q<sub>i</sub>k<sub>i</sub> has variance <strong>d<sub>k</sub></strong> (sum of d<sub>k</sub> independent unit-variance terms).</p>\n<p>With large d<sub>k</sub> (e.g., 64), the dot products have high magnitude. After softmax, this creates near one-hot distributions where almost all attention goes to one token. The gradient through softmax then vanishes (softmax is nearly flat everywhere except the peak).</p>\n<p>Dividing by √d<sub>k</sub> normalizes variance to 1 regardless of d<sub>k</sub>, keeping softmax in a region where gradients flow cleanly.</p>\n<div class=\"anote\"><strong>Follow-up:</strong> What if you use d<sub>k</sub>=1? Then the softmax is very flat — model loses ability to attend sharply. The √d_k scaling is the right tradeoff.</div>",
+            "a": "<p>If Q and K components are drawn from N(0,1), then the dot product Q·K = Σ q<sub>i</sub>k<sub>i</sub> has variance <strong>d<sub>k</sub></strong> (sum of d<sub>k</sub> independent unit-variance terms).</p>\n<p>With large d<sub>k</sub> (e.g., 64), the dot products have high magnitude. After softmax, this creates near one-hot distributions where almost all attention goes to one token. The gradient through softmax then vanishes (softmax is nearly flat everywhere except the peak).</p>\n<p>Dividing by √d<sub>k</sub> normalizes variance to 1 regardless of d<sub>k</sub>, keeping softmax in a region where gradients flow cleanly.</p>\n<p><strong>Follow-up:</strong> What if you use d<sub>k</sub>=1? Then the softmax is very flat — model loses ability to attend sharply. The √d_k scaling is the right tradeoff.</p>",
             "difficulty": "med",
             "tags": [
               "math",
@@ -72,7 +78,7 @@
           },
           {
             "q": "Derive why PCA is the eigendecomposition of the covariance matrix.",
-            "a": "<p>Center the data: X ∈ ℝ<sup>n×d</sup> with zero column means. Covariance C = (1/n) XᵀX, a d×d symmetric PSD matrix.</p>\n<p><strong>Goal:</strong> find the unit direction w that maximises the variance of the projections Xw:</p>\n<p>maximise wᵀCw &nbsp; subject to &nbsp; ‖w‖ = 1.</p>\n<p><strong>Lagrangian:</strong> L = wᵀCw − λ(wᵀw − 1). Set ∂L/∂w = 2Cw − 2λw = 0:</p>\n<p><strong>Cw = λw</strong> — the optimal w is an eigenvector of C, and the variance it captures is wᵀCw = λ. So the top eigenvalue is the maximum-variance direction; subsequent principal components are the next eigenvectors (orthogonal, by symmetry of C), in descending λ.</p>\n<p><strong>Via SVD (what you actually compute):</strong> X = UΣVᵀ ⟹ C = (1/n)VΣ²Vᵀ. The right singular vectors V are the principal components and σ²/n are the variances. SVD of X is numerically more stable than forming C explicitly.</p>\n<div class=\"anote\"><strong>Interview hook:</strong> on MNIST the first eigenvector ≈ global brightness, later ones capture strokes. That lets you say what each retained dimension \"means,\" not just that you ran PCA.</div>",
+            "a": "<p>Center the data: X ∈ ℝ<sup>n×d</sup> with zero column means. Covariance C = (1/n) XᵀX, a d×d symmetric PSD matrix.</p>\n<p><strong>Goal:</strong> find the unit direction w that maximises the variance of the projections Xw:</p>\n<p>maximise wᵀCw &nbsp; subject to &nbsp; ‖w‖ = 1.</p>\n<p><strong>Lagrangian:</strong> L = wᵀCw − λ(wᵀw − 1). Set ∂L/∂w = 2Cw − 2λw = 0:</p>\n<p><strong>Cw = λw</strong> — the optimal w is an eigenvector of C, and the variance it captures is wᵀCw = λ. So the top eigenvalue is the maximum-variance direction; subsequent principal components are the next eigenvectors (orthogonal, by symmetry of C), in descending λ.</p>\n<p><strong>Via SVD (what you actually compute):</strong> X = UΣVᵀ ⟹ C = (1/n)VΣ²Vᵀ. The right singular vectors V are the principal components and σ²/n are the variances. SVD of X is numerically more stable than forming C explicitly.</p>\n<p><strong>Note:</strong> on MNIST the first eigenvector ≈ global brightness, later ones capture strokes. That lets you say what each retained dimension \"means,\" not just that you ran PCA.</p>",
             "difficulty": "med",
             "tags": [
               "math",
@@ -95,7 +101,7 @@
           },
           {
             "q": "Explain KL divergence. Is it symmetric? Forward vs reverse KL — when to use each?",
-            "a": "<p><strong>KL(P||Q) = Σ P(x) log(P(x)/Q(x))</strong> — \"how much extra information you need to encode P using Q instead of P itself.\" Always ≥ 0. Equals 0 iff P=Q.</p>\n<p><strong>Not symmetric:</strong> KL(P||Q) ≠ KL(Q||P) in general.</p>\n<ul>\n<li><strong>Forward KL (I-projection, mode-covering):</strong> KL(P||Q). Q must cover all modes of P — if P has probability mass somewhere Q doesn't, you get ∞ loss. Used in VAE decoder, SFT (cross-entropy loss).</li>\n<li><strong>Reverse KL (M-projection, mode-seeking):</strong> KL(Q||P). Q concentrates on peaks of P. Produces mode-seeking behavior — Q might ignore some modes of P. Used in PPO (KL penalty from reference policy), variational inference.</li>\n</ul>\n<div class=\"anote\"><strong>Practical:</strong> In RLHF, the KL penalty KL(π||π_ref) is reverse KL — the new policy stays near the reference policy at the modes it's already good at.</div>",
+            "a": "<p><strong>KL(P||Q) = Σ P(x) log(P(x)/Q(x))</strong> — \"how much extra information you need to encode P using Q instead of P itself.\" Always ≥ 0. Equals 0 iff P=Q.</p>\n<p><strong>Not symmetric:</strong> KL(P||Q) ≠ KL(Q||P) in general.</p>\n<ul>\n<li><strong>Forward KL (I-projection, mode-covering):</strong> KL(P||Q). Q must cover all modes of P — if P has probability mass somewhere Q doesn't, you get ∞ loss. Used in VAE decoder, SFT (cross-entropy loss).</li>\n<li><strong>Reverse KL (M-projection, mode-seeking):</strong> KL(Q||P). Q concentrates on peaks of P. Produces mode-seeking behavior — Q might ignore some modes of P. Used in PPO (KL penalty from reference policy), variational inference.</li>\n</ul>\n<p><strong>Practical:</strong> In RLHF, the KL penalty KL(π||π_ref) is reverse KL — the new policy stays near the reference policy at the modes it's already good at.</p>",
             "difficulty": "hard",
             "tags": [
               "math",
@@ -105,7 +111,7 @@
           },
           {
             "q": "Explain bias-variance tradeoff.",
-            "a": "<p>For a model f̂ trained on dataset D:</p>\n<p><strong>MSE = Bias² + Variance + Irreducible Noise</strong></p>\n<ul>\n<li><strong>Bias:</strong> error from wrong assumptions in the model. High-bias = underfitting (linear model for nonlinear data).</li>\n<li><strong>Variance:</strong> sensitivity to training data fluctuations. High-variance = overfitting (memorizes training set).</li>\n</ul>\n<p>Complex models (deep nets, many parameters): low bias, high variance. Simple models (linear regression): high bias, low variance. Regularization reduces variance at cost of some bias.</p>\n<div class=\"anote\"><strong>Deep learning twist:</strong> deep nets with SGD can have low bias AND surprisingly low variance (double descent phenomenon). Traditional tradeoff breaks for very overparameterized models.</div>",
+            "a": "<p>For a model f̂ trained on dataset D:</p>\n<p><strong>MSE = Bias² + Variance + Irreducible Noise</strong></p>\n<ul>\n<li><strong>Bias:</strong> error from wrong assumptions in the model. High-bias = underfitting (linear model for nonlinear data).</li>\n<li><strong>Variance:</strong> sensitivity to training data fluctuations. High-variance = overfitting (memorizes training set).</li>\n</ul>\n<p>Complex models (deep nets, many parameters): low bias, high variance. Simple models (linear regression): high bias, low variance. Regularization reduces variance at cost of some bias.</p>\n<p><strong>Twist:</strong> deep nets with SGD can have low bias AND surprisingly low variance (double descent phenomenon). Traditional tradeoff breaks for very overparameterized models.</p>",
             "difficulty": "med",
             "tags": [
               "math",
@@ -364,7 +370,7 @@
           },
           {
             "q": "Sigmoid vs Tanh vs ReLU vs Leaky ReLU — when does each fail?",
-            "a": "<ul>\n<li><strong>Sigmoid</strong> σ(x)=1/(1+e^-x): output (0,1). Saturates at extremes (σ' → 0). Not zero-centered → zig-zag gradient updates. Only good for binary output layer.</li>\n<li><strong>Tanh</strong> tanh(x): output (-1,1). Zero-centered (better than sigmoid). Still saturates. Preferred over sigmoid in hidden layers when saturation is acceptable.</li>\n<li><strong>ReLU</strong> max(0,x): gradient = 1 when active (no saturation). Sparse activations (good inductive bias). <strong>Dying ReLU:</strong> neurons with negative z<sup>l</sup> for all training examples never activate, their gradients are always 0, they never update. Can freeze ~10-50% of neurons.</li>\n<li><strong>Leaky ReLU</strong> max(αx,x), α=0.01: fixes dying ReLU by allowing small negative gradient. <strong>GELU</strong> (used in GPT): smooth approximation, slightly better in practice for Transformers.</li>\n</ul>\n<div class=\"anote\"><strong>Modern practice:</strong> transformers use GELU. CNNs often use ReLU or Swish. Dying ReLU rarely a problem with He init + BN + residual connections.</div>",
+            "a": "<ul>\n<li><strong>Sigmoid</strong> σ(x)=1/(1+e^-x): output (0,1). Saturates at extremes (σ' → 0). Not zero-centered → zig-zag gradient updates. Only good for binary output layer.</li>\n<li><strong>Tanh</strong> tanh(x): output (-1,1). Zero-centered (better than sigmoid). Still saturates. Preferred over sigmoid in hidden layers when saturation is acceptable.</li>\n<li><strong>ReLU</strong> max(0,x): gradient = 1 when active (no saturation). Sparse activations (good inductive bias). <strong>Dying ReLU:</strong> neurons with negative z<sup>l</sup> for all training examples never activate, their gradients are always 0, they never update. Can freeze ~10-50% of neurons.</li>\n<li><strong>Leaky ReLU</strong> max(αx,x), α=0.01: fixes dying ReLU by allowing small negative gradient. <strong>GELU</strong> (used in GPT): smooth approximation, slightly better in practice for Transformers.</li>\n</ul>\n<p><strong>Modern practice:</strong> transformers use GELU. CNNs often use ReLU or Swish. Dying ReLU rarely a problem with He init + BN + residual connections.</p>",
             "difficulty": "easy",
             "tags": [
               "dl",
@@ -391,16 +397,6 @@
             ]
           },
           {
-            "q": "Layer Norm vs Batch Norm — why do Transformers use LayerNorm?",
-            "a": "<ul>\n<li><strong>BatchNorm:</strong> normalizes across the batch dimension for each feature. Mean/variance computed over (batch, spatial) dimensions. Depends on other samples in batch.</li>\n<li><strong>LayerNorm:</strong> normalizes across the feature dimension for each sample independently. Mean/variance over feature dimensions per sample.</li>\n</ul>\n<p><strong>Why Transformers use LayerNorm:</strong></p>\n<ul>\n<li>Sequence lengths vary — BatchNorm's statistics would be dominated by padding</li>\n<li>Autoregressive inference processes one token at a time (batch=1) — BatchNorm undefined</li>\n<li>LayerNorm works the same at train and inference — no running statistics needed</li>\n<li>Works for any batch size including 1</li>\n</ul>\n<p><strong>RMSNorm</strong> (LLaMA): normalizes only by RMS, no mean subtraction. y = x/RMS(x) · γ. Faster, fewer parameters, similar quality. Used in modern LLMs.</p>",
-            "difficulty": "med",
-            "tags": [
-              "dl",
-              "frontier",
-              "key"
-            ]
-          },
-          {
             "q": "Explain residual/skip connections. Why do they help with deep networks?",
             "a": "<p>Instead of h = F(x), learn <strong>h = F(x) + x</strong>. The network only needs to learn the \"residual\" F(x) = h - x.</p>\n<p><strong>Why they help:</strong></p>\n<ul>\n<li><strong>Gradient highway:</strong> ∂L/∂x = ∂L/∂h · (∂F/∂x + 1). Even if ∂F/∂x ≈ 0, gradient of at least 1 passes through. Vanishing gradients solved.</li>\n<li><strong>Identity is easy to learn:</strong> just set F(x) = 0 (zero out the weights). Networks can learn to skip layers that aren't useful.</li>\n<li><strong>Ensemble-like behavior:</strong> a network with n residual blocks is like an implicit ensemble of O(2^n) shallow networks.</li>\n</ul>\n<p>ResNet-152 became trainable (without residual connections, it performs worse than ResNet-18 due to degradation problem). Modern Transformers all use residual connections.</p>",
             "difficulty": "med",
@@ -411,7 +407,7 @@
           },
           {
             "q": "Explain knowledge distillation.",
-            "a": "<p>Train a smaller \"student\" model to mimic a larger \"teacher\" model.</p>\n<p><strong>Loss:</strong> L = α · CE(student, hard_labels) + (1-α) · KL(student_soft, teacher_soft)</p>\n<p>Soft targets from teacher (temperature T applied: logits/T before softmax) contain more information than one-hot labels: \"this image is 70% cat, 28% dog\" tells the student about similarity structure.</p>\n<p><strong>Why it works:</strong> the teacher's soft predictions encode its \"dark knowledge\" — the relative probabilities between wrong classes encode useful generalization patterns.</p>\n<p><strong>LLM distillation:</strong> Llama models were trained on outputs from larger models (GPT-4 distillation). Phi models achieve strong results at small scale through careful distillation. DistilBERT = 60% smaller, 97% of BERT performance.</p>",
+            "a": "<p>Train a smaller student to match a larger teacher's softened outputs (temperature-scaled softmax), not just hard labels. KL(student || teacher) carries relative confidence across wrong classes.</p>\n<p><strong>Structured pruning:</strong> remove whole heads/channels/layers — dense smaller model, runs faster on normal hardware.</p>\n<p><strong>Unstructured pruning:</strong> zero individual weights — higher sparsity ratio but needs sparse kernels to realize speedups.</p>",
             "difficulty": "hard",
             "tags": [
               "dl",
@@ -430,7 +426,7 @@
           },
           {
             "q": "What is dropout? How does it differ at train vs. inference?",
-            "a": "<p>Dropout randomly zeroes each neuron's activation with probability p (typically 0.1-0.5) during training.</p>\n<p><strong>Why it works:</strong></p>\n<ul>\n<li><strong>Ensemble interpretation:</strong> each forward pass uses a different sub-network. At inference, the full network approximates averaging 2^n sub-networks.</li>\n<li><strong>Co-adaptation:</strong> neurons can't co-adapt to rely on specific other neurons. Each must learn independently useful features.</li>\n</ul>\n<p><strong>Train vs. inference:</strong> at training, randomly zero neurons. At inference, use ALL neurons but scale activations by (1-p) to match expected training magnitude — OR (inverse dropout) scale activations by 1/(1-p) during training so inference needs no scaling. PyTorch uses inverse dropout.</p>\n<p><strong>Important:</strong> call <code>model.eval()</code> before inference — this disables dropout (and BatchNorm uses running stats instead of batch stats). Forgetting this is a classic bug.</p>\n<div class=\"rnote\"><strong>Gotcha:</strong> MC Dropout — run inference with dropout enabled N times, take mean and variance. Use variance as an uncertainty estimate. Cheap Bayesian approximation.</div>",
+            "a": "<p>Dropout randomly zeroes each neuron's activation with probability p (typically 0.1-0.5) during training.</p>\n<p><strong>Why it works:</strong></p>\n<ul>\n<li><strong>Ensemble interpretation:</strong> each forward pass uses a different sub-network. At inference, the full network approximates averaging 2^n sub-networks.</li>\n<li><strong>Co-adaptation:</strong> neurons can't co-adapt to rely on specific other neurons. Each must learn independently useful features.</li>\n</ul>\n<p><strong>Train vs. inference:</strong> at training, randomly zero neurons. At inference, use ALL neurons but scale activations by (1-p) to match expected training magnitude — OR (inverse dropout) scale activations by 1/(1-p) during training so inference needs no scaling. PyTorch uses inverse dropout.</p>\n<p><strong>Important:</strong> call <code>model.eval()</code> before inference — this disables dropout (and BatchNorm uses running stats instead of batch stats). Forgetting this is a classic bug.</p>\n<p><strong>Gotcha:</strong> MC Dropout — run inference with dropout enabled N times, take mean and variance. Use variance as an uncertainty estimate. Cheap Bayesian approximation.</p>",
             "difficulty": "easy",
             "tags": [
               "dl",
@@ -457,7 +453,7 @@
           },
           {
             "q": "Derive the backward pass of BatchNorm.",
-            "a": "<p><strong>Forward</strong> (per feature, over the N samples in the batch): μ = mean(x), σ² = var(x), x̂ = (x − μ)/√(σ²+ε), y = γx̂ + β.</p>\n<p><strong>Easy gradients:</strong> dγ = Σ dy·x̂, &nbsp; dβ = Σ dy, &nbsp; dx̂ = dy·γ.</p>\n<p><strong>The hard part:</strong> μ and σ² each depend on every xᵢ, so x̂ couples all N samples. Differentiate through them:</p>\n<ul>\n<li>dσ² = Σ dx̂·(x − μ)·(−½)(σ²+ε)<sup>−3/2</sup></li>\n<li>dμ = Σ dx̂·(−1/√(σ²+ε)) &nbsp; (the σ²-path term vanishes since Σ(x − μ) = 0)</li>\n<li>dx = dx̂/√(σ²+ε) + dσ²·2(x − μ)/N + dμ/N</li>\n</ul>\n<p><strong>Vectorised (the clean form):</strong></p>\n<p>dx = (1/N)·(1/√(σ²+ε))·(N·dx̂ − Σdx̂ − x̂·Σ(dx̂·x̂))</p>\n<div class=\"rnote\"><strong>Why BN is annoying:</strong> the batch coupling means you cannot compute stats for a single example at inference. You keep an EMA of μ and σ² during training and use those running averages at test time — a train/inference mismatch that does not exist for LayerNorm.</div>",
+            "a": "<p><strong>Forward</strong> (per feature, over the N samples in the batch): μ = mean(x), σ² = var(x), x̂ = (x − μ)/√(σ²+ε), y = γx̂ + β.</p>\n<p><strong>Easy gradients:</strong> dγ = Σ dy·x̂, &nbsp; dβ = Σ dy, &nbsp; dx̂ = dy·γ.</p>\n<p><strong>The hard part:</strong> μ and σ² each depend on every xᵢ, so x̂ couples all N samples. Differentiate through them:</p>\n<ul>\n<li>dσ² = Σ dx̂·(x − μ)·(−½)(σ²+ε)<sup>−3/2</sup></li>\n<li>dμ = Σ dx̂·(−1/√(σ²+ε)) &nbsp; (the σ²-path term vanishes since Σ(x − μ) = 0)</li>\n<li>dx = dx̂/√(σ²+ε) + dσ²·2(x − μ)/N + dμ/N</li>\n</ul>\n<p><strong>Vectorised (the clean form):</strong></p>\n<p>dx = (1/N)·(1/√(σ²+ε))·(N·dx̂ − Σdx̂ − x̂·Σ(dx̂·x̂))</p>\n<p><strong>Why BN is annoying:</strong> the batch coupling means you cannot compute stats for a single example at inference. You keep an EMA of μ and σ² during training and use those running averages at test time — a train/inference mismatch that does not exist for LayerNorm.</p>",
             "difficulty": "hard",
             "tags": [
               "dl",
@@ -466,7 +462,7 @@
           },
           {
             "q": "Derive the backward pass of LayerNorm. Why is it simpler than BatchNorm in practice?",
-            "a": "<p><strong>Forward</strong> (per token, over the D feature dimensions): μ and σ² are computed across the D features of one sample. x̂ = (x − μ)/√(σ²+ε), y = γ⊙x̂ + β.</p>\n<p><strong>Backward:</strong></p>\n<ul>\n<li>dγ = Σ dy⊙x̂, &nbsp; dβ = Σ dy &nbsp; (summed over batch and positions)</li>\n<li>dx̂ = dy⊙γ</li>\n<li>dx = (1/√(σ²+ε))·(dx̂ − mean(dx̂) − x̂·mean(dx̂⊙x̂)), &nbsp; means over the D feature dim</li>\n</ul>\n<p>Algebraically identical shape to the BatchNorm backward — the only difference is the axis of reduction.</p>\n<div class=\"gnote\"><strong>The whole BN↔LN distinction:</strong> same formula, different axis. BN reduces over the batch (couples samples → needs running stats). LN reduces over features within one sample → no batch coupling, identical train vs inference, works at batch=1. That last point is exactly why transformers (autoregressive decode at batch=1) use LN.</div>",
+            "a": "<p><strong>Forward</strong> (per token, over the D feature dimensions): μ and σ² are computed across the D features of one sample. x̂ = (x − μ)/√(σ²+ε), y = γ⊙x̂ + β.</p>\n<p><strong>Backward:</strong></p>\n<ul>\n<li>dγ = Σ dy⊙x̂, &nbsp; dβ = Σ dy &nbsp; (summed over batch and positions)</li>\n<li>dx̂ = dy⊙γ</li>\n<li>dx = (1/√(σ²+ε))·(dx̂ − mean(dx̂) − x̂·mean(dx̂⊙x̂)), &nbsp; means over the D feature dim</li>\n</ul>\n<p>Algebraically identical shape to the BatchNorm backward — the only difference is the axis of reduction.</p>\n<p><strong>The whole BN↔LN distinction:</strong> same formula, different axis. BN reduces over the batch (couples samples → needs running stats). LN reduces over features within one sample → no batch coupling, identical train vs inference, works at batch=1. That last point is exactly why transformers (autoregressive decode at batch=1) use LN.</p>",
             "difficulty": "hard",
             "tags": [
               "dl",
@@ -505,16 +501,6 @@
             "tags": [
               "dl",
               "cv"
-            ]
-          },
-          {
-            "q": "How does ViT (Vision Transformer) process images? Compare to CNN.",
-            "a": "<p><strong>ViT:</strong> split image into 16×16 patches, flatten each patch, embed linearly, add position embedding, feed to standard Transformer encoder.</p>\n<p>For 224×224 image: (224/16)² = 196 patches. Each patch is a token. Self-attention operates over all 196 tokens.</p>\n<p><strong>ViT vs CNN:</strong></p>\n<ul>\n<li><strong>Inductive bias:</strong> CNNs have strong priors (locality, translation equivariance). ViT has weak inductive bias — must learn everything from data.</li>\n<li><strong>Data efficiency:</strong> CNNs need less data (strong priors help). ViT needs large datasets (JFT-300M) to match CNN performance.</li>\n<li><strong>Global context:</strong> ViT attention can connect any two patches from layer 1. CNNs need many layers to get large receptive field.</li>\n<li><strong>Scale:</strong> ViT scales better with compute and data. ViT-22B outperforms all CNNs.</li>\n</ul>",
-            "difficulty": "med",
-            "tags": [
-              "dl",
-              "cv",
-              "general"
             ]
           }
         ]
@@ -583,7 +569,7 @@
           },
           {
             "q": "What is Flash Attention? How does it reduce memory from O(n²) to O(n)?",
-            "a": "<p><strong>Problem:</strong> standard attention materializes the n×n attention matrix in HBM (GPU high-bandwidth memory). For n=4096, seq_len: 16M floats = 64MB per head, per batch element. This is the memory bottleneck, not compute.</p>\n<p><strong>Flash Attention insight:</strong> tiling + online softmax.</p>\n<ul>\n<li>Process blocks of Q, K, V that fit in fast SRAM (on-chip cache, ~20MB)</li>\n<li>Compute partial softmax statistics online (track max and sum for numerical stability)</li>\n<li>Never write the full n×n matrix to HBM — only write the output O of shape (n, d)</li>\n</ul>\n<p><strong>Result:</strong> O(n) memory (just store O, plus block-level intermediate stats). Same O(n²d) compute. Typically 2-4× faster in wall-clock time due to memory bandwidth being the bottleneck.</p>\n<p><strong>Flash Attention 2:</strong> better work partitioning across warps, reduces redundant shared memory reads. ~2× faster than FA1.</p>",
+            "a": "<p>Standard attention writes the full N×N score matrix to HBM — bandwidth-bound for typical context lengths.</p>\n<p><strong>FlashAttention:</strong> tile Q,K,V into on-chip SRAM; online softmax rescales partial blocks so the full N×N matrix never materializes in HBM. Output is exact, not approximate.</p>\n<ul>\n<li>Memory: O(N) in HBM vs O(N²)</li>\n<li>Speed: often 2–4× wall-clock (FA2 improves warp scheduling further)</li>\n</ul>\n<p>Same IO-aware idea as tiled matmul — minimize HBM round-trips.</p>",
             "difficulty": "hard",
             "tags": [
               "transformers",
@@ -592,13 +578,14 @@
             ]
           },
           {
-            "q": "What is KV cache? How does it speed up inference?",
-            "a": "<p>During autoregressive generation, at step t we have tokens [t<sub>1</sub>,...,t<sub>t-1</sub>]. To generate t<sub>t</sub>, we need K and V for all past tokens.</p>\n<p>Without cache: recompute K, V for all t-1 previous tokens at each new step. O(t) per step → O(t²) total.</p>\n<p>With KV cache: store K, V tensors from previous steps. At step t, only compute new Q, K, V for the single new token t<sub>t-1</sub>. Append to cache. Attention over all t keys. O(1) compute per step (plus attention over growing cache).</p>\n<p><strong>Memory cost:</strong> 2 (K+V) × n_layers × n_heads × d_head × bytes per element × seq_len</p>\n<p>LLaMA-3-8B (32 layers, GQA 8 kv heads, d_head=128, FP16): 2×32×8×128×2 = 131KB per token. For 4096 tokens: ~512MB per sequence in the cache.</p>\n<div class=\"anote\"><strong>This is why long contexts are expensive:</strong> 128K context → 16GB KV cache per sequence.</div>",
+            "q": "What is KV cache? Memory scaling, speedup, and how to reduce it.",
+            "a": "<p>During autoregressive decode, each step needs K and V for all prior tokens. Without a cache you recompute them every step — O(t²) total work.</p>\n<p><strong>With cache:</strong> store K,V per layer; each new step only projects the latest token and appends. Per-step compute is O(1) in sequence length (attention still reads the growing cache).</p>\n<p><strong>Memory:</strong> 2 × layers × kv_heads × head_dim × seq_len × bytes × batch_size.</p>\n<p>LLaMA-3-8B (32 layers, GQA with 8 kv heads, d_head=128, FP16): ~131 KB/token → ~512 MB at 4096 tokens. At 128K context the cache alone can exceed weight memory.</p>\n<p><strong>Reduce it:</strong> GQA/MQA (fewer kv heads), shorter context, FP8/quantized KV, paged allocation (vLLM). See also GQA and Paged Attention questions.</p>",
             "difficulty": "med",
             "tags": [
               "transformers",
               "frontier",
-              "key"
+              "key",
+              "llm"
             ]
           },
           {
@@ -679,7 +666,7 @@
           },
           {
             "q": "Why is tokenization the root of most LLM weirdness?",
-            "a": "<p><strong>BPE recap:</strong> start from bytes/characters, greedily merge the most frequent adjacent pair, repeat to a target vocab size. Frequent words collapse to one token; rare strings fragment into many.</p>\n<p><strong>The quirks this causes:</strong></p>\n<ul>\n<li><strong>Non-English tax:</strong> under-represented scripts (Hindi, Tamil, even code) are barely merged, so they cost many more tokens — higher price and a smaller effective context window for the same text.</li>\n<li><strong>Bad arithmetic:</strong> numbers tokenize inconsistently (\"127\" might be one token, \"128\" two). Digits are not atomic, so the model never sees clean place value.</li>\n<li><strong>Can't spell:</strong> \"strawberry\" is a couple of tokens, never characters — so counting its r's is genuinely hard for the model.</li>\n<li><strong>Under-trained tokens:</strong> rare merges (the \"SolidGoldMagikarp\" tokens) have barely-trained embeddings and trigger weird behavior.</li>\n<li><strong>Whitespace/case sensitivity:</strong> \" the\", \"the\", \"The\", \"THE\" are different tokens.</li>\n</ul>\n<p><strong>Why BPE at all:</strong> char-level → sequences too long for O(n²) attention; word-level → out-of-vocabulary explosions and a huge vocab. BPE is the compromise. <strong>Byte-level BPE</strong> (GPT-2 onward) operates on UTF-8 bytes so every possible string is representable — no OOV ever.</p>\n<div class=\"anote\"><strong>Karpathy's line:</strong> \"tokenization is at the heart of much of the weirdness of LLMs.\" Being able to trace a specific failure (spelling, math, multilingual cost) back to the tokenizer is a strong signal.</div>",
+            "a": "<p><strong>BPE recap:</strong> start from bytes/characters, greedily merge the most frequent adjacent pair, repeat to a target vocab size. Frequent words collapse to one token; rare strings fragment into many.</p>\n<p><strong>The quirks this causes:</strong></p>\n<ul>\n<li><strong>Non-English tax:</strong> under-represented scripts (Hindi, Tamil, even code) are barely merged, so they cost many more tokens — higher price and a smaller effective context window for the same text.</li>\n<li><strong>Bad arithmetic:</strong> numbers tokenize inconsistently (\"127\" might be one token, \"128\" two). Digits are not atomic, so the model never sees clean place value.</li>\n<li><strong>Can't spell:</strong> \"strawberry\" is a couple of tokens, never characters — so counting its r's is genuinely hard for the model.</li>\n<li><strong>Under-trained tokens:</strong> rare merges (the \"SolidGoldMagikarp\" tokens) have barely-trained embeddings and trigger weird behavior.</li>\n<li><strong>Whitespace/case sensitivity:</strong> \" the\", \"the\", \"The\", \"THE\" are different tokens.</li>\n</ul>\n<p><strong>Why BPE at all:</strong> char-level → sequences too long for O(n²) attention; word-level → out-of-vocabulary explosions and a huge vocab. BPE is the compromise. <strong>Byte-level BPE</strong> (GPT-2 onward) operates on UTF-8 bytes so every possible string is representable — no OOV ever.</p>\n<p><strong>Karpathy's line:</strong> \"tokenization is at the heart of much of the weirdness of LLMs.\" Being able to trace a specific failure (spelling, math, multilingual cost) back to the tokenizer is a strong signal.</p>",
             "difficulty": "med",
             "tags": [
               "llm",
@@ -801,7 +788,7 @@
         "qs": [
           {
             "q": "Explain continuous batching and why it improves throughput.",
-            "a": "<p><strong>Static batching:</strong> batch is fixed when generation starts. Server waits until all requests in a batch finish generating (which can be different lengths) before starting new requests. GPUs idle while waiting for the longest sequence to finish.</p>\n<p><strong>Continuous batching (iteration-level scheduling):</strong> at each generation step, insert new requests into the batch and remove completed ones. No waiting for the longest sequence.</p>\n<p><strong>Why it helps:</strong></p>\n<ul>\n<li>GPU utilization goes from ~50% to ~90%+ (no wasted cycles waiting for stragglers)</li>\n<li>P50 latency stays low because short requests don't wait for long ones</li>\n<li>Higher throughput per GPU (more requests per second)</li>\n</ul>\n<p>vLLM implements continuous batching + Paged Attention. This is why production LLM servers use vLLM.</p>",
+            "a": "<p><strong>Static batching:</strong> batch is fixed when generation starts. Server waits until all requests in a batch finish generating (which can be different lengths) before starting new requests. GPUs idle while waiting for the longest sequence to finish.</p>\n<p><strong>Continuous batching (iteration-level scheduling):</strong> at each generation step, insert new requests into the batch and remove completed ones. No waiting for the longest sequence.</p>\n<p><strong>Why it helps:</strong></p>\n<ul>\n<li>GPU utilization goes from ~50% to ~90%+ (no wasted cycles waiting for stragglers)</li>\n<li>P50 latency stays low because short requests don't wait for long ones</li>\n<li>Higher throughput per GPU (more requests per second)</li>\n</ul>\n<p>vLLM implements continuous batching + Paged Attention. This is why production LLM servers use vLLM.</p>\n<p><strong>Memory-bound → compute-bound flip:</strong> at batch=1 you read all weights per token (arithmetic intensity ≈ 1 FLOP/byte). Batching amortizes weight reads across B sequences — throughput rises until you hit the roofline ridge or run out of KV-cache memory. Serving is picking B for your latency SLA.</p>",
             "difficulty": "hard",
             "tags": [
               "llm",
@@ -834,16 +821,6 @@
             "tags": [
               "llm",
               "frontier"
-            ]
-          },
-          {
-            "q": "What is the KV cache? How does its memory scale, and what reduces it?",
-            "a": "<p>During autoregressive generation, recomputing K and V for every previous token at every step would be wasteful — so each layer <strong>caches</strong> the K and V projections of all previously generated tokens and only computes K/V for the new token each step.</p><p><strong>Memory cost:</strong> roughly 2 · num_layers · num_heads · head_dim · seq_len · batch_size · bytes_per_value. It scales <strong>linearly with sequence length and batch size</strong> — for long contexts or large batches this often exceeds the memory used by the model weights themselves, making it the real inference bottleneck.</p><p><strong>Reduction techniques:</strong></p><ul><li><strong>Multi-Query Attention (MQA):</strong> all query heads share a single K/V head — large cache reduction, some quality loss.</li><li><strong>Grouped-Query Attention (GQA):</strong> a middle ground — groups of query heads share one K/V head (used in Llama 2/3, Mistral) — most of MQA's memory savings with much less quality degradation.</li><li><strong>PagedAttention (vLLM):</strong> manages the KV cache like OS virtual memory in fixed-size non-contiguous blocks, eliminating fragmentation so memory can be packed near-optimally across concurrent requests.</li></ul>",
-            "difficulty": "med",
-            "tags": [
-              "transformers",
-              "llm",
-              "key"
             ]
           },
           {
@@ -967,7 +944,7 @@
         "qs": [
           {
             "q": "Explain the ReAct (Reason + Act) agent architecture.",
-            "a": "<p>ReAct (Yao et al. 2022) interleaves reasoning traces and actions in a single LLM call.</p>\n<p><strong>Loop:</strong> Thought → Action → Observation → Thought → Action → ... → Final Answer</p>\n<ul>\n<li><strong>Thought:</strong> LLM reasons about what it knows and what to do next. Not visible to user.</li>\n<li><strong>Action:</strong> LLM calls a tool (search, calculator, code interpreter, API call)</li>\n<li><strong>Observation:</strong> tool returns result, appended to context</li>\n<li>Loop continues until LLM decides to output a final answer</li>\n</ul>\n<p><strong>Why it works:</strong> reasoning before acting prevents \"act first, think later\" failures. The chain of thought helps the model stay on task across many tool calls.</p>\n<div class=\"anote\"><strong>vs. standard CoT:</strong> CoT reasons but can't take actions. ReAct = CoT + tool use. Most production agents (LangChain agents, OpenAI Assistants) are ReAct under the hood.</div>",
+            "a": "<p>ReAct (Yao et al. 2022) interleaves reasoning traces and actions in a single LLM call.</p>\n<p><strong>Loop:</strong> Thought → Action → Observation → Thought → Action → ... → Final Answer</p>\n<ul>\n<li><strong>Thought:</strong> LLM reasons about what it knows and what to do next. Not visible to user.</li>\n<li><strong>Action:</strong> LLM calls a tool (search, calculator, code interpreter, API call)</li>\n<li><strong>Observation:</strong> tool returns result, appended to context</li>\n<li>Loop continues until LLM decides to output a final answer</li>\n</ul>\n<p><strong>Why it works:</strong> reasoning before acting prevents \"act first, think later\" failures. The chain of thought helps the model stay on task across many tool calls.</p>\n<p><strong>Compare:</strong> CoT reasons but can't take actions. ReAct = CoT + tool use. Most production agents (LangChain agents, OpenAI Assistants) are ReAct under the hood.</p>",
             "difficulty": "med",
             "tags": [
               "llm",
@@ -995,7 +972,7 @@
           },
           {
             "q": "Single-agent vs multi-agent systems — when do you split?",
-            "a": "<p><strong>Single-agent:</strong> one LLM handles all tasks sequentially. Simpler to debug, lower latency, no coordination overhead.</p>\n<p><strong>Multi-agent:</strong> multiple specialized agents, potentially parallel, coordinated by an orchestrator.</p>\n<p><strong>When to use multi-agent:</strong></p>\n<ul>\n<li><strong>Context limit:</strong> task requires more context than fits in one model's window</li>\n<li><strong>Specialization:</strong> sub-tasks benefit from different system prompts/models (research agent + code agent + writer agent)</li>\n<li><strong>Parallelism:</strong> independent sub-tasks can run simultaneously</li>\n<li><strong>Verification:</strong> generator agent + critic agent (self-consistency at agent level)</li>\n<li><strong>Cost:</strong> only use expensive model for final synthesis; cheaper models for routine subtasks</li>\n</ul>\n<p><strong>Patterns:</strong> hierarchical (orchestrator → workers), pipeline (sequential), fan-out/fan-in (parallel + merge), debate (peer-to-peer critique).</p>\n<div class=\"rnote\"><strong>Compounding failure:</strong> if each agent succeeds 90% of the time, 5 sequential agents succeed only 0.9^5 = 59% of the time. Reliability requirements multiply.</div>",
+            "a": "<p><strong>Single-agent:</strong> one LLM handles all tasks sequentially. Simpler to debug, lower latency, no coordination overhead.</p>\n<p><strong>Multi-agent:</strong> multiple specialized agents, potentially parallel, coordinated by an orchestrator.</p>\n<p><strong>When to use multi-agent:</strong></p>\n<ul>\n<li><strong>Context limit:</strong> task requires more context than fits in one model's window</li>\n<li><strong>Specialization:</strong> sub-tasks benefit from different system prompts/models (research agent + code agent + writer agent)</li>\n<li><strong>Parallelism:</strong> independent sub-tasks can run simultaneously</li>\n<li><strong>Verification:</strong> generator agent + critic agent (self-consistency at agent level)</li>\n<li><strong>Cost:</strong> only use expensive model for final synthesis; cheaper models for routine subtasks</li>\n</ul>\n<p><strong>Patterns:</strong> hierarchical (orchestrator → workers), pipeline (sequential), fan-out/fan-in (parallel + merge), debate (peer-to-peer critique).</p>\n<p><strong>Compounding failure:</strong> if each agent succeeds 90% of the time, 5 sequential agents succeed only 0.9^5 = 59% of the time. Reliability requirements multiply.</p>",
             "difficulty": "med",
             "tags": [
               "llm",
@@ -1022,7 +999,7 @@
           },
           {
             "q": "How do you evaluate agent quality?",
-            "a": "<p>Harder than evaluating standard LLM outputs — agent quality = multi-step execution + tool use + final answer quality combined.</p>\n<p><strong>Metrics:</strong></p>\n<ul>\n<li><strong>Task completion rate:</strong> did the agent achieve the final goal? Ground truth from annotated test cases.</li>\n<li><strong>Step efficiency:</strong> tool calls used vs. minimum needed. Fewer = cheaper + more reliable.</li>\n<li><strong>Tool use accuracy:</strong> correct tool with correct parameters? Track wrong tool selection rate.</li>\n<li><strong>Hallucination rate:</strong> did the agent fabricate tool results or invent non-existent outputs?</li>\n<li><strong>Cost per task:</strong> total tokens consumed across all agent steps.</li>\n</ul>\n<p><strong>Eval frameworks:</strong> AgentBench, GAIA, SWE-bench (coding agents), WebArena (web navigation). Build custom golden-trace eval suites for production agents.</p>\n<div class=\"anote\"><strong>Production:</strong> record full agent trajectories at 5% sample rate. Human raters grade: correct tool choice? Correct final answer? No harmful actions?</div>",
+            "a": "<p>Harder than evaluating standard LLM outputs — agent quality = multi-step execution + tool use + final answer quality combined.</p>\n<p><strong>Metrics:</strong></p>\n<ul>\n<li><strong>Task completion rate:</strong> did the agent achieve the final goal? Ground truth from annotated test cases.</li>\n<li><strong>Step efficiency:</strong> tool calls used vs. minimum needed. Fewer = cheaper + more reliable.</li>\n<li><strong>Tool use accuracy:</strong> correct tool with correct parameters? Track wrong tool selection rate.</li>\n<li><strong>Hallucination rate:</strong> did the agent fabricate tool results or invent non-existent outputs?</li>\n<li><strong>Cost per task:</strong> total tokens consumed across all agent steps.</li>\n</ul>\n<p><strong>Eval frameworks:</strong> AgentBench, GAIA, SWE-bench (coding agents), WebArena (web navigation). Build custom golden-trace eval suites for production agents.</p>\n<p><strong>Production:</strong> record full agent trajectories at 5% sample rate. Human raters grade: correct tool choice? Correct final answer? No harmful actions?</p>",
             "difficulty": "hard",
             "tags": [
               "llm",
@@ -1083,7 +1060,7 @@
           },
           {
             "q": "What is red teaming for LLMs?",
-            "a": "<p>Adversarial testing to discover failure modes, safety issues, and jailbreaks before deployment.</p>\n<p><strong>Failure categories to find:</strong></p>\n<ul>\n<li><strong>Harmful content:</strong> can you get the model to generate weapons instructions, hate speech, or facilitate harm?</li>\n<li><strong>Jailbreaks:</strong> prompts that bypass safety filters (roleplay, fictional framing, instruction ignore)</li>\n<li><strong>Bias:</strong> does the model treat different groups differently?</li>\n<li><strong>Privacy:</strong> can you extract training data via crafted prompts?</li>\n<li><strong>Hallucination:</strong> probe with questions the model is unlikely to know correctly</li>\n</ul>\n<p><strong>Process:</strong></p>\n<ol>\n<li>Build taxonomy of risk categories for your use case</li>\n<li>Human red teamers: domain experts craft adversarial prompts</li>\n<li>Automated red teaming: use a separate LLM to generate adversarial prompts at scale</li>\n<li>Document failures → add to eval suite → fix → retest</li>\n</ol>\n<div class=\"anote\"><strong>Anthropic:</strong> red teaming is part of every model release. They use both internal teams and third-party contractors. Constitutional AI uses AI self-critique as automated red teaming at scale.</div>",
+            "a": "<p>Adversarial testing to discover failure modes, safety issues, and jailbreaks before deployment.</p>\n<p><strong>Failure categories to find:</strong></p>\n<ul>\n<li><strong>Harmful content:</strong> can you get the model to generate weapons instructions, hate speech, or facilitate harm?</li>\n<li><strong>Jailbreaks:</strong> prompts that bypass safety filters (roleplay, fictional framing, instruction ignore)</li>\n<li><strong>Bias:</strong> does the model treat different groups differently?</li>\n<li><strong>Privacy:</strong> can you extract training data via crafted prompts?</li>\n<li><strong>Hallucination:</strong> probe with questions the model is unlikely to know correctly</li>\n</ul>\n<p><strong>Process:</strong></p>\n<ol>\n<li>Build taxonomy of risk categories for your use case</li>\n<li>Human red teamers: domain experts craft adversarial prompts</li>\n<li>Automated red teaming: use a separate LLM to generate adversarial prompts at scale</li>\n<li>Document failures → add to eval suite → fix → retest</li>\n</ol>\n<p><strong>Anthropic:</strong> red teaming is part of every model release. They use both internal teams and third-party contractors. Constitutional AI uses AI self-critique as automated red teaming at scale.</p>",
             "difficulty": "med",
             "tags": [
               "llm",
@@ -1135,7 +1112,8 @@
             "difficulty": "med",
             "tags": [
               "cv",
-              "general"
+              "general",
+              "frontier"
             ]
           }
         ]
@@ -1164,12 +1142,14 @@
             ]
           },
           {
-            "q": "Explain ViT — how does it tokenize images?",
-            "a": "<p><strong>Vision Transformer (Dosovitskiy et al. 2020):</strong></p>\n<ol>\n<li>Split image (224×224) into patches of 16×16 pixels → 14×14 = 196 patches</li>\n<li>Flatten each patch to a vector: 16×16×3 = 768 dimensions</li>\n<li>Linear projection → d_model dimensional \"patch embeddings\"</li>\n<li>Prepend a [CLS] token</li>\n<li>Add learnable position embeddings (1D — just patch index, not 2D)</li>\n<li>Feed 197 tokens to standard Transformer encoder</li>\n<li>Use [CLS] token representation for classification</li>\n</ol>\n<p><strong>Insight:</strong> once you've linearized the image into patches, images are just sequences — the same Transformer architecture applies.</p>\n<p><strong>Self-supervised ViT (MAE):</strong> mask 75% of patches, reconstruct pixel values. Much more data efficient than supervised pretraining. Enables training on unlabeled images.</p>",
+            "q": "How does ViT tokenize images? Compare to CNNs.",
+            "a": "<p>Split 224×224 into 16×16 patches → 196 tokens. Flatten each patch (16×16×3=768), linear project to d_model, add position embeddings, run a Transformer encoder. [CLS] token (or global pool) for classification.</p>\n<p><strong>ViT vs CNN:</strong></p>\n<ul>\n<li>CNNs: locality + translation equivariance built in; data-efficient</li>\n<li>ViT: weak inductive bias; needs large data (JFT-300M) but scales better — global context from layer 1</li>\n</ul>\n<p><strong>MAE:</strong> mask 75% of patches, reconstruct pixels — strong self-supervised pretrain on unlabeled images.</p>",
             "difficulty": "med",
             "tags": [
               "cv",
-              "general"
+              "general",
+              "transformers",
+              "key"
             ]
           },
           {
@@ -1179,6 +1159,79 @@
             "tags": [
               "cv",
               "llm"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Frontier CV",
+        "qs": [
+          {
+            "q": "How do you use SAM at inference? Point, box, and mask prompts.",
+            "a": "<p><strong>Pipeline:</strong> ViT image encoder (runs once per image) → prompt encoder (points/boxes/masks) → lightweight mask decoder outputs 3 mask candidates + IoU quality scores.</p><ul><li><strong>Point:</strong> foreground (+) / background (−) clicks steer which object to segment</li><li><strong>Box:</strong> tight bbox as prompt — often best for detection→segment pipelines</li><li><strong>Mask:</strong> coarse mask input for refinement</li></ul><p>Pick the mask with highest predicted IoU. No fine-tuning for new classes — prompt is the interface.</p>",
+            "difficulty": "med",
+            "tags": [
+              "cv",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "SAM 2 for video — how does it track objects across frames?",
+            "a": "<p>SAM 2 adds a <strong>streaming memory</strong> module: past frame embeddings and mask predictions are stored in a compact memory bank. Each new frame attends to memory + current image features to propagate masks without re-encoding the whole video.</p><p>Enables interactive video segmentation (click frame 1, track through clip) and improves temporal consistency vs running SAM independently per frame.</p>",
+            "difficulty": "med",
+            "tags": [
+              "cv",
+              "frontier"
+            ]
+          },
+          {
+            "q": "Open-vocabulary detection — how do Grounding DINO and YOLO-World work?",
+            "a": "<p>Detect arbitrary categories described in text at inference, not just fixed training classes.</p><ul><li><strong>Grounding DINO:</strong> fuses a text encoder with a DINO-style detector; cross-attention between language tokens and image features localizes phrases</li><li><strong>YOLO-World:</strong> image-text pretrain + prompt-then-detect — embed class names, score boxes against text embeddings at runtime</li></ul><p>Use when the label set changes often (retail SKUs, traffic signs) without retraining the full detector.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "cv",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "DINOv2 — why use it over supervised ImageNet pretrain?",
+            "a": "<p>DINOv2 (self-distilled ViT on curated web images) produces general visual features without labels.</p><ul><li>Strong linear probes and k-NN on downstream tasks with few labels</li><li>Better transfer to domains ImageNet doesn't cover (satellite, medical, industrial)</li><li>Typical workflow: frozen DINOv2 backbone + small task head; optional partial unfreeze with LoRA on last blocks</li></ul>",
+            "difficulty": "med",
+            "tags": [
+              "cv",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "Video understanding — how do models capture temporal information?",
+            "a": "<p>Options:</p><ul><li><strong>3D convolutions (I3D, SlowFast):</strong> explicit spatiotemporal filters — good inductive bias, heavier compute</li><li><strong>Frame sampling + Transformer (TimeSformer, ViViT):</strong> treat frames or tubelets as tokens; divided space-time attention</li><li><strong>VideoMAE:</strong> mask spacetime patches, reconstruct — self-supervised pretrain like MAE</li><li><strong>SAM 2 / streaming memory:</strong> temporal propagation for segmentation/tracking</li></ul><p>For surveillance/tracking (Beltech-style): detection per frame + DeepSORT/ByteTrack often beats end-to-end video models on cost and debuggability.</p>",
+            "difficulty": "med",
+            "tags": [
+              "cv",
+              "frontier",
+              "startup"
+            ]
+          },
+          {
+            "q": "When would you fine-tune SAM vs use zero-shot prompts vs train a U-Net?",
+            "a": "<ul><li><strong>Zero-shot SAM:</strong> novel objects, few labels, interactive labeling tool</li><li><strong>Fine-tune SAM (LoRA on decoder):</strong> consistent domain (medical slices, satellite) where prompts alone miss boundaries</li><li><strong>U-Net / dedicated seg model:</strong> fixed classes, need max FPS on edge, dataset &gt;5K masks — simpler deploy than ViT-H</li></ul>",
+            "difficulty": "med",
+            "tags": [
+              "cv",
+              "startup",
+              "key"
+            ]
+          },
+          {
+            "q": "Contrastive learning for re-identification — what matters for multi-camera tracking?",
+            "a": "<p>Learn embeddings where same vehicle/person across cameras is closer than different identities.</p><ul><li><strong>Loss:</strong> triplet loss or supervised contrastive with batch-hard mining</li><li><strong>Augmentation:</strong> strong color jitter (cameras differ), random erasing</li><li><strong>At inference:</strong> cosine distance in gallery; combine with motion (Kalman) in DeepSORT</li></ul><p>Metric quality (mAP on re-id benchmark) often matters more than detector mAP for end-to-end MOTA.</p>",
+            "difficulty": "med",
+            "tags": [
+              "cv",
+              "startup"
             ]
           }
         ]
@@ -1388,7 +1441,7 @@
         "qs": [
           {
             "q": "What is model drift? How do you monitor for it?",
-            "a": "<p><strong>Types:</strong></p>\n<ul>\n<li><strong>Data drift (covariate shift):</strong> P(X) changes but P(Y|X) stays the same. Features look different. e.g., new user demographics.</li>\n<li><strong>Label shift:</strong> P(Y) changes. Distribution of outcomes changes. e.g., more fraud during holiday season.</li>\n<li><strong>Concept drift:</strong> P(Y|X) changes. The relationship between features and labels changes. Most dangerous. e.g., \"COVID\" was never used before 2020 but suddenly matters for medical NLP.</li>\n</ul>\n<p><strong>Monitoring:</strong></p>\n<ul>\n<li>Input feature distribution: track mean, variance, quantiles per feature. Statistical tests: Kolmogorov-Smirnov, PSI (Population Stability Index).</li>\n<li>Output distribution: track label distribution of predictions. PSI on output scores.</li>\n<li>Model performance: track accuracy, AUC, F1 against ground truth (when labels arrive with delay).</li>\n<li>Alerting: PSI &gt; 0.2 = significant drift, trigger investigation. PSI &gt; 0.25 = retrain.</li>\n</ul>\n<div class=\"anote\"><strong>Production tip:</strong> log every prediction with features (sample 5-10% for storage). You'll need these for drift analysis and retraining datasets.</div>",
+            "a": "<p><strong>Types:</strong></p>\n<ul>\n<li><strong>Data drift (covariate shift):</strong> P(X) changes but P(Y|X) stays the same. Features look different. e.g., new user demographics.</li>\n<li><strong>Label shift:</strong> P(Y) changes. Distribution of outcomes changes. e.g., more fraud during holiday season.</li>\n<li><strong>Concept drift:</strong> P(Y|X) changes. The relationship between features and labels changes. Most dangerous. e.g., \"COVID\" was never used before 2020 but suddenly matters for medical NLP.</li>\n</ul>\n<p><strong>Monitoring:</strong></p>\n<ul>\n<li>Input feature distribution: track mean, variance, quantiles per feature. Statistical tests: Kolmogorov-Smirnov, PSI (Population Stability Index).</li>\n<li>Output distribution: track label distribution of predictions. PSI on output scores.</li>\n<li>Model performance: track accuracy, AUC, F1 against ground truth (when labels arrive with delay).</li>\n<li>Alerting: PSI &gt; 0.2 = significant drift, trigger investigation. PSI &gt; 0.25 = retrain.</li>\n</ul>\n<p><strong>Production tip:</strong> log every prediction with features (sample 5-10% for storage). You'll need these for drift analysis and retraining datasets.</p>",
             "difficulty": "med",
             "tags": [
               "mlops",
@@ -1442,21 +1495,131 @@
             ]
           },
           {
-            "q": "What is knowledge distillation? Structured vs unstructured pruning?",
-            "a": "<p><strong>Knowledge distillation:</strong> train a smaller \"student\" model to match a larger \"teacher\" model's outputs rather than (or in addition to) ground-truth labels. Typically minimizes KL divergence between the student's and teacher's <strong>softened</strong> (temperature-scaled) output distributions, often combined with a standard hard-label cross-entropy term. Soft targets carry \"dark knowledge\" — the teacher's relative confidence across wrong classes — which is a richer training signal than a one-hot label.</p><p><strong>Unstructured pruning:</strong> zero out individual weights below some magnitude threshold. Achieves high compression ratios but produces an irregular sparse weight matrix — realizing actual speedup requires specialized sparse-matrix kernels/hardware, which most deployment targets lack.</p><p><strong>Structured pruning:</strong> remove entire structural units — attention heads, channels, even whole layers. Lower compression ratio than unstructured pruning, but the resulting model is simply <strong>smaller and dense</strong>, so it runs faster on ordinary hardware with no special kernel support needed — which is usually the more practically useful trade-off for production deployment.</p>",
-            "difficulty": "med",
-            "tags": [
-              "llm",
-              "mlops"
-            ]
-          },
-          {
             "q": "ONNX, TorchScript, Triton Inference Server — when do you use each?",
-            "a": "<p><strong>ONNX (Open Neural Network Exchange):</strong> an IR (intermediate representation) that captures a model's computation graph in a framework-agnostic format. Export once (PyTorch → ONNX), run anywhere (TensorRT, ONNX Runtime, Core ML, OpenVINO). Use when you need to deploy to a different runtime than you trained in (e.g., ONNX Runtime for CPU serving, TensorRT for GPU).</p>\n<p><strong>TorchScript:</strong> serialises a PyTorch model into a graph format that runs without the Python interpreter — enables deployment in C++ environments (mobile, embedded, latency-critical services). Two modes: <em>tracing</em> (run once, record operations — fails with dynamic control flow) and <em>scripting</em> (compile the code — handles conditionals but requires type annotations). Use when staying in the PyTorch ecosystem but need to eliminate Python overhead.</p>\n<p><strong>Triton Inference Server (NVIDIA):</strong> a model-serving framework that sits above the model format layer — it handles HTTP/gRPC endpoints, dynamic batching, concurrent model execution, multiple model instances, and GPU/CPU scheduling. Supports ONNX, TensorRT, PyTorch, TensorFlow backends. Use when you need a production inference server with batching, multi-model serving, and SLAs — it's what powers most large-scale GPU serving at Beltech and similar shops.</p>\n<div class=\"anote\"><strong>Typical stack:</strong> PyTorch training → export to ONNX or TensorRT → serve via Triton. TorchScript is a shortcut if you're already on PyTorch everywhere and don't need TRT optimisation.</div>",
+            "a": "<p><strong>ONNX (Open Neural Network Exchange):</strong> an IR (intermediate representation) that captures a model's computation graph in a framework-agnostic format. Export once (PyTorch → ONNX), run anywhere (TensorRT, ONNX Runtime, Core ML, OpenVINO). Use when you need to deploy to a different runtime than you trained in (e.g., ONNX Runtime for CPU serving, TensorRT for GPU).</p>\n<p><strong>TorchScript:</strong> serialises a PyTorch model into a graph format that runs without the Python interpreter — enables deployment in C++ environments (mobile, embedded, latency-critical services). Two modes: <em>tracing</em> (run once, record operations — fails with dynamic control flow) and <em>scripting</em> (compile the code — handles conditionals but requires type annotations). Use when staying in the PyTorch ecosystem but need to eliminate Python overhead.</p>\n<p><strong>Triton Inference Server (NVIDIA):</strong> a model-serving framework that sits above the model format layer — it handles HTTP/gRPC endpoints, dynamic batching, concurrent model execution, multiple model instances, and GPU/CPU scheduling. Supports ONNX, TensorRT, PyTorch, TensorFlow backends. Use when you need a production inference server with batching, multi-model serving, and SLAs — it's what powers most large-scale GPU serving at Beltech and similar shops.</p>\n<p><strong>Typical stack:</strong> PyTorch training → export to ONNX or TensorRT → serve via Triton. TorchScript is a shortcut if you're already on PyTorch everywhere and don't need TRT optimisation.</p>",
             "difficulty": "med",
             "tags": [
               "mlops",
               "system"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Inference Engineering & AIOps",
+        "qs": [
+          {
+            "q": "TTFT vs tokens/sec — which do you optimize for, and why?",
+            "a": "<p><strong>TTFT (time to first token):</strong> prefill phase — process the full prompt. Dominated by prompt length and weight bandwidth. Users feel this as \"how long until it starts typing.\"</p><p><strong>TPS (tokens/sec):</strong> decode phase — one token at a time. Memory-bandwidth bound at batch=1.</p><ul><li>Chat UX: TTFT &lt; 500ms matters more than peak TPS</li><li>Batch API / summarization: optimize aggregate TPS</li><li>Prefix caching / prompt KV reuse cuts TTFT for repeated system prompts</li></ul>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "frontier",
+              "startup",
+              "key"
+            ]
+          },
+          {
+            "q": "vLLM vs TensorRT-LLM vs plain PyTorch serve — when to pick each?",
+            "a": "<ul><li><strong>PyTorch eager:</strong> prototyping only. No continuous batching, poor GPU util.</li><li><strong>vLLM:</strong> PagedAttention + continuous batching. Best default for multi-tenant LLM APIs on NVIDIA GPUs.</li><li><strong>TensorRT-LLM:</strong> compiled graphs, kernel fusion, FP8. Highest throughput when you can afford compile time and fixed model arch.</li><li><strong>ONNX Runtime:</strong> cross-platform, good for smaller models / CPU fallback.</li></ul><p>For CV at Beltech-style edge deploy: TensorRT + Triton. For LLM SaaS: vLLM or TRT-LLM behind a gateway.</p>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "system",
+              "startup",
+              "key"
+            ]
+          },
+          {
+            "q": "Walk through exporting a YOLO detector to TensorRT for production.",
+            "a": "<ol><li>Train in PyTorch → export ONNX (opset 17+, simplify graph)</li><li>Build TRT engine: FP16, fixed input shape or dynamic batch</li><li>Calibrate INT8 if edge GPU (Jetson) — need 500–1000 representative images</li><li>Validate mAP on val set: FP16 usually &lt;0.5% drop; INT8 can cost 1–2% if miscalibrated</li><li>Serve via Triton or DeepStream with dynamic batching</li></ol><p>Know your numbers: YOLOv10-n ~2ms/img on Orin NX FP16 vs ~15ms PyTorch CPU.</p>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "cv",
+              "startup",
+              "key"
+            ]
+          },
+          {
+            "q": "How do you calculate cost per 1M tokens for an LLM API?",
+            "a": "<p>Cost = (input_tokens × price_in + output_tokens × price_out) / 1M.</p><p>Self-hosted: GPU_hr × $/hr ÷ tokens_generated_per_hr.</p><p>Example: 1× A100, 7B int4, ~4000 tok/s aggregate with batching → 14.4B tok/hr. At $2/GPU-hr → ~$0.14 per 1M tokens (ignoring overhead). Compare to OpenAI GPT-4o-mini ~$0.15/1M input.</p>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "startup",
+              "system"
+            ]
+          },
+          {
+            "q": "What signals do you use to autoscale GPU inference workers?",
+            "a": "<ul><li>Request queue depth (best leading indicator)</li><li>GPU utilization &lt; 40% with growing queue → add replicas</li><li>P99 TTFT or TPS breaching SLA</li><li>KV cache memory pressure (vLLM block usage %)</li></ul><p>Scale down slowly (cooldown 5–10 min) — GPU cold start + model load is 30s–2min.</p>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "system",
+              "frontier"
+            ]
+          },
+          {
+            "q": "Design a canary rollout for a new model version in production.",
+            "a": "<ol><li>Route 1–5% traffic to new model (consistent hash on user_id)</li><li>Guardrails: error rate, P99 latency, cost/token, safety filter hit rate</li><li>Offline: golden-set eval before any traffic (faithfulness, task accuracy)</li><li>Shadow mode optional: run new model, log outputs, don't serve</li><li>Rollback: flip traffic weight to 0, keep old weights hot</li></ol>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "startup",
+              "key"
+            ]
+          },
+          {
+            "q": "What do you log on every inference request in production?",
+            "a": "<ul><li>request_id, model_version, prompt_hash (not raw prompt if PII)</li><li>input_tokens, output_tokens, TTFT_ms, total_latency_ms</li><li>GPU_id, batch_size at decode step</li><li>finish_reason (stop, length, error)</li><li>downstream task outcome if available (thumbs up, conversion)</li></ul><p>Sample 5–10% for full prompt/response storage with retention policy.</p>",
+            "difficulty": "easy",
+            "tags": [
+              "mlops",
+              "startup"
+            ]
+          },
+          {
+            "q": "Sarvam / Krutrim-style: what breaks when you serve Indic LLMs at scale?",
+            "a": "<ul><li><strong>Tokenization tax:</strong> Devanagari/Tamil text → 2–4× more tokens than English → higher cost, shorter effective context</li><li><strong>Code-mixing:</strong> Hinglish needs tokenizer trained on mixed corpora, not Hindi-only</li><li><strong>ASR→LLM pipeline latency:</strong> streaming ASR + LLM must stay &lt;300ms for voice UX</li><li><strong>Eval gap:</strong> MMLU doesn't measure Indic quality — need IndicQA, IndicGLUE, human eval</li><li><strong>Data sovereignty:</strong> weights + logs stay in-region (IndiaAI mission requirement)</li></ul>",
+            "difficulty": "hard",
+            "tags": [
+              "startup",
+              "llm",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "Frontier lab inference round: \"7B model, 10K concurrent users, 2s P99 latency — design it.\"",
+            "a": "<p>Back-of-envelope:</p><ul><li>Assume 50 tok avg output, need ~25 tok/s per user → unrealistic on single GPU</li><li>Reality: async API, streaming, most users don't need 50 tok instantly</li><li>Peak RPS × avg_output_tokens / aggregate_TPS = GPUs needed</li><li>Architecture: LB → API gateway (rate limit) → vLLM pool with continuous batching → semantic cache for repeated queries</li><li>Quantize to AWQ int4 to double effective throughput</li></ul>",
+            "difficulty": "hard",
+            "tags": [
+              "system",
+              "frontier",
+              "mlops",
+              "key"
+            ]
+          },
+          {
+            "q": "AIOps for ML: how is it different from classical DevOps monitoring?",
+            "a": "<p>Classical DevOps watches CPU, memory, 5xx. AIOps adds:</p><ul><li><strong>Data drift:</strong> feature/embedding distribution shift (PSI &gt; 0.2)</li><li><strong>Model quality:</strong> online accuracy proxy when labels are delayed</li><li><strong>LLM-specific:</strong> hallucination rate, refusal rate, toxicity score, cost/token trend</li><li><strong>Automated remediation:</strong> rollback model version, route to fallback, alert on-call</li></ul><p>Tools: Evidently, WhyLabs, Arize, Langfuse for LLM traces.</p>",
+            "difficulty": "med",
+            "tags": [
+              "mlops",
+              "startup",
+              "frontier"
+            ]
+          },
+          {
+            "q": "1 YOE CV/ML at a startup: what will they actually ask in a technical round?",
+            "a": "<p>Based on Sarvam, Krutrim, Yellow.ai, Uniphore, and similar:</p><ul><li>Walk through a project end-to-end (data → train → deploy → metrics)</li><li>Fine-tune a 7B model: LoRA vs full FT, dataset format, eval</li><li>Build or debug a RAG pipeline live</li><li>YOLO/detector tradeoffs, mAP, TensorRT export (your Beltech story)</li><li>Python + PyTorch fluency: write attention or dataloader on the spot</li><li>System sense: \"how would you serve this to 100 QPS?\"</li></ul><p>Less theory than frontier labs; more \"show you can ship.\"</p>",
+            "difficulty": "easy",
+            "tags": [
+              "startup",
+              "behavioral",
+              "key"
             ]
           }
         ]
@@ -1512,17 +1675,6 @@
             "code": "import numpy as np\n\ndef kmeans(X, k, n_iter=100, seed=42):\n    rng = np.random.default_rng(seed)\n    n = len(X)\n\n    # K-Means++ initialization\n    centers = [X[rng.integers(n)]]\n    for _ in range(k - 1):\n        dists = np.array([min(np.sum((x - c)**2) for c in centers) for x in X])\n        probs = dists / dists.sum()\n        centers.append(X[rng.choice(n, p=probs)])\n    centers = np.array(centers)\n\n    for _ in range(n_iter):\n        # Assign: (n, k) squared distances\n        dists = np.sum((X[:, None] - centers[None])**2, axis=-1)\n        labels = dists.argmin(axis=1)\n\n        # Update centers\n        new_centers = np.array([\n            X[labels == j].mean(0) if (labels == j).any() else centers[j]\n            for j in range(k)\n        ])\n        if np.allclose(centers, new_centers, atol=1e-6):\n            break\n        centers = new_centers\n\n    inertia = sum(np.sum((X[labels == j] - centers[j])**2) for j in range(k))\n    return centers, labels, inertia"
           },
           {
-            "q": "Implement top-k and top-p (nucleus) sampling for LLM decoding.",
-            "difficulty": "med",
-            "tags": [
-              "coding",
-              "llm",
-              "key"
-            ],
-            "a": "<p>These sampling strategies prevent the model from sampling very unlikely tokens while maintaining diversity.</p>",
-            "code": "import torch\nimport torch.nn.functional as F\n\ndef top_k_sampling(logits, k, temperature=1.0):\n    \"\"\"Sample from the top-k most likely tokens.\"\"\"\n    logits = logits / temperature\n    top_k_vals, top_k_idx = torch.topk(logits, k)\n    probs = F.softmax(top_k_vals, dim=-1)\n    sampled_idx = torch.multinomial(probs, num_samples=1)\n    return top_k_idx[sampled_idx]\n\ndef top_p_sampling(logits, p, temperature=1.0):\n    \"\"\"Nucleus sampling: sample from smallest set of tokens summing to p.\"\"\"\n    logits = logits / temperature\n    sorted_logits, sorted_idx = torch.sort(logits, descending=True)\n    sorted_probs = F.softmax(sorted_logits, dim=-1)\n    cumsum_probs = torch.cumsum(sorted_probs, dim=-1)\n\n    # Remove tokens where cumulative prob exceeds p (keep first one over p)\n    sorted_remove = cumsum_probs > p\n    sorted_remove[1:] = sorted_remove[:-1].clone()  # shift right\n    sorted_remove[0] = False  # always keep the highest prob token\n\n    sorted_logits[sorted_remove] = float('-inf')\n    probs = F.softmax(sorted_logits, dim=-1)\n    sampled_rank = torch.multinomial(probs, num_samples=1)\n    return sorted_idx[sampled_rank]"
-          },
-          {
             "q": "Implement precision, recall, F1, and BLEU score from scratch.",
             "difficulty": "med",
             "tags": [
@@ -1558,7 +1710,7 @@
         "qs": [
           {
             "q": "Tell me about a challenging ML project and what you learned.",
-            "a": "<p>Structure: <strong>STAR</strong> (Situation, Task, Action, Result)</p>\n<p><strong>What interviewers look for:</strong></p>\n<ul>\n<li>Clear problem definition — did you understand the real problem before building?</li>\n<li>Data thinking — what were the data challenges? How did you handle distribution issues?</li>\n<li>Iteration mindset — what didn't work and why? How did you debug?</li>\n<li>Quantifiable impact — accuracy improved X%, latency reduced Y%</li>\n<li>Honest self-assessment — what would you do differently?</li>\n</ul>\n<div class=\"anote\"><strong>Samit's context:</strong> your CV startup work is gold here. Pick one project — object detection or a model serving challenge — and tell it with specific technical details (what backbone, what loss, what data augmentation strategy, what evaluation metrics).</div>\n<p>Avoid: vague descriptions, no numbers, blaming external factors, no reflection.</p>",
+            "a": "<p>Structure: <strong>STAR</strong> (Situation, Task, Action, Result)</p>\n<p><strong>What interviewers look for:</strong></p>\n<ul>\n<li>Clear problem definition — did you understand the real problem before building?</li>\n<li>Data thinking — what were the data challenges? How did you handle distribution issues?</li>\n<li>Iteration mindset — what didn't work and why? How did you debug?</li>\n<li>Quantifiable impact — accuracy improved X%, latency reduced Y%</li>\n<li>Honest self-assessment — what would you do differently?</li>\n</ul>\n<p><strong>Your angle:</strong> your CV startup work is gold here. Pick one project — object detection or a model serving challenge — and tell it with specific technical details (what backbone, what loss, what data augmentation strategy, what evaluation metrics).</p>\n<p>Avoid: vague descriptions, no numbers, blaming external factors, no reflection.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1566,8 +1718,8 @@
             ]
           },
           {
-            "q": "How do you stay current with the ML landscape?",
-            "a": "<p>This is especially important for frontier labs — they want people who are intellectually engaged with the field, not just practitioners.</p>\n<p><strong>Good answers include:</strong></p>\n<ul>\n<li>arXiv daily: cs.LG, cs.CV, cs.CL — subscribe to feeds, use Semantic Scholar</li>\n<li>Papers you've read recently: be specific (name the paper, why it interested you, key insight)</li>\n<li>Twitter/X follows: @karpathy, @ylecun, @sama, @hardmaru, @ilyasut</li>\n<li>Blogs: Lilian Weng (lilianweng.github.io), Sebastian Raschka, The Gradient</li>\n<li>Podcasts: Dwarkesh Patel, Lex Fridman, Machine Learning Street Talk</li>\n<li>Code: re-implement interesting papers in PyTorch (this teaches more than just reading)</li>\n</ul>\n<div class=\"anote\"><strong>Tip:</strong> before the interview, read 2-3 recent papers relevant to the company's work. Have a concrete opinion on each. \"I read the Flash Attention 3 paper last week and found the warp specialization insight fascinating because...\" is a much stronger answer than \"I follow arXiv.\"</div>",
+            "q": "How do you stay current with ML research?",
+            "a": "<p>Frontier labs want specifics, not \"I follow arXiv.\"</p>\n<p><strong>Good answers include:</strong></p>\n<ul>\n<li>arXiv daily: cs.LG, cs.CV, cs.CL — subscribe to feeds, use Semantic Scholar</li>\n<li>Papers you've read recently: be specific (name the paper, why it interested you, key insight)</li>\n<li>Twitter/X follows: @karpathy, @ylecun, @sama, @hardmaru, @ilyasut</li>\n<li>Blogs: Lilian Weng (lilianweng.github.io), Sebastian Raschka, The Gradient</li>\n<li>Podcasts: Dwarkesh Patel, Lex Fridman, Machine Learning Street Talk</li>\n<li>Code: re-implement interesting papers in PyTorch (this teaches more than just reading)</li>\n</ul>\n<p><strong>Tip:</strong> before the interview, read 2-3 recent papers relevant to the company's work. Have a concrete opinion on each. \"I read the Flash Attention 3 paper last week and found the warp specialization insight fascinating because...\" is a much stronger answer than \"I follow arXiv.\"</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1604,7 +1756,7 @@
           },
           {
             "q": "How do you explain AI limitations to a non-technical PM who wants 99% accuracy?",
-            "a": "<p>This is a communication + technical maturity question.</p>\n<p><strong>Framework:</strong></p>\n<ul>\n<li><strong>Ground with the baseline:</strong> \"The current rule-based system achieves X%. No model achieves 99% on this kind of data.\"</li>\n<li><strong>Explain irreducible error:</strong> \"Some inputs are inherently ambiguous — even humans disagree. Our target can't exceed human-level performance on ambiguous cases.\"</li>\n<li><strong>Reframe the metric:</strong> \"99% overall accuracy may not be the right goal. If Type II errors (missed fraud) cost 10× more than Type I, we should optimize that, not accuracy.\"</li>\n<li><strong>Set expectations with data:</strong> \"SOTA for this task is 93%. We can realistically target 88-90% at launch.\"</li>\n</ul>\n<div class=\"anote\"><strong>Teaching angle:</strong> your experience teaching AI to seniors makes you well-suited for this. Draw on how you explain model limitations in InterviewReady.</div>",
+            "a": "<p>This is a communication + technical maturity question.</p>\n<p><strong>Framework:</strong></p>\n<ul>\n<li><strong>Ground with the baseline:</strong> \"The current rule-based system achieves X%. No model achieves 99% on this kind of data.\"</li>\n<li><strong>Explain irreducible error:</strong> \"Some inputs are inherently ambiguous — even humans disagree. Our target can't exceed human-level performance on ambiguous cases.\"</li>\n<li><strong>Reframe the metric:</strong> \"99% overall accuracy may not be the right goal. If Type II errors (missed fraud) cost 10× more than Type I, we should optimize that, not accuracy.\"</li>\n<li><strong>Set expectations with data:</strong> \"SOTA for this task is 93%. We can realistically target 88-90% at launch.\"</li>\n</ul>\n<p><strong>Your angle:</strong> your experience teaching AI to seniors makes you well-suited for this. Draw on how you explain model limitations in InterviewReady.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1613,7 +1765,7 @@
           },
           {
             "q": "How do you decide whether a problem needs ML at all?",
-            "a": "<p>Strong candidates know ML is not always the answer.</p>\n<p><strong>Don't use ML when:</strong></p>\n<ul>\n<li>Rule-based logic handles it fully (route emails by subject line)</li>\n<li>Insufficient data (&lt;1000 labeled examples for a complex task)</li>\n<li>Interpretability is legally required (regulated credit or medical decisions)</li>\n<li>Latency constraint makes inference infeasible (&lt;1ms requirement)</li>\n<li>Training cost exceeds value (one-time task, simple pattern)</li>\n</ul>\n<p><strong>Use ML when:</strong> patterns are too complex for hand-crafted rules, sufficient labeled data exists, prediction errors are acceptable, the task generalizes across many inputs.</p>\n<div class=\"anote\"><strong>Rule:</strong> always baseline with a simple heuristic first. If the rule gets 90%, the ML bar is 95%+ with acceptable cost and complexity. The delta must justify the complexity.</div>",
+            "a": "<p>Strong candidates know ML is not always the answer.</p>\n<p><strong>Don't use ML when:</strong></p>\n<ul>\n<li>Rule-based logic handles it fully (route emails by subject line)</li>\n<li>Insufficient data (&lt;1000 labeled examples for a complex task)</li>\n<li>Interpretability is legally required (regulated credit or medical decisions)</li>\n<li>Latency constraint makes inference infeasible (&lt;1ms requirement)</li>\n<li>Training cost exceeds value (one-time task, simple pattern)</li>\n</ul>\n<p><strong>Use ML when:</strong> patterns are too complex for hand-crafted rules, sufficient labeled data exists, prediction errors are acceptable, the task generalizes across many inputs.</p>\n<p><strong>Rule:</strong> always baseline with a simple heuristic first. If the rule gets 90%, the ML bar is 95%+ with acceptable cost and complexity. The delta must justify the complexity.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1622,7 +1774,7 @@
           },
           {
             "q": "Tell me about a time you improved model performance significantly.",
-            "a": "<p>Structure: what was the baseline, what did you try, what worked, what did you measure, what was the outcome?</p>\n<p><strong>Strong signals interviewers look for:</strong></p>\n<ul>\n<li>You measured first (profiled, identified bottleneck) rather than guessing</li>\n<li>You tried multiple hypotheses systematically, not randomly</li>\n<li>You can explain WHY something worked, not just that it worked</li>\n<li>You have specific numbers (mAP went from 0.76 to 0.91, not \"significantly improved\")</li>\n</ul>\n<div class=\"anote\"><strong>Your material:</strong> the 54% latency reduction at Beltech via NMS-free YOLOv10 + TensorRT is a strong story. Or 0.9+ F1 across 10+ detection modules. Pick one, tell it precisely with numbers.</div>",
+            "a": "<p>Structure: what was the baseline, what did you try, what worked, what did you measure, what was the outcome?</p>\n<p><strong>Strong signals interviewers look for:</strong></p>\n<ul>\n<li>You measured first (profiled, identified bottleneck) rather than guessing</li>\n<li>You tried multiple hypotheses systematically, not randomly</li>\n<li>You can explain WHY something worked, not just that it worked</li>\n<li>You have specific numbers (mAP went from 0.76 to 0.91, not \"significantly improved\")</li>\n</ul>\n<p><strong>Your story:</strong> the 54% latency reduction at Beltech via NMS-free YOLOv10 + TensorRT is a strong story. Or 0.9+ F1 across 10+ detection modules. Pick one, tell it precisely with numbers.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1640,7 +1792,7 @@
           },
           {
             "q": "Describe your experience teaching AI. What's the hardest concept to explain?",
-            "a": "<p>Use concrete examples from InterviewReady (200+ engineers) and TensorTonic (30k+ sign-ups).</p>\n<p><strong>Hard concepts (pick one you actually struggled to teach):</strong></p>\n<ul>\n<li><strong>Backpropagation:</strong> the chain rule is easy; why we can compute all gradients in one backward pass is hard. Key insight: you're computing a product of Jacobians with memoization — O(forward pass).</li>\n<li><strong>KV cache:</strong> most engineers understand caching. Specific confusion: why cache K and V but not Q? Q is the \"question\" for the current new token; K and V are history we reuse.</li>\n<li><strong>RLHF vs DPO:</strong> engineers understand supervised learning, not RL. Insight: DPO replaces the RL loop with a direct supervised objective derived from the RLHF optimal policy — alignment without RL training.</li>\n</ul>\n<div class=\"anote\"><strong>Teaching angle:</strong> mention specific misconceptions students had. Shows pedagogical depth beyond just knowing the content.</div>",
+            "a": "<p>Use concrete examples from InterviewReady (200+ engineers) and TensorTonic (30k+ sign-ups).</p>\n<p><strong>Hard concepts (pick one you actually struggled to teach):</strong></p>\n<ul>\n<li><strong>Backpropagation:</strong> the chain rule is easy; why we can compute all gradients in one backward pass is hard. Key insight: you're computing a product of Jacobians with memoization — O(forward pass).</li>\n<li><strong>KV cache:</strong> most engineers understand caching. Specific confusion: why cache K and V but not Q? Q is the \"question\" for the current new token; K and V are history we reuse.</li>\n<li><strong>RLHF vs DPO:</strong> engineers understand supervised learning, not RL. Insight: DPO replaces the RL loop with a direct supervised objective derived from the RLHF optimal policy — alignment without RL training.</li>\n</ul>\n<p><strong>Your angle:</strong> mention specific misconceptions students had. Shows pedagogical depth beyond just knowing the content.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1659,7 +1811,7 @@
           },
           {
             "q": "Where do you see the AI field heading in the next 3 years?",
-            "a": "<p>Tests intellectual engagement with the field. Give a genuine opinion, then defend it.</p>\n<p><strong>Strong view areas (pick 1-2 and go deep):</strong></p>\n<ul>\n<li><strong>Reasoning and verification:</strong> the o1/o3 paradigm — scaling compute at inference via \"thinking\" separates capability tiers. Models that verify their own outputs become more reliable than those that don't.</li>\n<li><strong>Agentic systems:</strong> LLMs will run entire software development workflows, not just assist. Bottleneck moves from model capability to reliable long-horizon tool use.</li>\n<li><strong>On-device intelligence:</strong> 7B models on laptops and phones, enabled by quantization + mobile hardware. Privacy-preserving AI becomes practical at scale.</li>\n<li><strong>Multimodal natively:</strong> models trained jointly on text, image, audio, video, code from scratch — not modality bolted on.</li>\n</ul>\n<div class=\"anote\"><strong>Be honest:</strong> \"I don't know\" is acceptable for specific timelines. A genuinely held view beats a diplomatic non-answer. Karpathy's insight: progress is fast but reliability and safety lag capability by years.</div>",
+            "a": "<p>Tests intellectual engagement with the field. Give a genuine opinion, then defend it.</p>\n<p><strong>Strong view areas (pick 1-2 and go deep):</strong></p>\n<ul>\n<li><strong>Reasoning and verification:</strong> the o1/o3 paradigm — scaling compute at inference via \"thinking\" separates capability tiers. Models that verify their own outputs become more reliable than those that don't.</li>\n<li><strong>Agentic systems:</strong> LLMs will run entire software development workflows, not just assist. Bottleneck moves from model capability to reliable long-horizon tool use.</li>\n<li><strong>On-device intelligence:</strong> 7B models on laptops and phones, enabled by quantization + mobile hardware. Privacy-preserving AI becomes practical at scale.</li>\n<li><strong>Multimodal natively:</strong> models trained jointly on text, image, audio, video, code from scratch — not modality bolted on.</li>\n</ul>\n<p><strong>Be honest:</strong> \"I don't know\" is acceptable for specific timelines. A genuinely held view beats a diplomatic non-answer. Karpathy's insight: progress is fast but reliability and safety lag capability by years.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1668,7 +1820,7 @@
           },
           {
             "q": "Tell me about a time you made a decision with incomplete data.",
-            "a": "<p>Tests comfort with uncertainty and decision-making under ambiguity — core skill at startups and research labs.</p>\n<p><strong>STAR for ML context:</strong></p>\n<ul>\n<li><strong>Situation:</strong> goal, timeline, why data was incomplete</li>\n<li><strong>Task:</strong> what decision needed to be made? Stakes?</li>\n<li><strong>Action:</strong> how did you quantify uncertainty? What assumptions did you make explicit? Did you prioritize getting more data vs. acting with what you had?</li>\n<li><strong>Result:</strong> what happened? Was the decision vindicated? What would you do differently?</li>\n</ul>\n<div class=\"anote\"><strong>Key insight to demonstrate:</strong> you make uncertainty explicit (confidence intervals, sensitivity analysis) rather than pretending more confidence than the data supports. Show you can act despite uncertainty, not just analyze it.</div>",
+            "a": "<p>Tests comfort with uncertainty and decision-making under ambiguity — core skill at startups and research labs.</p>\n<p><strong>STAR for ML context:</strong></p>\n<ul>\n<li><strong>Situation:</strong> goal, timeline, why data was incomplete</li>\n<li><strong>Task:</strong> what decision needed to be made? Stakes?</li>\n<li><strong>Action:</strong> how did you quantify uncertainty? What assumptions did you make explicit? Did you prioritize getting more data vs. acting with what you had?</li>\n<li><strong>Result:</strong> what happened? Was the decision vindicated? What would you do differently?</li>\n</ul>\n<p><strong>Key insight to demonstrate:</strong> you make uncertainty explicit (confidence intervals, sensitivity analysis) rather than pretending more confidence than the data supports. Show you can act despite uncertainty, not just analyze it.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral",
@@ -1695,7 +1847,7 @@
           },
           {
             "q": "Tell me about a time you pushed back on a technical direction and were wrong. What did you learn?",
-            "a": "<p>This question tests intellectual honesty and how you update beliefs under evidence — arguably more important in ML than in most engineering domains because ML involves constant uncertainty.</p>\n<p><strong>What interviewers want to hear:</strong></p>\n<ul>\n<li>You had a clear technical opinion and stated it (not passive)</li>\n<li>You were genuinely wrong, not just deferring to authority</li>\n<li>You updated your view based on evidence (data, results, a colleague's reasoning)</li>\n<li>You extracted a durable lesson, not just \"I was wrong once\"</li>\n</ul>\n<p><strong>Structure:</strong> situation → your position → counter-evidence you encountered → how you changed course → what you now look for before pushing back on similar decisions.</p>\n<div class=\"rnote\"><strong>Trap to avoid:</strong> picking a story where you were \"wrong\" but actually right, or where the stakes were trivially low. The question is a calibration check — interviewers (especially at Anthropic, DeepMind) will probe whether you're genuinely intellectually honest or performing humility.</div>",
+            "a": "<p>This question tests intellectual honesty and how you update beliefs under evidence — arguably more important in ML than in most engineering domains because ML involves constant uncertainty.</p>\n<p><strong>What interviewers want to hear:</strong></p>\n<ul>\n<li>You had a clear technical opinion and stated it (not passive)</li>\n<li>You were genuinely wrong, not just deferring to authority</li>\n<li>You updated your view based on evidence (data, results, a colleague's reasoning)</li>\n<li>You extracted a durable lesson, not just \"I was wrong once\"</li>\n</ul>\n<p><strong>Structure:</strong> situation → your position → counter-evidence you encountered → how you changed course → what you now look for before pushing back on similar decisions.</p>\n<p><strong>Trap to avoid:</strong> picking a story where you were \"wrong\" but actually right, or where the stakes were trivially low. The question is a calibration check — interviewers (especially at Anthropic, DeepMind) will probe whether you're genuinely intellectually honest or performing humility.</p>",
             "difficulty": "easy",
             "tags": [
               "behavioral"
@@ -1903,7 +2055,7 @@
         "qs": [
           {
             "q": "You replaced anchor-based YOLO with NMS-free YOLOv10 and cut latency 54%. What is NMS-free detection and why is it faster?",
-            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<p><strong>Traditional YOLO (v3-v8):</strong> each anchor at each scale predicts a box — one object produces 3-9 redundant candidates. NMS (Non-Maximum Suppression) de-duplicates post-inference: keep max-confidence box, suppress overlapping boxes with IoU &gt; threshold. NMS is sequential, CPU-bound, ~15-30ms on edge hardware.</p>\n<p><strong>YOLOv10 — dual head during training:</strong></p>\n<ul>\n<li><strong>One-to-many head:</strong> standard multi-anchor head used only during training for rich supervision signal.</li>\n<li><strong>One-to-one head:</strong> trained simultaneously via Hungarian matching + consistency distillation from the one-to-many head. Learns to predict exactly one confident box per object.</li>\n</ul>\n<p><strong>Inference:</strong> discard the one-to-many head. The one-to-one head outputs one box per object — no NMS needed. Post-processing is O(1).</p>\n<p><strong>Why 54%:</strong> NMS on CPU with 50+ candidates takes 20-40ms on Jetson-class hardware. Removing it was the bottleneck. Model FLOP count is essentially unchanged.</p>\n<div class=\"rnote\"><strong>Follow-up interviewers ask:</strong> How does the one-to-one head avoid predicting multiple overlapping boxes without NMS? Hungarian assignment during training forces strict one-to-one matching between predictions and GT boxes — the model learns to commit to one prediction rather than hedge across anchors.</div>",
+            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<p><strong>Traditional YOLO (v3-v8):</strong> each anchor at each scale predicts a box — one object produces 3-9 redundant candidates. NMS (Non-Maximum Suppression) de-duplicates post-inference: keep max-confidence box, suppress overlapping boxes with IoU &gt; threshold. NMS is sequential, CPU-bound, ~15-30ms on edge hardware.</p>\n<p><strong>YOLOv10 — dual head during training:</strong></p>\n<ul>\n<li><strong>One-to-many head:</strong> standard multi-anchor head used only during training for rich supervision signal.</li>\n<li><strong>One-to-one head:</strong> trained simultaneously via Hungarian matching + consistency distillation from the one-to-many head. Learns to predict exactly one confident box per object.</li>\n</ul>\n<p><strong>Inference:</strong> discard the one-to-many head. The one-to-one head outputs one box per object — no NMS needed. Post-processing is O(1).</p>\n<p><strong>Why 54%:</strong> NMS on CPU with 50+ candidates takes 20-40ms on Jetson-class hardware. Removing it was the bottleneck. Model FLOP count is essentially unchanged.</p>\n<p><strong>Follow-up interviewers ask:</strong> How does the one-to-one head avoid predicting multiple overlapping boxes without NMS? Hungarian assignment during training forces strict one-to-one matching between predictions and GT boxes — the model learns to commit to one prediction rather than hedge across anchors.</p>",
             "difficulty": "hard",
             "tags": [
               "cv",
@@ -1913,7 +2065,7 @@
           },
           {
             "q": "How does TensorRT optimize inference? Walk through the full pipeline.",
-            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<p>TensorRT takes ONNX → hardware-optimized .engine file via 4 steps:</p>\n<ol>\n<li><strong>Layer fusion:</strong> Conv + BatchNorm + ReLU → single CUDA kernel (1 launch instead of 3). Each kernel launch costs ~5-20μs. Fusion also eliminates intermediate tensor writes to slow HBM.</li>\n<li><strong>Kernel autotuning:</strong> benchmarks multiple CUDA implementations (cuBLAS, cutlass, custom GEMM) for each op on target GPU. Selects fastest. Engine is GPU-model specific — an A100 engine won't run on RTX 3090.</li>\n<li><strong>Precision calibration:</strong> INT8 calibration runs representative data, finds per-tensor scale factors minimizing quantization error. Calibrators: MinMax, Entropy, Percentile.</li>\n<li><strong>Memory planning:</strong> analyzes tensor lifetimes, reuses buffers for tensors that don't overlap in time. Reduces peak VRAM 20-40%.</li>\n</ol>\n<p><strong>Beltech pipeline:</strong> RTSP frame → GPU memcpy → CUDA preprocess (resize/normalize) → TensorRT engine → CUDA decode (box conversion) → results. No CPU in the hot path after initial upload. This is why you hit ≤10ms.</p>\n<div class=\"anote\"><strong>Critical gotcha:</strong> .engine files are GPU-model specific. Always build on the target hardware at deployment time.</div>",
+            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<p>TensorRT takes ONNX → hardware-optimized .engine file via 4 steps:</p>\n<ol>\n<li><strong>Layer fusion:</strong> Conv + BatchNorm + ReLU → single CUDA kernel (1 launch instead of 3). Each kernel launch costs ~5-20μs. Fusion also eliminates intermediate tensor writes to slow HBM.</li>\n<li><strong>Kernel autotuning:</strong> benchmarks multiple CUDA implementations (cuBLAS, cutlass, custom GEMM) for each op on target GPU. Selects fastest. Engine is GPU-model specific — an A100 engine won't run on RTX 3090.</li>\n<li><strong>Precision calibration:</strong> INT8 calibration runs representative data, finds per-tensor scale factors minimizing quantization error. Calibrators: MinMax, Entropy, Percentile.</li>\n<li><strong>Memory planning:</strong> analyzes tensor lifetimes, reuses buffers for tensors that don't overlap in time. Reduces peak VRAM 20-40%.</li>\n</ol>\n<p><strong>Beltech pipeline:</strong> RTSP frame → GPU memcpy → CUDA preprocess (resize/normalize) → TensorRT engine → CUDA decode (box conversion) → results. No CPU in the hot path after initial upload. This is why you hit ≤10ms.</p>\n<p><strong>Critical gotcha:</strong> .engine files are GPU-model specific. Always build on the target hardware at deployment time.</p>",
             "difficulty": "hard",
             "tags": [
               "cv",
@@ -1922,7 +2074,7 @@
           },
           {
             "q": "How does Triton Inference Server handle concurrent requests? How does it compare to Flask/FastAPI?",
-            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<p><strong>Triton's key capabilities over Flask:</strong></p>\n<ul>\n<li><strong>Dynamic batching:</strong> accumulates requests within a configurable window (max_queue_delay_microseconds), batches them → 1 GPU forward pass instead of N sequential. Critical for throughput.</li>\n<li><strong>Instance groups:</strong> count: N in config.pbtxt → N model replicas share GPU. Each handles one request concurrently.</li>\n<li><strong>Model ensemble:</strong> preprocessing → model → postprocessing all run GPU-side via shared memory. Zero CPU overhead between stages.</li>\n<li><strong>Backend abstraction:</strong> TensorRT, ONNX, PyTorch TorchScript, OpenVINO — same gRPC/HTTP API.</li>\n<li><strong>Built-in perf_analyzer:</strong> measure optimal concurrency and batch size before deploying.</li>\n</ul>\n<p><strong>Flask/FastAPI limitation:</strong> one request per worker, no native GPU batching, no queue management. At 100 RPS with 10ms inference, Flask needs 100 workers — can't manage GPU contention efficiently.</p>\n<div class=\"anote\"><strong>Zero-downtime swap:</strong> Triton supports loading a new model version while old version serves traffic, then atomic swap. This is how your continuous learning pipeline deployed with zero downtime.</div>",
+            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<p><strong>Triton's key capabilities over Flask:</strong></p>\n<ul>\n<li><strong>Dynamic batching:</strong> accumulates requests within a configurable window (max_queue_delay_microseconds), batches them → 1 GPU forward pass instead of N sequential. Critical for throughput.</li>\n<li><strong>Instance groups:</strong> count: N in config.pbtxt → N model replicas share GPU. Each handles one request concurrently.</li>\n<li><strong>Model ensemble:</strong> preprocessing → model → postprocessing all run GPU-side via shared memory. Zero CPU overhead between stages.</li>\n<li><strong>Backend abstraction:</strong> TensorRT, ONNX, PyTorch TorchScript, OpenVINO — same gRPC/HTTP API.</li>\n<li><strong>Built-in perf_analyzer:</strong> measure optimal concurrency and batch size before deploying.</li>\n</ul>\n<p><strong>Flask/FastAPI limitation:</strong> one request per worker, no native GPU batching, no queue management. At 100 RPS with 10ms inference, Flask needs 100 workers — can't manage GPU contention efficiently.</p>\n<p><strong>Zero-downtime swap:</strong> Triton supports loading a new model version while old version serves traffic, then atomic swap. This is how your continuous learning pipeline deployed with zero downtime.</p>",
             "difficulty": "med",
             "tags": [
               "cv",
@@ -1932,7 +2084,7 @@
           },
           {
             "q": "Walk through your continuous learning pipeline. How do you handle data quality and catastrophic forgetting?",
-            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<ol>\n<li><strong>Data capture:</strong> inference service logs low-confidence predictions (&lt;0.4) and temporal inconsistencies (box disappears mid-scene). Frames + metadata → object storage staging bucket.</li>\n<li><strong>Annotation (2-week cadence):</strong> high-confidence captures → auto-labeled by teacher model. Uncertain examples → active learning queue → human reviewers.</li>\n<li><strong>Dataset merge:</strong> new annotations + curated training set. Dedup by perceptual hash. Rebalance class distribution.</li>\n<li><strong>Retrain from checkpoint</strong> — not from scratch, preserves prior class knowledge. 5-10 epochs on combined dataset.</li>\n<li><strong>Quality gate:</strong> eval on fixed held-out validation set. mAP50 ≥ previous_best × 0.98 → proceed. Else → reject, alert team.</li>\n<li><strong>Blue-green deploy:</strong> load candidate as model-B in Triton while model-A serves traffic. Route 5% → monitor 30 min → promote to 100% → unload A.</li>\n</ol>\n<div class=\"rnote\"><strong>Hard problems:</strong> (1) Failure distribution ≠ class distribution — failures cluster in edge cases, biasing retraining. Fix: replay buffer with 20% random old data mixed in. (2) Catastrophic forgetting on head classes when fine-tuning on tail-heavy new data. Fix: EWC regularization or replay. (3) Annotation drift between annotators/rounds. Fix: inter-annotator agreement threshold + calibration sessions.</div>",
+            "a": "<span style=\"background:rgba(63,185,80,.15);color:var(--green);font-size:9px;font-weight:700;padding:1px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:inline-block\">Beltech AI</span>\n<ol>\n<li><strong>Data capture:</strong> inference service logs low-confidence predictions (&lt;0.4) and temporal inconsistencies (box disappears mid-scene). Frames + metadata → object storage staging bucket.</li>\n<li><strong>Annotation (2-week cadence):</strong> high-confidence captures → auto-labeled by teacher model. Uncertain examples → active learning queue → human reviewers.</li>\n<li><strong>Dataset merge:</strong> new annotations + curated training set. Dedup by perceptual hash. Rebalance class distribution.</li>\n<li><strong>Retrain from checkpoint</strong> — not from scratch, preserves prior class knowledge. 5-10 epochs on combined dataset.</li>\n<li><strong>Quality gate:</strong> eval on fixed held-out validation set. mAP50 ≥ previous_best × 0.98 → proceed. Else → reject, alert team.</li>\n<li><strong>Blue-green deploy:</strong> load candidate as model-B in Triton while model-A serves traffic. Route 5% → monitor 30 min → promote to 100% → unload A.</li>\n</ol>\n<p><strong>Hard problems:</strong> (1) Failure distribution ≠ class distribution — failures cluster in edge cases, biasing retraining. Fix: replay buffer with 20% random old data mixed in. (2) Catastrophic forgetting on head classes when fine-tuning on tail-heavy new data. Fix: EWC regularization or replay. (3) Annotation drift between annotators/rounds. Fix: inter-annotator agreement threshold + calibration sessions.</p>",
             "difficulty": "hard",
             "tags": [
               "mlops",
@@ -1950,7 +2102,7 @@
           },
           {
             "q": "mAP50 vs mAP50-95 — when does each matter? Which did you optimize at Beltech and why?",
-            "a": "<p>IoU(pred, gt) measures box overlap. IoU threshold determines TP/FP: if IoU &gt; threshold → TP, else FP.</p>\n<ul>\n<li><strong>mAP50:</strong> mean AP at IoU=0.50. Lenient — rough localization OK. Pascal VOC standard. Well-trained YOLO typically 0.85-0.95.</li>\n<li><strong>mAP50-95:</strong> mean AP averaged over IoU = {0.50, 0.55, ..., 0.95}. COCO standard. Penalizes poor box quality. Same model might be mAP50=0.90 but mAP50-95=0.55 if boxes are loose.</li>\n</ul>\n<p><strong>Beltech use case (surveillance):</strong> mAP50 is appropriate. LPR/counting/wrong-way detection needs \"is there a vehicle approximately here?\" Pixel-perfect boundaries don't change system outcome. Optimizing mAP50-95 adds training cost with no production benefit.</p>\n<p><strong>When mAP50-95 matters:</strong> autonomous driving (pedestrian safety margins), medical imaging (tumor volume), satellite imagery (building footprint area).</p>\n<div class=\"anote\"><strong>Resume note:</strong> your 0.9+ F1 likely refers to classification F1 (is_phone / is_helmet), not box-level mAP. These are different metrics on different tasks — be ready to clarify this distinction in interviews.</div>",
+            "a": "<p>IoU(pred, gt) measures box overlap. IoU threshold determines TP/FP: if IoU &gt; threshold → TP, else FP.</p>\n<ul>\n<li><strong>mAP50:</strong> mean AP at IoU=0.50. Lenient — rough localization OK. Pascal VOC standard. Well-trained YOLO typically 0.85-0.95.</li>\n<li><strong>mAP50-95:</strong> mean AP averaged over IoU = {0.50, 0.55, ..., 0.95}. COCO standard. Penalizes poor box quality. Same model might be mAP50=0.90 but mAP50-95=0.55 if boxes are loose.</li>\n</ul>\n<p><strong>Beltech use case (surveillance):</strong> mAP50 is appropriate. LPR/counting/wrong-way detection needs \"is there a vehicle approximately here?\" Pixel-perfect boundaries don't change system outcome. Optimizing mAP50-95 adds training cost with no production benefit.</p>\n<p><strong>When mAP50-95 matters:</strong> autonomous driving (pedestrian safety margins), medical imaging (tumor volume), satellite imagery (building footprint area).</p>\n<p><strong>Resume note:</strong> your 0.9+ F1 likely refers to classification F1 (is_phone / is_helmet), not box-level mAP. These are different metrics on different tasks — be ready to clarify this distinction in interviews.</p>",
             "difficulty": "easy",
             "tags": [
               "cv",
@@ -1983,7 +2135,7 @@
           },
           {
             "q": "Walk through how you trained the RLHF reward model at MakeMyTrip. What data, what loss, what did it output?",
-            "a": "<p>The goal was to rank itinerary recommendations — so the reward model needed to capture human preference, not a proxy like click-through rate.</p>\n<p><strong>Data:</strong> pairs of itineraries annotated with user preference labels (A preferred over B). Collected from user interaction logs and manual annotation.</p>\n<p><strong>Architecture:</strong> a pretrained encoder (text representation of itinerary features) with a linear head producing a scalar reward score. Trained with <strong>Bradley-Terry pairwise ranking loss</strong>: for a preferred item A and rejected item B, maximise log σ(r_A − r_B).</p>\n<p><strong>Output:</strong> a scalar score for any itinerary — used downstream as the reward signal to rank candidates. Not a language model RM (no token-level reward), just preference ranking over structured travel items.</p>\n<div class=\"anote\"><strong>Interview hook:</strong> connect this to modern RLHF — the same Bradley-Terry pairwise loss is used in LLM reward models (InstructGPT, Claude). The difference: LLM RMs operate on token sequences, yours operated on structured item features. Same principle, different domain.</div>",
+            "a": "<p>The goal was to rank itinerary recommendations — so the reward model needed to capture human preference, not a proxy like click-through rate.</p>\n<p><strong>Data:</strong> pairs of itineraries annotated with user preference labels (A preferred over B). Collected from user interaction logs and manual annotation.</p>\n<p><strong>Architecture:</strong> a pretrained encoder (text representation of itinerary features) with a linear head producing a scalar reward score. Trained with <strong>Bradley-Terry pairwise ranking loss</strong>: for a preferred item A and rejected item B, maximise log σ(r_A − r_B).</p>\n<p><strong>Output:</strong> a scalar score for any itinerary — used downstream as the reward signal to rank candidates. Not a language model RM (no token-level reward), just preference ranking over structured travel items.</p>\n<p><strong>Note:</strong> connect this to modern RLHF — the same Bradley-Terry pairwise loss is used in LLM reward models (InstructGPT, Claude). The difference: LLM RMs operate on token sequences, yours operated on structured item features. Same principle, different domain.</p>",
             "difficulty": "hard",
             "tags": [
               "llm",
@@ -1993,7 +2145,7 @@
           },
           {
             "q": "How did you build the NLP-based resume screening pipeline at MakeMyTrip? What signals did you use?",
-            "a": "<p>The goal was to help the Data team filter engineering resumes at volume — identifying candidates with relevant ML/data skills.</p>\n<p><strong>Text similarity:</strong> TF-IDF or dense embeddings (sentence-transformers) to compute cosine similarity between a resume and a target job description. Candidates above a threshold pass the first stage.</p>\n<p><strong>Keyword extraction:</strong> frequency-based or RAKE/KeyBERT to identify the most salient technical terms (frameworks, methods, tools). Matched against a curated skills dictionary for the role.</p>\n<p><strong>Pipeline:</strong> parse resume (PDF → text via pdfplumber/pdfminer), preprocess (lemmatise, remove stopwords), embed or TF-IDF, score against JD, rank candidates.</p>\n<div class=\"rnote\"><strong>Gotcha to prepare for:</strong> interviewers often ask about bias and fairness here — a keyword-matching system can penalise non-standard resume formats, unconventional career paths, or different naming conventions for the same skill. Have a sentence ready on limitations.</div>",
+            "a": "<p>The goal was to help the Data team filter engineering resumes at volume — identifying candidates with relevant ML/data skills.</p>\n<p><strong>Text similarity:</strong> TF-IDF or dense embeddings (sentence-transformers) to compute cosine similarity between a resume and a target job description. Candidates above a threshold pass the first stage.</p>\n<p><strong>Keyword extraction:</strong> frequency-based or RAKE/KeyBERT to identify the most salient technical terms (frameworks, methods, tools). Matched against a curated skills dictionary for the role.</p>\n<p><strong>Pipeline:</strong> parse resume (PDF → text via pdfplumber/pdfminer), preprocess (lemmatise, remove stopwords), embed or TF-IDF, score against JD, rank candidates.</p>\n<p><strong>Gotcha to prepare for:</strong> interviewers often ask about bias and fairness here — a keyword-matching system can penalise non-standard resume formats, unconventional career paths, or different naming conventions for the same skill. Have a sentence ready on limitations.</p>",
             "difficulty": "med",
             "tags": [
               "startup",
@@ -2071,11 +2223,11 @@
   },
   {
     "id": "s15",
-    "title": "15. Karpathy Mode: Build It",
+    "title": "15. Karpathy Questions",
     "type": "qa",
     "subs": [
       {
-        "title": "From-Scratch Implementations",
+        "title": "Core Questions",
         "qs": [
           {
             "q": "Implement scaled dot-product attention backward pass without autograd. Given dO, compute dQ, dK, dV.",
@@ -2112,7 +2264,7 @@
           },
           {
             "q": "What happens when you call loss.backward() in PyTorch? Trace the actual call chain.",
-            "a": "<p>No magic. It is graph traversal + chain rule, implemented in C++.</p>\n<ol>\n<li><code>loss.backward()</code> → C++ <code>torch::autograd::backward({loss}, {ones(1)})</code></li>\n<li>The autograd Engine performs reverse-topological BFS from the loss node</li>\n<li>Each tensor's <code>grad_fn</code> stores the backward op (e.g., <code>AddmmBackward0</code>, <code>SoftmaxBackward0</code>)</li>\n<li>Engine calls <code>grad_fn(upstream_gradient)</code> → returns list of input gradients</li>\n<li>Gradients accumulated into <code>.grad</code> of leaf tensors (model parameters)</li>\n<li>Non-leaf activations: their gradients are freed after use (unless <code>retain_grad()</code> called)</li>\n</ol>\n<p><strong>Key flags:</strong></p>\n<ul>\n<li><code>retain_graph=True</code>: don't free the graph after backward. Needed for MAML, gradient penalties in GANs.</li>\n<li><code>create_graph=True</code>: build differentiable graph through backward. Needed for higher-order gradients (Hessian computation).</li>\n<li><code>torch.no_grad()</code>: stops building the graph entirely. ~40% memory savings during inference.</li>\n</ul>\n<div class=\"anote\"><strong>torch.compile() (PyTorch 2.0+):</strong> captures the graph via TorchDynamo (Python bytecode tracing), optimizes via TorchInductor (generates Triton kernels), fuses ops across entire forward+backward. 1.5-3× training speedup common for LLMs. Use for production training runs.</div>",
+            "a": "<p>No magic. It is graph traversal + chain rule, implemented in C++.</p>\n<ol>\n<li><code>loss.backward()</code> → C++ <code>torch::autograd::backward({loss}, {ones(1)})</code></li>\n<li>The autograd Engine performs reverse-topological BFS from the loss node</li>\n<li>Each tensor's <code>grad_fn</code> stores the backward op (e.g., <code>AddmmBackward0</code>, <code>SoftmaxBackward0</code>)</li>\n<li>Engine calls <code>grad_fn(upstream_gradient)</code> → returns list of input gradients</li>\n<li>Gradients accumulated into <code>.grad</code> of leaf tensors (model parameters)</li>\n<li>Non-leaf activations: their gradients are freed after use (unless <code>retain_grad()</code> called)</li>\n</ol>\n<p><strong>Key flags:</strong></p>\n<ul>\n<li><code>retain_graph=True</code>: don't free the graph after backward. Needed for MAML, gradient penalties in GANs.</li>\n<li><code>create_graph=True</code>: build differentiable graph through backward. Needed for higher-order gradients (Hessian computation).</li>\n<li><code>torch.no_grad()</code>: stops building the graph entirely. ~40% memory savings during inference.</li>\n</ul>\n<p><strong>torch.compile() (PyTorch 2.0+):</strong> captures the graph via TorchDynamo (Python bytecode tracing), optimizes via TorchInductor (generates Triton kernels), fuses ops across entire forward+backward. 1.5-3× training speedup common for LLMs. Use for production training runs.</p>",
             "difficulty": "hard",
             "tags": [
               "dl",
@@ -2141,22 +2293,91 @@
           },
           {
             "q": "Walk through a nanoGPT training loop line by line: data → forward → loss → backward → step → eval.",
-            "a": "<p><strong>Data:</strong> tokenize the corpus into one flat array. <code>get_batch</code> samples B random offsets; for each, x = tokens[i : i+T] and y = tokens[i+1 : i+T+1]. y is x shifted by one — every position predicts the next token.</p>\n<p><strong>Forward:</strong> token embeddings + positional embeddings → N transformer blocks (pre-LN: LN → attention → residual, LN → MLP → residual) → final LN → logits via the LM head (weights usually tied to the token embedding).</p>\n<p><strong>Loss:</strong> <code>F.cross_entropy(logits.view(-1, V), y.view(-1))</code> — mean negative log-likelihood across all B·T positions. Every position is a training signal, which is why a single sequence teaches T predictions.</p>\n<p><strong>Backward + step:</strong></p>\n<pre><code>for step in range(max_steps):\n    x, y = get_batch('train')\n    logits, loss = model(x, y)\n    optimizer.zero_grad(set_to_none=True)\n    loss.backward()\n    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)\n    lr = get_lr(step)              # warmup then cosine decay\n    for g in optimizer.param_groups: g['lr'] = lr\n    optimizer.step()              # AdamW</code></pre>\n<p><strong>Eval:</strong> periodically, under <code>torch.no_grad()</code> with <code>model.eval()</code>, average the loss over a few train and val batches, then switch back to <code>model.train()</code>.</p>\n<p><strong>Details that matter:</strong> weight tying, bias-free LN/Linear, gradient accumulation for a large effective batch, mixed precision (bf16 autocast), and the warmup+cosine LR schedule.</p>\n<div class=\"anote\"><strong>Your strongest story:</strong> you built MicroGPT in ~218 lines. Be ready to defend every line — especially why y is x shifted by one and why the loss means over all T positions.</div>",
+            "a": "<p><strong>Data:</strong> tokenize the corpus into one flat array. <code>get_batch</code> samples B random offsets; for each, x = tokens[i : i+T] and y = tokens[i+1 : i+T+1]. y is x shifted by one — every position predicts the next token.</p>\n<p><strong>Forward:</strong> token embeddings + positional embeddings → N transformer blocks (pre-LN: LN → attention → residual, LN → MLP → residual) → final LN → logits via the LM head (weights usually tied to the token embedding).</p>\n<p><strong>Loss:</strong> <code>F.cross_entropy(logits.view(-1, V), y.view(-1))</code> — mean negative log-likelihood across all B·T positions. Every position is a training signal, which is why a single sequence teaches T predictions.</p>\n<p><strong>Backward + step:</strong></p>\n<pre><code>for step in range(max_steps):\n    x, y = get_batch('train')\n    logits, loss = model(x, y)\n    optimizer.zero_grad(set_to_none=True)\n    loss.backward()\n    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)\n    lr = get_lr(step)              # warmup then cosine decay\n    for g in optimizer.param_groups: g['lr'] = lr\n    optimizer.step()              # AdamW</code></pre>\n<p><strong>Eval:</strong> periodically, under <code>torch.no_grad()</code> with <code>model.eval()</code>, average the loss over a few train and val batches, then switch back to <code>model.train()</code>.</p>\n<p><strong>Details that matter:</strong> weight tying, bias-free LN/Linear, gradient accumulation for a large effective batch, mixed precision (bf16 autocast), and the warmup+cosine LR schedule.</p>\n<p><strong>Your story:</strong> you built MicroGPT in ~218 lines. Be ready to defend every line — especially why y is x shifted by one and why the loss means over all T positions.</p>",
             "difficulty": "med",
             "tags": [
               "coding",
               "dl",
               "key"
             ]
+          },
+          {
+            "q": "Implement BPE (byte-pair encoding) tokenizer from scratch.",
+            "a": "<p>Start from bytes (256 tokens). Count adjacent pairs, merge the most frequent, repeat until vocab size target.</p><ul><li>Encode: greedily apply merges left-to-right on bytes</li><li>Decode: map token ids back through merge table to bytes → UTF-8 string</li><li>Why bytes: no UNK token; any Unicode string tokenizes</li></ul><p>Karpathy's minBPE and GPT-2 tokenizer follow this exactly. Be ready to write <code>get_stats</code>, <code>merge</code>, and the training loop.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "llm",
+              "key"
+            ]
+          },
+          {
+            "q": "Trace tensor shapes through one GPT-2 block forward pass (batch B, seq T, model dim C).",
+            "a": "<p>Input <code>x: [B, T, C]</code></p><ul><li>Q,K,V projections: each <code>[B, T, C]</code> (with n_head splits → <code>[B, n_h, T, d_h]</code> where d_h = C/n_h)</li><li>Attention scores: <code>[B, n_h, T, T]</code></li><li>Attention out: <code>[B, n_h, T, d_h]</code> → merge heads → <code>[B, T, C]</code></li><li>FFN: <code>[B, T, C] → [B, T, 4C] → [B, T, C]</code></li><li>Residual paths keep <code>[B, T, C]</code> throughout</li></ul><p>The only O(T²) tensor is the attention map. Everything else is O(T).</p>",
+            "difficulty": "med",
+            "tags": [
+              "transformers",
+              "dl",
+              "key"
+            ]
+          },
+          {
+            "q": "Why tie input token embeddings to the LM head weights?",
+            "a": "<p>Both map between vocab space (V) and model dim (C). Tying uses one matrix W ∈ ℝ^{V×C} for embedding lookup and logits = x @ W^T.</p><ul><li>Saves ~V×C parameters (for GPT-2 vocab 50K, C=768 → ~38M params)</li><li>Regularizes: input and output representations must agree</li><li>Standard in GPT-2/3, LLaMA, nanoGPT</li></ul><p>Untied head can help when vocab is huge or modalities differ, but for vanilla LMs tying is the default.</p>",
+            "difficulty": "med",
+            "tags": [
+              "llm",
+              "dl"
+            ]
+          },
+          {
+            "q": "Training loss is NaN after ~100 steps. Walk through your debug checklist.",
+            "a": "<ol><li>Print one batch: labels in range? Inputs finite?</li><li>Lower LR 10× — exploding gradients?</li><li><code>clip_grad_norm_(..., 1.0)</code> — does loss stabilize?</li><li>Overfit 1 batch: if still NaN, bug in loss/forward (wrong ignore_index, div by zero in LN)</li><li>Check mixed precision: loss scaling, bf16 vs fp16 overflow</li><li>Inspect per-layer grad norms — which layer blows up first?</li></ol><p>Karpathy-style: always overfit one batch before scaling up. If you can't hit ~0 loss on 1 batch, the code is wrong.</p>",
+            "difficulty": "med",
+            "tags": [
+              "dl",
+              "behavioral",
+              "key"
+            ]
+          },
+          {
+            "q": "Implement LayerNorm forward and backward in NumPy (no autograd).",
+            "a": "<p>Forward per row x ∈ ℝ^D: μ = mean(x), σ² = var(x), x̂ = (x−μ)/√(σ²+ε), y = γ⊙x̂ + β</p><p>Backward:</p><ul><li>dγ = Σ dy⊙x̂, dβ = Σ dy</li><li>dx̂ = dy⊙γ</li><li>dx = (1/√(σ²+ε)) · (dx̂ − mean(dx̂) − x̂⊙mean(dx̂⊙x̂))</li></ul><p>Same formula as BatchNorm backward but reduction is over features, not batch — no running stats, works at batch=1.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "dl",
+              "key"
+            ]
+          },
+          {
+            "q": "Estimate Pi with Monte Carlo — implement it and explain the variance.",
+            "a": "<p>Sample (x,y) ~ Uniform[0,1]². Count fraction with x²+y² ≤ 1 → estimates π/4.</p><p>Variance shrinks as O(1/N). After N=10⁶ samples, std error ≈ 0.0016 on π.</p><p>Karpathy uses this to test if candidates understand probability, loops, and convergence — not memorized LeetCode.</p>",
+            "difficulty": "easy",
+            "tags": [
+              "math",
+              "coding",
+              "general"
+            ]
+          },
+          {
+            "q": "Matrix multiply: O(n³) naive, then how do you actually make it fast on a GPU?",
+            "a": "<p>Levels:</p><ol><li><strong>BLAS:</strong> <code>a @ b</code> calls cuBLAS — never write naive triple loops in production</li><li><strong>Tiling:</strong> load blocks into shared memory to raise arithmetic intensity</li><li><strong>Strassen:</strong> O(n^2.807) — rarely wins except huge matrices due to constants</li><li><strong>Tensor Cores:</strong> WMMA ops for FP16/BF16 tile matmuls</li></ol><p>Interview move: write naive matmul, then explain why it's memory-bound and what cuBLAS does differently.</p>",
+            "difficulty": "med",
+            "tags": [
+              "coding",
+              "system",
+              "key"
+            ]
           }
         ]
       },
       {
-        "title": "Hardware & Low Level (Hotz Mode)",
+        "title": "Hardware & GPUs",
         "qs": [
           {
             "q": "What does a CUDA matmul kernel actually do? Why are Tensor Cores faster than regular CUDA cores?",
-            "a": "<p><strong>Naive CUDA matmul:</strong> each thread computes C[i,j] = Σ_k A[i,k]·B[k,j]. Reads A[i,:] and B[:,j] from global memory (HBM) per output element. HBM bandwidth ≈ 2TB/s on A100. Kernel is severely memory-bound — compute sits idle waiting for data.</p>\n<p><strong>Tiled matmul (what cuBLAS/Flash Attention actually do):</strong></p>\n<ol>\n<li>Divide A, B into tiles that fit in SRAM/shared memory (~32-48KB per SM)</li>\n<li>Each thread block loads one tile of A + one tile of B into SRAM (fast: ~19TB/s)</li>\n<li>Compute partial products using SRAM data only — no HBM access during computation</li>\n<li>Advance tile pointer across K dimension, accumulate, repeat</li>\n<li>Write final C block back to HBM once</li>\n</ol>\n<p>Arithmetic intensity: naive = O(1) FLOP/byte. Tiled = O(tile_size) FLOP/byte → compute-bound instead of memory-bound.</p>\n<p><strong>Tensor Cores:</strong> dedicated hardware units that compute a 16×16×16 matmul (D = A×B+C) in one clock cycle. Regular CUDA cores: one multiply-accumulate per clock (scalar). Tensor Cores: 256 multiply-accumulate per clock. ~8× throughput for FP16, BF16, INT8, FP8. Flash Attention uses Tensor Cores via WMMA instructions (cute/CUTLASS library).</p>\n<div class=\"anote\"><strong>Roofline model:</strong> LLM inference (batch=1) is memory-bound. LLM training (large batch) is compute-bound. This determines your optimization strategy — inference: reduce bytes transferred (quantization, KV cache). Training: maximize GPU utilization (batch size, kernel fusion).</div>",
+            "a": "<p><strong>Naive CUDA matmul:</strong> each thread computes C[i,j] = Σ_k A[i,k]·B[k,j]. Reads A[i,:] and B[:,j] from global memory (HBM) per output element. HBM bandwidth ≈ 2TB/s on A100. Kernel is severely memory-bound — compute sits idle waiting for data.</p>\n<p><strong>Tiled matmul (what cuBLAS/Flash Attention actually do):</strong></p>\n<ol>\n<li>Divide A, B into tiles that fit in SRAM/shared memory (~32-48KB per SM)</li>\n<li>Each thread block loads one tile of A + one tile of B into SRAM (fast: ~19TB/s)</li>\n<li>Compute partial products using SRAM data only — no HBM access during computation</li>\n<li>Advance tile pointer across K dimension, accumulate, repeat</li>\n<li>Write final C block back to HBM once</li>\n</ol>\n<p>Arithmetic intensity: naive = O(1) FLOP/byte. Tiled = O(tile_size) FLOP/byte → compute-bound instead of memory-bound.</p>\n<p><strong>Tensor Cores:</strong> dedicated hardware units that compute a 16×16×16 matmul (D = A×B+C) in one clock cycle. Regular CUDA cores: one multiply-accumulate per clock (scalar). Tensor Cores: 256 multiply-accumulate per clock. ~8× throughput for FP16, BF16, INT8, FP8. Flash Attention uses Tensor Cores via WMMA instructions (cute/CUTLASS library).</p>\n<p><strong>Roofline model:</strong> LLM inference (batch=1) is memory-bound. LLM training (large batch) is compute-bound. This determines your optimization strategy — inference: reduce bytes transferred (quantization, KV cache). Training: maximize GPU utilization (batch size, kernel fusion).</p>",
             "difficulty": "hard",
             "tags": [
               "dl",
@@ -2165,7 +2386,7 @@
           },
           {
             "q": "Why is LLM inference memory-bandwidth bound? What optimization strategies follow from this?",
-            "a": "<p><strong>Arithmetic intensity math:</strong> for weight W ∈ ℝ^{d×d} and input x ∈ ℝ^d (batch=1):</p>\n<ul>\n<li>FLOPs: 2d² (matmul)</li>\n<li>Memory: d² × 2 bytes (read weights in BF16) + d × 2 bytes (read/write x) ≈ 2d² bytes</li>\n<li>Arithmetic intensity ≈ 2d²/(2d²) = 1 FLOP/byte</li>\n</ul>\n<p>A100 ratio: 312 TFLOP/s ÷ 2 TB/s = 156 FLOP/byte. Since 1 ≪ 156, inference at batch=1 is deeply memory-bound. GPU compute sits idle ~99% of the time waiting for weights from HBM.</p>\n<p><strong>Optimization strategies that follow directly:</strong></p>\n<ul>\n<li><strong>INT4 quantization:</strong> 4× fewer bytes per weight → 4× faster. Not about fewer FLOPs — about less HBM bandwidth consumed.</li>\n<li><strong>KV cache:</strong> avoids re-reading K,V for all previous tokens each step. But KV cache itself must be read → as context grows, KV cache reading dominates.</li>\n<li><strong>Speculative decoding:</strong> draft model (small, bandwidth-light) proposes K tokens → big model verifies in one pass (now effective batch=K → better arithmetic intensity).</li>\n<li><strong>Continuous batching (vLLM):</strong> N sequences together → arithmetic intensity scales with N → becomes compute-bound at high N → full GPU utilization.</li>\n</ul>\n<div class=\"anote\"><strong>Karpathy's rule:</strong> \"If you're not batching, you're not using the GPU.\" The difference between batch=1 (memory-bound, 1% utilization) and batch=512 (compute-bound, 80% utilization) is the fundamental lever of LLM serving economics.</div>",
+            "a": "<p><strong>Arithmetic intensity math:</strong> for weight W ∈ ℝ^{d×d} and input x ∈ ℝ^d (batch=1):</p>\n<ul>\n<li>FLOPs: 2d² (matmul)</li>\n<li>Memory: d² × 2 bytes (read weights in BF16) + d × 2 bytes (read/write x) ≈ 2d² bytes</li>\n<li>Arithmetic intensity ≈ 2d²/(2d²) = 1 FLOP/byte</li>\n</ul>\n<p>A100 ratio: 312 TFLOP/s ÷ 2 TB/s = 156 FLOP/byte. Since 1 ≪ 156, inference at batch=1 is deeply memory-bound. GPU compute sits idle ~99% of the time waiting for weights from HBM.</p>\n<p><strong>Optimization strategies that follow directly:</strong></p>\n<ul>\n<li><strong>INT4 quantization:</strong> 4× fewer bytes per weight → 4× faster. Not about fewer FLOPs — about less HBM bandwidth consumed.</li>\n<li><strong>KV cache:</strong> avoids re-reading K,V for all previous tokens each step. But KV cache itself must be read → as context grows, KV cache reading dominates.</li>\n<li><strong>Speculative decoding:</strong> draft model (small, bandwidth-light) proposes K tokens → big model verifies in one pass (now effective batch=K → better arithmetic intensity).</li>\n<li><strong>Continuous batching (vLLM):</strong> N sequences together → arithmetic intensity scales with N → becomes compute-bound at high N → full GPU utilization.</li>\n</ul>\n<p><strong>Karpathy's rule:</strong> \"If you're not batching, you're not using the GPU.\" The difference between batch=1 (memory-bound, 1% utilization) and batch=512 (compute-bound, 80% utilization) is the fundamental lever of LLM serving economics.</p>",
             "difficulty": "hard",
             "tags": [
               "llm",
@@ -2174,18 +2395,8 @@
             ]
           },
           {
-            "q": "What is Flash Attention? How does it reduce memory from O(n²) to O(n) without losing accuracy?",
-            "a": "<p>FlashAttention rewrites the attention algorithm to be <strong>IO-aware</strong> — it minimises reads and writes to HBM (GPU high-bandwidth memory) rather than reducing FLOPs.</p>\n<p><strong>Why standard attention is slow:</strong> it materialises the full N×N score matrix in HBM. HBM has high bandwidth in aggregate but each round-trip is expensive, and attention (for typical context lengths) is <em>memory-bandwidth bound</em>, not compute-bound — you're paying for HBM traffic, not arithmetic.</p>\n<p><strong>FlashAttention's fix:</strong> tile Q, K, V into blocks that fit in on-chip SRAM (~20MB on an A100). Use an online softmax algorithm that rescales partial sums as new K/V blocks arrive — producing the <em>exact same numerical output</em> without ever writing the N×N matrix to HBM.</p>\n<p><strong>Memory:</strong> O(N) instead of O(N²) in HBM — enables much longer contexts. <strong>Speed:</strong> 2–4× faster wall-clock on typical sequence lengths.</p>\n<div class=\"anote\"><strong>FlashAttention-2/3</strong> add warp-level parallelism and pipelining for further speedups but the core IO-tiling idea is unchanged. This is what you implement if asked to optimise attention from scratch.</div>",
-            "difficulty": "hard",
-            "tags": [
-              "transformers",
-              "frontier",
-              "key"
-            ]
-          },
-          {
             "q": "What is arithmetic intensity? Explain the roofline model.",
-            "a": "<p><strong>Arithmetic intensity</strong> = FLOPs performed ÷ bytes moved from memory. It tells you whether a kernel is limited by compute or by bandwidth.</p>\n<p><strong>Roofline:</strong> achievable FLOP/s = min( peak compute, bandwidth × arithmetic intensity ). Plot intensity on the x-axis: below the \"ridge\" you are <strong>memory-bound</strong> (the slanted bandwidth roof), above it you are <strong>compute-bound</strong> (the flat compute roof).</p>\n<p><strong>Where the ridge is:</strong> peak_FLOPs ÷ peak_bandwidth. For an A100 ≈ 312 TFLOP/s ÷ 2 TB/s ≈ 156 FLOP/byte. You need intensity above ~156 to saturate the compute units.</p>\n<p><strong>Examples:</strong></p>\n<ul>\n<li>Large square matmul (M×K)·(K×N): 2MKN FLOPs, ~(MK+KN+MN) bytes → high intensity → compute-bound. GPUs love this.</li>\n<li>Matrix×vector (batch-1 decode): 2KN FLOPs, ~KN weight bytes → intensity ≈ 2 → deeply memory-bound. The GPU sits mostly idle.</li>\n</ul>\n<div class=\"anote\">This single framework explains FlashAttention, fused kernels, and why batching matters — they all push intensity up so you stop wasting the compute roof.</div>",
+            "a": "<p><strong>Arithmetic intensity</strong> = FLOPs performed ÷ bytes moved from memory. It tells you whether a kernel is limited by compute or by bandwidth.</p>\n<p><strong>Roofline:</strong> achievable FLOP/s = min( peak compute, bandwidth × arithmetic intensity ). Plot intensity on the x-axis: below the \"ridge\" you are <strong>memory-bound</strong> (the slanted bandwidth roof), above it you are <strong>compute-bound</strong> (the flat compute roof).</p>\n<p><strong>Where the ridge is:</strong> peak_FLOPs ÷ peak_bandwidth. For an A100 ≈ 312 TFLOP/s ÷ 2 TB/s ≈ 156 FLOP/byte. You need intensity above ~156 to saturate the compute units.</p>\n<p><strong>Examples:</strong></p>\n<ul>\n<li>Large square matmul (M×K)·(K×N): 2MKN FLOPs, ~(MK+KN+MN) bytes → high intensity → compute-bound. GPUs love this.</li>\n<li>Matrix×vector (batch-1 decode): 2KN FLOPs, ~KN weight bytes → intensity ≈ 2 → deeply memory-bound. The GPU sits mostly idle.</li>\n</ul>\n<p>This single framework explains FlashAttention, fused kernels, and why batching matters — they all push intensity up so you stop wasting the compute roof.</p>",
             "difficulty": "hard",
             "tags": [
               "system",
@@ -2195,7 +2406,7 @@
           },
           {
             "q": "Estimate the tokens/sec ceiling for a 7B model on one A100. Show the arithmetic.",
-            "a": "<p>Single-stream decode is memory-bound: to generate one token you read the entire model out of HBM once.</p>\n<ul>\n<li>7B params × 2 bytes (fp16) = <strong>14 GB</strong> read per token</li>\n<li>A100 HBM bandwidth ≈ <strong>2 TB/s</strong></li>\n<li>floor latency/token = 14 GB ÷ 2 TB/s = <strong>7 ms</strong> → ceiling ≈ <strong>143 tok/s</strong> (batch=1, ignoring KV cache and overhead)</li>\n</ul>\n<p><strong>Quantization moves the ceiling:</strong> int8 (7 GB) → ~3.5 ms → ~285 tok/s; int4 (3.5 GB) → ~570 tok/s. That is why quantization is <em>the</em> lever for single-stream latency — it directly cuts the bytes you read per token.</p>\n<div class=\"rnote\"><strong>Reality check:</strong> production hits ~60-70% of this roofline. But if your measured throughput is 10× under the estimate, you have a software bug, not a hardware limit. Knowing the ceiling is how you tell the difference.</div>",
+            "a": "<p>Single-stream decode is memory-bound: to generate one token you read the entire model out of HBM once.</p>\n<ul>\n<li>7B params × 2 bytes (fp16) = <strong>14 GB</strong> read per token</li>\n<li>A100 HBM bandwidth ≈ <strong>2 TB/s</strong></li>\n<li>floor latency/token = 14 GB ÷ 2 TB/s = <strong>7 ms</strong> → ceiling ≈ <strong>143 tok/s</strong> (batch=1, ignoring KV cache and overhead)</li>\n</ul>\n<p><strong>Quantization moves the ceiling:</strong> int8 (7 GB) → ~3.5 ms → ~285 tok/s; int4 (3.5 GB) → ~570 tok/s. That is why quantization is <em>the</em> lever for single-stream latency — it directly cuts the bytes you read per token.</p>\n<p><strong>Reality check:</strong> production hits ~60-70% of this roofline. But if your measured throughput is 10× under the estimate, you have a software bug, not a hardware limit. Knowing the ceiling is how you tell the difference.</p>",
             "difficulty": "hard",
             "tags": [
               "system",
@@ -2205,18 +2416,8 @@
             ]
           },
           {
-            "q": "Why does batching raise throughput? When do you flip from memory-bound to compute-bound?",
-            "a": "<p>At batch=1 you read every weight from HBM to produce a single token — terrible reuse. At batch=B you read the same weights once and produce B tokens, so the weight bytes are amortised across B requests. Arithmetic intensity rises roughly linearly with B.</p>\n<p><strong>The flip:</strong> throughput climbs with B until intensity crosses the roofline ridge (you become compute-bound) or you run out of memory — the KV cache grows with B × sequence length and eventually dominates.</p>\n<p><strong>This is continuous batching</strong> (vLLM): keep B high by packing concurrent requests into each forward pass, admitting and retiring sequences token-by-token instead of waiting for a whole batch to finish.</p>\n<div class=\"anote\"><strong>Tradeoff:</strong> large B maximises aggregate tok/s but raises per-request latency. Serving is the art of choosing B for your latency SLA.</div>",
-            "difficulty": "med",
-            "tags": [
-              "system",
-              "mlops",
-              "key"
-            ]
-          },
-          {
             "q": "GPU memory hierarchy — the numbers that actually matter.",
-            "a": "<p>Top to bottom, fast/small to slow/large (A100-class):</p>\n<ul>\n<li><strong>Registers:</strong> ~KBs per thread, fastest, private to a thread.</li>\n<li><strong>SRAM / shared memory:</strong> ~192 KB per SM (~20 MB on-chip total), ~19 TB/s. The scratchpad FlashAttention tiles Q/K/V into.</li>\n<li><strong>HBM (global memory):</strong> 40-80 GB, ~2 TB/s. Where weights and activations live — and the bottleneck for almost everything.</li>\n<li><strong>Host RAM over PCIe:</strong> ~64 GB/s — roughly 30× slower than HBM. CPU/disk offload is a last resort, not a plan.</li>\n</ul>\n<div class=\"gnote\"><strong>One rule explains most GPU optimization:</strong> minimise HBM traffic. FlashAttention, kernel fusion, activation recomputation, and quantization are all the same idea — keep data in SRAM/registers and stop round-tripping to HBM.</div>",
+            "a": "<p>Top to bottom, fast/small to slow/large (A100-class):</p>\n<ul>\n<li><strong>Registers:</strong> ~KBs per thread, fastest, private to a thread.</li>\n<li><strong>SRAM / shared memory:</strong> ~192 KB per SM (~20 MB on-chip total), ~19 TB/s. The scratchpad FlashAttention tiles Q/K/V into.</li>\n<li><strong>HBM (global memory):</strong> 40-80 GB, ~2 TB/s. Where weights and activations live — and the bottleneck for almost everything.</li>\n<li><strong>Host RAM over PCIe:</strong> ~64 GB/s — roughly 30× slower than HBM. CPU/disk offload is a last resort, not a plan.</li>\n</ul>\n<p><strong>One rule explains most GPU optimization:</strong> minimise HBM traffic. FlashAttention, kernel fusion, activation recomputation, and quantization are all the same idea — keep data in SRAM/registers and stop round-tripping to HBM.</p>",
             "difficulty": "med",
             "tags": [
               "system",
@@ -2239,14 +2440,14 @@
   },
   {
     "id": "s16",
-    "title": "16. Build Roadmap",
+    "title": "16. Projects to Do",
     "subs": [
       {
         "title": "Systems & Kernels",
         "qs": [
           {
             "q": "Triton FlashAttention — write fused attention as a GPU kernel",
-            "a": "<p><strong>Build:</strong> a fused attention kernel in Triton that uses tiling + the online-softmax trick so the N×N score matrix never touches HBM.</p>\n<p><strong>What it teaches:</strong> the GPU programming model (program ids, block pointers), why attention is IO-bound not compute-bound, the online-softmax rescaling, and tiling Q/K/V into SRAM.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>Triton vector-add and softmax kernels to learn the model</li>\n<li>Naive attention kernel (materialise scores) as a baseline</li>\n<li>Tiled forward with online softmax</li>\n<li>Match <code>F.scaled_dot_product_attention</code> numerically (atol/rtol)</li>\n<li>Benchmark vs PyTorch eager; plot the speedup vs sequence length</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> \"I wrote FlashAttention in Triton\" signals you understand the IO-bound nature of attention, not just the math. Be ready to explain the online softmax and why no N×N matrix hits HBM.</div>\n<p><strong>Resources:</strong> Triton fused-attention tutorial, FlashAttention (Dao et al., 2022).</p>",
+            "a": "<p><strong>Goal:</strong> a fused attention kernel in Triton that uses tiling + the online-softmax trick so the N×N score matrix never touches HBM.</p>\n<p><strong>What it teaches:</strong> the GPU programming model (program ids, block pointers), why attention is IO-bound not compute-bound, the online-softmax rescaling, and tiling Q/K/V into SRAM.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>Triton vector-add and softmax kernels to learn the model</li>\n<li>Naive attention kernel (materialise scores) as a baseline</li>\n<li>Tiled forward with online softmax</li>\n<li>Match <code>F.scaled_dot_product_attention</code> numerically (atol/rtol)</li>\n<li>Benchmark vs PyTorch eager; plot the speedup vs sequence length</li>\n</ul>\n<p><strong>Note:</strong> \"I wrote FlashAttention in Triton\" signals you understand the IO-bound nature of attention, not just the math. Be ready to explain the online softmax and why no N×N matrix hits HBM.</p>\n<p><strong>Resources:</strong> Triton fused-attention tutorial, FlashAttention (Dao et al., 2022).</p>",
             "difficulty": "hard",
             "tags": [
               "coding",
@@ -2256,7 +2457,7 @@
           },
           {
             "q": "Transformers in CUDA — a GPT forward/backward in raw C++/CUDA",
-            "a": "<p><strong>Build:</strong> a GPT block (ideally a full training step) in raw CUDA/C++, llm.c style — no PyTorch.</p>\n<p><strong>What it teaches:</strong> writing kernels for matmul, LayerNorm, softmax, GELU; memory coalescing, shared memory, warps and occupancy; what cuBLAS does for you; and moving from fp32 to mixed precision.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>CPU reference forward in plain C</li>\n<li>Port matmul to CUDA, verify against the reference</li>\n<li>LayerNorm / softmax / GELU kernels</li>\n<li>Wire a full forward pass, match PyTorch logits</li>\n<li>Backward pass + a training step on Shakespeare</li>\n<li>Profile with Nsight, chase occupancy and memory throughput</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> the deepest \"do you know the machine\" flex. Even finishing the forward pass is strong. Karpathy's llm.c is the reference implementation.</div>\n<p><strong>Resources:</strong> Karpathy llm.c, CUDA C++ Programming Guide, the PMPP book.</p>",
+            "a": "<p><strong>Goal:</strong> a GPT block (ideally a full training step) in raw CUDA/C++, llm.c style — no PyTorch.</p>\n<p><strong>What it teaches:</strong> writing kernels for matmul, LayerNorm, softmax, GELU; memory coalescing, shared memory, warps and occupancy; what cuBLAS does for you; and moving from fp32 to mixed precision.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>CPU reference forward in plain C</li>\n<li>Port matmul to CUDA, verify against the reference</li>\n<li>LayerNorm / softmax / GELU kernels</li>\n<li>Wire a full forward pass, match PyTorch logits</li>\n<li>Backward pass + a training step on Shakespeare</li>\n<li>Profile with Nsight, chase occupancy and memory throughput</li>\n</ul>\n<p><strong>Note:</strong> the deepest \"do you know the machine\" flex. Even finishing the forward pass is strong. Karpathy's llm.c is the reference implementation.</p>\n<p><strong>Resources:</strong> Karpathy llm.c, CUDA C++ Programming Guide, the PMPP book.</p>",
             "difficulty": "hard",
             "tags": [
               "coding",
@@ -2266,7 +2467,7 @@
           },
           {
             "q": "Contribute to tinygrad — read and modify a real DL framework",
-            "a": "<p><strong>Build:</strong> explore George Hotz's tinygrad (a deliberately tiny autograd/DL framework) and land a real PR.</p>\n<p><strong>What it teaches:</strong> lazy evaluation, the kernel-fusion scheduler, how ops lower to a small instruction set, and how a framework is built end to end — not just used.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>Read the codebase; run the MNIST and llama examples</li>\n<li><code>DEBUG=2</code> to watch kernels fuse and schedule</li>\n<li>Take a \"good first issue\" or add a missing op + test</li>\n<li>Attempt a bounty PR (tiny corp pays for some)</li>\n<li>Implement a model in tinygrad to stress the framework</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> contributing to tinygrad is rare signal — it says you can read and modify a DL compiler, not just call <code>.fit()</code>. Strong talking point for Hotz / comma / tiny corp style teams.</div>\n<p><strong>Resources:</strong> github.com/tinygrad/tinygrad, the <code>docs/</code> and <code>examples/</code>, the Discord bounty board.</p>",
+            "a": "<p><strong>Goal:</strong> explore George Hotz's tinygrad (a deliberately tiny autograd/DL framework) and land a real PR.</p>\n<p><strong>What it teaches:</strong> lazy evaluation, the kernel-fusion scheduler, how ops lower to a small instruction set, and how a framework is built end to end — not just used.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>Read the codebase; run the MNIST and llama examples</li>\n<li><code>DEBUG=2</code> to watch kernels fuse and schedule</li>\n<li>Take a \"good first issue\" or add a missing op + test</li>\n<li>Attempt a bounty PR (tiny corp pays for some)</li>\n<li>Implement a model in tinygrad to stress the framework</li>\n</ul>\n<p><strong>Note:</strong> contributing to tinygrad is rare signal — it says you can read and modify a DL compiler, not just call <code>.fit()</code>. Strong talking point for Hotz / comma / tiny corp style teams.</p>\n<p><strong>Resources:</strong> github.com/tinygrad/tinygrad, the <code>docs/</code> and <code>examples/</code>, the Discord bounty board.</p>",
             "difficulty": "hard",
             "tags": [
               "coding",
@@ -2281,7 +2482,7 @@
         "qs": [
           {
             "q": "Llama 3 from scratch — implement the architecture and load real weights",
-            "a": "<p><strong>Build:</strong> the Llama-3 decoder from scratch and load the released weights to run inference.</p>\n<p><strong>What it teaches:</strong> the modern decoder stack — RoPE, RMSNorm, SwiGLU, GQA, KV cache — plus the exact tensor shapes and <em>why</em> each replaced its predecessor (RoPE vs learned positions, RMSNorm vs LayerNorm, SwiGLU vs ReLU, GQA vs MHA).</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>RMSNorm, RoPE, and SwiGLU as standalone modules</li>\n<li>Attention with grouped-query attention + KV cache</li>\n<li>Assemble the block, load HF/Meta weights, match logits on a prompt</li>\n<li>Sampling (temperature, top-p) and free-form generation</li>\n<li>Stretch: paged KV cache or quantized inference</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> covers half the \"modern LLM internals\" surface in one project. Any \"why does Llama use X\" becomes easy once you have built it. Ties directly to your MathLM/MiniTorch work.</div>\n<p><strong>Resources:</strong> the Llama 3 paper, Karpathy/Meta reference impls.</p>",
+            "a": "<p><strong>Goal:</strong> the Llama-3 decoder from scratch and load the released weights to run inference.</p>\n<p><strong>What it teaches:</strong> the modern decoder stack — RoPE, RMSNorm, SwiGLU, GQA, KV cache — plus the exact tensor shapes and <em>why</em> each replaced its predecessor (RoPE vs learned positions, RMSNorm vs LayerNorm, SwiGLU vs ReLU, GQA vs MHA).</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>RMSNorm, RoPE, and SwiGLU as standalone modules</li>\n<li>Attention with grouped-query attention + KV cache</li>\n<li>Assemble the block, load HF/Meta weights, match logits on a prompt</li>\n<li>Sampling (temperature, top-p) and free-form generation</li>\n<li>Stretch: paged KV cache or quantized inference</li>\n</ul>\n<p><strong>Note:</strong> covers half the \"modern LLM internals\" surface in one project. Any \"why does Llama use X\" becomes easy once you have built it. Ties directly to your MathLM/MiniTorch work.</p>\n<p><strong>Resources:</strong> the Llama 3 paper, Karpathy/Meta reference impls.</p>",
             "difficulty": "hard",
             "tags": [
               "coding",
@@ -2292,7 +2493,7 @@
           },
           {
             "q": "Stable Diffusion — read the paper and implement a text-to-image sampler",
-            "a": "<p><strong>Build:</strong> read the Latent Diffusion paper and implement a minimal text-to-image pipeline.</p>\n<p><strong>What it teaches:</strong> VAE encode/decode to a latent space, the U-Net denoiser, DDPM vs DDIM sampling, classifier-free guidance, and CLIP text conditioning via cross-attention.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>DDPM on MNIST/CIFAR in pixel space (forward noising + reverse denoising)</li>\n<li>Add a U-Net with a time embedding</li>\n<li>DDIM sampler for fast (≈20-50 step) generation</li>\n<li>Classifier-free guidance</li>\n<li>Latent diffusion: VAE + text conditioning (or load SD weights and write only the sampler)</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> diffusion is the other half of generative modeling (vs LLMs). Implementing the sampler proves you understand the forward/reverse process, not just the vibe.</div>\n<p><strong>Resources:</strong> DDPM (Ho et al., 2020), DDIM (Song et al., 2020), Latent Diffusion (Rombach et al., 2022).</p>",
+            "a": "<p><strong>Goal:</strong> read the Latent Diffusion paper and implement a minimal text-to-image pipeline.</p>\n<p><strong>What it teaches:</strong> VAE encode/decode to a latent space, the U-Net denoiser, DDPM vs DDIM sampling, classifier-free guidance, and CLIP text conditioning via cross-attention.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>DDPM on MNIST/CIFAR in pixel space (forward noising + reverse denoising)</li>\n<li>Add a U-Net with a time embedding</li>\n<li>DDIM sampler for fast (≈20-50 step) generation</li>\n<li>Classifier-free guidance</li>\n<li>Latent diffusion: VAE + text conditioning (or load SD weights and write only the sampler)</li>\n</ul>\n<p><strong>Note:</strong> diffusion is the other half of generative modeling (vs LLMs). Implementing the sampler proves you understand the forward/reverse process, not just the high-level idea.</p>\n<p><strong>Resources:</strong> DDPM (Ho et al., 2020), DDIM (Song et al., 2020), Latent Diffusion (Rombach et al., 2022).</p>",
             "difficulty": "hard",
             "tags": [
               "coding",
@@ -2302,7 +2503,7 @@
           },
           {
             "q": "Multimodal Vision-Language Model — code a VLM from scratch (PaliGemma-style)",
-            "a": "<p><strong>Build:</strong> a vision-language model from scratch — a SigLIP/ViT vision encoder + a projection layer + a Gemma decoder — following Umar Jamil's end-to-end walkthrough.</p>\n<p><strong>What it teaches:</strong> how image patches become tokens the LLM consumes, the projection that bridges vision and text embedding spaces, contrastive (SigLIP/CLIP) vs generative training, and the two-stage train (align the projector, then instruction-tune).</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>SigLIP/ViT patch encoder</li>\n<li>Linear/MLP projector into the LLM embedding space</li>\n<li>Wire vision tokens + text tokens into the decoder</li>\n<li>Load PaliGemma weights, caption an image</li>\n<li>Visual question answering / instruction following</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> multimodal is where frontier labs are pushing. Building one shows you can connect modalities, and it ties straight to your CV background.</div>\n<p><strong>Resources:</strong> Umar Jamil, \"Coding a multimodal (vision) language model from scratch\" (youtube.com/watch?v=vAmKB7iPkWw); PaliGemma, SigLIP, and LLaVA papers.</p>",
+            "a": "<p><strong>Goal:</strong> a vision-language model from scratch — a SigLIP/ViT vision encoder + a projection layer + a Gemma decoder — following Umar Jamil's end-to-end walkthrough.</p>\n<p><strong>What it teaches:</strong> how image patches become tokens the LLM consumes, the projection that bridges vision and text embedding spaces, contrastive (SigLIP/CLIP) vs generative training, and the two-stage train (align the projector, then instruction-tune).</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>SigLIP/ViT patch encoder</li>\n<li>Linear/MLP projector into the LLM embedding space</li>\n<li>Wire vision tokens + text tokens into the decoder</li>\n<li>Load PaliGemma weights, caption an image</li>\n<li>Visual question answering / instruction following</li>\n</ul>\n<p><strong>Note:</strong> multimodal is where frontier labs are pushing. Building one shows you can connect modalities, and it ties straight to your CV background.</p>\n<p><strong>Resources:</strong> Umar Jamil, \"Coding a multimodal (vision) language model from scratch\" (youtube.com/watch?v=vAmKB7iPkWw); PaliGemma, SigLIP, and LLaVA papers.</p>",
             "difficulty": "hard",
             "tags": [
               "coding",
@@ -2314,6 +2515,13 @@
           }
         ]
       }
-    ]
+    ],
+    "type": "qa"
+  },
+  {
+    "id": "s17",
+    "title": "17. NeetCode 150",
+    "type": "info",
+    "html": "\n<p>Full list: <a href=\"https://neetcode.io/practice/practice/neetcode150\" target=\"_blank\" rel=\"noopener noreferrer\">NeetCode 150</a>. Do these before ML system rounds that include a DSA screen.</p>\n<p class=\"sub-title\">Must-do for ML interviews (≈40 problems)</p>\n<ul>\n<li><strong>Arrays & Hashing:</strong> Two Sum, Contains Duplicate, Valid Anagram, Group Anagrams, Top K Frequent, Encode/Decode Strings, Product of Array Except Self, Valid Sudoku, Longest Consecutive Sequence</li>\n<li><strong>Two Pointers:</strong> Valid Palindrome, Two Sum II, 3Sum, Container With Most Water, Trapping Rain Water</li>\n<li><strong>Sliding Window:</strong> Best Time to Buy/Sell Stock, Longest Substring Without Repeating, Longest Repeating Char Replacement, Permutation in String, Minimum Window Substring</li>\n<li><strong>Stack:</strong> Valid Parentheses, Min Stack, Evaluate RPN, Generate Parentheses, Daily Temperatures, Car Fleet, Largest Rectangle in Histogram</li>\n<li><strong>Binary Search:</strong> Binary Search, Search 2D Matrix, Koko Eating Bananas, Find Minimum in Rotated Sorted Array, Search Rotated Sorted Array, Time Based Key-Value Store, Median of Two Sorted Arrays</li>\n<li><strong>Linked List:</strong> Reverse Linked List, Merge Two Sorted Lists, Reorder List, Remove Nth From End, Copy List With Random Pointer, Add Two Numbers, Find Duplicate (Floyd), LRU Cache</li>\n<li><strong>Trees:</strong> Invert, Max Depth, Diameter, Balanced, Same/Symmetric/Subtree, LCA, Level Order, Right Side View, Count Good Nodes, Validate BST, Kth Smallest, Construct from Preorder/Inorder, Max Path Sum, Serialize/Deserialize</li>\n<li><strong>Heap:</strong> Kth Largest, Merge K Sorted Lists, Top K Frequent, Design Twitter</li>\n<li><strong>Graphs:</strong> Number of Islands, Clone Graph, Pacific Atlantic, Course Schedule, Number of Connected Components, Graph Valid Tree, Redundant Connection</li>\n<li><strong>1-D DP:</strong> Climbing Stairs, House Robber I/II, Longest Palindromic Substring, Palindromic Substrings, Decode Ways, Coin Change, Maximum Product Subarray, Word Break, Longest Increasing Subsequence</li>\n<li><strong>Intervals:</strong> Insert Interval, Merge Intervals, Non-overlapping Intervals, Meeting Rooms II</li>\n</ul>\n<p class=\"sub-title\">Patterns to recognize</p>\n<ul>\n<li>Hash map for O(1) lookup (Two Sum family)</li>\n<li>Monotonic stack (Daily Temperatures, Histogram)</li>\n<li>Fast/slow pointers (cycle, middle of list)</li>\n<li>BFS/DFS on grids and adjacency lists</li>\n<li>DP state = (index, constraint) — start with recursion + memo</li>\n</ul>\n<p>Work through 2–3 problems/day alongside ML theory.</p>\n"
   }
 ]

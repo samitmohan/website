@@ -28,27 +28,33 @@ export function QACard({
   tags: Tag[];
   children: React.ReactNode;
 }) {
-  const { isCardVisible, queryActive, allExpanded, flashId } = useInterviews();
+  const { isCardVisible, queryActive } = useInterviews();
   const [localOpen, setLocalOpen] = useState(false);
 
-  // Collapse local state when a query clears so cards return to drill-ready.
   useEffect(() => {
     if (!queryActive) setLocalOpen(false);
   }, [queryActive]);
 
+  // Open when linked from cram list (#question-id).
+  useEffect(() => {
+    const syncFromHash = () => {
+      if (window.location.hash === `#${id}`) setLocalOpen(true);
+    };
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, [id]);
+
   if (!isCardVisible(id)) return null;
 
-  const open = localOpen || queryActive || allExpanded;
+  const open = localOpen || queryActive;
   const isKey = tags.includes("key");
-  const flashing = flashId === id;
   const specialTags = tags.filter((t): t is keyof typeof SPECIAL_TAGS => t in SPECIAL_TAGS);
 
   return (
     <div
       id={id}
-      className={`bg-card border rounded-md mb-1.5 overflow-hidden scroll-mt-32 transition-shadow ${
-        flashing ? "ring-2 ring-primary" : ""
-      } ${
+      className={`bg-card border rounded-md mb-1.5 overflow-hidden scroll-mt-32 ${
         isKey ? "border-l-2 border-l-[#ca8a04] border-y-border border-r-border" : "border-border"
       }`}
     >

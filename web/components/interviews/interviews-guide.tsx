@@ -36,8 +36,19 @@ export function InterviewsGuide() {
     });
   }
 
+  const questionCount = index.length;
+
   return (
     <InterviewsShell sections={sectionMeta} index={index}>
+      <header className="mb-10 pb-6 border-b border-border">
+        <h1 className="text-[15px] font-semibold text-foreground mb-2">Interview prep</h1>
+        <p className="text-[13px] text-muted-foreground leading-relaxed">
+          Questions I need to prepare for interviews 2026.
+        </p>
+        <p className="text-[11px] text-muted-foreground/70 mt-2">
+          {questionCount} questions across {sectionMeta.length} sections
+        </p>
+      </header>
       {SECTIONS.map((sec) => {
         const title = stripNum(sec.title);
 
