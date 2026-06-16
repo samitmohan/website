@@ -1,8 +1,8 @@
 // Extracts the `const DATA = [...]` array out of ml-interview-guide.html
-// and writes it to web/lib/learning-data.json (the Learning tab's source
-// of truth). Run from repo root: node scripts/extract-learning-data.mjs
+// and writes it to web/lib/interviews-data.json (the Interviews tab's source
+// of truth). Run from repo root: node scripts/extract-interviews-data.mjs
 //
-// Warning: web/lib/learning-data.json has hand-added Q&A entries beyond
+// Warning: web/lib/interviews-data.json has hand-added Q&A entries beyond
 // what's in the HTML source. Re-running this script overwrites them —
 // only run it if you're intentionally re-syncing from the HTML guide.
 import fs from "fs";
@@ -13,7 +13,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const htmlPath = path.join(repoRoot, "ml-interview-guide.html");
-const outPath = path.join(repoRoot, "web/lib/learning-data.json");
+const outPath = path.join(repoRoot, "web/lib/interviews-data.json");
 
 const html = fs.readFileSync(htmlPath, "utf8");
 const scriptContent = html.slice(html.indexOf("<script>") + 8, html.lastIndexOf("</script>"));

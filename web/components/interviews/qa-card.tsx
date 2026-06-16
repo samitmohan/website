@@ -1,31 +1,46 @@
 "use client";
 
-import { useState } from "react";
-import type { QA, Tag } from "@/lib/learning-data";
+import { useEffect, useState } from "react";
+import type { Difficulty, Tag } from "@/lib/interviews-data";
+import { useInterviews } from "@/components/interviews/interviews-context";
 
-// Only the tags that map to filter chips — shown as plain colored text, no pill background
 const SPECIAL_TAGS: Partial<Record<Tag, string>> = {
-  key: "text-[#ca8a04]",
   frontier: "text-purple-500 dark:text-purple-400",
   startup: "text-primary",
 };
 
-const SPECIAL_LABELS: Partial<Record<Tag, string>> = {
-  key: "key",
-  frontier: "frontier",
-  startup: "startup",
-};
-
-const DIFFICULTY_DOT: Record<QA["difficulty"], string> = {
+const DIFFICULTY_DOT: Record<Difficulty, string> = {
   easy: "bg-[#16a34a]",
   med: "bg-[#ca8a04]",
   hard: "bg-destructive",
 };
 
-export function QACard({ qa, id }: { qa: QA; id: string }) {
+export function QACard({
+  id,
+  q,
+  difficulty,
+  tags,
+  children,
+}: {
+  id: string;
+  q: string;
+  difficulty: Difficulty;
+  tags: Tag[];
+  children: React.ReactNode;
+}) {
+  const { isCardVisible, queryActive } = useInterviews();
   const [expanded, setExpanded] = useState(false);
-  const isKey = qa.tags.includes("key");
-  const specialTags = qa.tags.filter((t): t is keyof typeof SPECIAL_TAGS => t in SPECIAL_TAGS && t !== "key");
+
+  // Auto-expand to reveal matching answers while a search query is active;
+  // collapse again once the query is cleared.
+  useEffect(() => {
+    setExpanded(queryActive);
+  }, [queryActive]);
+
+  if (!isCardVisible(id)) return null;
+
+  const isKey = tags.includes("key");
+  const specialTags = tags.filter((t): t is keyof typeof SPECIAL_TAGS => t in SPECIAL_TAGS);
 
   return (
     <div
@@ -41,21 +56,21 @@ export function QACard({ qa, id }: { qa: QA; id: string }) {
         aria-expanded={expanded}
       >
         <span
-          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mt-px ${DIFFICULTY_DOT[qa.difficulty]}`}
-          title={qa.difficulty}
+          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${DIFFICULTY_DOT[difficulty]}`}
+          title={difficulty}
         />
-        <div className="flex-1 min-w-0">
-          <span className="text-[13px] text-foreground leading-snug">{qa.q}</span>
+        <span className="flex-1 min-w-0 text-[13px] text-foreground leading-snug">
+          {q}
           {specialTags.length > 0 && (
             <span className="ml-2">
               {specialTags.map((t) => (
                 <span key={t} className={`text-[10px] font-medium mr-1.5 ${SPECIAL_TAGS[t]}`}>
-                  {SPECIAL_LABELS[t]}
+                  {t}
                 </span>
               ))}
             </span>
           )}
-        </div>
+        </span>
         <span
           className={`text-muted-foreground/50 text-[9px] flex-shrink-0 transition-transform ${
             expanded ? "rotate-90" : ""
@@ -65,9 +80,7 @@ export function QACard({ qa, id }: { qa: QA; id: string }) {
         </span>
       </button>
       {expanded && (
-        <div className="learning-prose px-3.5 pb-3.5 pt-2 border-t border-border">
-          <div dangerouslySetInnerHTML={{ __html: qa.a }} />
-        </div>
+        <div className="interviews-prose px-3.5 pb-3.5 pt-2 border-t border-border">{children}</div>
       )}
     </div>
   );

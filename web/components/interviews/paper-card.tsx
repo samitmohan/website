@@ -1,8 +1,8 @@
-import type { Paper } from "@/lib/learning-data";
+import type { Paper } from "@/lib/interviews-data";
 
 export function PaperCard({ paper }: { paper: Paper }) {
   return (
-    <div className="flex items-center gap-3 bg-card border border-border rounded-lg px-3.5 py-2.5 mb-1.5">
+    <div className="flex items-center gap-3 bg-card border border-border rounded-md px-3.5 py-2.5 mb-1.5">
       <span className="text-[10px] text-muted-foreground bg-muted rounded px-1.5 py-0.5 flex-shrink-0">
         {paper.year}
       </span>

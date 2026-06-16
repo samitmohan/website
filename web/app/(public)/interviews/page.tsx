@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/blog";
 import { PublicNav } from "@/components/public-nav";
-import { LearningShell } from "@/components/learning/learning-shell";
+import { InterviewsGuide } from "@/components/interviews/interviews-guide";
 
 export const metadata: Metadata = {
   title: "Interviews — Samit Mohan",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export const revalidate = 30;
 
-export default function LearningPage() {
+export default function InterviewsPage() {
   const searchEntries = getAllPosts().map((p) => ({
     slug: p.slug,
     title: p.title,
@@ -22,7 +22,7 @@ export default function LearningPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <PublicNav searchEntries={searchEntries} />
-      <LearningShell />
+      <InterviewsGuide />
     </div>
   );
 }

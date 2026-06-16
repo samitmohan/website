@@ -1,5 +1,7 @@
-// Source of truth: web/lib/learning-data.json
-// To regenerate from HTML guide: node scripts/extract-learning-data.mjs
+// Source of truth: web/lib/interviews-data.json
+// To regenerate from the HTML guide: node scripts/extract-interviews-data.mjs
+// (warning: the JSON has hand-added Q&As beyond the HTML source — re-running
+// the extractor overwrites them).
 
 export type Difficulty = "easy" | "med" | "hard";
 
@@ -61,7 +63,7 @@ export interface PapersSection {
   papers: Paper[];
 }
 
-export type LearningSection = QASection | InfoSection | PapersSection;
+export type Section = QASection | InfoSection | PapersSection;
 
-import rawData from "./learning-data.json";
-export const SECTIONS = rawData as LearningSection[];
+import rawData from "./interviews-data.json";
+export const SECTIONS = rawData as Section[];
