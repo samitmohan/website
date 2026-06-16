@@ -83,7 +83,7 @@ export default async function HomePage() {
                 I build computer-vision systems for city traffic at Beltech AI: live CCTV,{" "}
                 <span className="font-semibold text-foreground">≤10ms</span> inference,{" "}
                 <span className="font-semibold text-foreground">0.9+ F1</span> in production.
-                I write about rebuilding ML from scratch.
+                In my free time I like to rebuild ML from scratch.
               </p>
             </div>
           </div>
