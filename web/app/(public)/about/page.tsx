@@ -50,8 +50,8 @@ const TEACHING = [
     stack: "Python · PyTorch · LLMs · RAG · Agents",
     href: "https://aiengg.dev/",
     bullets: [
-      "TA'd a 16-week live AI engineering cohort: ran weekly classes on RAG, agents, fine-tuning, and inference for **200+ engineers**. Designed assignments, debugged student projects, took office hours.",
-      "Parent platform: InterviewReady. Restructured content for 10k+ subscribers; technical posts reached **20k+ readers**.",
+      "TA'd a 16-week live AI engineering cohort: ran weekly classes on RAG, agents, fine-tuning, and inference for **200+ engineers**. Designed assignments, took doubt sessions, designed the course and syllabus.",
+      "InterviewReady: restructured content for 10k+ subscribers; technical posts reached **20k+ readers**.",
     ],
   },
   {
