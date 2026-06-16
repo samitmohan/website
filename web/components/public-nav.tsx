@@ -14,7 +14,7 @@ export function PublicNav({ searchEntries }: { searchEntries?: SearchEntry[] }) 
   const links = [
     { href: "/about", label: "About" },
     { href: "/blog", label: "Posts" },
-    { href: "/learning", label: "Learning" },
+    { href: "/interviews", label: "Interviews" },
   ];
 
   const openPalette = () => {

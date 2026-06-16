@@ -4,9 +4,9 @@ import { PublicNav } from "@/components/public-nav";
 import { LearningShell } from "@/components/learning/learning-shell";
 
 export const metadata: Metadata = {
-  title: "Learning — Samit Mohan",
+  title: "Interviews — Samit Mohan",
   description:
-    "ML interview prep guide: 175+ questions covering math, deep learning, LLMs, CV, system design, and MLOps.",
+    "ML interview prep guide: 181 questions covering math, deep learning, LLMs, CV, system design, and MLOps.",
 };
 
 export const revalidate = 30;
