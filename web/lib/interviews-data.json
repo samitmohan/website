@@ -69,6 +69,15 @@
             "tags": [
               "math"
             ]
+          },
+          {
+            "q": "Derive why PCA is the eigendecomposition of the covariance matrix.",
+            "a": "<p>Center the data: X ∈ ℝ<sup>n×d</sup> with zero column means. Covariance C = (1/n) XᵀX, a d×d symmetric PSD matrix.</p>\n<p><strong>Goal:</strong> find the unit direction w that maximises the variance of the projections Xw:</p>\n<p>maximise wᵀCw &nbsp; subject to &nbsp; ‖w‖ = 1.</p>\n<p><strong>Lagrangian:</strong> L = wᵀCw − λ(wᵀw − 1). Set ∂L/∂w = 2Cw − 2λw = 0:</p>\n<p><strong>Cw = λw</strong> — the optimal w is an eigenvector of C, and the variance it captures is wᵀCw = λ. So the top eigenvalue is the maximum-variance direction; subsequent principal components are the next eigenvectors (orthogonal, by symmetry of C), in descending λ.</p>\n<p><strong>Via SVD (what you actually compute):</strong> X = UΣVᵀ ⟹ C = (1/n)VΣ²Vᵀ. The right singular vectors V are the principal components and σ²/n are the variances. SVD of X is numerically more stable than forming C explicitly.</p>\n<div class=\"anote\"><strong>Interview hook:</strong> on MNIST the first eigenvector ≈ global brightness, later ones capture strokes. That lets you say what each retained dimension \"means,\" not just that you ran PCA.</div>",
+            "difficulty": "med",
+            "tags": [
+              "math",
+              "key"
+            ]
           }
         ]
       },
@@ -445,6 +454,25 @@
               "dl",
               "general"
             ]
+          },
+          {
+            "q": "Derive the backward pass of BatchNorm.",
+            "a": "<p><strong>Forward</strong> (per feature, over the N samples in the batch): μ = mean(x), σ² = var(x), x̂ = (x − μ)/√(σ²+ε), y = γx̂ + β.</p>\n<p><strong>Easy gradients:</strong> dγ = Σ dy·x̂, &nbsp; dβ = Σ dy, &nbsp; dx̂ = dy·γ.</p>\n<p><strong>The hard part:</strong> μ and σ² each depend on every xᵢ, so x̂ couples all N samples. Differentiate through them:</p>\n<ul>\n<li>dσ² = Σ dx̂·(x − μ)·(−½)(σ²+ε)<sup>−3/2</sup></li>\n<li>dμ = Σ dx̂·(−1/√(σ²+ε)) &nbsp; (the σ²-path term vanishes since Σ(x − μ) = 0)</li>\n<li>dx = dx̂/√(σ²+ε) + dσ²·2(x − μ)/N + dμ/N</li>\n</ul>\n<p><strong>Vectorised (the clean form):</strong></p>\n<p>dx = (1/N)·(1/√(σ²+ε))·(N·dx̂ − Σdx̂ − x̂·Σ(dx̂·x̂))</p>\n<div class=\"rnote\"><strong>Why BN is annoying:</strong> the batch coupling means you cannot compute stats for a single example at inference. You keep an EMA of μ and σ² during training and use those running averages at test time — a train/inference mismatch that does not exist for LayerNorm.</div>",
+            "difficulty": "hard",
+            "tags": [
+              "dl",
+              "key"
+            ]
+          },
+          {
+            "q": "Derive the backward pass of LayerNorm. Why is it simpler than BatchNorm in practice?",
+            "a": "<p><strong>Forward</strong> (per token, over the D feature dimensions): μ and σ² are computed across the D features of one sample. x̂ = (x − μ)/√(σ²+ε), y = γ⊙x̂ + β.</p>\n<p><strong>Backward:</strong></p>\n<ul>\n<li>dγ = Σ dy⊙x̂, &nbsp; dβ = Σ dy &nbsp; (summed over batch and positions)</li>\n<li>dx̂ = dy⊙γ</li>\n<li>dx = (1/√(σ²+ε))·(dx̂ − mean(dx̂) − x̂·mean(dx̂⊙x̂)), &nbsp; means over the D feature dim</li>\n</ul>\n<p>Algebraically identical shape to the BatchNorm backward — the only difference is the axis of reduction.</p>\n<div class=\"gnote\"><strong>The whole BN↔LN distinction:</strong> same formula, different axis. BN reduces over the batch (couples samples → needs running stats). LN reduces over features within one sample → no batch coupling, identical train vs inference, works at batch=1. That last point is exactly why transformers (autoregressive decode at batch=1) use LN.</div>",
+            "difficulty": "hard",
+            "tags": [
+              "dl",
+              "transformers",
+              "key"
+            ]
           }
         ]
       },
@@ -648,6 +676,16 @@
             ],
             "a": "<p>A causal mask ensures each position only attends to earlier positions (and itself). Upper triangle is masked to -inf.</p>",
             "code": "import torch\n\ndef causal_mask(seq_len, device='cpu'):\n    # 1 where attention is allowed, 0 where masked\n    mask = torch.tril(torch.ones(seq_len, seq_len, device=device))\n    # shape (1, 1, seq_len, seq_len) for broadcasting over batch and heads\n    return mask.unsqueeze(0).unsqueeze(0)\n\n# Usage:\n# mask = causal_mask(seq_len, device=x.device)\n# scores = scores.masked_fill(mask == 0, float('-inf'))"
+          },
+          {
+            "q": "Why is tokenization the root of most LLM weirdness?",
+            "a": "<p><strong>BPE recap:</strong> start from bytes/characters, greedily merge the most frequent adjacent pair, repeat to a target vocab size. Frequent words collapse to one token; rare strings fragment into many.</p>\n<p><strong>The quirks this causes:</strong></p>\n<ul>\n<li><strong>Non-English tax:</strong> under-represented scripts (Hindi, Tamil, even code) are barely merged, so they cost many more tokens — higher price and a smaller effective context window for the same text.</li>\n<li><strong>Bad arithmetic:</strong> numbers tokenize inconsistently (\"127\" might be one token, \"128\" two). Digits are not atomic, so the model never sees clean place value.</li>\n<li><strong>Can't spell:</strong> \"strawberry\" is a couple of tokens, never characters — so counting its r's is genuinely hard for the model.</li>\n<li><strong>Under-trained tokens:</strong> rare merges (the \"SolidGoldMagikarp\" tokens) have barely-trained embeddings and trigger weird behavior.</li>\n<li><strong>Whitespace/case sensitivity:</strong> \" the\", \"the\", \"The\", \"THE\" are different tokens.</li>\n</ul>\n<p><strong>Why BPE at all:</strong> char-level → sequences too long for O(n²) attention; word-level → out-of-vocabulary explosions and a huge vocab. BPE is the compromise. <strong>Byte-level BPE</strong> (GPT-2 onward) operates on UTF-8 bytes so every possible string is representable — no OOV ever.</p>\n<div class=\"anote\"><strong>Karpathy's line:</strong> \"tokenization is at the heart of much of the weirdness of LLMs.\" Being able to trace a specific failure (spelling, math, multilingual cost) back to the tokenizer is a strong signal.</div>",
+            "difficulty": "med",
+            "tags": [
+              "llm",
+              "transformers",
+              "key"
+            ]
           }
         ]
       }
@@ -2100,6 +2138,16 @@
               "llm"
             ],
             "code": "import torch, torch.nn.functional as F\n\ndef sample(logits, temperature=1.0, top_p=0.9, top_k=0):\n    \"\"\"logits: (vocab_size,) — raw unnormalized scores from model\"\"\"\n    # Step 1: temperature scaling\n    logits = logits / max(temperature, 1e-5)\n\n    # Step 2: optional top-k filtering (before top-p)\n    if top_k > 0:\n        topk_thresh = torch.topk(logits, top_k).values[-1]\n        logits[logits < topk_thresh] = float('-inf')\n\n    # Step 3: softmax\n    probs = F.softmax(logits, dim=-1)\n\n    # Step 4: top-p nucleus filtering\n    sorted_probs, sorted_idx = torch.sort(probs, descending=True)\n    cumprobs = torch.cumsum(sorted_probs, dim=-1)\n    # Remove tokens AFTER the cumsum exceeds top_p (shift by 1 to include the crossing token)\n    to_remove = (cumprobs - sorted_probs) >= top_p\n    sorted_probs[to_remove] = 0.0\n    sorted_probs = sorted_probs / sorted_probs.sum()  # renormalize\n\n    # Step 5: sample from filtered distribution\n    sampled = torch.multinomial(sorted_probs, num_samples=1)\n    return sorted_idx[sampled].item()"
+          },
+          {
+            "q": "Walk through a nanoGPT training loop line by line: data → forward → loss → backward → step → eval.",
+            "a": "<p><strong>Data:</strong> tokenize the corpus into one flat array. <code>get_batch</code> samples B random offsets; for each, x = tokens[i : i+T] and y = tokens[i+1 : i+T+1]. y is x shifted by one — every position predicts the next token.</p>\n<p><strong>Forward:</strong> token embeddings + positional embeddings → N transformer blocks (pre-LN: LN → attention → residual, LN → MLP → residual) → final LN → logits via the LM head (weights usually tied to the token embedding).</p>\n<p><strong>Loss:</strong> <code>F.cross_entropy(logits.view(-1, V), y.view(-1))</code> — mean negative log-likelihood across all B·T positions. Every position is a training signal, which is why a single sequence teaches T predictions.</p>\n<p><strong>Backward + step:</strong></p>\n<pre><code>for step in range(max_steps):\n    x, y = get_batch('train')\n    logits, loss = model(x, y)\n    optimizer.zero_grad(set_to_none=True)\n    loss.backward()\n    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)\n    lr = get_lr(step)              # warmup then cosine decay\n    for g in optimizer.param_groups: g['lr'] = lr\n    optimizer.step()              # AdamW</code></pre>\n<p><strong>Eval:</strong> periodically, under <code>torch.no_grad()</code> with <code>model.eval()</code>, average the loss over a few train and val batches, then switch back to <code>model.train()</code>.</p>\n<p><strong>Details that matter:</strong> weight tying, bias-free LN/Linear, gradient accumulation for a large effective batch, mixed precision (bf16 autocast), and the warmup+cosine LR schedule.</p>\n<div class=\"anote\"><strong>Your strongest story:</strong> you built MicroGPT in ~218 lines. Be ready to defend every line — especially why y is x shifted by one and why the loss means over all T positions.</div>",
+            "difficulty": "med",
+            "tags": [
+              "coding",
+              "dl",
+              "key"
+            ]
           }
         ]
       },
@@ -2131,6 +2179,135 @@
             "difficulty": "hard",
             "tags": [
               "transformers",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "What is arithmetic intensity? Explain the roofline model.",
+            "a": "<p><strong>Arithmetic intensity</strong> = FLOPs performed ÷ bytes moved from memory. It tells you whether a kernel is limited by compute or by bandwidth.</p>\n<p><strong>Roofline:</strong> achievable FLOP/s = min( peak compute, bandwidth × arithmetic intensity ). Plot intensity on the x-axis: below the \"ridge\" you are <strong>memory-bound</strong> (the slanted bandwidth roof), above it you are <strong>compute-bound</strong> (the flat compute roof).</p>\n<p><strong>Where the ridge is:</strong> peak_FLOPs ÷ peak_bandwidth. For an A100 ≈ 312 TFLOP/s ÷ 2 TB/s ≈ 156 FLOP/byte. You need intensity above ~156 to saturate the compute units.</p>\n<p><strong>Examples:</strong></p>\n<ul>\n<li>Large square matmul (M×K)·(K×N): 2MKN FLOPs, ~(MK+KN+MN) bytes → high intensity → compute-bound. GPUs love this.</li>\n<li>Matrix×vector (batch-1 decode): 2KN FLOPs, ~KN weight bytes → intensity ≈ 2 → deeply memory-bound. The GPU sits mostly idle.</li>\n</ul>\n<div class=\"anote\">This single framework explains FlashAttention, fused kernels, and why batching matters — they all push intensity up so you stop wasting the compute roof.</div>",
+            "difficulty": "hard",
+            "tags": [
+              "system",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "Estimate the tokens/sec ceiling for a 7B model on one A100. Show the arithmetic.",
+            "a": "<p>Single-stream decode is memory-bound: to generate one token you read the entire model out of HBM once.</p>\n<ul>\n<li>7B params × 2 bytes (fp16) = <strong>14 GB</strong> read per token</li>\n<li>A100 HBM bandwidth ≈ <strong>2 TB/s</strong></li>\n<li>floor latency/token = 14 GB ÷ 2 TB/s = <strong>7 ms</strong> → ceiling ≈ <strong>143 tok/s</strong> (batch=1, ignoring KV cache and overhead)</li>\n</ul>\n<p><strong>Quantization moves the ceiling:</strong> int8 (7 GB) → ~3.5 ms → ~285 tok/s; int4 (3.5 GB) → ~570 tok/s. That is why quantization is <em>the</em> lever for single-stream latency — it directly cuts the bytes you read per token.</p>\n<div class=\"rnote\"><strong>Reality check:</strong> production hits ~60-70% of this roofline. But if your measured throughput is 10× under the estimate, you have a software bug, not a hardware limit. Knowing the ceiling is how you tell the difference.</div>",
+            "difficulty": "hard",
+            "tags": [
+              "system",
+              "mlops",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "Why does batching raise throughput? When do you flip from memory-bound to compute-bound?",
+            "a": "<p>At batch=1 you read every weight from HBM to produce a single token — terrible reuse. At batch=B you read the same weights once and produce B tokens, so the weight bytes are amortised across B requests. Arithmetic intensity rises roughly linearly with B.</p>\n<p><strong>The flip:</strong> throughput climbs with B until intensity crosses the roofline ridge (you become compute-bound) or you run out of memory — the KV cache grows with B × sequence length and eventually dominates.</p>\n<p><strong>This is continuous batching</strong> (vLLM): keep B high by packing concurrent requests into each forward pass, admitting and retiring sequences token-by-token instead of waiting for a whole batch to finish.</p>\n<div class=\"anote\"><strong>Tradeoff:</strong> large B maximises aggregate tok/s but raises per-request latency. Serving is the art of choosing B for your latency SLA.</div>",
+            "difficulty": "med",
+            "tags": [
+              "system",
+              "mlops",
+              "key"
+            ]
+          },
+          {
+            "q": "GPU memory hierarchy — the numbers that actually matter.",
+            "a": "<p>Top to bottom, fast/small to slow/large (A100-class):</p>\n<ul>\n<li><strong>Registers:</strong> ~KBs per thread, fastest, private to a thread.</li>\n<li><strong>SRAM / shared memory:</strong> ~192 KB per SM (~20 MB on-chip total), ~19 TB/s. The scratchpad FlashAttention tiles Q/K/V into.</li>\n<li><strong>HBM (global memory):</strong> 40-80 GB, ~2 TB/s. Where weights and activations live — and the bottleneck for almost everything.</li>\n<li><strong>Host RAM over PCIe:</strong> ~64 GB/s — roughly 30× slower than HBM. CPU/disk offload is a last resort, not a plan.</li>\n</ul>\n<div class=\"gnote\"><strong>One rule explains most GPU optimization:</strong> minimise HBM traffic. FlashAttention, kernel fusion, activation recomputation, and quantization are all the same idea — keep data in SRAM/registers and stop round-tripping to HBM.</div>",
+            "difficulty": "med",
+            "tags": [
+              "system",
+              "frontier"
+            ]
+          },
+          {
+            "q": "What is MFU (Model FLOPs Utilization)? What caps training throughput?",
+            "a": "<p><strong>MFU</strong> = achieved FLOP/s ÷ hardware peak FLOP/s. A well-tuned large training run lands around 40-55%; above 50% is excellent.</p>\n<p><strong>Training FLOPs per token ≈ 6N</strong> for N parameters (≈2N forward + ≈4N backward). So tokens/sec ≈ MFU × peak_FLOPs ÷ 6N — a quick way to sanity-check a training run.</p>\n<p><strong>What kills MFU:</strong></p>\n<ul>\n<li>Memory-bandwidth stalls and low arithmetic intensity (small micro-batch / short sequences)</li>\n<li>Communication: all-reduce / all-gather in data and tensor parallelism</li>\n<li>Pipeline bubbles in pipeline parallelism</li>\n<li>Kernel launch overhead and poor overlap of compute with comms</li>\n</ul>\n<p><strong>Levers:</strong> larger micro-batch, fused kernels (FlashAttention), the right parallelism layout, gradient-checkpoint tradeoffs, and overlapping communication with compute (FSDP/ZeRO prefetch).</p>",
+            "difficulty": "hard",
+            "tags": [
+              "system",
+              "frontier",
+              "key"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "s16",
+    "title": "16. Build Roadmap",
+    "subs": [
+      {
+        "title": "Systems & Kernels",
+        "qs": [
+          {
+            "q": "Triton FlashAttention — write fused attention as a GPU kernel",
+            "a": "<p><strong>Build:</strong> a fused attention kernel in Triton that uses tiling + the online-softmax trick so the N×N score matrix never touches HBM.</p>\n<p><strong>What it teaches:</strong> the GPU programming model (program ids, block pointers), why attention is IO-bound not compute-bound, the online-softmax rescaling, and tiling Q/K/V into SRAM.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>Triton vector-add and softmax kernels to learn the model</li>\n<li>Naive attention kernel (materialise scores) as a baseline</li>\n<li>Tiled forward with online softmax</li>\n<li>Match <code>F.scaled_dot_product_attention</code> numerically (atol/rtol)</li>\n<li>Benchmark vs PyTorch eager; plot the speedup vs sequence length</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> \"I wrote FlashAttention in Triton\" signals you understand the IO-bound nature of attention, not just the math. Be ready to explain the online softmax and why no N×N matrix hits HBM.</div>\n<p><strong>Resources:</strong> Triton fused-attention tutorial, FlashAttention (Dao et al., 2022).</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "system",
+              "frontier"
+            ]
+          },
+          {
+            "q": "Transformers in CUDA — a GPT forward/backward in raw C++/CUDA",
+            "a": "<p><strong>Build:</strong> a GPT block (ideally a full training step) in raw CUDA/C++, llm.c style — no PyTorch.</p>\n<p><strong>What it teaches:</strong> writing kernels for matmul, LayerNorm, softmax, GELU; memory coalescing, shared memory, warps and occupancy; what cuBLAS does for you; and moving from fp32 to mixed precision.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>CPU reference forward in plain C</li>\n<li>Port matmul to CUDA, verify against the reference</li>\n<li>LayerNorm / softmax / GELU kernels</li>\n<li>Wire a full forward pass, match PyTorch logits</li>\n<li>Backward pass + a training step on Shakespeare</li>\n<li>Profile with Nsight, chase occupancy and memory throughput</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> the deepest \"do you know the machine\" flex. Even finishing the forward pass is strong. Karpathy's llm.c is the reference implementation.</div>\n<p><strong>Resources:</strong> Karpathy llm.c, CUDA C++ Programming Guide, the PMPP book.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "system",
+              "frontier"
+            ]
+          },
+          {
+            "q": "Contribute to tinygrad — read and modify a real DL framework",
+            "a": "<p><strong>Build:</strong> explore George Hotz's tinygrad (a deliberately tiny autograd/DL framework) and land a real PR.</p>\n<p><strong>What it teaches:</strong> lazy evaluation, the kernel-fusion scheduler, how ops lower to a small instruction set, and how a framework is built end to end — not just used.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>Read the codebase; run the MNIST and llama examples</li>\n<li><code>DEBUG=2</code> to watch kernels fuse and schedule</li>\n<li>Take a \"good first issue\" or add a missing op + test</li>\n<li>Attempt a bounty PR (tiny corp pays for some)</li>\n<li>Implement a model in tinygrad to stress the framework</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> contributing to tinygrad is rare signal — it says you can read and modify a DL compiler, not just call <code>.fit()</code>. Strong talking point for Hotz / comma / tiny corp style teams.</div>\n<p><strong>Resources:</strong> github.com/tinygrad/tinygrad, the <code>docs/</code> and <code>examples/</code>, the Discord bounty board.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "system",
+              "frontier"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Models From Scratch",
+        "qs": [
+          {
+            "q": "Llama 3 from scratch — implement the architecture and load real weights",
+            "a": "<p><strong>Build:</strong> the Llama-3 decoder from scratch and load the released weights to run inference.</p>\n<p><strong>What it teaches:</strong> the modern decoder stack — RoPE, RMSNorm, SwiGLU, GQA, KV cache — plus the exact tensor shapes and <em>why</em> each replaced its predecessor (RoPE vs learned positions, RMSNorm vs LayerNorm, SwiGLU vs ReLU, GQA vs MHA).</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>RMSNorm, RoPE, and SwiGLU as standalone modules</li>\n<li>Attention with grouped-query attention + KV cache</li>\n<li>Assemble the block, load HF/Meta weights, match logits on a prompt</li>\n<li>Sampling (temperature, top-p) and free-form generation</li>\n<li>Stretch: paged KV cache or quantized inference</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> covers half the \"modern LLM internals\" surface in one project. Any \"why does Llama use X\" becomes easy once you have built it. Ties directly to your MathLM/MiniTorch work.</div>\n<p><strong>Resources:</strong> the Llama 3 paper, Karpathy/Meta reference impls.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "llm",
+              "frontier",
+              "key"
+            ]
+          },
+          {
+            "q": "Stable Diffusion — read the paper and implement a text-to-image sampler",
+            "a": "<p><strong>Build:</strong> read the Latent Diffusion paper and implement a minimal text-to-image pipeline.</p>\n<p><strong>What it teaches:</strong> VAE encode/decode to a latent space, the U-Net denoiser, DDPM vs DDIM sampling, classifier-free guidance, and CLIP text conditioning via cross-attention.</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>DDPM on MNIST/CIFAR in pixel space (forward noising + reverse denoising)</li>\n<li>Add a U-Net with a time embedding</li>\n<li>DDIM sampler for fast (≈20-50 step) generation</li>\n<li>Classifier-free guidance</li>\n<li>Latent diffusion: VAE + text conditioning (or load SD weights and write only the sampler)</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> diffusion is the other half of generative modeling (vs LLMs). Implementing the sampler proves you understand the forward/reverse process, not just the vibe.</div>\n<p><strong>Resources:</strong> DDPM (Ho et al., 2020), DDIM (Song et al., 2020), Latent Diffusion (Rombach et al., 2022).</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "generative",
+              "cv"
+            ]
+          },
+          {
+            "q": "Multimodal Vision-Language Model — code a VLM from scratch (PaliGemma-style)",
+            "a": "<p><strong>Build:</strong> a vision-language model from scratch — a SigLIP/ViT vision encoder + a projection layer + a Gemma decoder — following Umar Jamil's end-to-end walkthrough.</p>\n<p><strong>What it teaches:</strong> how image patches become tokens the LLM consumes, the projection that bridges vision and text embedding spaces, contrastive (SigLIP/CLIP) vs generative training, and the two-stage train (align the projector, then instruction-tune).</p>\n<p><strong>Milestones:</strong></p>\n<ul>\n<li>SigLIP/ViT patch encoder</li>\n<li>Linear/MLP projector into the LLM embedding space</li>\n<li>Wire vision tokens + text tokens into the decoder</li>\n<li>Load PaliGemma weights, caption an image</li>\n<li>Visual question answering / instruction following</li>\n</ul>\n<div class=\"anote\"><strong>Interview hook:</strong> multimodal is where frontier labs are pushing. Building one shows you can connect modalities, and it ties straight to your CV background.</div>\n<p><strong>Resources:</strong> Umar Jamil, \"Coding a multimodal (vision) language model from scratch\" (youtube.com/watch?v=vAmKB7iPkWw); PaliGemma, SigLIP, and LLaVA papers.</p>",
+            "difficulty": "hard",
+            "tags": [
+              "coding",
+              "cv",
+              "llm",
               "frontier",
               "key"
             ]

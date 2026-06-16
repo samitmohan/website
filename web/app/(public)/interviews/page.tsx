@@ -6,7 +6,7 @@ import { InterviewsGuide } from "@/components/interviews/interviews-guide";
 export const metadata: Metadata = {
   title: "Interviews — Samit Mohan",
   description:
-    "ML interview prep guide: 181 questions covering math, deep learning, LLMs, CV, system design, and MLOps.",
+    "End-to-end ML interview prep: 197 questions plus a build roadmap covering math, deep learning, LLMs, CV, systems, and from-scratch projects.",
 };
 
 export const revalidate = 30;
