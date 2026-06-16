@@ -18,9 +18,9 @@ const EXPERIENCE = [
     stack: "PyTorch · YOLO · PARSeq · Triton · TensorRT · FastAPI · Kubernetes · Docker",
     bullets: [
       "Shipped a 10+ module CV system (LPR, PUCC, helmet, phone, wrong-way) over live RTSP at **0.9+ F1** on Indian CCTV.",
-      "Wrote a custom-C DeepStream pipeline that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Scaled per-server capacity to **100+ cameras** on multi-GPU.",
+      "Wrote a custom C pipeline that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Scaled per-server capacity to **100+ cameras** on multi-GPU.",
       "Cut detection latency **54% to ≤10 ms** by replacing anchor-based heads with NMS-free YOLOv10 on Triton + TensorRT. 0.90+ mAP across 8 classes.",
-      "PUCC pollution-certificate FastAPI service: YOLO verifies probe insertion, LPR reads the plate, OCR'd testing-center name validated against the government registry. Real-time on 10-second clips — **7 s** with frame-skipping on PaddleOCR.",
+      "PUCC pollution-certificate FastAPI service: YOLO verifies probe insertion, LPR reads the plate, OCR'd testing-center name validated against the government registry. Processes a 10-second clip in **7 s** with frame-skipping; full frame pass takes 10 s.",
       "Rebuilt LPR end-to-end: YOLOv11s for text detection, PARSeq ViT for recognition, TensorRT FP16 on edge. **150 ms → 40 ms** with higher read accuracy.",
       "Continuous-learning loop on a 2-week cadence: live misclassifications → retrain → mAP50 gate → hot-swap on Triton with **zero downtime**.",
       "Vehicle-attribute microservices (color, type) at **0.92+ Macro-F1** with Grafana SLOs and A/B rollout.",
