@@ -20,22 +20,25 @@ export function QACard({
   q,
   difficulty,
   tags,
+  code,
   children,
 }: {
   id: string;
   q: string;
   difficulty: Difficulty;
   tags: Tag[];
+  code?: string;
   children: React.ReactNode;
 }) {
   const { isCardVisible, queryActive } = useInterviews();
   const [localOpen, setLocalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!queryActive) setLocalOpen(false);
   }, [queryActive]);
 
-  // Open when linked from cram list (#question-id).
+  // Open when linked from in-page jump links (#question-id).
   useEffect(() => {
     const syncFromHash = () => {
       if (window.location.hash === `#${id}`) setLocalOpen(true);
@@ -51,6 +54,13 @@ export function QACard({
   const isKey = tags.includes("key");
   const specialTags = tags.filter((t): t is keyof typeof SPECIAL_TAGS => t in SPECIAL_TAGS);
 
+  const copyCode = async () => {
+    if (!code) return;
+    await navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
   return (
     <div
       id={id}
@@ -61,7 +71,7 @@ export function QACard({
       <button
         type="button"
         onClick={() => setLocalOpen((e) => !e)}
-        className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left hover:bg-muted/30 transition-colors"
+        className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-muted/30 transition-colors"
         aria-expanded={open}
       >
         <span
@@ -89,7 +99,26 @@ export function QACard({
         </span>
       </button>
       {open && (
-        <div className="interviews-prose px-3.5 pb-3.5 pt-2 border-t border-border">{children}</div>
+        <div className="interviews-prose px-3.5 border-t border-border pb-2.5 pt-1.5">
+          {children}
+          {code && (
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Code</span>
+                <button
+                  type="button"
+                  onClick={copyCode}
+                  className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <pre className="text-[12px] leading-relaxed overflow-x-auto">
+                <code>{code}</code>
+              </pre>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

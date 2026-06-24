@@ -25,6 +25,7 @@ export type Tag =
 export interface QA {
   q: string;
   a: string;
+  code?: string;
   difficulty: Difficulty;
   tags: Tag[];
 }

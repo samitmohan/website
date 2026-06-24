@@ -563,3 +563,8 @@ for _ in range(10):
 *The complete MicroGPT architecture on one page. Every concept maps 1:1 to a line in the code above.*
 
 > I also sometimes ask silly questions like speed of light, what is 13 in binary etc.. just to check their fluency with these numbers and in general fluency with computers is what gets you hired, not passion.
+---
+
+These five are what I ask. For the other side of the table, I keep a full prep guide of every question I am drilling for my own 2026 interviews: math, deep learning, LLMs, CV, systems, GPU/hardware, and from-scratch builds.
+
+[Full interview prep guide](/interviews)

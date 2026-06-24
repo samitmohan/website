@@ -13,7 +13,8 @@ const FILTERS: { label: string; tag: Tag | "all" }[] = [
   { label: "All", tag: "all" },
   { label: "Frontier", tag: "frontier" },
   { label: "Startups", tag: "startup" },
-  { label: "Key", tag: "key" },
+  { label: "CV", tag: "cv" },
+  { label: "MLOps", tag: "mlops" },
   { label: "Coding", tag: "coding" },
   { label: "System", tag: "system" },
 ];
@@ -31,6 +32,7 @@ export function InterviewsShell({
   const [filter, setFilter] = useState<Tag | "all">("all");
   const [activeSection, setActiveSection] = useState(sections[0]?.id);
   const searchRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const lowerQuery = query.trim().toLowerCase();
   const queryActive = lowerQuery.length > 0;
@@ -87,6 +89,7 @@ export function InterviewsShell({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       const tag = (e.target as HTMLElement)?.tagName;
       const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT";
       if (e.key === "Escape") {
@@ -103,6 +106,29 @@ export function InterviewsShell({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Render LaTeX math in interview answers using KaTeX delimiters.
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    let mounted = true;
+    (async () => {
+      const autoRender = (await import("katex/contrib/auto-render")).default;
+      if (!mounted || !contentRef.current) return;
+      autoRender(contentRef.current, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+          { left: "$", right: "$", display: false },
+        ],
+        throwOnError: false,
+      });
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [query, filter]);
 
   const noResults = searchActive && matchCount === 0;
 
@@ -131,7 +157,7 @@ export function InterviewsShell({
         </aside>
 
         <div className="flex-1 min-w-0 flex flex-col">
-          <div className="sticky top-14 z-10 bg-background/95 backdrop-blur border-b border-border px-5 sm:px-8 py-3 flex flex-col gap-2">
+          <div className="sticky top-14 z-10 bg-background/95 backdrop-blur border-b border-border px-5 sm:px-8 py-3 flex flex-col gap-2.5">
             <div className="flex items-center gap-3">
               <input
                 ref={searchRef}
@@ -148,7 +174,7 @@ export function InterviewsShell({
               )}
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex gap-4 overflow-x-auto">
+              <div className="flex gap-4 overflow-x-auto pb-0.5">
                 {FILTERS.map((f) => (
                   <button
                     key={f.tag}
@@ -178,7 +204,7 @@ export function InterviewsShell({
             </div>
           </div>
 
-          <div className="px-5 sm:px-8 py-8 max-w-2xl">
+          <div ref={contentRef} className="px-5 sm:px-8 py-8 max-w-2xl">
             {children}
             {noResults && (
               <p className="text-[13px] text-muted-foreground py-8">

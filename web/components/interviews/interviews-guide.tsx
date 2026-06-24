@@ -41,7 +41,7 @@ export function InterviewsGuide() {
   return (
     <InterviewsShell sections={sectionMeta} index={index}>
       <header className="mb-10 pb-6 border-b border-border">
-        <h1 className="text-[15px] font-semibold text-foreground mb-2">Interview prep</h1>
+        <h1 className="text-[15px] font-semibold text-foreground mb-2">Interview Preparation</h1>
         <p className="text-[13px] text-muted-foreground leading-relaxed">
           Questions I need to prepare for interviews 2026.
         </p>
@@ -81,6 +81,7 @@ export function InterviewsGuide() {
                     q={qa.q}
                     difficulty={qa.difficulty}
                     tags={qa.tags}
+                    code={qa.code}
                   >
                     <div dangerouslySetInnerHTML={{ __html: qa.a }} />
                   </QACard>
