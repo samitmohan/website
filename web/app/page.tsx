@@ -77,7 +77,7 @@ export default async function HomePage() {
                 Samit Mohan
               </h1>
               <p className="text-[12px] font-mono text-muted-foreground/70 mb-4">
-                Bangalore · ML engineer at Beltech AI
+                Bangalore · AI Scientist at Beltech AI
               </p>
               <p className="text-[15px] text-foreground/80 max-w-xl leading-relaxed">
                 I build computer-vision systems for city traffic at Beltech AI: live CCTV,{" "}

@@ -6,7 +6,7 @@ import { PublicNav, PublicFooter } from "@/components/public-nav";
 export const metadata: Metadata = {
   title: "About — Samit Mohan",
   description:
-    "ML engineer working on computer-vision systems for city infrastructure. Background, work, education, and what I build with.",
+    "AI Scientist working on computer-vision systems for city infrastructure. Background, work, education, and what I build with.",
 };
 
 const EXPERIENCE = [
@@ -106,7 +106,7 @@ export default function AboutPage() {
               </p>
               <div className="space-y-3 max-w-2xl text-[15px] text-foreground/80 leading-relaxed">
                 <p>
-                  I&apos;m an ML engineer working on computer-vision systems for
+                  I&apos;m an AI Scientist working on computer-vision systems for
                   city infrastructure at{" "}
                   <a
                     href="https://beltech.ai"

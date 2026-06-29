@@ -23,13 +23,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
   title: "Samit Mohan",
-  description: "ML/AI engineer at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
+  description: "AI Scientist at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
     title: "Samit Mohan",
-    description: "ML/AI engineer at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
+    description: "AI Scientist at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
     type: "website",
     siteName: "Samit Mohan",
     url: "https://samitmohan.in",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Samit Mohan",
-    description: "ML/AI engineer at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
+    description: "AI Scientist at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
   },
 };
 
@@ -68,7 +68,7 @@ export default function RootLayout({
               name: "Samit Mohan",
               url: "https://samitmohan.in",
               image: "https://samitmohan.in/photo.jpeg",
-              jobTitle: "ML Engineer",
+              jobTitle: "AI Scientist",
               worksFor: {
                 "@type": "Organization",
                 name: "Beltech AI",

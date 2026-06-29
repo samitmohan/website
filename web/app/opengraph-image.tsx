@@ -48,7 +48,7 @@ export default function OGImage() {
             maxWidth: "700px",
           }}
         >
-          ML/AI engineer. CV systems, teaching, and writing about building ML from scratch.
+          AI Scientist. CV systems, teaching, and writing about building ML from scratch.
         </div>
         <div
           style={{
