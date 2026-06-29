@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const EXPERIENCE = [
   {
     company: "Beltech AI",
-    role: "Computer Vision Engineer",
+    role: "AI Scientist",
     period: "Jun 2025 — Present",
     location: "Bangalore",
     stack: "PyTorch · YOLO · PARSeq · Triton · TensorRT · FastAPI · Kubernetes · Docker",
