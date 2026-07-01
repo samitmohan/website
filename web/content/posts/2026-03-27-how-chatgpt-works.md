@@ -276,7 +276,7 @@ The causal mask fills future positions with -inf before softmax. Each token only
 
 **Multi-head attention**: run 8-16 attention operations in parallel with different weight matrices. Different heads learn different relationships - subject-verb agreement, coreference, syntactic structure. Concatenate and project back.
 
-For a deeper look at how residual connections and attention interact across layers, see [from residual connections to attention residuals](/tech/2026/03/18/attention-residuals.html).
+For a deeper look at how residual connections and attention interact across layers, see [from residual connections to attention residuals](/blog/attention-residuals).
 
 ![Transformer architecture](/assets/images/chatgpt/archTrans.png){: loading="lazy"}
 
@@ -464,7 +464,7 @@ Three stopping conditions:
 
 ## pretraining
 
-Take 15 trillion tokens of cleaned text. Feed sequences into the transformer. At each position, predict the next token. Cross-entropy loss against the actual token. Backprop. Repeat. (If you want to understand how backprop and the tensor operations underneath this actually work, [building pytorch from scratch](/tech/2026/03/11/minitorch.html) walks through it.)
+Take 15 trillion tokens of cleaned text. Feed sequences into the transformer. At each position, predict the next token. Cross-entropy loss against the actual token. Backprop. Repeat. (If you want to understand how backprop and the tensor operations underneath this actually work, [building pytorch from scratch](/blog/minitorch) walks through it.)
 
 The supervision signal is the text itself.
 
@@ -601,7 +601,7 @@ The weights don't store the internet. They store what predicts the internet. Tha
 
 OpenAI's GPT-4 pretraining run reportedly cost over $100M. The alignment phase that turned it into ChatGPT cost a fraction of that - a few weeks of SFT and RLHF on a model that already knew everything.
 
-How much data and how large a model to train? That's the Chinchilla question - covered in detail in [scaling laws](/tech/2026/01/06/scalinglaws.html).
+How much data and how large a model to train? That's the Chinchilla question - covered in detail in [scaling laws](/blog/scalinglaws).
 
 ![Pretraining vs post-training overview](/assets/images/chatgpt/preandpost.png){: loading="lazy"}
 
@@ -1224,7 +1224,7 @@ After generation: detokenize (token IDs back to text), strip control tokens, nor
 }
 ```
 
-The backend intercepts this, runs the tool, injects the result back into context, and the model generates its final answer. That's what makes an AI agent: it takes actions in a loop, not just text in response to text. For how retrieval fits into this (RAG, vector search, chunking), see [rag](/tech/2026/01/27/rag.html).
+The backend intercepts this, runs the tool, injects the result back into context, and the model generates its final answer. That's what makes an AI agent: it takes actions in a loop, not just text in response to text. For how retrieval fits into this (RAG, vector search, chunking), see [rag](/blog/rag).
 
 ### output safety layer
 

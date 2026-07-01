@@ -12,7 +12,7 @@ tags: [ml, from-scratch]
 
 The goal: understand PyTorch by building it from scratch.
 
-*Prerequisites:* python, calculus (chain rule), some pytorch. if not, read [neural networks](/tech/2025/10/25/nn.html), [tensor library](/tech/2026/01/07/torch.html), and [backprop math](/tech/2026/01/21/math.html) first.
+*Prerequisites:* python, calculus (chain rule), some pytorch. if not, read [neural networks](/blog/nn), [tensor library](/blog/torch), and [backprop math](/blog/math) first.
 
 Docs: [minitorch documentation, examples and source code](https://samitmohan.github.io/minitorch/)
 
@@ -1069,9 +1069,9 @@ It's linear algebra and the chain rule, organized carefully.
 
 ## 14. references
 
-- [neural networks from scratch](/tech/2025/10/25/nn.html) - building a neural network without a framework
-- [tensors and autograd](/tech/2026/01/07/torch.html) - the math behind automatic differentiation
-- [backpropagation math](/tech/2026/01/21/math.html) - deriving the chain rule for neural networks
+- [neural networks from scratch](/blog/nn) - building a neural network without a framework
+- [tensors and autograd](/blog/torch) - the math behind automatic differentiation
+- [backpropagation math](/blog/math) - deriving the chain rule for neural networks
 - [micrograd](https://github.com/karpathy/micrograd) - Karpathy's scalar-valued autograd engine
 - [tinygrad](https://github.com/tinygrad/tinygrad) - George Hotz's minimal deep learning framework
 - [PyTorch internals](http://blog.ezyang.com/2019/05/pytorch-internals/) - Edward Yang's tour of PyTorch's C++ core

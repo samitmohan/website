@@ -10,7 +10,7 @@ tags: [llm, papers]
 ---
 
 
-Quick context about resnets: neural networks learn by [backpropagating](/tech/2025/10/25/nn.html) gradients through layers. The deeper the network, the more times those gradients get multiplied by small numbers (sigmoid derivatives, weight matrices). After enough layers, [gradients shrink to zero](/tech/2026/01/21/math.html) - early layers stop learning entirely. This is the vanishing gradient problem, and it's why stacking more layers didn't work for a long time.
+Quick context about resnets: neural networks learn by [backpropagating](/blog/nn) gradients through layers. The deeper the network, the more times those gradients get multiplied by small numbers (sigmoid derivatives, weight matrices). After enough layers, [gradients shrink to zero](/blog/math) - early layers stop learning entirely. This is the vanishing gradient problem, and it's why stacking more layers didn't work for a long time.
 
 ResNet fixed this in 2015. Then everyone moved on. Ten years later, Moonshot AI looked at the fix.
 
@@ -472,7 +472,7 @@ The residual weight was 1.0 for a decade. Softmax temperature is always 1/sqrt(d
 - [Attention Residuals Code](https://github.com/MoonshotAI/Attention-Residuals)
 - [Deep Residual Learning (ResNet)](https://arxiv.org/abs/1512.03385)
 - [My CIFAR-10 ResNet implementation](https://github.com/samitmohan/deep-residual-learning-pytorch)
-- [Vanishing gradients explained](/tech/2026/01/21/math.html) - from my math post
-- [Backpropagation from scratch](/tech/2025/10/25/nn.html) - from my neural networks post
-- [Transformers](/tech/2025/11/27/ai.html) - attention, residuals in the transformer block
+- [Vanishing gradients explained](/blog/math) - from my math post
+- [Backpropagation from scratch](/blog/nn) - from my neural networks post
+- [Transformers](/blog/ai) - attention, residuals in the transformer block
 - [AttnRes notebook](https://colab.research.google.com/drive/1FGVHFRY2ShFeQWPXTW30e_K-caW1_l-S) - standalone implementation with weight heatmap visualizations, by [Arjun](https://www.k-a.in/AttnRes.html)
