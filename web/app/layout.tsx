@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import "katex/dist/katex.min.css";
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
@@ -23,13 +14,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
   title: "Samit Mohan",
-  description: "AI Scientist at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
+  description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
     title: "Samit Mohan",
-    description: "AI Scientist at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
+    description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
     type: "website",
     siteName: "Samit Mohan",
     url: "https://samitmohan.in",
@@ -37,7 +28,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Samit Mohan",
-    description: "AI Scientist at beltech.ai. Building CV systems, writing about ML, teaching from first principles.",
+    description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
   },
 };
 
@@ -49,8 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
@@ -77,7 +67,7 @@ export default function RootLayout({
               email: "mailto:samitmohan@gmail.com",
               sameAs: [
                 "https://github.com/samitmohan",
-                "https://linkedin.com/in/samitmohan",
+                "https://www.linkedin.com/in/samit-mohan/",
               ],
               alumniOf: {
                 "@type": "CollegeOrUniversity",
@@ -94,7 +84,7 @@ export default function RootLayout({
             }),
           }}
         />
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
         <Analytics />
         <SpeedInsights />
       </body>

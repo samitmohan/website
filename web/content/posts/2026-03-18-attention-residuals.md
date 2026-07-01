@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "attention residuals"
+title: "Attention residuals"
 date:   2026-03-18 18:00:00 +0530
 categories: tech
 tokens: "~9k"
 math: true
-description: "The residual connection solved deep learning in 2015. Ten years later, Moonshot AI noticed it's been sabotaging deep networks the whole time. The fix is 30 lines of PyTorch."
+description: "The residual connection solved deep learning in 2015. Ten years later, Moonshot AI noticed it also dilutes signal in very deep networks. The fix is 30 lines of PyTorch."
 tags: [llm, papers]
 ---
 

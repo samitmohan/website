@@ -1,7 +1,3 @@
-"use client";
-
-import { useInterviews } from "@/components/interviews/interviews-context";
-
 export function SectionBlock({
   id,
   title,
@@ -11,12 +7,11 @@ export function SectionBlock({
   title: string;
   children: React.ReactNode;
 }) {
-  const { isSectionVisible } = useInterviews();
-  if (!isSectionVisible(id)) return null;
-
   return (
-    <section id={id} className="mb-12 scroll-mt-32">
-      <h2 className="text-[14px] font-semibold text-foreground mb-4">{title}</h2>
+    <section id={id} className="mb-14 scroll-mt-20">
+      <h2 className="text-[17px] font-semibold tracking-tight text-foreground mb-4 pb-2 border-b border-border">
+        {title}
+      </h2>
       {children}
     </section>
   );

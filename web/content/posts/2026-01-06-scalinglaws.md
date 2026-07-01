@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "scaling laws"
+title: "Scaling laws"
 date:   2026-01-06 14:06:04 +0530
 categories: tech
-tokens: "~1.2k"
+tokens: "~1k"
 description: "Maybe intelligence is just a lot of compute applied to a lot of data having a lot of parameters. OpenAI wrote a paper on this."
 tags: [llm, papers]
 ---
@@ -21,18 +21,9 @@ OpenAI wrote a paper on what happens to model performance as you scale parameter
 </video>
 *Scaling parameters alone, data alone, or both (Chinchilla) - same compute, different loss.*
 
-SL: simple predictive laws / rules for behaviour of language model performance.
+Scaling laws are simple predictive rules for how a language model's loss behaves as you grow it. The practical payoff: tune on small, cheap models, then extrapolate to the large one and nail it in a single run instead of guessing hyperparameters at full scale.
 
-*HOW WE TEST:*
-
-- OLD: Tune hyper-parameters on big models
-- NEW: Tune on small models -> extrapolate to large ones
-
-Scaling Laws Paper says validation and test loss decreases as parameter and number of layers increases along with compute increase.
-
-**IDEA:** Do all experimentations on small model with less compute -> Nail the big model in one-go.
-
-Kaplan et al. (2020) quantified this with three power law equations:
+Kaplan et al. (2020) quantified this with three power laws:
 
 $$L(N) \sim N^{-0.076}$$
 
@@ -40,14 +31,9 @@ $$L(D) \sim D^{-0.095}$$
 
 $$L(C) \sim C^{-0.050}$$
 
-where *N* = number of parameters, *D* = dataset size (tokens), *C* = compute budget (FLOPs), and *L* = cross-entropy loss. Loss decreases as a power law as you add more parameters, data, or compute, but the small exponents mean you get diminishing returns: each 10x increase in any factor yields only a modest drop in loss.
+where *N* = number of parameters, *D* = dataset size (tokens), *C* = compute budget (FLOPs), and *L* = cross-entropy loss. Loss drops as a power law as you add more parameters, data, or compute, but the small exponents mean diminishing returns: each 10x increase in any factor buys only a modest drop in loss.
 
-**Maybe intelligence -> lot of compute applied to lot of data having lot of parameters.**
-
-Kaplan et al. (2020) was the first rigorous quantification of this for large language models.
-
-- Training on enough data matters: GPT-3 was undertrained.
-- Chinchilla (half parameter size of GPT3 (70b) but 4x data -> performed better)
+Two things followed from this. GPT-3 turned out to be undertrained, and Chinchilla (half the parameters of GPT-3, 4x the data) beat it by spending the same compute budget more wisely.
 
 <style>
 .chinchilla-widget{background:var(--bg-card,#1f2335);border:1px solid var(--border,#e1e4e8);border-radius:10px;padding:20px 24px;margin:24px 0;font-family:inherit}
@@ -146,120 +132,35 @@ lazyWidget('chinchilla-calc', function(){
 });
 </script>
 
-Data Scaling Laws: formula that maps dataset size(n)
+### data
 
-Loss and 'n' is linear on a loglog plot
+Loss versus dataset size is also a power law, linear on a log-log plot.
 
 ![dl](/assets/images/scaling_laws/data_loss.webp){: loading="lazy"}
 
-**Engineering Data Laws:**
-
-How does data composition affect model performance (not just size) -> data composition only affects offset not slope (You can do data select experiments on a much smaller model)
+Data *composition* shifts the offset, not the slope, so you can run data-selection experiments on a small model and trust they transfer to the big one.
 
 ![datacomposition](/assets/images/scaling_laws/dc.webp){: loading="lazy"}
 
-More questions on data:
-
-- We have finite data, how does repeating examples affect scaling?
-  - Up to 4 epochs repeating data is almost as good as new but after that it shows rapidly diminishing returns.
-- Given that repeated data is less valuable -> data selection should adapt to scale.
-- **Repeat high quality data OR include new data (trade-off)**
+Repeating data helps up to about 4 epochs, then returns fall off fast. That sets up the real tradeoff: repeat high-quality data, or pull in new lower-quality data.
 
 ### how to design a huge LM
 
-- **Architecture:** LSTM vs Transformer (Transformer loss decreases as we increase parameters (MOE is the only thing better than vanilla transformer))
-- **Optimiser:** Adam is much better than SGD as we increase epochs (adaptive learning rate (basically takes steps automatically instead of a fixed size))
-- **Depth:** layers >=6 is good, 1 vs 2 layers make a huge difference; after that, performance plateaus.
-- **Batch Size:** batch size increase -> gradient steps increase (past certain point -> diminishing returns (bias dominates instead of learning deeper features)
-  - Critical BatchSize: minimum number of steps for target loss (compute increase -> steps can stay the same (BS fixed))
-
-### side note
-
-> What even are parameters
-
-A number the model can change during training. Training = adjusting numbers so predictions improve.
-
-**Linear regression**
-
-- 𝑦 = 𝑤 𝑥 + 𝑏
-
-- Parameters:
-        - w (weight)
-        - b (bias)
-
-- So this model has 2 parameters. More parameters = more freedom to fit data.
-
----
-
-Simple neural layer
-𝑦 = 𝑊 𝑥 + 𝑏
-
-If:
-
-- input dim = 4
-- output dim = 3
-
-Then:
-
-- W has 4 × 3 = 12 parameters
-- b has 3 parameters
-- Total = 15 parameters
-
-For LLMs:
-
-```text
-Input embeddings
-   │
-   ▼
-Multi-Head Attention
-   │  (Wq, Wk, Wv, Wo)
-   ▼
-Feedforward Network
-   │  (W1, W2)
-   ▼
-Output
-```
-
-Every W matrix is full of parameters.
-
-**When people say “LLaMA-7B has 7 billion parameters” : There are 7 billion trainable numbers inside the model.**
-Each one:
-
-- A floating-point value (e.g. 16-bit or 32-bit (how do we optimise this? Quantisation (later on (changing from FP32->FP16 without compromising performance so we use lesser bits to store our embeddings))))
-- Learned during training
-- Frozen at inference
-
-> Parameters are representational capacity, not intelligence (misconception)
-
-Parameters alone aren't enough. The model also needs enough training data and compute.
-
-If:
-
-- Model is huge
-- Data is small
-
-Then:
-
-- Model memorizes
-- Poor generalization
-
-Hence: Big models need big data.
-
-> Compute ∝ Parameters ∝ Training ∝ Tokens
+- **Architecture:** Transformer over LSTM; loss keeps dropping as you add parameters. MoE is the only thing that consistently beats a vanilla transformer.
+- **Optimizer:** Adam over SGD once you train for many epochs (adaptive step sizes instead of one fixed rate).
+- **Depth:** 1 vs 2 layers is night and day; past ~6 layers it plateaus.
+- **Batch size:** bigger batches mean more gradient signal per step, up to a critical batch size; past it you spend compute for little gain.
 
 ### recap
 
-You’re always budget-constrained, so you pick which of the three knobs to turn: parameters, data, or compute. You can turn all three - there’s no impossibility theorem - but nobody has infinite money. The Chinchilla paper showed most labs were turning the wrong knob. They were making models too big and not training them on enough data. Chinchilla (70B params, 4x the data of GPT-3) outperformed the much larger GPT-3 by allocating the compute budget more wisely.
+You're always budget-constrained, so you pick which of the three knobs to turn: parameters, data, or compute. You can turn all three - there's no impossibility theorem - but nobody has infinite money. The Chinchilla paper showed most labs were turning the wrong knob. They were making models too big and not training them on enough data. Chinchilla (70B params, 4x the data of GPT-3) outperformed the much larger GPT-3 by allocating the compute budget more wisely.
 
 > Loss ~ f(parameters, data, compute) - all three matter, but how you balance them matters more.
 
 Different labs make different bets on this tradeoff. ChatGPT scales up parameters and broad data with massive compute - optimizing for generality. DeepSeek goes the other way: fewer parameters, higher-quality data, and more inference-time compute - optimizing for reasoning efficiency. Both obey the same scaling laws, they just allocate their budgets differently.
 
-### limitations and future
+### limitations and what's next
 
-But we are going out of data:
+The catch: we're running out of high-quality text. Two escape routes are in play. Synthetic data (AlphaGo learned entirely from self-play) and reasoning models like o1 that spend more compute at inference, thinking longer to answer better, which is its own new scaling axis. New architectures are the other hope, but nothing has unseated the transformer yet, usually because the alternatives aren't numerically stable.
 
-- Running out of data (quality of data) -> ways to make data synthetic (deepmind alphago plays against itself and only has synthetic data) 
-- Reasoning model (o1) bridges this gap (chain of thought) -> longer o1 thinks better it performs (new paradigm for scaling llms -> reasoning (we need higher compute for this)- > current state of AI)
-- Invent new arch? Numerical stability of model should be there (none so far, transformer works only)
 ![sl](/assets/images/scaling_laws/scaling_loss.webp){: loading="lazy"}

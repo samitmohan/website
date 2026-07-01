@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "what happens when you press 'submit' on chatgpt"
+title: "What happens when you press 'submit' on ChatGPT"
 date:   2026-03-27 00:00:00 +0530
 categories: [tech]
 tokens: "~12k"
@@ -10,36 +10,36 @@ tags: [llm]
 
 <style>
 :root {
-  --cg-bg: #0f1923;
-  --cg-bg-alt: #1a1a2e;
-  --cg-border: #1a2a3b;
-  --cg-muted: #888;
-  --cg-muted2: #666;
-  --cg-muted3: #555;
-  --cg-muted4: #444;
-  --cg-blue: #a8c7fa;
-  --cg-blue-bg: #1a2a3b;
-  --cg-blue-border: #2a4a6b;
-  --cg-green: #a8fac4;
-  --cg-green-bg: #1a3b2a;
-  --cg-green-border: #2a6b4a;
-  --cg-yellow: #fafaa8;
-  --cg-yellow-bg: #3b3b1a;
-  --cg-yellow-border: #6b6b2a;
-  --cg-purple: #c4a8fa;
-  --cg-purple-bg: #2a1a3b;
-  --cg-purple-border: #4a2a6b;
-  --cg-pink: #faa8c4;
-  --cg-pink-bg: #3b1a2a;
-  --cg-pink-border: #6b2a4a;
-  --cg-teal: #a8fafa;
-  --cg-teal-bg: #1a3b3b;
-  --cg-teal-border: #2a6b6b;
-  --cg-orange: #fac4a8;
-  --cg-orange-bg: #3b2a1a;
-  --cg-orange-border: #6b4a2a;
-  --cg-red-bg: #3b1a1a;
-  --cg-red-border: #6b2a2a;
+  --cg-bg: #f4f4f5;
+  --cg-bg-alt: #ffffff;
+  --cg-border: #e5e7eb;
+  --cg-muted: #6b7280;
+  --cg-muted2: #9ca3af;
+  --cg-muted3: #b0b7c0;
+  --cg-muted4: #c7ccd4;
+  --cg-blue: #1d4ed8;
+  --cg-blue-bg: #e8eefc;
+  --cg-blue-border: #bcd0f5;
+  --cg-green: #16a34a;
+  --cg-green-bg: #e6f7ee;
+  --cg-green-border: #b6e3c8;
+  --cg-yellow: #a16207;
+  --cg-yellow-bg: #f9f3d6;
+  --cg-yellow-border: #e6dca3;
+  --cg-purple: #7c3aed;
+  --cg-purple-bg: #efe8fc;
+  --cg-purple-border: #d7c4f6;
+  --cg-pink: #db2777;
+  --cg-pink-bg: #fce8f1;
+  --cg-pink-border: #f6c4da;
+  --cg-teal: #0d9488;
+  --cg-teal-bg: #e0f6f4;
+  --cg-teal-border: #b3e5e0;
+  --cg-orange: #ea580c;
+  --cg-orange-bg: #fdece1;
+  --cg-orange-border: #f6cfb5;
+  --cg-red-bg: #fce8e8;
+  --cg-red-border: #f2c2c2;
 }
 </style>
 
@@ -142,8 +142,8 @@ In practice you'd use tiktoken:
 import tiktoken
 enc = tiktoken.encoding_for_model("gpt-4o")
 tokens = enc.encode("How does ChatGPT work?")
-print(tokens)         # [4438, 1587, 91985, 990, 30]
-print(len(tokens))    # 5
+print(tokens)         # [4438, 1587, 13149, 38, 2898, 990, 30]
+print(len(tokens))    # 7
 ```
 
 ![Training phase tokenization](/assets/images/chatgpt/trainingPhasetoken.webp){: loading="lazy"}
@@ -202,13 +202,13 @@ Fewer tokens per sentence = less compute per request. Token efficiency is a real
   opacity: 0;
   animation: fadeUp 0.3s 2.5s forwards;
 }
-.t1 { background: #3b4a6b; color: #a8c7fa; animation-delay: 0.2s; }
-.t2 { background: #4a3b6b; color: #c4a8fa; animation-delay: 0.5s; }
-.t3 { background: #3b6b4a; color: #a8fac4; animation-delay: 0.8s; }
-.t4 { background: #6b4a3b; color: #fac4a8; animation-delay: 1.1s; }
-.t5 { background: #6b3b4a; color: #faa8c4; animation-delay: 1.4s; }
-.t6 { background: #4a6b3b; color: #c4faa8; animation-delay: 1.7s; }
-.t7 { background: #3b6b6b; color: #a8fafa; animation-delay: 2.0s; }
+.t1 { background: #c3d2f0; color: #1d4ed8; animation-delay: 0.2s; }
+.t2 { background: #d3c6ee; color: #7c3aed; animation-delay: 0.5s; }
+.t3 { background: #bce6cd; color: #16a34a; animation-delay: 0.8s; }
+.t4 { background: #e6cbb5; color: #ea580c; animation-delay: 1.1s; }
+.t5 { background: #eec4d2; color: #db2777; animation-delay: 1.4s; }
+.t6 { background: #cfe3b8; color: #4d9a1f; animation-delay: 1.7s; }
+.t7 { background: #b8e6e1; color: #0d9488; animation-delay: 2.0s; }
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
 }
@@ -362,15 +362,15 @@ window._anims = window._anims || {};
     if(!bar) return;
     bar.innerHTML='';
     if(countEl) countEl.textContent='0 tokens used';
-    if(noteEl){ noteEl.textContent='Tokens accumulate left to right. When the window fills, oldest tokens are evicted.'; noteEl.style.color='#666'; }
+    if(noteEl){ noteEl.textContent='Tokens accumulate left to right. When the window fills, oldest tokens are evicted.'; noteEl.style.color='#9ca3af'; }
     var segs=[
-      {label:"system",  flex:5,  color:"#1a2a3b",border:"#2a4a6b",text:"#a8c7fa", tok:6400},
-      {label:"turn 1",  flex:12, color:"#1a3b2a",border:"#2a6b4a",text:"#a8fac4", tok:21760},
-      {label:"turn 2",  flex:12, color:"#3b3b1a",border:"#6b6b2a",text:"#fafaa8", tok:37120},
-      {label:"turn 3",  flex:18, color:"#2a1a3b",border:"#4a2a6b",text:"#c4a8fa", tok:60160},
-      {label:"turn 4",  flex:20, color:"#3b1a2a",border:"#6b2a4a",text:"#faa8c4", tok:85760},
-      {label:"new msg", flex:8,  color:"#1a3b3b",border:"#2a6b6b",text:"#a8fafa", tok:96000},
-      {label:"overflow \u2192",flex:25,color:"#130a0a",border:"#3a1212",text:"#5a2020",tok:128000},
+      {label:"system",  flex:5,  color:"#e8eefc",border:"#bcd0f5",text:"#1d4ed8", tok:6400},
+      {label:"turn 1",  flex:12, color:"#e6f7ee",border:"#b6e3c8",text:"#16a34a", tok:21760},
+      {label:"turn 2",  flex:12, color:"#f9f3d6",border:"#e6dca3",text:"#a16207", tok:37120},
+      {label:"turn 3",  flex:18, color:"#efe8fc",border:"#d7c4f6",text:"#7c3aed", tok:60160},
+      {label:"turn 4",  flex:20, color:"#fce8f1",border:"#f6c4da",text:"#db2777", tok:85760},
+      {label:"new msg", flex:8,  color:"#e0f6f4",border:"#b3e5e0",text:"#0d9488", tok:96000},
+      {label:"overflow \u2192",flex:25,color:"#fdf6f6",border:"#fdeaea",text:"#f2c2c2",tok:128000},
     ];
     segs.forEach(function(seg,i){
       timers.push(setTimeout(function(){
@@ -383,7 +383,7 @@ window._anims = window._anims || {};
         el.textContent=seg.label;
         bar.appendChild(el);
         if(countEl) countEl.textContent=seg.tok.toLocaleString()+" tokens used";
-        if(i===segs.length-1 && noteEl){ noteEl.style.color="#8a3a3a"; noteEl.textContent="Window full. System prompt and turn 1 get truncated - the model has no memory of them."; }
+        if(i===segs.length-1 && noteEl){ noteEl.style.color="#b91c1c"; noteEl.textContent="Window full. System prompt and turn 1 get truncated - the model has no memory of them."; }
       },600*(i+1)));
     });
   };
@@ -399,7 +399,7 @@ window._anims = window._anims || {};
 }
 .ctx-win-outer {
   height: 36px;
-  background: #070c10;
+  background: #ffffff;
   border: 1px solid var(--cg-border);
   border-radius: 4px;
   overflow: hidden;
@@ -549,7 +549,7 @@ window._anims = window._anims || {};
 .moe-router-lbl {
   font-family: monospace;
   font-size: 11px;
-  color: #3a6b4a;
+  color: #b9e4ca;
   margin: 5px 0 2px;
 }
 .moe-expert-row {
@@ -568,16 +568,16 @@ window._anims = window._anims || {};
   font-family: monospace;
   font-size: 12px;
   font-weight: 700;
-  background: #111820;
-  border: 1px solid #1e2a38;
-  color: #2a3a4a;
+  background: #fafafa;
+  border: 1px solid #eef2f7;
+  color: #eaeef3;
   transition: background 0.35s, border-color 0.35s, color 0.35s, box-shadow 0.35s;
 }
 .moe-active {
   background: var(--cg-green-bg) !important;
   border-color: var(--cg-green-border) !important;
   color: var(--cg-green) !important;
-  box-shadow: 0 0 10px #1a4a2a80;
+  box-shadow: 0 0 10px #e0f5e880;
 }
 .moe-note {
   color: var(--cg-muted2);
@@ -690,7 +690,7 @@ Four steps:
   animation: fadeUp 0.3s forwards;
 }
 .rs-arrow {
-  color: #3a6b4a;
+  color: #b9e4ca;
   font-size: 16px;
   margin-left: 20px;
   opacity: 0;
@@ -706,7 +706,7 @@ Four steps:
 .ra2 { animation-delay: 0.8s; }
 .ra3 { animation-delay: 1.2s; }
 .ra4 { animation-delay: 1.6s; }
-.ra5 { animation-delay: 2.0s; color: #6b4a2a; }
+.ra5 { animation-delay: 2.0s; color: #f6cfb5; }
 </style>
 
 | Stage | Purpose | Data | Objective |
@@ -843,7 +843,7 @@ window._anims = window._anims || {};
   padding: 2px 6px; margin-left: 1px;
   opacity: 0; animation: fadeUp 0.3s forwards;
 }
-.ag-cursor { color: #a8c7fa; animation: blink 0.9s infinite; margin-left: 2px; }
+.ag-cursor { color: #1d4ed8; animation: blink 0.9s infinite; margin-left: 2px; }
 .ag-note { color: var(--cg-muted2); font-size: 12px; margin: 10px 0 0; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 </style>
@@ -1003,10 +1003,10 @@ Decoding strategy comparison:
   white-space: nowrap;
   font-family: monospace;
 }
-.b1 { background: #2a6b4a; animation-delay: 0.1s; }
-.b2 { background: #2a4a6b; animation-delay: 0.2s; }
-.b3 { background: #4a2a6b; animation-delay: 0.3s; }
-.excluded { background: #2a2a2a; }
+.b1 { background: #b6e3c8; animation-delay: 0.1s; }
+.b2 { background: #bcd0f5; animation-delay: 0.2s; }
+.b3 { background: #d7c4f6; animation-delay: 0.3s; }
+.excluded { background: #d1d5db; }
 .b4 { animation-delay: 0.4s; }
 .b5 { animation-delay: 0.5s; }
 .b6 { animation-delay: 0.6s; }
@@ -1088,7 +1088,7 @@ One request, start to finish.
 .ps2 { background: var(--cg-green-bg); color: var(--cg-green); border: 1px solid var(--cg-green-border); animation-delay: 0.4s; }
 .ps3 { background: var(--cg-orange-bg); color: var(--cg-orange); border: 1px solid var(--cg-orange-border); animation-delay: 0.7s; }
 .ps4 { background: var(--cg-purple-bg); color: var(--cg-purple); border: 1px solid var(--cg-purple-border); animation-delay: 1.0s; }
-.ps5 { background: #3b1a1a; color: #faafa8; border: 1px solid #6b2a2a; animation-delay: 1.3s; }
+.ps5 { background: #fce8e8; color: #e0512f; border: 1px solid #f2c2c2; animation-delay: 1.3s; }
 .ps6 { background: var(--cg-teal-bg); color: var(--cg-teal); border: 1px solid var(--cg-teal-border); animation-delay: 1.6s; }
 .ps7 { background: var(--cg-yellow-bg); color: var(--cg-yellow); border: 1px solid var(--cg-yellow-border); animation-delay: 1.9s; }
 .ps-arrow:nth-child(2)  { animation-delay: 0.25s; }
@@ -1459,9 +1459,9 @@ Without continuous batching: GPU utilization 20-30%. With it: 80-90%.
   display: flex; align-items: center; justify-content: center;
   border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 400;
   flex: 1;
-  background: #0d0d0d; border: 1px dashed #222; color: #333;
+  background: #ffffff; border: 1px dashed #e5e7eb; color: #cbd0d8;
 }
-.cbt-waste { color: #5a2a2a; border-color: #3a1515; background: #130a0a; }
+.cbt-waste { color: #f2c2c2; border-color: #fdeaea; background: #fdf6f6; }
 .cbt-a { background: var(--cg-blue-bg); border: 1px solid var(--cg-blue-border); color: var(--cg-blue); }
 .cbt-b { background: var(--cg-green-bg); border: 1px solid var(--cg-green-border); color: var(--cg-green); }
 .cbt-c { background: var(--cg-orange-bg); border: 1px solid var(--cg-orange-border); color: var(--cg-orange); }
@@ -1469,8 +1469,8 @@ Without continuous batching: GPU utilization 20-30%. With it: 80-90%.
 .cbt-e { background: var(--cg-yellow-bg); border: 1px solid var(--cg-yellow-border); color: var(--cg-yellow); }
 .cbt-f { background: var(--cg-pink-bg); border: 1px solid var(--cg-pink-border); color: var(--cg-pink); }
 .cbt-g { background: var(--cg-teal-bg); border: 1px solid var(--cg-teal-border); color: var(--cg-teal); }
-.cbt-h { background: #2a3b1a; border: 1px solid #4a6b2a; color: #c4faa8; }
-.cbt-i { background: #3b1a3b; border: 1px solid #6b2a6b; color: #faa8fa; }
+.cbt-h { background: #f0f3e2; border: 1px solid #d5e3a8; color: #4d9a1f; }
+.cbt-i { background: #f7e6f7; border: 1px solid #ecc4ec; color: #a21caf; }
 .cbt-a, .cbt-b, .cbt-c, .cbt-d, .cbt-e, .cbt-f, .cbt-g, .cbt-h, .cbt-i { }
 .cba1 { opacity: 0; animation: fadeUp 0.4s 0.1s forwards; }
 .cba2 { opacity: 0; animation: fadeUp 0.4s 0.7s forwards; }
@@ -1594,7 +1594,7 @@ If a draft token is wrong, the rest get discarded and the large model takes over
   animation: fadeUp 0.25s forwards;
 }
 .accepted { background: var(--cg-green-bg); border: 1px solid var(--cg-green-border); color: var(--cg-green); }
-.rejected  { background: #3b1a1a; border: 1px solid #6b2a2a; color: #faa8a8; }
+.rejected  { background: #fce8e8; border: 1px solid #f2c2c2; color: #dc2626; }
 .corrected { background: var(--cg-orange-bg); border: 1px solid var(--cg-orange-border); color: var(--cg-orange); }
 .st1  { animation-delay: 0.2s; }
 .st2  { animation-delay: 0.5s; }
@@ -1706,21 +1706,21 @@ window._anims = window._anims || {};
 .fcell {
   aspect-ratio: 1;
   border-radius: 3px;
-  background: #111820;
-  border: 1px solid #1a2230;
+  background: #fafafa;
+  border: 1px solid #f4f6f9;
   transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-.fcell-hbm { background: #3b1a1a; border-color: #6b2a2a; }
-.fcell-sram { background: var(--cg-green-bg); border-color: var(--cg-green-border); box-shadow: 0 0 5px #2a6b4a80; }
-.fcell-done { background: #1a2a1a; border-color: #2a3b2a; }
+.fcell-hbm { background: #fce8e8; border-color: #f2c2c2; }
+.fcell-sram { background: var(--cg-green-bg); border-color: var(--cg-green-border); box-shadow: 0 0 5px #b6e3c880; }
+.fcell-done { background: #eef4ee; border-color: #eef5ee; }
 .flash-mem-lbl {
   font-family: monospace;
   font-size: 11px;
   margin: 8px 0 0;
   text-align: center;
 }
-.hmem-lbl { color: #8a4a4a; }
-.smem-lbl { color: #4a8a4a; }
+.hmem-lbl { color: #a5453b; }
+.smem-lbl { color: #15803d; }
 .flash-note {
   color: var(--cg-muted2);
   font-size: 12px;
@@ -1857,19 +1857,6 @@ Critical      "We're experiencing high demand"
 
 Priority queuing: paying API customers get priority over free-tier ChatGPT users.
 
-### quick reference
-
-| Problem | Trick | Savings |
-|---------|-------|---------|
-| Redundant system prompt computation | Prompt caching | 50% input cost |
-| Slow decode (sequential bottleneck) | Speculative decoding | 2-3x speedup |
-| Expensive model for easy questions | Model routing | 40-60% cost |
-| Same question asked 1000x | Semantic caching | ~100% for cache hits |
-| Redundant work in multi-turn chat | Prefix sharing | 80-90% prefill savings |
-| Prefill and decode fight for GPU | Disaggregated serving | Better utilization |
-| Long prompts block other requests | Chunked prefill | Lower P99 latency |
-| Traffic spikes | Graceful degradation | Availability |
-
 ---
 
 ## evaluation
@@ -1908,9 +1895,9 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #111820;
-  border: 1px solid #2a4a6b;
-  color: #6a9acb;
+  background: #fafafa;
+  border: 1px solid #bcd0f5;
+  color: #2563eb;
   font-family: monospace;
   font-size: 12px;
   cursor: pointer;
@@ -1921,7 +1908,7 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
   line-height: 1.5;
   z-index: 10;
 }
-.anim-replay-btn:hover { opacity: 1; color: #a8c7fa; border-color: #4a7acb; }
+.anim-replay-btn:hover { opacity: 1; color: #1d4ed8; border-color: #1d4ed8; }
 .token-animation, .attn-viz, .rlhf-loop, .topp-viz, .pipeline-viz, .spec-viz,
 .cbatch-viz, .autogen-viz, .ctx-win-viz, .moe-viz, .flash-viz, .kv-viz {
   position: relative;

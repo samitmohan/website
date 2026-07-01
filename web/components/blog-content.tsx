@@ -86,48 +86,53 @@ export function BlogContent({ html, className }: { html: string; className?: str
       for (const v of videos) videoObs.observe(v);
     }
 
+    const COPY_ICON =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    const CHECK_ICON =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
     const figures = Array.from(root.querySelectorAll("figure[data-rehype-pretty-code-figure]"));
     for (const fig of figures) {
-      if (fig.querySelector("[data-blog-copy]")) continue;
+      if (fig.querySelector(".code-header")) continue;
       const pre = fig.querySelector("pre");
       const code = fig.querySelector("code");
       if (!pre || !code) continue;
 
       const lang = code.getAttribute("data-language") || "";
-      const figEl = fig as HTMLElement;
-      figEl.style.position = "relative";
+      const title = fig.querySelector("figcaption")?.textContent || "";
 
-      const toolbar = document.createElement("div");
-      toolbar.setAttribute("data-blog-copy", "");
-      toolbar.style.cssText =
-        "position:absolute;top:6px;right:8px;display:flex;align-items:center;gap:8px;font-family:var(--font-jetbrains-mono),monospace;font-size:11px;color:var(--muted-foreground);opacity:0.55;transition:opacity 0.15s;pointer-events:none;";
+      const header = document.createElement("div");
+      header.className = "code-header";
 
-      if (lang) {
-        const tag = document.createElement("span");
-        tag.textContent = lang;
-        tag.style.cssText = "letter-spacing:0.04em;";
-        toolbar.appendChild(tag);
-      }
+      const label = document.createElement("span");
+      label.className = "code-lang";
+      label.textContent = title || lang;
+      header.appendChild(label);
 
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.textContent = "copy";
-      btn.style.cssText =
-        "pointer-events:auto;background:transparent;border:0;color:inherit;cursor:pointer;font:inherit;padding:2px 4px;";
+      btn.className = "code-copy";
+      btn.setAttribute("aria-label", "Copy code");
+      const setLabel = (icon: string, text: string) => {
+        btn.innerHTML = `${icon}<span>${text}</span>`;
+      };
+      setLabel(COPY_ICON, "Copy");
+      let resetTimer: ReturnType<typeof setTimeout> | undefined;
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        const text = code.textContent || "";
-        navigator.clipboard.writeText(text).then(() => {
-          btn.textContent = "copied";
-          setTimeout(() => { btn.textContent = "copy"; }, 1200);
+        navigator.clipboard.writeText(code.textContent || "").then(() => {
+          btn.classList.add("copied");
+          setLabel(CHECK_ICON, "Copied");
+          if (resetTimer) clearTimeout(resetTimer);
+          resetTimer = setTimeout(() => {
+            btn.classList.remove("copied");
+            setLabel(COPY_ICON, "Copy");
+          }, 1400);
         });
       });
-      toolbar.appendChild(btn);
+      header.appendChild(btn);
 
-      figEl.addEventListener("mouseenter", () => { toolbar.style.opacity = "1"; });
-      figEl.addEventListener("mouseleave", () => { toolbar.style.opacity = "0.55"; });
-
-      figEl.appendChild(toolbar);
+      fig.insertBefore(header, fig.firstChild);
     }
 
     return () => {

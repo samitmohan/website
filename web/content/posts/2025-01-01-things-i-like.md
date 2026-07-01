@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "things i like"
+title: "Things I like"
 date:   2025-01-01 14:06:04 +0530
 categories: fun
 tokens: "~150"

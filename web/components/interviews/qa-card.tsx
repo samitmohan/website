@@ -1,11 +1,7 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import type { Difficulty, Tag } from "@/lib/interviews-data";
-import { useInterviews } from "@/components/interviews/interviews-context";
 
 const SPECIAL_TAGS: Partial<Record<Tag, string>> = {
-  frontier: "text-purple-500 dark:text-purple-400",
+  frontier: "text-purple-600",
   startup: "text-primary",
 };
 
@@ -15,6 +11,8 @@ const DIFFICULTY_DOT: Record<Difficulty, string> = {
   hard: "bg-destructive",
 };
 
+// Static, zero-JS expandable Q&A. Native <details>/<summary> handles
+// open/close with no client bundle.
 export function QACard({
   id,
   q,
@@ -30,55 +28,22 @@ export function QACard({
   code?: string;
   children: React.ReactNode;
 }) {
-  const { isCardVisible, queryActive } = useInterviews();
-  const [localOpen, setLocalOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!queryActive) setLocalOpen(false);
-  }, [queryActive]);
-
-  // Open when linked from in-page jump links (#question-id).
-  useEffect(() => {
-    const syncFromHash = () => {
-      if (window.location.hash === `#${id}`) setLocalOpen(true);
-    };
-    syncFromHash();
-    window.addEventListener("hashchange", syncFromHash);
-    return () => window.removeEventListener("hashchange", syncFromHash);
-  }, [id]);
-
-  if (!isCardVisible(id)) return null;
-
-  const open = localOpen || queryActive;
   const isKey = tags.includes("key");
   const specialTags = tags.filter((t): t is keyof typeof SPECIAL_TAGS => t in SPECIAL_TAGS);
 
-  const copyCode = async () => {
-    if (!code) return;
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1000);
-  };
-
   return (
-    <div
+    <details
       id={id}
-      className={`bg-card border rounded-md mb-1.5 overflow-hidden scroll-mt-32 ${
-        isKey ? "border-l-2 border-l-[#ca8a04] border-y-border border-r-border" : "border-border"
+      className={`group mb-1 scroll-mt-24 border-l-2 pl-3 ${
+        isKey ? "border-l-[#ca8a04]" : "border-l-transparent"
       }`}
     >
-      <button
-        type="button"
-        onClick={() => setLocalOpen((e) => !e)}
-        className="w-full flex items-center gap-3 px-3.5 py-2 text-left hover:bg-muted/30 transition-colors"
-        aria-expanded={open}
-      >
+      <summary className="flex items-center gap-3 py-1.5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <span
           className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${DIFFICULTY_DOT[difficulty]}`}
           title={difficulty}
         />
-        <span className="flex-1 min-w-0 text-[13px] text-foreground leading-snug">
+        <span className="flex-1 min-w-0 text-[14px] text-foreground leading-snug">
           {q}
           {specialTags.length > 0 && (
             <span className="ml-2">
@@ -90,36 +55,18 @@ export function QACard({
             </span>
           )}
         </span>
-        <span
-          className={`text-muted-foreground/50 text-[9px] flex-shrink-0 transition-transform ${
-            open ? "rotate-90" : ""
-          }`}
-        >
+        <span className="text-muted-foreground/50 text-[9px] flex-shrink-0 group-open:rotate-90">
           ▶
         </span>
-      </button>
-      {open && (
-        <div className="interviews-prose px-3.5 border-t border-border pb-2.5 pt-1.5">
-          {children}
-          {code && (
-            <div className="mt-3">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Code</span>
-                <button
-                  type="button"
-                  onClick={copyCode}
-                  className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {copied ? "Copied" : "Copy"}
-                </button>
-              </div>
-              <pre className="text-[12px] leading-relaxed overflow-x-auto">
-                <code>{code}</code>
-              </pre>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+      </summary>
+      <div className="interviews-prose pb-3 pt-1">
+        {children}
+        {code && (
+          <pre className="text-[12px] leading-relaxed overflow-x-auto mt-3">
+            <code>{code}</code>
+          </pre>
+        )}
+      </div>
+    </details>
   );
 }

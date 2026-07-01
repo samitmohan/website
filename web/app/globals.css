@@ -1,18 +1,14 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Theme is toggled via .dark class (next-themes attribute="class"),
-   not prefers-color-scheme, so the dark: variant must key off the class */
-@custom-variant dark (&:where(.dark, .dark *));
-
 :root {
-  --background: #FAFAF9;
+  --background: #FFFFFF;
   --foreground: #1A1A1A;
-  --card: #FAFAFA;
+  --card: #FFFFFF;
   --card-foreground: #1A1A1A;
   --popover: #FFFFFF;
   --popover-foreground: #1A1A1A;
-  --primary: #0EA5E9;
+  --primary: #1D4ED8;
   --primary-foreground: #FFFFFF;
   --secondary: #F4F4F5;
   --secondary-foreground: #1A1A1A;
@@ -24,7 +20,7 @@
   --destructive-foreground: #FFFFFF;
   --border: #E5E7EB;
   --input: #E5E7EB;
-  --ring: #0EA5E9;
+  --ring: #1D4ED8;
   --radius: 0.375rem;
   --sidebar-bg: #FAFAFA;
   --sidebar-border: #E5E7EB;
@@ -32,36 +28,7 @@
   --sidebar-text-hover: #1A1A1A;
   --sidebar-active-bg: rgba(14, 165, 233, 0.08);
   --sidebar-hover-bg: rgba(0, 0, 0, 0.03);
-  --nav-bg: rgba(250, 250, 249, 0.95);
-}
-
-.dark {
-  --background: #0F1419;
-  --foreground: #E5E7EB;
-  --card: #18181B;
-  --card-foreground: #E5E7EB;
-  --popover: #18181B;
-  --popover-foreground: #E5E7EB;
-  --primary: #38BDF8;
-  --primary-foreground: #0F1419;
-  --secondary: #1F2937;
-  --secondary-foreground: #E5E7EB;
-  --muted: #1F2937;
-  --muted-foreground: #9CA3AF;
-  --accent: #1F2937;
-  --accent-foreground: #E5E7EB;
-  --destructive: #DC2626;
-  --destructive-foreground: #FFFFFF;
-  --border: #27272A;
-  --input: #27272A;
-  --ring: #38BDF8;
-  --sidebar-bg: #18181B;
-  --sidebar-border: #27272A;
-  --sidebar-text: #9CA3AF;
-  --sidebar-text-hover: #E5E7EB;
-  --sidebar-active-bg: rgba(56, 189, 248, 0.12);
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
-  --nav-bg: rgba(15, 20, 25, 0.95);
+  --nav-bg: rgba(255, 255, 255, 0.9);
 }
 
 @theme inline {
@@ -91,7 +58,7 @@
   --color-sidebar-active-bg: var(--sidebar-active-bg);
   --color-sidebar-hover-bg: var(--sidebar-hover-bg);
   --color-nav-bg: var(--nav-bg);
-  --font-sans: var(--font-space-grotesk);
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-jetbrains-mono);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -111,7 +78,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Selection - uses primary token so it follows theme + accent swaps */
@@ -140,6 +107,100 @@ code[data-theme*=" "] span {
    not override the pre background set via Tailwind bg-card */
 code[data-theme*=" "] {
   background-color: transparent !important;
+}
+
+/* Blog post code blocks (rehype-pretty-code figures). Chrome lives here so
+   the injected header bar and the <pre> body compose as one rounded card. */
+.blog-prose [data-rehype-pretty-code-figure] {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  background: var(--card);
+  overflow: hidden;
+}
+.blog-prose [data-rehype-pretty-code-title] {
+  display: none;
+}
+.blog-prose [data-rehype-pretty-code-figure] pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow-x: auto;
+}
+.blog-prose [data-rehype-pretty-code-figure] pre::-webkit-scrollbar {
+  height: 8px;
+}
+.blog-prose [data-rehype-pretty-code-figure] pre::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+  border-radius: 4px;
+}
+
+/* Header bar injected client-side by BlogContent */
+.blog-prose .code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0.5rem 0.35rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--muted) 55%, transparent);
+  font-family: var(--font-mono), monospace;
+}
+.blog-prose .code-lang {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.blog-prose .code-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 3px 8px;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.blog-prose .code-copy:hover {
+  color: var(--foreground);
+  background: var(--muted);
+  border-color: var(--border);
+}
+.blog-prose .code-copy.copied {
+  color: #16a34a;
+  border-color: transparent;
+  background: transparent;
+}
+.blog-prose .code-copy svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Full-width line + token highlighting (rehype-pretty-code) */
+.blog-prose [data-rehype-pretty-code-figure] code {
+  display: grid;
+}
+.blog-prose [data-rehype-pretty-code-figure] [data-line] {
+  border-left: 2px solid transparent;
+  padding: 0 1rem;
+  margin: 0 -1rem;
+}
+.blog-prose [data-highlighted-line] {
+  background: color-mix(in srgb, var(--primary) 9%, transparent);
+  border-left-color: var(--primary);
+}
+.blog-prose [data-highlighted-chars] {
+  background: color-mix(in srgb, var(--primary) 16%, transparent);
+  border-radius: 3px;
+  padding: 1px 3px;
 }
 
 /* Scrollbar styling for code editors */
@@ -217,29 +278,25 @@ code[data-theme*=" "] {
 .interviews-prose .anote,
 .interviews-prose .rnote,
 .interviews-prose .gnote {
-  border-radius: 0 5px 5px 0;
-  padding: 8px 12px;
+  padding: 2px 0 2px 12px;
   margin: 10px 0;
   font-size: 12.5px;
   line-height: 1.6;
 }
 .interviews-prose .anote {
-  background: color-mix(in srgb, var(--primary) 8%, transparent);
-  border-left: 3px solid var(--primary);
+  border-left: 2px solid var(--border);
 }
 .interviews-prose .anote strong {
   color: var(--primary);
 }
 .interviews-prose .rnote {
-  background: color-mix(in srgb, var(--destructive) 8%, transparent);
-  border-left: 3px solid var(--destructive);
+  border-left: 2px solid var(--border);
 }
 .interviews-prose .rnote strong {
   color: var(--destructive);
 }
 .interviews-prose .gnote {
-  background: color-mix(in srgb, #16a34a 10%, transparent);
-  border-left: 3px solid #16a34a;
+  border-left: 2px solid var(--border);
 }
 .interviews-prose .gnote strong {
   color: #16a34a;
@@ -293,17 +350,13 @@ code[data-theme*=" "] {
 }
 .interviews-prose .badge {
   font-size: 10px;
-  padding: 1px 7px;
-  border-radius: 10px;
   font-weight: 600;
   margin-left: 4px;
 }
 .interviews-prose .badge.bf {
-  background: color-mix(in srgb, #a855f7 18%, transparent);
   color: #a855f7;
 }
 .interviews-prose .badge.bs {
-  background: color-mix(in srgb, var(--primary) 18%, transparent);
   color: var(--primary);
 }
 

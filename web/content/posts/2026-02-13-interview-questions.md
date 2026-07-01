@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "my favourite interview questions"
+title: "My favourite interview questions"
 date: 2026-02-13 14:06:04 +0530
 categories: tech
 tokens: "~6.5k"

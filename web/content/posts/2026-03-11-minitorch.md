@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "building pytorch from scratch"
+title: "Building PyTorch from scratch"
 date: 2026-03-11 14:06:04 +0530
 categories: tech
 tokens: "~18k"
@@ -24,22 +24,6 @@ Docs: [minitorch documentation, examples and source code](https://samitmohan.git
 | **Files** | 11 |
 | **Dependencies** | NumPy only |
 | **MNIST accuracy** | 96.4% (CNN), 95.15% (MLP) |
-
-**Codebase breakdown** (lines per module):
-
-| File | Lines | What it does |
-|---|---|---|
-| `tensor.py` | 522 | Tensor class, all operators, autograd engine |
-| `conv.py` | 150 | Conv2d via im2col, MaxPool2d, col2im backward |
-| `module.py` | 140 | Module system, Sequential, state_dict |
-| `layers.py` | 109 | Linear, ReLU, Dropout, BatchNorm1d |
-| `optim.py` | 113 | SGD with momentum, Adam, gradient clipping, LR schedulers |
-| `functional.py` | 82 | Activation functions with numerical stability |
-| `grad_check.py` | 56 | Numerical gradient verification via finite differences |
-| `viz.py` | 39 | Computation graph visualization with graphviz |
-| `backend.py` | 33 | Optional CuPy GPU backend |
-| `data.py` | 27 | Minimal DataLoader |
-| `loss.py` | 25 | MSE, BCE, cross-entropy |
 
 **Training loop:** Forward pass → Compute loss → `zero_grad()` → `.backward()` → `optimizer.step()`
 
@@ -478,7 +462,7 @@ class Linear(Module):
 
 The autograd engine handles the backward pass automatically - `@` and `+` already have backward closures.
 
-I first tried `np.random.randn` with no scaling. The MLP "trained"; 60% accuracy on MNIST. It was that activations were dying in the forward pass because the initial weights were way too large for ReLU. The fix:
+I first tried `np.random.randn` with no scaling. The MLP "trained"; 60% accuracy on MNIST. The activations were dying in the forward pass: initial weights were way too large for ReLU. The fix:
 
 - **Kaiming init**: scale by $\sqrt{2/\text{fan\_in}}$. The factor of 2 compensates for ReLU killing half the signal.
 - **Xavier init**: scale by $\sqrt{2/(\text{fan\_in} + \text{fan\_out})}$. Better for sigmoid/tanh.
@@ -675,7 +659,7 @@ minitorch also has gradient clipping (both norm and value), StepLR, and cosine a
 
 ## 9. convolutions
 
-> matrix multiplication is just convolution
+> convolution is just matrix multiplication
 
 Naive convolution is nested loops. Painfully slow. Every serious framework uses **im2col** instead: convert the convolution into a matrix multiply.
 

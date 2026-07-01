@@ -1,17 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getAllPosts, formatPostDate } from "@/lib/blog";
-import { getViews, formatViews } from "@/lib/views";
-import { PublicNav, PublicFooter } from "@/components/public-nav";
+import { getAllPosts } from "@/lib/blog";
+import { PublicFooter } from "@/components/public-nav";
 
 export const revalidate = 30;
 
-const FEATURED_SLUGS = [
-  "minitorch",
-  "inference",
-  "how-chatgpt-works",
-  "attention-residuals",
-  "microgpt",
+// Ordered from-scratch ladder. Each rung assumes the last.
+const CURRICULUM: { slug: string; gloss: string }[] = [
+  { slug: "math", gloss: "gradients and the chain rule, from scratch" },
+  { slug: "nn", gloss: "a digit classifier in pure NumPy" },
+  { slug: "torch", gloss: "tensors and autograd, then the same net in PyTorch" },
+  { slug: "minitorch", gloss: "a working framework in ~1300 lines" },
+  { slug: "attention-residuals", gloss: "why attention and residual streams work" },
+  { slug: "microgpt", gloss: "a GPT built and trained end to end" },
+  { slug: "how-chatgpt-works", gloss: "the full pipeline: data, alignment, inference" },
+  { slug: "inference", gloss: "the KV cache, batching, what makes tokens fast" },
 ];
 
 const PROJECTS = [
@@ -41,23 +44,81 @@ const PROJECTS = [
   },
 ];
 
+const EXPERIENCE = [
+  {
+    company: "Beltech AI",
+    role: "AI Scientist",
+    period: "Jun 2025 — Present",
+    location: "Bangalore",
+    stack: "PyTorch · YOLO · PARSeq · Triton · TensorRT · FastAPI · Kubernetes · Docker",
+    bullets: [
+      "Shipped a 10+ module CV system (LPR, PUCC, helmet, phone, wrong-way) over live RTSP at **0.9+ F1** on Indian CCTV.",
+      "Led the Bangalore on-ground demo end to end with a 2-person team: picked junctions, set up and routed cameras, trained models, built the pipeline, and managed annotators. Integrated a DeepStream pipeline in C that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Captured **20k+ violations/day across 6 junctions**, scaling to **100+ cameras** per server on multi-GPU.",
+      "Cut detection latency **54% to ≤10 ms** by replacing anchor-based heads with NMS-free YOLOv10 on Triton + TensorRT. 0.90+ mAP across 8 classes.",
+      "Rebuilt LPR end-to-end: YOLOv11s for text detection, PARSeq ViT for recognition, TensorRT FP16 on edge. **150 ms → 40 ms** with higher read accuracy.",
+      "Continuous-learning loop on a 2-week cadence: live misclassifications → retrain → mAP50 gate → hot-swap on Triton with **zero downtime**.",
+      "Owned T4 fleet scheduling for **10 production models**: per-card placement and pod autoscaling to prevent OOM under load.",
+    ],
+  },
+  {
+    company: "MakeMyTrip",
+    role: "Machine Learning Intern",
+    period: "Aug 2022 — Oct 2022",
+    location: "Gurgaon",
+    stack: "Scala · Redis · MySQL · Kafka · AWS",
+    bullets: [
+      "Built a personalization API with multi-armed bandits (ε-greedy, Thompson Sampling, UCB), an RLHF reward model for itinerary ranking, and NLP resume screening for the Data team.",
+    ],
+  },
+];
+
+const TEACHING = [
+  {
+    company: "aiengg.dev",
+    role: "AI Cohort TA",
+    period: "Dec 2025 — May 2026",
+    stack: "Python · PyTorch · LLMs · RAG · Agents",
+    href: "https://aiengg.dev/",
+    bullets: [
+      "TA'd a 16-week live AI engineering cohort for **200+ engineers**: weekly classes on RAG, agents, fine-tuning, and inference. Designed the syllabus and assignments, ran doubt sessions.",
+      "InterviewReady: restructured content for 10k+ subscribers; technical posts reached **20k+ readers**.",
+    ],
+  },
+  {
+    company: "TensorTonic",
+    role: "Contributor",
+    period: "Ongoing",
+    stack: "Python · PyTorch · ML systems",
+    href: "https://www.tensortonic.com/ml-math",
+    bullets: [
+      "Contributed **300+ implementation and system-design problems**, quizzes, and paper-implementation questions, plus the pro study plan. Platform serves **40k+ users**.",
+    ],
+  },
+];
+
+// Renders **text** segments in bullet strings as bold foreground spans
+function emphasize(text: string) {
+  return text.split("**").map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="font-semibold text-foreground">
+        {part}
+      </strong>
+    ) : (
+      part
+    )
+  );
+}
+
 export default async function HomePage() {
   const allPosts = getAllPosts();
-  const featuredPosts = FEATURED_SLUGS
-    .map((slug) => allPosts.find((p) => p.slug === slug))
-    .filter(Boolean) as typeof allPosts;
-  const views = await getViews(featuredPosts.map((p) => p.slug));
-  const searchEntries = allPosts.map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    date: p.date,
-    description: p.description,
-  }));
-
+  const ladder = CURRICULUM
+    .map(({ slug, gloss }) => {
+      const post = allPosts.find((p) => p.slug === slug);
+      return post ? { post, gloss } : null;
+    })
+    .filter(Boolean) as { post: (typeof allPosts)[number]; gloss: string }[];
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <PublicNav searchEntries={searchEntries} />
-
       <main id="main" className="max-w-3xl mx-auto px-6">
         {/* Hero */}
         <section className="py-12 md:py-16">
@@ -76,23 +137,66 @@ export default async function HomePage() {
               <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2 leading-[1.1]">
                 Samit Mohan
               </h1>
-              <p className="text-[12px] font-mono text-muted-foreground/70 mb-4">
-                Bangalore · AI Scientist at Beltech AI
+              <p className="text-[16px] text-foreground/80 max-w-xl leading-relaxed">
+                Hello! I&apos;m an AI Scientist at{" "}
+                <a
+                  href="https://beltech.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-2"
+                >
+                  Beltech AI
+                </a>{" "}
+                in Bangalore, building computer-vision systems for city traffic:
+                live CCTV, ≤10ms inference, 0.9+ F1 in production. In my free time
+                I rebuild ML from scratch and write{" "}
+                <Link
+                  href="/blog"
+                  className="text-primary underline underline-offset-2"
+                >
+                  engineering blogs
+                </Link>
+                .
               </p>
-              <p className="text-[15px] text-foreground/80 max-w-xl leading-relaxed">
-                I build computer-vision systems for city traffic at Beltech AI: live CCTV,{" "}
-                <span className="font-semibold text-foreground">≤10ms</span> inference,{" "}
-                <span className="font-semibold text-foreground">0.9+ F1</span> in production.
-                In my free time I like to rebuild ML from scratch.
-              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px]">
+                <a
+                  href="https://github.com/samitmohan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline underline-offset-2"
+                >
+                  GitHub
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/samit-mohan/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline underline-offset-2"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  href="mailto:samitmohan@gmail.com"
+                  className="text-primary hover:underline underline-offset-2"
+                >
+                  Email
+                </a>
+                {/* TODO: replace href with the CV link Samit provides */}
+                <a
+                  href="#"
+                  className="text-primary hover:underline underline-offset-2"
+                >
+                  CV
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Posts */}
-        <section className="py-12">
-          <div className="flex items-baseline justify-between mb-5">
-            <h2 className="text-[13px] font-mono uppercase tracking-wider text-muted-foreground">
+        {/* Posts — from-scratch ladder */}
+        <section className="border-t border-border py-16">
+          <div className="flex items-baseline justify-between mb-6">
+            <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
               Posts
             </h2>
             <Link
@@ -102,44 +206,33 @@ export default async function HomePage() {
               all posts →
             </Link>
           </div>
-          <ul className="space-y-4">
-            {featuredPosts.map((post) => (
+          <ol className="space-y-3">
+            {ladder.map(({ post, gloss }, i) => (
               <li
                 key={post.slug}
-                className="text-[15px] leading-relaxed flex gap-4 items-baseline"
+                className="text-[16px] leading-relaxed flex gap-4 items-baseline"
               >
-                <span className="font-mono text-[12px] text-muted-foreground/60 w-24 shrink-0 pt-1 whitespace-nowrap">
-                  {formatPostDate(post.date)}
+                <span className="font-mono text-[12px] text-muted-foreground/50 w-6 shrink-0 pt-0.5 tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="text-foreground/80 hover:text-primary hover:underline underline-offset-2 transition-transform inline-block hover:translate-x-0.5"
+                    className="text-foreground/80 hover:text-primary hover:underline underline-offset-2"
                   >
                     {post.title}
                   </Link>
-                  {post.description && (
-                    <p className="text-[13px] text-muted-foreground/70 leading-snug line-clamp-1">
-                      {post.description}
-                    </p>
-                  )}
+                  <span className="text-muted-foreground"> — {gloss}</span>
                 </div>
-                <span
-                  className="font-mono text-[11px] text-muted-foreground/60 shrink-0 whitespace-nowrap tabular-nums"
-                  aria-label={`${views[post.slug] ?? 0} views`}
-                  title={`${views[post.slug] ?? 0} views`}
-                >
-                  ◉ {formatViews(views[post.slug] ?? 0)}
-                </span>
               </li>
             ))}
-          </ul>
+          </ol>
         </section>
 
         {/* Projects */}
-        <section className="py-12 pb-20">
+        <section className="border-t border-border py-16">
           <div className="flex items-baseline justify-between mb-5">
-            <h2 className="text-[13px] font-mono uppercase tracking-wider text-muted-foreground">
+            <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
               Projects
             </h2>
             <a
@@ -153,7 +246,7 @@ export default async function HomePage() {
           </div>
           <ul className="space-y-3">
             {PROJECTS.map((p) => (
-              <li key={p.name} className="text-[15px] leading-relaxed">
+              <li key={p.name} className="text-[16px] leading-relaxed">
                 <a
                   href={p.url}
                   target="_blank"
@@ -169,6 +262,116 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* Experience */}
+        <section className="border-t border-border py-16">
+          <h2 className="text-[18px] font-semibold tracking-tight text-foreground mb-6">
+            Experience
+          </h2>
+          <div className="space-y-10">
+            {EXPERIENCE.map((job) => (
+              <div key={`${job.company}-${job.period}`}>
+                <div className="flex items-baseline justify-between mb-1 flex-wrap gap-x-4">
+                  <h3 className="text-[16px] font-medium text-foreground">
+                    {job.company}
+                    <span className="text-muted-foreground font-normal">
+                      , {job.role}
+                    </span>
+                  </h3>
+                  <span className="text-[12px] font-mono text-muted-foreground/60 shrink-0">
+                    {job.period}
+                  </span>
+                </div>
+                <p className="text-[12px] font-mono text-muted-foreground/60 mb-3">
+                  {job.stack} · {job.location}
+                </p>
+                <ul className="space-y-2.5">
+                  {job.bullets.map((b) => (
+                    <li
+                      key={b}
+                      className="text-[16px] text-foreground/80 leading-relaxed flex gap-3"
+                    >
+                      <span className="text-muted-foreground/40 shrink-0">·</span>
+                      <span>{emphasize(b)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Teaching */}
+        <section className="border-t border-border py-16">
+          <h2 className="text-[18px] font-semibold tracking-tight text-foreground mb-6">
+            Teaching &amp; Writing
+          </h2>
+          <div className="space-y-10">
+            {TEACHING.map((job) => (
+              <div key={`${job.company}-${job.period}`}>
+                <div className="flex items-baseline justify-between mb-1 flex-wrap gap-x-4">
+                  <h3 className="text-[16px] font-medium text-foreground">
+                    <Link
+                      href={job.href}
+                      className="hover:text-primary hover:underline underline-offset-2"
+                    >
+                      {job.company}
+                      <span className="text-muted-foreground font-normal">
+                        , {job.role}
+                      </span>
+                    </Link>
+                  </h3>
+                  <span className="text-[12px] font-mono text-muted-foreground/60 shrink-0">
+                    {job.period}
+                  </span>
+                </div>
+                <p className="text-[12px] font-mono text-muted-foreground/60 mb-3">
+                  {job.stack}
+                </p>
+                <ul className="space-y-2.5">
+                  {job.bullets.map((b) => (
+                    <li
+                      key={b}
+                      className="text-[16px] text-foreground/80 leading-relaxed flex gap-3"
+                    >
+                      <span className="text-muted-foreground/40 shrink-0">·</span>
+                      <span>{emphasize(b)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Education */}
+        <section className="border-t border-border py-16 pb-24">
+          <h2 className="text-[18px] font-semibold tracking-tight text-foreground mb-6">
+            Education
+          </h2>
+          <div>
+            <div className="flex items-baseline justify-between mb-1 flex-wrap gap-x-4">
+              <h3 className="text-[16px] font-medium text-foreground">
+                NHCE, VTU
+                <span className="text-muted-foreground font-normal">
+                  , B.Tech Information Technology
+                </span>
+              </h3>
+              <span className="text-[12px] font-mono text-muted-foreground/60 shrink-0">
+                2020 — 2024
+              </span>
+            </div>
+            <p className="text-[12px] font-mono text-muted-foreground/60 mb-3">
+              CGPA 9.4 / 10 · Bangalore
+            </p>
+            <ul className="space-y-1.5">
+              <li className="text-[16px] text-foreground/80 leading-relaxed flex gap-3">
+                <span className="text-muted-foreground/40 shrink-0">·</span>
+                <span>Founder, Coding Club NHCE.</span>
+              </li>
+            </ul>
+          </div>
         </section>
 
       </main>

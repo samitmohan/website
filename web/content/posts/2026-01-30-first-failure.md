@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "first failure of 2026: solving 100+ deep learning questions"
+title: "First failure of 2026: solving 100+ deep learning questions"
 date:   2026-01-30 14:06:04 +0530
 published: false
 categories: fun

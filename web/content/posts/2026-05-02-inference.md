@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "inference engineering"
+title: "Inference engineering"
 date: 2026-05-02 00:00:00 +0530
 categories: [tech]
 tokens: "~15k"
@@ -11,17 +11,17 @@ tags: [llm]
 
 <style>
 :root {
-  --inf-bg: var(--color-background-secondary, #1a1a2e);
-  --inf-border: var(--color-border, #2a2a4a);
-  --inf-text: var(--color-text-primary, #e8e8e8);
-  --inf-muted: var(--color-text-secondary, #888);
-  --inf-blue: #4f9ef8;
-  --inf-green: #4caf78;
-  --inf-red: #f87171;
-  --inf-orange: #f08c4b;
-  --inf-purple: #a78bfa;
-  --inf-yellow: #fbbf24;
-  --inf-teal: #2dd4bf;
+  --inf-bg: var(--color-background-secondary, #f4f4f5);
+  --inf-border: var(--color-border, #e5e7eb);
+  --inf-text: var(--color-text-primary, #1a1a1a);
+  --inf-muted: var(--color-text-secondary, #6b7280);
+  --inf-blue: #1d4ed8;
+  --inf-green: #16a34a;
+  --inf-red: #dc2626;
+  --inf-orange: #ea580c;
+  --inf-purple: #7c3aed;
+  --inf-yellow: #ca8a04;
+  --inf-teal: #0d9488;
 }
 .inf-card { background: var(--inf-bg); border: 1px solid var(--inf-border); border-radius: 10px; padding: 16px 20px; margin: 1.2rem 0; font-size: 14px; color: var(--inf-muted); }
 .inf-card strong { color: var(--inf-text); }
@@ -150,7 +150,7 @@ Specialized units that do small matrix multiplications fast. Busy during prefill
 
 ## 3. prefill vs decode
 
-Two phases, completely different bottlenecks. This split is the single most important mental model in this post.
+Two phases, completely different bottlenecks.
 
 <div class="diag">
 <svg viewBox="0 0 800 230" xmlns="http://www.w3.org/2000/svg">
@@ -291,7 +291,7 @@ That's per user. Bump to batch=32: **342 GB**. Llama 70B itself is only 140 GB.
 </div>
 
 <div class="inf-card">
-<strong>The plot twist:</strong> the KV cache, not the model weights, is the memory bottleneck. Every "fit more requests on this GPU" technique is really just "make the KV cache smaller."
+<strong>The KV cache, not the model weights, is the memory bottleneck.</strong> Every "fit more requests on this GPU" technique is really just "make the KV cache smaller."
 </div>
 
 ### how to fight it

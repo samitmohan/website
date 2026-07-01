@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "every agent framework, ranked"
+title: "Every agent framework, ranked"
 date: 2026-05-03 00:00:00 +0530
 categories: [tech]
 tokens: "~25k"
@@ -318,9 +318,9 @@ The model does everything. You provide tools and a system prompt. The SDK runs t
 
 ### LangChain
 
-LangChain started as a chain library, became an ecosystem, and is currently rebranding as "the agent engineering platform." The original 2023 LangChain was a giant collection of integrations (every vector store, every LLM, every tool) wrapped in a set of abstractions for chaining LLM calls. It was, in retrospect, too opinionated. The team rewrote it in 2025 to be more streamlined, and the modern langchain package is a much leaner integration layer on top of langgraph's runtime.
+LangChain started as a chain library, became an ecosystem, and is currently rebranding as "the agent engineering platform." The original 2023 LangChain was a giant collection of integrations (every vector store, every LLM, every tool) wrapped in a set of abstractions for chaining LLM calls. It was too opinionated. The team rewrote it in 2025 to be more streamlined, and the modern langchain package is a much leaner integration layer on top of langgraph's runtime.
 
-The mistake people make about LangChain is treating it as a single thing. Think of it as three layers stacked. At the bottom is langchain-core, which gives you common abstractions for messages, models, tools, and runnables. In the middle is langchain itself, the integration layer with hundreds of model providers, vector stores, and tools. On top sits langgraph for actual agent control flow, langsmith for observability, and langserve for deployment. When people say "LangChain is bloated," they usually mean the integration layer. When people say "LangChain is the most powerful framework," they usually mean the whole stack including LangGraph and LangSmith. Both are true.
+The mistake people make about LangChain is treating it as a single thing. Think of it as three layers stacked. At the bottom is langchain-core, which gives you common abstractions for messages, models, tools, and runnables. In the middle is langchain itself, the integration layer with hundreds of model providers, vector stores, and tools. On top sits langgraph for actual agent control flow, langsmith for observability, and langserve for deployment. Calling it "bloated" points at the integration layer; calling it "the most powerful framework" points at the full stack with LangGraph and LangSmith. Same name, different layers.
 
 It's still the widest integration layer in the field: 100+ models, 50+ vector stores, 200+ APIs, all under one roof. The price is layers between you and the actual prompt. Most senior engineers I know skip the abstractions and hit the model API directly with a thin wrapper.
 
@@ -400,7 +400,7 @@ Most "bullish on models" position in the field. Right answer when you don't know
 
 ### the rest of the landscape
 
-These frameworks matter but don't need the long-form treatment. Each occupies a clear niche:
+These matter but each fills a narrow niche:
 
 | Framework | Backer | Mental model | Sweet spot |
 |-----------|--------|-------------|------------|
@@ -417,7 +417,7 @@ Two things stand out. Smolagents' "agents think in code" approach is the interes
 
 ## the protocol layer underneath all of this
 
-The most important development, more important than any individual framework, is the emergence of protocols that sit beneath the frameworks. The two that matter are MCP and A2A.
+The protocols underneath the frameworks matter more than any single framework. Two count: MCP and A2A.
 
 <svg width="100%" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width: 680px; display: block; margin: 1.5rem auto;">
   <title>The agent stack</title>
@@ -487,13 +487,13 @@ The most important development, more important than any individual framework, is
 
 MCP, the Model Context Protocol, was introduced by Anthropic in November 2024 to solve what they called the N x M integration problem: every model times every tool times every data source equals a custom integration to write. MCP defines a standard JSON-RPC protocol between an MCP client (your AI application) and an MCP server (a tool or data source), so a tool implemented once works with any MCP-compatible client. The original spec defined three primitives (tools, resources, prompts) and has since expanded to five, with sampling and roots added.
 
-The adoption curve was unusually fast for a standard. By March 2025, OpenAI added MCP support to ChatGPT. By Q3 2025, Microsoft shipped MCP servers for GitHub, Azure, and Microsoft 365. By Q1 2026, Google added MCP to Gemini and Vertex AI. In December 2025, Anthropic donated MCP to the Linux Foundation's new Agentic AI Foundation, jointly governed with Block, OpenAI, AWS, Google, and Microsoft, which removed the last political reason for non-Anthropic players to resist it. The public registry now lists thousands of servers. SDK downloads cross 97 million per month. It is, at this point, the integration standard.
+By March 2025, OpenAI added MCP support to ChatGPT. By Q3 2025, Microsoft shipped MCP servers for GitHub, Azure, and Microsoft 365. By Q1 2026, Google added MCP to Gemini and Vertex AI. In December 2025, Anthropic donated MCP to the Linux Foundation's new Agentic AI Foundation, jointly governed with Block, OpenAI, AWS, Google, and Microsoft, which removed the last political reason for non-Anthropic players to resist it. The public registry now lists thousands of servers. SDK downloads cross 97 million per month. It is, at this point, the integration standard.
 
 No more custom Slack/GitHub/Postgres/Drive integrations. Point your agent at the MCP server. Frameworks compete on control flow, observability, and DX; integration becomes commodity. Same path HTTP took for the web, JDBC for databases.
 
 A2A (Agent-to-Agent) is the complement. MCP lets an agent talk to tools and data; A2A lets agents talk to other agents across framework boundaries. A LangGraph agent invokes a CrewAI agent through A2A's task interface. Earlier in adoption than MCP, trending the same way. Google's ADK ships with native support.
 
-Related: "code execution with MCP" (Anthropic) and how smolagents has worked from day one. When you have hundreds or thousands of tools, dumping all the definitions into context is brutal on tokens. Better: expose tools as code on a virtual filesystem, give the agent a search-tools function and a sandbox, let it pull in only what it needs. The agent writes and runs a small script instead of producing JSON for every call. Compresses both the input (definitions) and the intermediate state (outputs flow through variables, not context). This is where the high end is heading.
+Related: "code execution with MCP" (Anthropic) and how smolagents has worked from day one. When you have hundreds or thousands of tools, dumping all the definitions into context is brutal on tokens. Better: expose tools as code on a virtual filesystem, give the agent a search-tools function and a sandbox, let it pull in only what it needs. The agent writes and runs a small script instead of producing JSON for every call. Compresses both the input (definitions) and the intermediate state (outputs flow through variables, not context).
 
 ---
 
