@@ -39,7 +39,42 @@ tags: [llm]
   --cg-orange-bg: #fdece1;
   --cg-orange-border: #f6cfb5;
   --cg-red-bg: #fce8e8;
+  --cg-red: #dc2626;
   --cg-red-border: #f2c2c2;
+}
+
+.dark {
+  --cg-bg: #141416;
+  --cg-bg-alt: #1c1c20;
+  --cg-border: #313136;
+  --cg-muted: #9ca0a9;
+  --cg-muted2: #82858d;
+  --cg-muted3: #6d7078;
+  --cg-muted4: #5b5e65;
+  --cg-blue: #8ea2f0;
+  --cg-blue-bg: #1a2340;
+  --cg-blue-border: #303f6b;
+  --cg-green: #4ade80;
+  --cg-green-bg: #14301f;
+  --cg-green-border: #204d34;
+  --cg-yellow: #d6b24a;
+  --cg-yellow-bg: #2c2712;
+  --cg-yellow-border: #4a4020;
+  --cg-purple: #b794f6;
+  --cg-purple-bg: #241a3d;
+  --cg-purple-border: #3d2c66;
+  --cg-pink: #f472b6;
+  --cg-pink-bg: #331526;
+  --cg-pink-border: #5a2942;
+  --cg-teal: #2dd4bf;
+  --cg-teal-bg: #10302c;
+  --cg-teal-border: #1c4d47;
+  --cg-orange: #fb923c;
+  --cg-orange-bg: #311d0e;
+  --cg-orange-border: #563318;
+  --cg-red-bg: #331616;
+  --cg-red: #f87171;
+  --cg-red-border: #5a2929;
 }
 </style>
 
@@ -52,7 +87,7 @@ You press Enter. Between that and the first token appearing in your browser: 13 
 
 GPT-4 trained on roughly 13 trillion tokens. Most of it starts as raw HTML from [Common Crawl](https://commoncrawl.org/) - 2.7 billion web pages, 200-400TB per crawl, new crawl every two months. Raw Common Crawl is mostly garbage: boilerplate, navigation menus, duplicate content, spam.
 
-![GPT-2 crawler pipeline](/assets/images/chatgpt/gpt2-crawler.png){: loading="lazy"}
+![GPT-2 crawler pipeline](/assets/images/chatgpt/gpt2-crawler.png)
 
 GPT-2 tried using Common Crawl directly. The paper notes that large amounts of content was "unintelligible." So they switched to a different signal: Reddit upvotes. Outbound links from posts with 3+ karma. If humans upvoted it, it clears a basic quality bar.
 
@@ -65,7 +100,7 @@ The cleaning pipeline every serious dataset now runs:
 
 [FineWeb](https://huggingface.co/datasets/HuggingFaceFW/fineweb) is the best public example of this pipeline. HuggingFace starts from Common Crawl and ends up with 44TB of cleaned text (15 trillion tokens) after all filtering. About 10% of what they scraped survives. They use a blocklist from the University of Toulouse to remove adult content, then language filtering (English only), deduplication, and classifier-based quality filtering.
 
-![FineWeb data pipeline](/assets/images/chatgpt/fineweb.png){: loading="lazy"}
+![FineWeb data pipeline](/assets/images/chatgpt/fineweb.png)
 
 A table with `text`, `id`, `dump`, and `url` columns. Loading it:
 
@@ -93,7 +128,7 @@ A token is roughly a word or subword. "Unbelievable" might be one token or split
 
 The standard is **BPE (Byte Pair Encoding)**. Start with individual bytes, repeatedly merge the most frequent adjacent pair.
 
-![Tokenization overview](/assets/images/chatgpt/tokenisation.png){: loading="lazy"}
+![Tokenization overview](/assets/images/chatgpt/tokenisation.png)
 
 Two phases:
 
@@ -146,9 +181,9 @@ print(tokens)         # [4438, 1587, 13149, 38, 2898, 990, 30]
 print(len(tokens))    # 7
 ```
 
-![Training phase tokenization](/assets/images/chatgpt/trainingPhasetoken.webp){: loading="lazy"}
+![Training phase tokenization](/assets/images/chatgpt/trainingPhasetoken.webp)
 
-![Inference phase tokenization](/assets/images/chatgpt/inferencetokenisation.png){: loading="lazy"}
+![Inference phase tokenization](/assets/images/chatgpt/inferencetokenisation.png)
 
 Explore token splits interactively at [tiktokenizer.vercel.app](https://tiktokenizer.vercel.app/).
 
@@ -202,13 +237,13 @@ Fewer tokens per sentence = less compute per request. Token efficiency is a real
   opacity: 0;
   animation: fadeUp 0.3s 2.5s forwards;
 }
-.t1 { background: #c3d2f0; color: #1d4ed8; animation-delay: 0.2s; }
-.t2 { background: #d3c6ee; color: #7c3aed; animation-delay: 0.5s; }
-.t3 { background: #bce6cd; color: #16a34a; animation-delay: 0.8s; }
-.t4 { background: #e6cbb5; color: #ea580c; animation-delay: 1.1s; }
-.t5 { background: #eec4d2; color: #db2777; animation-delay: 1.4s; }
-.t6 { background: #cfe3b8; color: #4d9a1f; animation-delay: 1.7s; }
-.t7 { background: #b8e6e1; color: #0d9488; animation-delay: 2.0s; }
+.t1 { background: var(--cg-blue-border); color: var(--cg-blue); animation-delay: 0.2s; }
+.t2 { background: var(--cg-purple-border); color: var(--cg-purple); animation-delay: 0.5s; }
+.t3 { background: var(--cg-green-border); color: var(--cg-green); animation-delay: 0.8s; }
+.t4 { background: var(--cg-orange-border); color: var(--cg-orange); animation-delay: 1.1s; }
+.t5 { background: var(--cg-pink-border); color: var(--cg-pink); animation-delay: 1.4s; }
+.t6 { background: var(--cg-green-border); color: var(--cg-green); animation-delay: 1.7s; }
+.t7 { background: var(--cg-teal-border); color: var(--cg-teal); animation-delay: 2.0s; }
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
 }
@@ -220,16 +255,16 @@ Fewer tokens per sentence = less compute per request. Token efficiency is a real
 
 Modern LLMs use a decoder-only transformer. Token integers go in, a probability distribution over the next token comes out.
 
-![Decoder-only architecture](/assets/images/chatgpt/decoderonly.png){: loading="lazy"}
+![Decoder-only architecture](/assets/images/chatgpt/decoderonly.png)
 
 Three parts:
 1. **Embedding layer**: token IDs to dense vectors (4096-dimensional for large models)
 2. **N transformer blocks**: 32-96 identical blocks, each refining the representations
 3. **Output layer**: final hidden state to a logit vector - one float per vocabulary token (~50,000)
 
-![Input and output of decoder](/assets/images/chatgpt/inpoutofdecode.png){: loading="lazy"}
+![Input and output of decoder](/assets/images/chatgpt/inpoutofdecode.png)
 
-![Embedding and transformer block flow](/assets/images/chatgpt/trans.png){: loading="lazy"}
+![Embedding and transformer block flow](/assets/images/chatgpt/trans.png)
 
 Each block has two sublayers:
 - **Attention**: tokens communicate with each other
@@ -278,7 +313,7 @@ The causal mask fills future positions with -inf before softmax. Each token only
 
 For a deeper look at how residual connections and attention interact across layers, see [from residual connections to attention residuals](/blog/attention-residuals).
 
-![Transformer architecture](/assets/images/chatgpt/archTrans.png){: loading="lazy"}
+![Transformer architecture](/assets/images/chatgpt/archTrans.png)
 
 <div class="attn-viz">
   <p class="anim-label">Self-attention: "The cat sat on the mat"</p>
@@ -362,15 +397,15 @@ window._anims = window._anims || {};
     if(!bar) return;
     bar.innerHTML='';
     if(countEl) countEl.textContent='0 tokens used';
-    if(noteEl){ noteEl.textContent='Tokens accumulate left to right. When the window fills, oldest tokens are evicted.'; noteEl.style.color='#9ca3af'; }
+    if(noteEl){ noteEl.textContent='Tokens accumulate left to right. When the window fills, oldest tokens are evicted.'; noteEl.style.color='var(--cg-muted2)'; }
     var segs=[
-      {label:"system",  flex:5,  color:"#e8eefc",border:"#bcd0f5",text:"#1d4ed8", tok:6400},
-      {label:"turn 1",  flex:12, color:"#e6f7ee",border:"#b6e3c8",text:"#16a34a", tok:21760},
-      {label:"turn 2",  flex:12, color:"#f9f3d6",border:"#e6dca3",text:"#a16207", tok:37120},
-      {label:"turn 3",  flex:18, color:"#efe8fc",border:"#d7c4f6",text:"#7c3aed", tok:60160},
-      {label:"turn 4",  flex:20, color:"#fce8f1",border:"#f6c4da",text:"#db2777", tok:85760},
-      {label:"new msg", flex:8,  color:"#e0f6f4",border:"#b3e5e0",text:"#0d9488", tok:96000},
-      {label:"overflow \u2192",flex:25,color:"#fdf6f6",border:"#fdeaea",text:"#f2c2c2",tok:128000},
+      {label:"system",  flex:5,  color:"var(--cg-blue-bg)",border:"var(--cg-blue-border)",text:"var(--cg-blue)", tok:6400},
+      {label:"turn 1",  flex:12, color:"var(--cg-green-bg)",border:"var(--cg-green-border)",text:"var(--cg-green)", tok:21760},
+      {label:"turn 2",  flex:12, color:"var(--cg-yellow-bg)",border:"var(--cg-yellow-border)",text:"var(--cg-yellow)", tok:37120},
+      {label:"turn 3",  flex:18, color:"var(--cg-purple-bg)",border:"var(--cg-purple-border)",text:"var(--cg-purple)", tok:60160},
+      {label:"turn 4",  flex:20, color:"var(--cg-pink-bg)",border:"var(--cg-pink-border)",text:"var(--cg-pink)", tok:85760},
+      {label:"new msg", flex:8,  color:"var(--cg-teal-bg)",border:"var(--cg-teal-border)",text:"var(--cg-teal)", tok:96000},
+      {label:"overflow \u2192",flex:25,color:"var(--cg-red-bg)",border:"var(--cg-red-bg)",text:"var(--cg-red-border)",tok:128000},
     ];
     segs.forEach(function(seg,i){
       timers.push(setTimeout(function(){
@@ -383,7 +418,7 @@ window._anims = window._anims || {};
         el.textContent=seg.label;
         bar.appendChild(el);
         if(countEl) countEl.textContent=seg.tok.toLocaleString()+" tokens used";
-        if(i===segs.length-1 && noteEl){ noteEl.style.color="#b91c1c"; noteEl.textContent="Window full. System prompt and turn 1 get truncated - the model has no memory of them."; }
+        if(i===segs.length-1 && noteEl){ noteEl.style.color="var(--cg-red)"; noteEl.textContent="Window full. System prompt and turn 1 get truncated - the model has no memory of them."; }
       },600*(i+1)));
     });
   };
@@ -399,7 +434,7 @@ window._anims = window._anims || {};
 }
 .ctx-win-outer {
   height: 36px;
-  background: #ffffff;
+  background: var(--cg-bg-alt);
   border: 1px solid var(--cg-border);
   border-radius: 4px;
   overflow: hidden;
@@ -549,7 +584,7 @@ window._anims = window._anims || {};
 .moe-router-lbl {
   font-family: monospace;
   font-size: 11px;
-  color: #b9e4ca;
+  color: var(--cg-green-border);
   margin: 5px 0 2px;
 }
 .moe-expert-row {
@@ -568,16 +603,16 @@ window._anims = window._anims || {};
   font-family: monospace;
   font-size: 12px;
   font-weight: 700;
-  background: #fafafa;
-  border: 1px solid #eef2f7;
-  color: #eaeef3;
+  background: var(--cg-bg-alt);
+  border: 1px solid var(--cg-bg);
+  color: var(--cg-bg);
   transition: background 0.35s, border-color 0.35s, color 0.35s, box-shadow 0.35s;
 }
 .moe-active {
   background: var(--cg-green-bg) !important;
   border-color: var(--cg-green-border) !important;
   color: var(--cg-green) !important;
-  box-shadow: 0 0 10px #e0f5e880;
+  box-shadow: 0 0 10px var(--cg-green-bg)80;
 }
 .moe-note {
   color: var(--cg-muted2);
@@ -603,7 +638,7 @@ OpenAI's GPT-4 pretraining run reportedly cost over $100M. The alignment phase t
 
 How much data and how large a model to train? That's the Chinchilla question - covered in detail in [scaling laws](/blog/scalinglaws).
 
-![Pretraining vs post-training overview](/assets/images/chatgpt/preandpost.png){: loading="lazy"}
+![Pretraining vs post-training overview](/assets/images/chatgpt/preandpost.png)
 
 ---
 
@@ -625,7 +660,7 @@ loss = cross_entropy(model(x), y)
 
 Problem: "ideal" is subjective. Different annotators write different ideal responses. The loss treats every output token equally - no signal for tone, helpfulness, or avoiding harmful content.
 
-![SFT data preparation](/assets/images/chatgpt/data_prep_sft.webp){: loading="lazy"}
+![SFT data preparation](/assets/images/chatgpt/data_prep_sft.webp)
 
 ### RLHF (reinforcement learning from human feedback)
 
@@ -647,7 +682,7 @@ Four steps:
 
 **Step 4**: Use PPO to update the SFT model to maximize reward model scores, with a KL-divergence penalty to stop it drifting too far from the SFT starting point
 
-![PPO training loop](/assets/images/chatgpt/ppo.png){: loading="lazy"}
+![PPO training loop](/assets/images/chatgpt/ppo.png)
 
 <div class="rlhf-loop">
   <p class="anim-label">RLHF training loop</p>
@@ -690,7 +725,7 @@ Four steps:
   animation: fadeUp 0.3s forwards;
 }
 .rs-arrow {
-  color: #b9e4ca;
+  color: var(--cg-green-border);
   font-size: 16px;
   margin-left: 20px;
   opacity: 0;
@@ -706,7 +741,7 @@ Four steps:
 .ra2 { animation-delay: 0.8s; }
 .ra3 { animation-delay: 1.2s; }
 .ra4 { animation-delay: 1.6s; }
-.ra5 { animation-delay: 2.0s; color: #f6cfb5; }
+.ra5 { animation-delay: 2.0s; color: var(--cg-orange-border); }
 </style>
 
 | Stage | Purpose | Data | Objective |
@@ -715,7 +750,7 @@ Four steps:
 | SFT | Follow instructions | (instruction, response) pairs | Supervised loss |
 | RLHF | Align to human preference | Ranked responses | Maximize reward |
 
-![Summary](/assets/images/chatgpt/summary.webp){: loading="lazy"}
+![Summary](/assets/images/chatgpt/summary.webp)
 
 ### DPO: a simpler alternative to PPO
 
@@ -843,46 +878,46 @@ window._anims = window._anims || {};
   padding: 2px 6px; margin-left: 1px;
   opacity: 0; animation: fadeUp 0.3s forwards;
 }
-.ag-cursor { color: #1d4ed8; animation: blink 0.9s infinite; margin-left: 2px; }
+.ag-cursor { color: var(--cg-blue); animation: blink 0.9s infinite; margin-left: 2px; }
 .ag-note { color: var(--cg-muted2); font-size: 12px; margin: 10px 0 0; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 </style>
 
-![Output probabilities](/assets/images/chatgpt/op.png){: loading="lazy"}
+![Output probabilities](/assets/images/chatgpt/op.png)
 
-![Choosing from probabilities](/assets/images/chatgpt/choosingprob.png){: loading="lazy"}
+![Choosing from probabilities](/assets/images/chatgpt/choosingprob.png)
 
 ### greedy search
 
 Always pick the highest-probability token. Deterministic. Fast. Gets stuck in repetitive loops.
 
-![Greedy search](/assets/images/chatgpt/greedy.webp){: loading="lazy"}
+![Greedy search](/assets/images/chatgpt/greedy.webp)
 
 ### beam search
 
 Keep the top-k most likely sequences at each step (beam width k=3-5). More creative than greedy. More expensive. Used in translation and summarization where you want a few good candidates rather than pure randomness.
 
-![Beam search](/assets/images/chatgpt/beam.png){: loading="lazy"}
+![Beam search](/assets/images/chatgpt/beam.png)
 
 ### multinomial sampling
 
 Sample according to probabilities. Introduces randomness - you might pick low-probability tokens. Can produce incoherent text if not constrained.
 
-![Multinomial sampling](/assets/images/chatgpt/multinomial.png){: loading="lazy"}
+![Multinomial sampling](/assets/images/chatgpt/multinomial.png)
 
 ### top-K sampling
 
 Pick the top K tokens by probability. Sample from those K. Fixed candidate set size is a problem: sometimes the model is very confident (K=1 is ideal), sometimes uncertain (K=50 makes sense). A fixed K fits neither case.
 
-![Top-K sampling](/assets/images/chatgpt/topk.png){: loading="lazy"}
+![Top-K sampling](/assets/images/chatgpt/topk.png)
 
 ### top-P (nucleus) sampling
 
 Pick the smallest set of tokens whose cumulative probability exceeds p (typically 0.9). Candidate set size adapts to the model's confidence.
 
-![Top-P sampling distribution](/assets/images/chatgpt/topp.png){: loading="lazy"}
+![Top-P sampling distribution](/assets/images/chatgpt/topp.png)
 
-![Top-P results comparison](/assets/images/chatgpt/topPresults.webp){: loading="lazy"}
+![Top-P results comparison](/assets/images/chatgpt/topPresults.webp)
 
 ```python
 import numpy as np
@@ -938,7 +973,7 @@ Decoding strategy comparison:
 | Top-K | Stochastic | Chat, creative text, fixed candidate set |
 | Top-P | Stochastic | Chat, creative text, dynamic set (modern LLMs) |
 
-![Hyperparameter table](/assets/images/chatgpt/hyperparameter.png){: loading="lazy"}
+![Hyperparameter table](/assets/images/chatgpt/hyperparameter.png)
 
 <div class="topp-viz">
   <p class="anim-label">Top-P sampling (p=0.9): probability distribution over next token</p>
@@ -1003,10 +1038,10 @@ Decoding strategy comparison:
   white-space: nowrap;
   font-family: monospace;
 }
-.b1 { background: #b6e3c8; animation-delay: 0.1s; }
-.b2 { background: #bcd0f5; animation-delay: 0.2s; }
-.b3 { background: #d7c4f6; animation-delay: 0.3s; }
-.excluded { background: #d1d5db; }
+.b1 { background: var(--cg-green-border); animation-delay: 0.1s; }
+.b2 { background: var(--cg-blue-border); animation-delay: 0.2s; }
+.b3 { background: var(--cg-purple-border); animation-delay: 0.3s; }
+.excluded { background: var(--cg-border); }
 .b4 { animation-delay: 0.4s; }
 .b5 { animation-delay: 0.5s; }
 .b6 { animation-delay: 0.6s; }
@@ -1088,7 +1123,7 @@ One request, start to finish.
 .ps2 { background: var(--cg-green-bg); color: var(--cg-green); border: 1px solid var(--cg-green-border); animation-delay: 0.4s; }
 .ps3 { background: var(--cg-orange-bg); color: var(--cg-orange); border: 1px solid var(--cg-orange-border); animation-delay: 0.7s; }
 .ps4 { background: var(--cg-purple-bg); color: var(--cg-purple); border: 1px solid var(--cg-purple-border); animation-delay: 1.0s; }
-.ps5 { background: #fce8e8; color: #e0512f; border: 1px solid #f2c2c2; animation-delay: 1.3s; }
+.ps5 { background: var(--cg-red-bg); color: var(--cg-orange); border: 1px solid var(--cg-red-border); animation-delay: 1.3s; }
 .ps6 { background: var(--cg-teal-bg); color: var(--cg-teal); border: 1px solid var(--cg-teal-border); animation-delay: 1.6s; }
 .ps7 { background: var(--cg-yellow-bg); color: var(--cg-yellow); border: 1px solid var(--cg-yellow-border); animation-delay: 1.9s; }
 .ps-arrow:nth-child(2)  { animation-delay: 0.25s; }
@@ -1099,7 +1134,7 @@ One request, start to finish.
 .ps-arrow:nth-child(12) { animation-delay: 1.75s; }
 </style>
 
-![System design overview](/assets/images/chatgpt/sysDesign.webp){: loading="lazy"}
+![System design overview](/assets/images/chatgpt/sysDesign.webp)
 
 | Step | Component | What it does | Latency |
 |------|-----------|--------------|---------|
@@ -1207,7 +1242,7 @@ data: {"choices":[{"delta":{"content":" architecture"}}]}
 data: [DONE]
 ```
 
-For a 500-token response at 50 tokens/sec: 10 seconds total. Without streaming you stare at a blank screen for 10 seconds. With streaming you start reading after ~20ms (first token).
+For a 500-token response at 50 tokens/sec: 10 seconds total. Without streaming you stare at a blank screen for 10 seconds. With streaming you start reading after ~130ms (first token).
 
 ### 8. post-processing
 
@@ -1459,9 +1494,9 @@ Without continuous batching: GPU utilization 20-30%. With it: 80-90%.
   display: flex; align-items: center; justify-content: center;
   border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 400;
   flex: 1;
-  background: #ffffff; border: 1px dashed #e5e7eb; color: #cbd0d8;
+  background: var(--cg-bg-alt); border: 1px dashed var(--cg-border); color: var(--cg-border);
 }
-.cbt-waste { color: #f2c2c2; border-color: #fdeaea; background: #fdf6f6; }
+.cbt-waste { color: var(--cg-red-border); border-color: var(--cg-red-bg); background: var(--cg-red-bg); }
 .cbt-a { background: var(--cg-blue-bg); border: 1px solid var(--cg-blue-border); color: var(--cg-blue); }
 .cbt-b { background: var(--cg-green-bg); border: 1px solid var(--cg-green-border); color: var(--cg-green); }
 .cbt-c { background: var(--cg-orange-bg); border: 1px solid var(--cg-orange-border); color: var(--cg-orange); }
@@ -1469,8 +1504,8 @@ Without continuous batching: GPU utilization 20-30%. With it: 80-90%.
 .cbt-e { background: var(--cg-yellow-bg); border: 1px solid var(--cg-yellow-border); color: var(--cg-yellow); }
 .cbt-f { background: var(--cg-pink-bg); border: 1px solid var(--cg-pink-border); color: var(--cg-pink); }
 .cbt-g { background: var(--cg-teal-bg); border: 1px solid var(--cg-teal-border); color: var(--cg-teal); }
-.cbt-h { background: #f0f3e2; border: 1px solid #d5e3a8; color: #4d9a1f; }
-.cbt-i { background: #f7e6f7; border: 1px solid #ecc4ec; color: #a21caf; }
+.cbt-h { background: var(--cg-yellow-bg); border: 1px solid var(--cg-yellow-border); color: var(--cg-green); }
+.cbt-i { background: var(--cg-purple-bg); border: 1px solid var(--cg-pink-border); color: var(--cg-purple); }
 .cbt-a, .cbt-b, .cbt-c, .cbt-d, .cbt-e, .cbt-f, .cbt-g, .cbt-h, .cbt-i { }
 .cba1 { opacity: 0; animation: fadeUp 0.4s 0.1s forwards; }
 .cba2 { opacity: 0; animation: fadeUp 0.4s 0.7s forwards; }
@@ -1594,7 +1629,7 @@ If a draft token is wrong, the rest get discarded and the large model takes over
   animation: fadeUp 0.25s forwards;
 }
 .accepted { background: var(--cg-green-bg); border: 1px solid var(--cg-green-border); color: var(--cg-green); }
-.rejected  { background: #fce8e8; border: 1px solid #f2c2c2; color: #dc2626; }
+.rejected  { background: var(--cg-red-bg); border: 1px solid var(--cg-red-border); color: var(--cg-red); }
 .corrected { background: var(--cg-orange-bg); border: 1px solid var(--cg-orange-border); color: var(--cg-orange); }
 .st1  { animation-delay: 0.2s; }
 .st2  { animation-delay: 0.5s; }
@@ -1706,21 +1741,21 @@ window._anims = window._anims || {};
 .fcell {
   aspect-ratio: 1;
   border-radius: 3px;
-  background: #fafafa;
-  border: 1px solid #f4f6f9;
+  background: var(--cg-bg-alt);
+  border: 1px solid var(--cg-bg);
   transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-.fcell-hbm { background: #fce8e8; border-color: #f2c2c2; }
-.fcell-sram { background: var(--cg-green-bg); border-color: var(--cg-green-border); box-shadow: 0 0 5px #b6e3c880; }
-.fcell-done { background: #eef4ee; border-color: #eef5ee; }
+.fcell-hbm { background: var(--cg-red-bg); border-color: var(--cg-red-border); }
+.fcell-sram { background: var(--cg-green-bg); border-color: var(--cg-green-border); box-shadow: 0 0 5px var(--cg-green-border)80; }
+.fcell-done { background: var(--cg-green-bg); border-color: var(--cg-green-bg); }
 .flash-mem-lbl {
   font-family: monospace;
   font-size: 11px;
   margin: 8px 0 0;
   text-align: center;
 }
-.hmem-lbl { color: #a5453b; }
-.smem-lbl { color: #15803d; }
+.hmem-lbl { color: var(--cg-red); }
+.smem-lbl { color: var(--cg-green); }
 .flash-note {
   color: var(--cg-muted2);
   font-size: 12px;
@@ -1743,9 +1778,9 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 ```
 
-![Inference optimization overview](/assets/images/chatgpt/llminference.webp){: loading="lazy"}
+![Inference optimization overview](/assets/images/chatgpt/llminference.webp)
 
-![Memory movements in GPU inference](/assets/images/chatgpt/memory_movements.png){: loading="lazy"}
+![Memory movements in GPU inference](/assets/images/chatgpt/memory_movements.png)
 
 ---
 
@@ -1824,15 +1859,19 @@ Prefill and decode have different hardware requirements:
 
 Run them on separate GPU pools:
 
-```text
-Prefill Pool (high-compute H100 SXM):
-  Process all input tokens in parallel
-  Transfer KV cache to decode pool
-        |
-        v
-Decode Pool (bandwidth-optimized):
-  Generate tokens one-by-one using cached KV
-```
+<svg viewBox="0 0 560 212" role="img" aria-label="Disaggregated prefill and decode" style="width:100%;max-width:520px;height:auto;display:block;margin:24px auto;font-family:var(--font-geist-sans),ui-sans-serif,system-ui,sans-serif">
+  <defs><marker id="cg-ah" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M1,1 L8,5 L1,9" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5"/></marker></defs>
+  <rect x="40" y="16" width="480" height="72" rx="10" fill="rgba(53,76,205,0.14)" stroke="currentColor" stroke-opacity="0.25"/>
+  <text x="280" y="44" text-anchor="middle" font-size="14" font-weight="600" fill="currentColor">Prefill pool  ·  high-compute H100 SXM</text>
+  <text x="280" y="66" text-anchor="middle" font-size="12" fill="currentColor" fill-opacity="0.7">process all input tokens in parallel</text>
+  <line x1="280" y1="88" x2="280" y2="124" stroke="currentColor" stroke-opacity="0.4" stroke-width="1.5" marker-end="url(#cg-ah)"/>
+  <text x="296" y="110" font-size="11" fill="currentColor" fill-opacity="0.6">transfer KV cache</text>
+  <rect x="40" y="124" width="480" height="72" rx="10" fill="rgba(34,158,68,0.16)" stroke="currentColor" stroke-opacity="0.25"/>
+  <text x="280" y="152" text-anchor="middle" font-size="14" font-weight="600" fill="currentColor">Decode pool  ·  bandwidth-optimized</text>
+  <text x="280" y="174" text-anchor="middle" font-size="12" fill="currentColor" fill-opacity="0.7">generate tokens one-by-one from cached KV</text>
+</svg>
+
+*Figure: disaggregated serving - prefill and decode on separate GPU pools.*
 
 Neither pool gets bottlenecked by the other's workload. Each scales independently.
 
@@ -1895,9 +1934,9 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #fafafa;
-  border: 1px solid #bcd0f5;
-  color: #2563eb;
+  background: var(--cg-bg-alt);
+  border: 1px solid var(--cg-blue-border);
+  color: var(--cg-blue);
   font-family: monospace;
   font-size: 12px;
   cursor: pointer;
@@ -1908,7 +1947,7 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
   line-height: 1.5;
   z-index: 10;
 }
-.anim-replay-btn:hover { opacity: 1; color: #1d4ed8; border-color: #1d4ed8; }
+.anim-replay-btn:hover { opacity: 1; color: var(--cg-blue); border-color: var(--cg-blue); }
 .token-animation, .attn-viz, .rlhf-loop, .topp-viz, .pipeline-viz, .spec-viz,
 .cbatch-viz, .autogen-viz, .ctx-win-viz, .moe-viz, .flash-viz, .kv-viz {
   position: relative;

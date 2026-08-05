@@ -71,7 +71,7 @@ class Tensor:
 
 Five fields do all the work:
 
-- **`data`**: a NumPy array holding the actual values. Make everything to float32 (or float64) because you can't differentiate integers.
+- **`data`**: a NumPy array holding the actual values. Cast everything to float32 (or float64) because you can't differentiate integers.
 - **`requires_grad`**: a boolean flag. If `True`, track operations on this tensor. Notice it's AND'd with `_grad_enabled` - more on that in a moment.
 - **`grad`**: where the gradient ends up after `.backward()`. Starts as `None`, gets lazily initialized.
 - **`_backward`**: a closure. Every operation that creates a new tensor stuffs a function in here that knows how to push gradients back to the inputs. We initialize it to a no-op lambda.

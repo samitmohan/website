@@ -14,11 +14,11 @@ My only resolution for 2026 was to solve one machine learning problem a day.
 
 Made it 20+ days. Went to bombay for concert and lost my streak... I did see Linkin Park tho :P
 
-![progress](/assets/images/failure/progress.webp){: loading="lazy"}
+![progress](/assets/images/failure/progress.webp)
 
 Still solved **100+ problems** though. 
 
-![100pr](/assets/images/failure/100pr.webp){: loading="lazy"}
+![100pr](/assets/images/failure/100pr.webp)
 
 ## why i'm done
 

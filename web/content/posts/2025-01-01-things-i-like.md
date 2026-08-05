@@ -1,10 +1,11 @@
 ---
 layout: post
-title: "Things I like"
+title: "things i like"
 date:   2025-01-01 14:06:04 +0530
 categories: fun
 tokens: "~150"
 published: true
+hidden: true
 tags: [fun]
 ---
 in no particular order,
@@ -39,5 +40,8 @@ in no particular order,
 - converse chuck taylors
 - sound of clickity clack when i type fast
 - shirts & ties
-- cocaine rap blasting in my ears at 100 volume
 - walking in cubbon park
+- eerie feeling when i play black sabbath or hendrix
+- first sip of beer; goes straight to heart
+- davidoff espresso 57 in the morning; yum
+- sitting in other people'ss living rooms

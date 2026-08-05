@@ -33,7 +33,7 @@ $$L(C) \sim C^{-0.050}$$
 
 where *N* = number of parameters, *D* = dataset size (tokens), *C* = compute budget (FLOPs), and *L* = cross-entropy loss. Loss drops as a power law as you add more parameters, data, or compute, but the small exponents mean diminishing returns: each 10x increase in any factor buys only a modest drop in loss.
 
-Two things followed from this. GPT-3 turned out to be undertrained, and Chinchilla (half the parameters of GPT-3, 4x the data) beat it by spending the same compute budget more wisely.
+Two things followed from this. GPT-3 turned out to be undertrained, and Chinchilla (40% of the parameters of GPT-3, 4x the data) beat it by spending the same compute budget more wisely.
 
 <style>
 .chinchilla-widget{background:var(--bg-card,#1f2335);border:1px solid var(--border,#e1e4e8);border-radius:10px;padding:20px 24px;margin:24px 0;font-family:inherit}
@@ -50,6 +50,18 @@ Two things followed from this. GPT-3 turned out to be undertrained, and Chinchil
 .chinchilla-widget .result-card .val{font-size:15px;font-weight:600;color:var(--text-heading,#c0caf5);font-family:var(--font-mono,'JetBrains Mono',monospace)}
 .chinchilla-widget .result-card .val span{font-weight:400;font-size:12px;color:var(--text-muted,#565f89)}
 .chinchilla-widget .summary{margin-top:14px;padding:12px 16px;background:var(--bg-code,#16161e);border-radius:8px;font-size:13px;color:var(--text,#a9b1d6);line-height:1.6;font-family:var(--font-mono,'JetBrains Mono',monospace)}
+.dark .chinchilla-widget{background:#141416;border-color:#313136}
+.dark .chinchilla-widget h4{color:#E7E7E9}
+.dark .chinchilla-widget p.desc{color:#9CA0A9}
+.dark .chinchilla-widget .presets button{background:#1c1c20;color:#E7E7E9;border-color:#313136}
+.dark .chinchilla-widget .presets button:hover,.dark .chinchilla-widget .presets button.active{background:#1a2340;color:#8ea2f0;border-color:#8ea2f0}
+.dark .chinchilla-widget input[type=text]{background:#1c1c20;color:#E7E7E9;border-color:#313136}
+.dark .chinchilla-widget .result-card{background:#1c1c20;border-left-color:#8ea2f0}
+.dark .chinchilla-widget .result-card.old{border-left-color:#f87171}
+.dark .chinchilla-widget .result-card .label{color:#9CA0A9}
+.dark .chinchilla-widget .result-card .val{color:#E7E7E9}
+.dark .chinchilla-widget .result-card .val span{color:#9CA0A9}
+.dark .chinchilla-widget .summary{background:#1c1c20;color:#E7E7E9}
 @media(max-width:500px){.chinchilla-widget .results{grid-template-columns:1fr}}
 </style>
 
@@ -136,11 +148,11 @@ lazyWidget('chinchilla-calc', function(){
 
 Loss versus dataset size is also a power law, linear on a log-log plot.
 
-![dl](/assets/images/scaling_laws/data_loss.webp){: loading="lazy"}
+![dl](/assets/images/scaling_laws/data_loss.webp)
 
 Data *composition* shifts the offset, not the slope, so you can run data-selection experiments on a small model and trust they transfer to the big one.
 
-![datacomposition](/assets/images/scaling_laws/dc.webp){: loading="lazy"}
+![datacomposition](/assets/images/scaling_laws/dc.webp)
 
 Repeating data helps up to about 4 epochs, then returns fall off fast. That sets up the real tradeoff: repeat high-quality data, or pull in new lower-quality data.
 
@@ -163,4 +175,4 @@ Different labs make different bets on this tradeoff. ChatGPT scales up parameter
 
 The catch: we're running out of high-quality text. Two escape routes are in play. Synthetic data (AlphaGo learned entirely from self-play) and reasoning models like o1 that spend more compute at inference, thinking longer to answer better, which is its own new scaling axis. New architectures are the other hope, but nothing has unseated the transformer yet, usually because the alternatives aren't numerically stable.
 
-![sl](/assets/images/scaling_laws/scaling_loss.webp){: loading="lazy"}
+![sl](/assets/images/scaling_laws/scaling_loss.webp)

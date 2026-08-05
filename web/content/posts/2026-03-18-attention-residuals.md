@@ -177,6 +177,7 @@ The deeper your network, the less any individual layer matters. A 128-layer mode
 <style>
 .dilution-widget{background:var(--bg-code,#f1f3f6);border-radius:8px;padding:16px 20px;margin:1rem 0;font-family:var(--font-mono,'JetBrains Mono',monospace)}
 .dark-mode .dilution-widget{background:#1e1e2e}
+.dark .dilution-widget{background:#1c1c20;border:1px solid #313136;color:#E7E7E9}
 .dilution-widget label{font-size:14px;display:block;margin-bottom:6px}
 .dilution-widget input[type=range]{width:100%;margin:8px 0}
 .dilution-widget .result{font-size:18px;font-weight:600;margin-top:8px}

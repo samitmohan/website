@@ -22,6 +22,19 @@ tags: [agents]
   --agent-red: #ff6b6b;
   --agent-yellow: #ffd93d;
 }
+.dark {
+  --agent-bg: var(--color-background-secondary, #1c1c20);
+  --agent-border: var(--color-border, #313136);
+  --agent-text: var(--color-text-primary, #E7E7E9);
+  --agent-muted: var(--color-text-secondary, #9CA0A9);
+  --agent-teal: #2dd4bf;
+  --agent-purple: #b794f6;
+  --agent-blue: #8ea2f0;
+  --agent-green: #4ade80;
+  --agent-orange: #fb923c;
+  --agent-red: #f87171;
+  --agent-yellow: #d6b24a;
+}
 .agent-video { margin: 1.8rem 0; text-align: center; }
 .agent-video video { max-width: 100%; border-radius: 10px; border: 1px solid var(--agent-border); }
 .agent-card { background: var(--agent-bg); border: 1px solid var(--agent-border); border-radius: 10px; padding: 16px 20px; margin: 1.2rem 0; font-size: 14px; color: var(--agent-muted); }
@@ -80,6 +93,11 @@ One axis explains the whole space: how much control you hand to the model. Rigid
       .title { fill: #F1EFE8; }
       .subtitle { fill: #D3D1C7; }
     }
+    html.dark .label { fill: #B4B2A9; }
+    html.dark .axis-stroke { stroke: #B4B2A9; }
+    html.dark .box-fill { fill: #444441; stroke: #D3D1C7; }
+    html.dark .title { fill: #F1EFE8; }
+    html.dark .subtitle { fill: #D3D1C7; }
   </style>
   <defs>
     <marker id="arrow-spec" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -148,6 +166,18 @@ Wave three (2025 - 2026): Claude 3.5/4 and GPT-4o/5 got reliable enough at tool 
       .pill { fill: #2C2C2A; stroke: #888780; }
       .pill-text { fill: #D3D1C7; }
     }
+    html.dark .axis-stroke { stroke: #B4B2A9; }
+    html.dark .gray-fill { fill: #444441; stroke: #D3D1C7; }
+    html.dark .gray-title { fill: #F1EFE8; }
+    html.dark .gray-sub { fill: #D3D1C7; }
+    html.dark .purple-fill { fill: #3C3489; stroke: #CECBF6; }
+    html.dark .purple-title { fill: #EEEDFE; }
+    html.dark .purple-sub { fill: #CECBF6; }
+    html.dark .teal-fill { fill: #085041; stroke: #9FE1CB; }
+    html.dark .teal-title { fill: #E1F5EE; }
+    html.dark .teal-sub { fill: #9FE1CB; }
+    html.dark .pill { fill: #2C2C2A; stroke: #888780; }
+    html.dark .pill-text { fill: #D3D1C7; }
   </style>
   <defs>
     <marker id="arrow-gen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -447,6 +477,17 @@ The protocols underneath the frameworks matter more than any single framework. T
       .pill { fill: #2C2C2A; stroke: #888780; }
       .pill-text { fill: #D3D1C7; }
     }
+    html.dark .teal-fill { fill: #085041; stroke: #9FE1CB; }
+    html.dark .teal-title { fill: #E1F5EE; }
+    html.dark .teal-sub { fill: #9FE1CB; }
+    html.dark .amber-fill { fill: #633806; stroke: #FAC775; }
+    html.dark .amber-title { fill: #FAEEDA; }
+    html.dark .amber-sub { fill: #FAC775; }
+    html.dark .gray-fill { fill: #444441; stroke: #D3D1C7; }
+    html.dark .gray-title { fill: #F1EFE8; }
+    html.dark .gray-sub { fill: #D3D1C7; }
+    html.dark .pill { fill: #2C2C2A; stroke: #888780; }
+    html.dark .pill-text { fill: #D3D1C7; }
   </style>
   <rect x="40" y="40" width="600" height="60" rx="12" class="teal-fill"/>
   <text x="60" y="64" class="teal-title" dominant-baseline="central">Frameworks</text>
@@ -523,6 +564,17 @@ Related: "code execution with MCP" (Anthropic) and how smolagents has worked fro
       .sa-text { fill: #F1EFE8; }
       .sa-muted { fill: #B4B2A9; }
     }
+    html.dark .sa-fill { fill: #444441; }
+    html.dark .sa-stroke { stroke: #D3D1C7; }
+    html.dark .sa-text { fill: #F1EFE8; }
+    html.dark .sa-muted { fill: #B4B2A9; }
+    html.dark [fill="#4ecdc4"] { fill: #2dd4bf; }
+    html.dark [stroke="#4ecdc4"] { stroke: #2dd4bf; }
+    html.dark [fill="#a78bfa"] { fill: #b794f6; }
+    html.dark [stroke="#a78bfa"] { stroke: #b794f6; }
+    html.dark [fill="#ff6b6b"] { fill: #f87171; }
+    html.dark [stroke="#ff6b6b"] { stroke: #f87171; }
+    html.dark [fill="#2ecc71"] { fill: #4ade80; }
   </style>
   <!-- Left panel: Single Agent -->
   <text x="195" y="30" text-anchor="middle" class="sa-title sa-text">Single Agent</text>
@@ -618,6 +670,20 @@ If you must pick one:
       .fc-text-color { fill: #F1EFE8; }
       .fc-muted { fill: #B4B2A9; }
     }
+    html.dark .fc-fill { fill: #444441; }
+    html.dark .fc-stroke { stroke: #D3D1C7; }
+    html.dark .fc-text-color { fill: #F1EFE8; }
+    html.dark .fc-muted { fill: #B4B2A9; }
+    html.dark [fill="#4f9ef8"] { fill: #8ea2f0; }
+    html.dark [stroke="#4f9ef8"] { stroke: #8ea2f0; }
+    html.dark [fill="#f08c4b"] { fill: #fb923c; }
+    html.dark [stroke="#f08c4b"] { stroke: #fb923c; }
+    html.dark [fill="#a78bfa"] { fill: #b794f6; }
+    html.dark [stroke="#a78bfa"] { stroke: #b794f6; }
+    html.dark [fill="#4ecdc4"] { fill: #2dd4bf; }
+    html.dark [stroke="#4ecdc4"] { stroke: #2dd4bf; }
+    html.dark .fc-yes { fill: #4ade80; }
+    html.dark .fc-no { fill: #f87171; }
   </style>
   <defs>
     <marker id="ah-fc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">

@@ -12,6 +12,8 @@ export interface PostMeta {
   math: boolean;
   readingTime: number;
   tags: string[];
+  thumbnail?: string;
+  hidden: boolean;
 }
 
 export interface Post extends PostMeta {
@@ -43,12 +45,13 @@ function formatDate(raw: string): string {
   });
 }
 
-export function getAllPosts(): PostMeta[] {
+// Read + normalize every published post (both public and hidden).
+function readAllPosts() {
   const files = fs.readdirSync(POSTS_DIR).filter((f) =>
     f.match(/\.(md|markdown)$/)
   );
 
-  const posts = files
+  return files
     .map((filename) => {
       const raw = fs.readFileSync(path.join(POSTS_DIR, filename), "utf8");
       const { data, content } = matter(raw);
@@ -65,13 +68,37 @@ export function getAllPosts(): PostMeta[] {
         math: Boolean(data.math),
         readingTime: readingTime(content),
         tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
+        thumbnail: (data.thumbnail as string) || undefined,
+        hidden: data.hidden === true,
         published: data.published !== false,
       };
     })
     .filter((p) => p.published)
     .sort((a, b) => b.date.localeCompare(a.date));
+}
 
-  return posts;
+// Public posts: everything except hidden ones. Feeds the blog index, tags,
+// RSS, sitemap, homepage, and related/prev-next links.
+export function getAllPosts(): PostMeta[] {
+  return readAllPosts().filter((p) => !p.hidden);
+}
+
+// Hidden ("fun") posts: unlisted, noindex, reachable only via /fun or direct URL.
+export function getHiddenPosts(): PostMeta[] {
+  return readAllPosts().filter((p) => p.hidden);
+}
+
+// Distinct tags across published posts, ordered by frequency then name.
+export function getAllTags(): string[] {
+  const counts = new Map<string, number>();
+  for (const post of getAllPosts()) {
+    for (const tag of post.tags) {
+      counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([tag]) => tag);
 }
 
 // Strip Liquid tags. Rewrite internal Jekyll post links to /blog/[slug].
@@ -99,6 +126,7 @@ export function getPost(slug: string): Post | null {
 
   const raw = fs.readFileSync(path.join(POSTS_DIR, filename), "utf8");
   const { data, content } = matter(raw);
+  if (data.published === false) return null;
   const dateStr = data.date
     ? new Date(data.date).toISOString().slice(0, 10)
     : fileToDate(filename);
@@ -111,6 +139,8 @@ export function getPost(slug: string): Post | null {
     math: Boolean(data.math),
     readingTime: readingTime(content),
     tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
+    thumbnail: (data.thumbnail as string) || undefined,
+    hidden: data.hidden === true,
     content: preprocessContent(content),
   };
 }

@@ -23,6 +23,15 @@ tags: [llm]
   --inf-yellow: #ca8a04;
   --inf-teal: #0d9488;
 }
+.dark {
+  --inf-blue: #8ea2f0;
+  --inf-green: #4ade80;
+  --inf-red: #f87171;
+  --inf-orange: #fb923c;
+  --inf-purple: #b794f6;
+  --inf-yellow: #d6b24a;
+  --inf-teal: #2dd4bf;
+}
 .inf-card { background: var(--inf-bg); border: 1px solid var(--inf-border); border-radius: 10px; padding: 16px 20px; margin: 1.2rem 0; font-size: 14px; color: var(--inf-muted); }
 .inf-card strong { color: var(--inf-text); }
 .inf-highlight { border-left: 3px solid var(--inf-orange); padding: 10px 14px; margin: 1rem 0; font-size: 13px; color: var(--inf-muted); background: var(--inf-bg); border-radius: 0 5px 5px 0; }

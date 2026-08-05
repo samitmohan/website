@@ -4,12 +4,13 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
 import { visit } from "unist-util-visit";
 import { createHighlighter } from "shiki";
-import type { Element, Root } from "hast";
+import type { Element, Root, Text } from "hast";
 
 const highlighterPromise = createHighlighter({
   themes: ["github-dark", "github-light"],
@@ -43,6 +44,57 @@ function rehypeMediaPerf() {
   };
 }
 
+// GitHub-style alerts: `> [!NOTE]` blockquotes become styled callout boxes.
+const CALLOUT_LABELS: Record<string, string> = {
+  note: "Note",
+  tip: "Tip",
+  important: "Important",
+  warning: "Warning",
+  caution: "Caution",
+};
+
+function rehypeCallouts() {
+  return (tree: Root) => {
+    visit(tree, "element", (node: Element) => {
+      if (node.tagName !== "blockquote") return;
+      const firstP = node.children.find(
+        (c): c is Element => c.type === "element" && c.tagName === "p"
+      );
+      if (!firstP) return;
+      const firstText = firstP.children.find(
+        (c): c is Text => c.type === "text"
+      );
+      if (!firstText) return;
+
+      const match = firstText.value.match(
+        /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*\n?/
+      );
+      if (!match) return;
+
+      const type = match[1].toLowerCase();
+      firstText.value = firstText.value.slice(match[0].length);
+
+      // Drop the now-empty marker text node and a trailing hard break.
+      if (firstText.value === "") {
+        const idx = firstP.children.indexOf(firstText);
+        firstP.children.splice(idx, 1);
+        if (firstP.children[idx]?.type === "element" && (firstP.children[idx] as Element).tagName === "br") {
+          firstP.children.splice(idx, 1);
+        }
+      }
+
+      node.properties = node.properties || {};
+      node.properties.className = ["callout", `callout-${type}`];
+      node.children.unshift({
+        type: "element",
+        tagName: "div",
+        properties: { className: ["callout-title"] },
+        children: [{ type: "text", value: CALLOUT_LABELS[type] }],
+      });
+    });
+  };
+}
+
 export async function markdownToHtml(
   content: string,
   hasMath = false
@@ -53,6 +105,8 @@ export async function markdownToHtml(
     .use(hasMath ? remarkMath : () => {})
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
+    .use(rehypeSlug)
+    .use(rehypeCallouts)
     .use(rehypeMediaPerf)
     .use(rehypePrettyCode, {
       theme: {
