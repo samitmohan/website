@@ -118,7 +118,7 @@ export default async function BlogPostPage({
         <div className="label mb-10 flex items-center gap-2">
           <Link
             href={post.hidden ? "/fun" : "/blog"}
-            className="transition-colors hover:text-brand"
+            className="transition-colors hover:text-orange"
           >
             {post.hidden ? "fun" : "Posts"}
           </Link>
@@ -204,7 +204,7 @@ export default async function BlogPostPage({
                   href={`/blog/${p.slug}`}
                   className="card-surface group flex flex-col p-4"
                 >
-                  <h3 className="text-[14.5px] font-medium leading-snug text-ink transition-colors group-hover:text-brand">
+                  <h3 className="text-[14.5px] font-medium leading-snug text-ink transition-colors group-hover:text-orange">
                     {p.title}
                   </h3>
                   <div className="meta mt-auto pt-4">
@@ -223,7 +223,7 @@ export default async function BlogPostPage({
                 <p className="label mb-2">
                   ← Older
                 </p>
-                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-brand">
+                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-orange">
                   {prevPost.title}
                 </p>
               </Link>
@@ -235,7 +235,7 @@ export default async function BlogPostPage({
                 <p className="label mb-2">
                   Newer →
                 </p>
-                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-brand">
+                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-orange">
                   {nextPost.title}
                 </p>
               </Link>

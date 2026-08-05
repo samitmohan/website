@@ -62,6 +62,7 @@
   --orange: #E6651B;
   --orange-strong: #A5460F;
   --orange-soft: #FEEDE6;
+  --orange-border: #FDDCCE;
   --panel: #141414;
   --panel-foreground: #FAFAFA;
   --radius-card: 24px;
@@ -117,6 +118,7 @@
   --color-orange: var(--orange);
   --color-orange-strong: var(--orange-strong);
   --color-orange-soft: var(--orange-soft);
+  --color-orange-border: var(--orange-border);
   --color-panel: var(--panel);
   --color-panel-foreground: var(--panel-foreground);
   --font-sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
@@ -192,6 +194,7 @@
   --orange: #F38858;
   --orange-strong: #F9BB9E;
   --orange-soft: rgba(230, 101, 27, 0.18);
+  --orange-border: rgba(243, 136, 88, 0.35);
   --panel: #161618;
   --panel-foreground: #F2F2F2;
 }
@@ -295,14 +298,14 @@ body {
   color: var(--foreground);
 }
 .pill-ghost:hover {
-  border-color: var(--brand-border);
-  background: var(--brand-soft);
-  color: var(--brand);
+  border-color: var(--orange-border);
+  background: var(--orange-soft);
+  color: var(--orange);
   transform: translateY(-1px);
 }
 .pill-ghost:active {
   background: var(--surface-3);
-  color: var(--brand-strong);
+  color: var(--orange-strong);
   transform: none;
 }
 .pill .arrow {
@@ -334,13 +337,13 @@ body {
   top: -1px;
   bottom: -1px;
   width: 2px;
-  background: var(--brand);
+  background: var(--orange);
   opacity: 0;
   transition: opacity 0.3s var(--ease-out);
 }
 a.row:hover,
 .row-interactive:hover {
-  background: linear-gradient(90deg, var(--brand-soft), transparent 78%);
+  background: linear-gradient(90deg, var(--orange-soft), transparent 78%);
   padding-left: 22px;
 }
 a.row:hover::before { opacity: 1; }
@@ -359,8 +362,8 @@ a.row:hover .row-index { color: var(--orange); }
 .row-title {
   transition: color 0.3s var(--ease-out);
 }
-a.row:hover .row-title { color: var(--brand); }
-a.row:active .row-title { color: var(--brand-strong); }
+a.row:hover .row-title { color: var(--orange); }
+a.row:active .row-title { color: var(--orange-strong); }
 .row-arrow {
   opacity: 0;
   transform: translateX(-6px);
@@ -383,7 +386,7 @@ a.row:hover .row-arrow { opacity: 1; transform: none; }
 }
 a.card-surface:hover,
 .card-surface-hover:hover {
-  border-color: var(--brand-border);
+  border-color: var(--orange-border);
   transform: translateY(-2px);
   box-shadow: var(--shadow-card);
 }
@@ -466,7 +469,7 @@ code[data-theme*=" "] {
   transition: color 0.15s var(--ease-out);
 }
 .blog-prose a:hover {
-  color: var(--brand-strong);
+  color: var(--orange);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -545,9 +548,9 @@ code[data-theme*=" "] {
     border-color 0.15s var(--ease-out);
 }
 .blog-prose .code-copy:hover {
-  color: var(--brand);
-  background: var(--brand-soft);
-  border-color: var(--brand-border);
+  color: var(--orange);
+  background: var(--orange-soft);
+  border-color: var(--orange-border);
 }
 /* Success reads green, not indigo - indigo means "link" everywhere else. */
 .blog-prose .code-copy.copied {

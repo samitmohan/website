@@ -27,7 +27,7 @@ export function PublicNav() {
       <div className="shell flex h-14 items-center justify-between">
         <Link
           href="/"
-          className="text-[15px] font-medium tracking-tight text-ink transition-colors hover:text-brand"
+          className="text-[15px] font-medium tracking-tight text-ink transition-colors hover:text-orange"
         >
           Samit Mohan
         </Link>
@@ -56,7 +56,7 @@ export function PublicFooter() {
           href="https://github.com/samitmohan"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-ink-2 transition-colors hover:text-brand"
+          className="text-ink-2 transition-colors hover:text-orange"
         >
           GitHub
         </a>
@@ -64,17 +64,17 @@ export function PublicFooter() {
           href="https://www.linkedin.com/in/samit-mohan/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-ink-2 transition-colors hover:text-brand"
+          className="text-ink-2 transition-colors hover:text-orange"
         >
           LinkedIn
         </a>
         <a
           href="mailto:samitmohan@gmail.com"
-          className="text-ink-2 transition-colors hover:text-brand"
+          className="text-ink-2 transition-colors hover:text-orange"
         >
           Email
         </a>
-        <a href="#" className="text-ink-2 transition-colors hover:text-brand">
+        <a href="#" className="text-ink-2 transition-colors hover:text-orange">
           CV
         </a>
       </div>

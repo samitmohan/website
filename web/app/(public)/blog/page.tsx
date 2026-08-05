@@ -33,7 +33,7 @@ export default function BlogPage() {
                   {post.title}
                   <span
                     aria-hidden
-                    className="row-arrow hidden text-[13px] text-brand sm:inline"
+                    className="row-arrow hidden text-[13px] text-orange sm:inline"
                   >
                     →
                   </span>
