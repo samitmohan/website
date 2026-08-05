@@ -238,7 +238,7 @@ export default async function HomePage() {
         {/* Posts - from-scratch ladder */}
         <section className="reveal border-t border-rule">
           <div className="shell py-14">
-          <h2 className="section-title mb-8">From scratch</h2>
+          <h2 className="section-title mb-8">From Scratch</h2>
           <div className="rows">
             {ladder.map(({ post, gloss }, i) => (
               <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
