@@ -1,13 +1,28 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
+  display: "swap",
+});
+
+// Stands in for Season Mix on the hero and section headings.
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -40,7 +55,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetbrainsMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
@@ -84,7 +100,14 @@ export default function RootLayout({
             }),
           }}
         />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>

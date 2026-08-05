@@ -15,52 +15,75 @@ export default function OGImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: "80px",
-          background: "#0C111D",
+          justifyContent: "space-between",
+          padding: "72px 80px",
+          background: "#FAFAFA",
+          color: "#141414",
         }}
       >
         <div
           style={{
-            width: "48px",
-            height: "3px",
-            background: "#0EA5E9",
-            marginBottom: "32px",
-          }}
-        />
-        <div
-          style={{
-            fontSize: "72px",
-            fontWeight: 700,
-            color: "#F9FAFB",
-            lineHeight: 1.1,
-            letterSpacing: "-2px",
-            marginBottom: "20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontSize: "18px",
+            letterSpacing: "2px",
+            color: "#999999",
           }}
         >
-          Samit Mohan
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "10px",
+                height: "10px",
+                borderRadius: "999px",
+                background: "#E6651B",
+              }}
+            />
+            AI SCIENTIST · BANGALORE
+          </div>
+          <div>SAMITMOHAN.IN</div>
         </div>
-        <div
-          style={{
-            fontSize: "24px",
-            color: "#6B7280",
-            lineHeight: 1.5,
-            maxWidth: "700px",
-          }}
-        >
-          AI Scientist. CV systems, teaching, and writing about building ML from scratch.
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              fontSize: "128px",
+              fontWeight: 400,
+              color: "#141414",
+              lineHeight: 0.95,
+              letterSpacing: "-4px",
+            }}
+          >
+            Samit Mohan
+          </div>
+          <div
+            style={{
+              fontSize: "26px",
+              color: "#666666",
+              lineHeight: 1.45,
+              maxWidth: "760px",
+              marginTop: "28px",
+            }}
+          >
+            Computer vision in production, and machine learning rebuilt from
+            scratch in public.
+          </div>
         </div>
+
         <div
           style={{
-            position: "absolute",
-            top: "80px",
-            right: "80px",
-            fontSize: "16px",
-            color: "#374151",
-            fontFamily: "monospace",
+            display: "flex",
+            gap: "48px",
+            borderTop: "1px solid #E6E6E6",
+            paddingTop: "28px",
+            fontSize: "20px",
+            color: "#3333CC",
           }}
         >
-          samitmohan.in
+          <div>≤10ms inference</div>
+          <div>0.9+ F1 in production</div>
+          <div>100+ cameras per server</div>
         </div>
       </div>
     ),

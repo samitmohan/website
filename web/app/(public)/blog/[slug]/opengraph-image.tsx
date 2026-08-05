@@ -36,37 +36,40 @@ export default async function OGImage({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "80px",
-          background: "#0F1419",
-          color: "#E5E7EB",
+          padding: "72px 80px",
+          background: "#FAFAFA",
+          color: "#141414",
         }}
       >
         <div
           style={{
-            fontSize: "20px",
-            color: "#9CA3AF",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            fontSize: "18px",
+            color: "#999999",
             letterSpacing: "2px",
           }}
         >
-          SAMITMOHAN.VERCEL.APP / BLOG
+          <div
+            style={{
+              width: "10px",
+              height: "10px",
+              borderRadius: "999px",
+              background: "#E6651B",
+            }}
+          />
+          SAMITMOHAN.IN / WRITING
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
-              width: "48px",
-              height: "3px",
-              background: "#60A5FA",
+              fontSize: "76px",
+              fontWeight: 400,
+              color: "#141414",
+              lineHeight: 1.02,
+              letterSpacing: "-2.5px",
               marginBottom: "32px",
-            }}
-          />
-          <div
-            style={{
-              fontSize: "64px",
-              fontWeight: 700,
-              color: "#F9FAFB",
-              lineHeight: 1.1,
-              letterSpacing: "-1.5px",
-              marginBottom: "24px",
               maxWidth: "1000px",
             }}
           >
@@ -75,11 +78,16 @@ export default async function OGImage({
           <div
             style={{
               display: "flex",
+              gap: "14px",
+              borderTop: "1px solid #E6E6E6",
+              paddingTop: "28px",
               fontSize: "22px",
-              color: "#9CA3AF",
+              color: "#666666",
             }}
           >
-            {`${date ? `${date} · ` : ""}Samit Mohan`}
+            <span style={{ color: "#3333CC" }}>Samit Mohan</span>
+            {date ? <span style={{ color: "#B3B3B3" }}>·</span> : null}
+            {date ? <span>{date}</span> : null}
           </div>
         </div>
       </div>

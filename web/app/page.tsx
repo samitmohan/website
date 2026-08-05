@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
-import { PublicFooter } from "@/components/public-nav";
+import { PublicNav, PublicFooter } from "@/components/public-nav";
+import { RevealOnScroll } from "@/components/reveal";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export const revalidate = 30;
 
@@ -48,27 +54,23 @@ const EXPERIENCE = [
   {
     company: "Beltech AI",
     role: "AI Scientist",
-    period: "Jun 2025 — Present",
-    location: "Bangalore",
-    stack: "PyTorch · YOLO · PARSeq · Triton · TensorRT · FastAPI · Kubernetes · Docker",
-    bullets: [
-      "Shipped a 10+ module CV system (LPR, PUCC, helmet, phone, wrong-way) over live RTSP at **0.9+ F1** on Indian CCTV.",
-      "Led the Bangalore on-ground demo end to end with a 2-person team: picked junctions, set up and routed cameras, trained models, built the pipeline, and managed annotators. Integrated a DeepStream pipeline in C that keeps decode → detect → track on-GPU, removing CPU↔GPU copies. Captured **20k+ violations/day across 6 junctions**, scaling to **100+ cameras** per server on multi-GPU.",
-      "Cut detection latency **54% to ≤10 ms** by replacing anchor-based heads with NMS-free YOLOv10 on Triton + TensorRT. 0.90+ mAP across 8 classes.",
-      "Rebuilt LPR end-to-end: YOLOv11s for text detection, PARSeq ViT for recognition, TensorRT FP16 on edge. **150 ms → 40 ms** with higher read accuracy.",
-      "Continuous-learning loop on a 2-week cadence: live misclassifications → retrain → mAP50 gate → hot-swap on Triton with **zero downtime**.",
-      "Owned T4 fleet scheduling for **10 production models**: per-card placement and pod autoscaling to prevent OOM under load.",
-    ],
+    period: "Jun 2025 - Present",
+    summary:
+      "City-traffic computer vision on live CCTV: **≤10ms** inference, **0.9+ F1** in production, **100+ cameras** per server.",
+  },
+  {
+    company: "Genpact",
+    role: "Data Science Intern",
+    period: "Oct 2023 - Dec 2023",
+    summary:
+      "Built an **NLP resume screener** for data-team hiring and a **churn-prediction model** (POC), plus dashboards and ETL. **Alteryx certified**.",
   },
   {
     company: "MakeMyTrip",
     role: "Machine Learning Intern",
-    period: "Aug 2022 — Oct 2022",
-    location: "Gurgaon",
-    stack: "Scala · Redis · MySQL · Kafka · AWS",
-    bullets: [
-      "Built a personalization API with multi-armed bandits (ε-greedy, Thompson Sampling, UCB), an RLHF reward model for itinerary ranking, and NLP resume screening for the Data team.",
-    ],
+    period: "Aug 2022 - Oct 2022",
+    summary:
+      "Personalization API with multi-armed bandits and an RLHF reward model for itinerary ranking.",
   },
 ];
 
@@ -76,31 +78,26 @@ const TEACHING = [
   {
     company: "aiengg.dev",
     role: "AI Cohort TA",
-    period: "Dec 2025 — May 2026",
-    stack: "Python · PyTorch · LLMs · RAG · Agents",
+    period: "Dec 2025 - May 2026",
     href: "https://aiengg.dev/",
-    bullets: [
-      "TA'd a 16-week live AI engineering cohort for **200+ engineers**: weekly classes on RAG, agents, fine-tuning, and inference. Designed the syllabus and assignments, ran doubt sessions.",
-      "InterviewReady: restructured content for 10k+ subscribers; technical posts reached **20k+ readers**.",
-    ],
+    summary:
+      "TA'd a 16-week AI engineering cohort for **200+ engineers**: RAG, agents, fine-tuning, inference.",
   },
   {
     company: "TensorTonic",
     role: "Contributor",
     period: "Ongoing",
-    stack: "Python · PyTorch · ML systems",
     href: "https://www.tensortonic.com/ml-math",
-    bullets: [
-      "Contributed **300+ implementation and system-design problems**, quizzes, and paper-implementation questions, plus the pro study plan. Platform serves **40k+ users**.",
-    ],
+    summary:
+      "**300+** implementation and system-design problems; the platform serves **40k+ users**.",
   },
 ];
 
-// Renders **text** segments in bullet strings as bold foreground spans
+// Renders **text** segments as bold foreground spans
 function emphasize(text: string) {
   return text.split("**").map((part, i) =>
     i % 2 === 1 ? (
-      <strong key={i} className="font-semibold text-foreground">
+      <strong key={i} className="font-medium text-ink">
         {part}
       </strong>
     ) : (
@@ -109,61 +106,110 @@ function emphasize(text: string) {
   );
 }
 
+type RoleRow = {
+  company: string;
+  role: string;
+  period: string;
+  href?: string;
+  summary: string;
+};
+
+function RoleRows({ items }: { items: RoleRow[] }) {
+  return (
+    <div className="rows">
+      {items.map((item) => {
+        const inner = (
+          <>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h3 className="text-[16px] text-ink">
+                <span className="row-title font-medium">{item.company}</span>
+                <span className="text-ink-2"> · {item.role}</span>
+              </h3>
+              <span className="meta shrink-0">{item.period}</span>
+            </div>
+            <p className="mt-1.5 max-w-3xl text-pretty text-[15px] leading-[155%] text-ink-2">
+              {emphasize(item.summary)}
+            </p>
+          </>
+        );
+
+        return item.href ? (
+          <a
+            key={`${item.company}-${item.period}`}
+            href={item.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="row"
+          >
+            {inner}
+          </a>
+        ) : (
+          <div key={`${item.company}-${item.period}`} className="row">
+            {inner}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const allPosts = getAllPosts();
-  const ladder = CURRICULUM
-    .map(({ slug, gloss }) => {
-      const post = allPosts.find((p) => p.slug === slug);
-      return post ? { post, gloss } : null;
-    })
-    .filter(Boolean) as { post: (typeof allPosts)[number]; gloss: string }[];
+  const ladder = CURRICULUM.map(({ slug, gloss }) => {
+    const post = allPosts.find((p) => p.slug === slug);
+    return post ? { post, gloss } : null;
+  }).filter(Boolean) as { post: (typeof allPosts)[number]; gloss: string }[];
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <main id="main" className="max-w-3xl mx-auto px-6">
+      <RevealOnScroll />
+      <PublicNav />
+
+      <main id="main">
         {/* Hero */}
-        <section className="py-12 md:py-16">
-          <div className="flex flex-col sm:flex-row gap-8 items-start">
-            <div className="shrink-0">
+        <section className="shell py-16 md:py-24">
+          <div className="flex flex-col items-start gap-8 sm:flex-row sm:gap-10">
+            <div className="min-w-0 shrink-0">
               <Image
                 src="/photo.jpeg"
                 alt="Samit Mohan"
-                width={240}
-                height={240}
-                className="rounded-md object-cover w-[88px] h-[88px] sm:w-[120px] sm:h-[120px]"
+                width={400}
+                height={400}
+                className="h-[88px] w-[88px] rounded-[16px] object-cover sm:h-[132px] sm:w-[132px]"
                 priority
               />
             </div>
-            <div className="flex-1 pt-1">
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2 leading-[1.1]">
+            <div className="min-w-0 flex-1">
+              <h1 className="display text-[52px] text-ink md:text-[88px]">
                 Samit Mohan
               </h1>
-              <p className="text-[16px] text-foreground/80 max-w-xl leading-relaxed">
-                Hello! I&apos;m an AI Scientist at{" "}
+              <p className="mt-7 max-w-xl text-pretty text-[17px] leading-[155%] text-ink-2">
+                I&apos;m an AI Scientist at{" "}
                 <a
                   href="https://beltech.ai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary underline underline-offset-2"
+                  className="text-ink underline decoration-brand/40 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
                 >
                   Beltech AI
                 </a>{" "}
                 in Bangalore, building computer-vision systems for city traffic:
-                live CCTV, ≤10ms inference, 0.9+ F1 in production. In my free time
-                I rebuild ML from scratch and write{" "}
+                live CCTV, ≤10ms inference, 0.9+ F1 in production. In my free
+                time I rebuild ML from scratch and write{" "}
                 <Link
                   href="/blog"
-                  className="text-primary underline underline-offset-2"
+                  className="text-ink underline decoration-brand/40 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
                 >
                   engineering blogs
                 </Link>
                 .
               </p>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px]">
+              <div className="mt-8 flex flex-wrap items-center gap-2">
                 <a
                   href="https://github.com/samitmohan"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline underline-offset-2"
+                  className="pill pill-ghost"
                 >
                   GitHub
                 </a>
@@ -171,21 +217,17 @@ export default async function HomePage() {
                   href="https://www.linkedin.com/in/samit-mohan/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline underline-offset-2"
+                  className="pill pill-ghost"
                 >
                   LinkedIn
                 </a>
                 <a
                   href="mailto:samitmohan@gmail.com"
-                  className="text-primary hover:underline underline-offset-2"
+                  className="pill pill-ghost"
                 >
                   Email
                 </a>
-                {/* TODO: replace href with the CV link Samit provides */}
-                <a
-                  href="#"
-                  className="text-primary hover:underline underline-offset-2"
-                >
+                <a href="#" className="pill pill-ghost">
                   CV
                 </a>
               </div>
@@ -193,187 +235,107 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Posts — from-scratch ladder */}
-        <section className="border-t border-border py-16">
-          <div className="flex items-baseline justify-between mb-6">
-            <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
-              Posts
-            </h2>
-            <Link
-              href="/blog"
-              className="text-[13px] text-muted-foreground hover:text-foreground"
-            >
-              all posts →
-            </Link>
-          </div>
-          <ol className="space-y-3">
+        {/* Posts - from-scratch ladder */}
+        <section className="reveal border-t border-rule">
+          <div className="shell py-14">
+          <h2 className="section-title mb-8">From scratch</h2>
+          <div className="rows">
             {ladder.map(({ post, gloss }, i) => (
-              <li
-                key={post.slug}
-                className="text-[16px] leading-relaxed flex gap-4 items-baseline"
-              >
-                <span className="font-mono text-[12px] text-muted-foreground/50 w-6 shrink-0 pt-0.5 tabular-nums">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="text-foreground/80 hover:text-primary hover:underline underline-offset-2"
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
+                <div className="flex items-baseline gap-4">
+                  <span className="row-index w-6 shrink-0">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="min-w-0 flex-1 text-[16px] leading-relaxed">
+                    <span className="row-title text-ink">{post.title}</span>
+                    <span className="text-ink-2"> - {gloss}</span>
+                  </p>
+                  <span
+                    aria-hidden
+                    className="row-arrow hidden shrink-0 text-[13px] text-brand sm:block"
                   >
-                    {post.title}
-                  </Link>
-                  <span className="text-muted-foreground"> — {gloss}</span>
+                    →
+                  </span>
                 </div>
-              </li>
+              </Link>
             ))}
-          </ol>
+          </div>
+          </div>
         </section>
 
         {/* Projects */}
-        <section className="border-t border-border py-16">
-          <div className="flex items-baseline justify-between mb-5">
-            <h2 className="text-[18px] font-semibold tracking-tight text-foreground">
-              Projects
-            </h2>
-            <a
-              href="https://github.com/samitmohan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[13px] text-muted-foreground hover:text-foreground"
-            >
-              github →
-            </a>
-          </div>
-          <ul className="space-y-3">
+        <section className="reveal border-t border-rule">
+          <div className="shell py-14">
+          <h2 className="section-title mb-8">Projects</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {PROJECTS.map((p) => (
-              <li key={p.name} className="text-[16px] leading-relaxed">
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-mono text-foreground hover:text-primary hover:underline underline-offset-2"
-                >
-                  {p.name}
-                  <span aria-hidden className="text-muted-foreground/50 text-[12px] ml-1 align-baseline">
+              <a
+                key={p.name}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card-surface group flex flex-col p-5"
+              >
+                <div className="mb-2.5 flex items-center gap-2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden
+                    className="h-4 w-4 shrink-0 text-ink-3"
+                    fill="currentColor"
+                  >
+                    <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.34 9.34 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.85 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z" />
+                  </svg>
+                  <span className="font-mono text-[14px] font-medium text-ink transition-colors group-hover:text-brand">
+                    {p.name}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="out-arrow ml-auto text-[12px] text-ink-4 transition-colors"
+                  >
                     ↗
                   </span>
-                </a>
-                <span className="text-muted-foreground"> — {p.description}</span>
-              </li>
+                </div>
+                <p className="text-pretty text-[14px] leading-[155%] text-ink-2">
+                  {p.description}
+                </p>
+              </a>
             ))}
-          </ul>
+          </div>
+          </div>
         </section>
 
         {/* Experience */}
-        <section className="border-t border-border py-16">
-          <h2 className="text-[18px] font-semibold tracking-tight text-foreground mb-6">
-            Experience
-          </h2>
-          <div className="space-y-10">
-            {EXPERIENCE.map((job) => (
-              <div key={`${job.company}-${job.period}`}>
-                <div className="flex items-baseline justify-between mb-1 flex-wrap gap-x-4">
-                  <h3 className="text-[16px] font-medium text-foreground">
-                    {job.company}
-                    <span className="text-muted-foreground font-normal">
-                      , {job.role}
-                    </span>
-                  </h3>
-                  <span className="text-[12px] font-mono text-muted-foreground/60 shrink-0">
-                    {job.period}
-                  </span>
-                </div>
-                <p className="text-[12px] font-mono text-muted-foreground/60 mb-3">
-                  {job.stack} · {job.location}
-                </p>
-                <ul className="space-y-2.5">
-                  {job.bullets.map((b) => (
-                    <li
-                      key={b}
-                      className="text-[16px] text-foreground/80 leading-relaxed flex gap-3"
-                    >
-                      <span className="text-muted-foreground/40 shrink-0">·</span>
-                      <span>{emphasize(b)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+        <section className="reveal border-t border-rule">
+          <div className="shell py-14">
+            <h2 className="section-title mb-8">Experience</h2>
+            <RoleRows items={EXPERIENCE} />
           </div>
         </section>
 
         {/* Teaching */}
-        <section className="border-t border-border py-16">
-          <h2 className="text-[18px] font-semibold tracking-tight text-foreground mb-6">
-            Teaching &amp; Writing
-          </h2>
-          <div className="space-y-10">
-            {TEACHING.map((job) => (
-              <div key={`${job.company}-${job.period}`}>
-                <div className="flex items-baseline justify-between mb-1 flex-wrap gap-x-4">
-                  <h3 className="text-[16px] font-medium text-foreground">
-                    <Link
-                      href={job.href}
-                      className="hover:text-primary hover:underline underline-offset-2"
-                    >
-                      {job.company}
-                      <span className="text-muted-foreground font-normal">
-                        , {job.role}
-                      </span>
-                    </Link>
-                  </h3>
-                  <span className="text-[12px] font-mono text-muted-foreground/60 shrink-0">
-                    {job.period}
-                  </span>
-                </div>
-                <p className="text-[12px] font-mono text-muted-foreground/60 mb-3">
-                  {job.stack}
-                </p>
-                <ul className="space-y-2.5">
-                  {job.bullets.map((b) => (
-                    <li
-                      key={b}
-                      className="text-[16px] text-foreground/80 leading-relaxed flex gap-3"
-                    >
-                      <span className="text-muted-foreground/40 shrink-0">·</span>
-                      <span>{emphasize(b)}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+        <section className="reveal border-t border-rule">
+          <div className="shell py-14">
+            <h2 className="section-title mb-8">Teaching &amp; Writing</h2>
+            <RoleRows items={TEACHING} />
           </div>
         </section>
 
         {/* Education */}
-        <section className="border-t border-border py-16 pb-24">
-          <h2 className="text-[18px] font-semibold tracking-tight text-foreground mb-6">
-            Education
-          </h2>
-          <div>
-            <div className="flex items-baseline justify-between mb-1 flex-wrap gap-x-4">
-              <h3 className="text-[16px] font-medium text-foreground">
-                NHCE, VTU
-                <span className="text-muted-foreground font-normal">
-                  , B.Tech Information Technology
-                </span>
-              </h3>
-              <span className="text-[12px] font-mono text-muted-foreground/60 shrink-0">
-                2020 — 2024
-              </span>
-            </div>
-            <p className="text-[12px] font-mono text-muted-foreground/60 mb-3">
-              CGPA 9.4 / 10 · Bangalore
-            </p>
-            <ul className="space-y-1.5">
-              <li className="text-[16px] text-foreground/80 leading-relaxed flex gap-3">
-                <span className="text-muted-foreground/40 shrink-0">·</span>
-                <span>Founder, Coding Club NHCE.</span>
-              </li>
-            </ul>
+        <section className="reveal border-t border-rule">
+          <div className="shell py-14 pb-20">
+            <h2 className="section-title mb-8">Education</h2>
+            <RoleRows
+              items={[
+                {
+                  company: "NHCE, VTU",
+                  role: "B.Tech Information Technology",
+                  period: "2020 - 2024",
+                  summary: "CGPA **9.4 / 10** · Founder, Coding Club NHCE.",
+                },
+              ]}
+            />
           </div>
         </section>
-
       </main>
 
       <PublicFooter />

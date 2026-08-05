@@ -1,22 +1,47 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function PublicNav() {
+  const pathname = usePathname();
+  const onBlog = pathname === "/blog" || pathname.startsWith("/blog/");
+
+  // Hairline only once the page has moved, so the nav sits flush at rest.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-[var(--nav-bg)]">
-      <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+    <nav
+      className={`sticky top-0 z-50 border-b bg-[var(--nav-bg)] backdrop-blur-xl transition-colors duration-300 ${
+        scrolled ? "border-rule" : "border-transparent"
+      }`}
+    >
+      <div className="shell flex h-14 items-center justify-between">
         <Link
           href="/"
-          className="text-[15px] font-semibold tracking-tight text-foreground hover:text-primary"
+          className="text-[15px] font-medium tracking-tight text-ink transition-colors hover:text-brand"
         >
           Samit Mohan
         </Link>
         <div className="flex items-center gap-1">
           <Link
             href="/blog"
-            className="px-3 py-1.5 text-[13px] text-muted-foreground hover:text-foreground"
+            aria-current={onBlog ? "page" : undefined}
+            className={`rounded-full px-3 py-1.5 text-[13px] transition-colors ${
+              onBlog ? "text-ink" : "text-ink-2 hover:text-ink"
+            }`}
           >
             Blog
           </Link>
+          <ThemeToggle />
         </div>
       </div>
     </nav>
@@ -25,13 +50,13 @@ export function PublicNav() {
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-border mt-4">
-      <div className="max-w-3xl mx-auto px-6 py-8 flex items-center justify-center flex-wrap gap-x-5 gap-y-2 text-[13px]">
+    <footer className="mt-4 border-t border-rule">
+      <div className="shell flex flex-wrap items-center justify-center gap-x-5 gap-y-2 py-8 text-[13px]">
         <a
           href="https://github.com/samitmohan"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-muted-foreground hover:text-foreground"
+          className="text-ink-2 transition-colors hover:text-brand"
         >
           GitHub
         </a>
@@ -39,21 +64,18 @@ export function PublicFooter() {
           href="https://www.linkedin.com/in/samit-mohan/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-muted-foreground hover:text-foreground"
+          className="text-ink-2 transition-colors hover:text-brand"
         >
           LinkedIn
         </a>
         <a
           href="mailto:samitmohan@gmail.com"
-          className="text-muted-foreground hover:text-foreground"
+          className="text-ink-2 transition-colors hover:text-brand"
         >
           Email
         </a>
-        <a
-          href="/blog/rss.xml"
-          className="text-muted-foreground hover:text-foreground"
-        >
-          RSS
+        <a href="#" className="text-ink-2 transition-colors hover:text-brand">
+          CV
         </a>
       </div>
     </footer>

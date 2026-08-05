@@ -140,10 +140,16 @@ export function BlogContent({ html, className }: { html: string; className?: str
     };
   }, [html]);
 
+  // Post HTML carries inline <style>/<script> widgets. The browser runs those
+  // scripts while parsing the server response, so the DOM has already been
+  // mutated by the time React hydrates and it flags the innerHTML as changed.
+  // The markup is authored, not derived from state, so there is nothing for
+  // React to reconcile here.
   return (
     <div
       ref={ref}
       className={className}
+      suppressHydrationWarning
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

@@ -2,33 +2,71 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #1A1A1A;
+  --background: #FAFAFA;
+  --foreground: #141414;
   --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
+  --card-foreground: #141414;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
-  --primary: #1D4ED8;
+  --popover-foreground: #141414;
+  --primary: #3333CC;
   --primary-foreground: #FFFFFF;
-  --secondary: #F4F4F5;
-  --secondary-foreground: #1A1A1A;
-  --muted: #F4F4F5;
-  --muted-foreground: #6B7280;
-  --accent: #F4F4F5;
-  --accent-foreground: #1A1A1A;
-  --destructive: #DC2626;
+  --secondary: #F5F5F5;
+  --secondary-foreground: #141414;
+  --muted: #F5F5F5;
+  --muted-foreground: #666666;
+  --accent: #F0F0F0;
+  --accent-foreground: #141414;
+  --destructive: #B81514;
   --destructive-foreground: #FFFFFF;
-  --border: #E5E7EB;
-  --input: #E5E7EB;
-  --ring: #1D4ED8;
-  --radius: 0.375rem;
-  --sidebar-bg: #FAFAFA;
-  --sidebar-border: #E5E7EB;
-  --sidebar-text: #6B7280;
-  --sidebar-text-hover: #1A1A1A;
-  --sidebar-active-bg: rgba(14, 165, 233, 0.08);
+  --border: #E6E6E6;
+  --input: #E6E6E6;
+  --ring: #3333CC;
+  --radius: 0.5rem;
+  --shadow-card: 0 6px 24px rgba(20, 20, 20, 0.05);
+  --sidebar-bg: #F9F9F9;
+  --sidebar-border: #E6E6E6;
+  --sidebar-text: #666666;
+  --sidebar-text-hover: #141414;
+  --sidebar-active-bg: color-mix(in srgb, var(--primary) 8%, transparent);
   --sidebar-hover-bg: rgba(0, 0, 0, 0.03);
-  --nav-bg: rgba(255, 255, 255, 0.9);
+  --nav-bg: rgba(250, 250, 250, 0.82);
+
+  /* Sarvam-derived extensions. Surfaces step 50 -> 300, ink steps down from
+     #141414, brand indigo + orange carry the two accent moments. */
+  --surface: #FFFFFF;
+  --surface-2: #F5F5F5;
+  --surface-3: #F0F0F0;
+  --ink-2: #666666;
+  --ink-3: #999999;
+  --ink-4: #B3B3B3;
+  /* One stroke colour at three weights rather than three greys, the way
+     sarvam modulates border-st/25, /50, /80. Structural rules use --rule;
+     rules inside a component use --rule-soft. */
+  --rule: #E6E6E6;
+  --rule-soft: color-mix(in srgb, #E6E6E6 55%, transparent);
+  --rule-strong: #CCCCCC;
+  /* Positive/success. Sarvam pairs green-600 text with a green-50/75 fill
+     and a green-200/75 border. */
+  --positive: #6EA335;
+  --positive-soft: color-mix(in srgb, #F2F8EB 75%, transparent);
+  --positive-border: color-mix(in srgb, #C8E4B0 75%, transparent);
+  /* Indigo runs four steps so hover has depth: soft fills, border tints,
+     base text, deep press. Mirrors sarvam's indigo-100/200/800/900 usage. */
+  --brand-soft: #E8EFFC;
+  --brand-border: #D2DFF9;
+  --brand-mid: #556ADC;
+  --brand: #3333CC;
+  --brand-strong: #212191;
+  /* Orange is accent punctuation only: hovered list index, outbound arrows,
+     blockquote rule. Never a fill, never a link colour. */
+  --orange: #E6651B;
+  --orange-strong: #A5460F;
+  --orange-soft: #FEEDE6;
+  --panel: #141414;
+  --panel-foreground: #FAFAFA;
+  --radius-card: 24px;
+  --radius-panel: 32px;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 @theme inline {
@@ -58,8 +96,32 @@
   --color-sidebar-active-bg: var(--sidebar-active-bg);
   --color-sidebar-hover-bg: var(--sidebar-hover-bg);
   --color-nav-bg: var(--nav-bg);
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: var(--font-jetbrains-mono);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--foreground);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-rule-strong: var(--rule-strong);
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-positive-border: var(--positive-border);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-mid: var(--brand-mid);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-border: var(--brand-border);
+  --color-orange: var(--orange);
+  --color-orange-strong: var(--orange-strong);
+  --color-orange-soft: var(--orange-soft);
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+  --font-sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -75,10 +137,285 @@
   --color-text-secondary: var(--muted-foreground);
 }
 
+/* Dark theme — toggled by next-themes via .dark on <html>. */
+.dark {
+  --background: #0D0D0F;
+  --foreground: #F2F2F2;
+  --card: #161618;
+  --card-foreground: #F2F2F2;
+  --popover: #161618;
+  --popover-foreground: #F2F2F2;
+  --primary: #6A88E2;
+  --primary-foreground: #0D0D0F;
+  --secondary: #1B1B1E;
+  --secondary-foreground: #F2F2F2;
+  --muted: #1B1B1E;
+  --muted-foreground: #A0A0A5;
+  --accent: #202024;
+  --accent-foreground: #F2F2F2;
+  --destructive: #F59970;
+  --destructive-foreground: #0D0D0F;
+  --border: #2A2A2E;
+  --input: #2A2A2E;
+  --ring: #6A88E2;
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.5);
+  --sidebar-bg: #111113;
+  --sidebar-border: #2A2A2E;
+  --sidebar-text: #A0A0A5;
+  --sidebar-text-hover: #F2F2F2;
+  --sidebar-active-bg: color-mix(in srgb, var(--primary) 16%, transparent);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
+  --nav-bg: rgba(13, 13, 15, 0.8);
+  --color-background-secondary: var(--muted);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+
+  --surface: #161618;
+  --surface-2: #1B1B1E;
+  --surface-3: #202024;
+  --ink-2: #A0A0A5;
+  --ink-3: #77777D;
+  --ink-4: #5A5A60;
+  --rule: #2A2A2E;
+  --rule-soft: color-mix(in srgb, #2A2A2E 60%, transparent);
+  --rule-strong: #3A3A40;
+  --positive: #90C85B;
+  --positive-soft: rgba(110, 163, 53, 0.16);
+  --positive-border: rgba(144, 200, 91, 0.3);
+  /* Dark holds a true indigo rather than washing out to pale blue.
+     #6A88E2 on #0D0D0F measures 5.7:1, so body links still pass AA. */
+  --brand-soft: rgba(51, 51, 204, 0.24);
+  --brand-border: #3A3F8F;
+  --brand-mid: #556ADC;
+  --brand: #6A88E2;
+  --brand-strong: #A7C0F1;
+  --orange: #F38858;
+  --orange-strong: #F9BB9E;
+  --orange-soft: rgba(230, 101, 27, 0.18);
+  --panel: #161618;
+  --panel-foreground: #F2F2F2;
+}
+
+html {
+  scroll-padding-top: 4.5rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   Sarvam-style primitives. Wide shell, serif display headings,
+   pill buttons, hairline rows, rounded card surfaces.
+   ============================================================ */
+
+.shell {
+  width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+@media (min-width: 768px) {
+  .shell { padding-inline: 40px; }
+}
+
+/* Display face for hero + section headings. */
+.display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.94;
+}
+
+/* Explicit sizes per breakpoint rather than clamp, so mobile is chosen
+   rather than interpolated. Sarvam uses no clamp anywhere. */
+.section-title {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--foreground);
+}
+@media (min-width: 768px) {
+  .section-title { font-size: 40px; }
+}
+
+/* Micro label: sarvam's 10px uppercase mono, used for structural captions
+   (CONTENTS, RELATED POSTS, OLDER/NEWER). */
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Meta: dates, periods, reading times. Data rather than caption, so a step
+   larger than .label and tabular so digits don't jitter in a right column. */
+.meta {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+/* Pill buttons. Solid = primary action, ghost = everything else. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+.pill-solid {
+  background: var(--brand);
+  color: var(--primary-foreground);
+}
+.pill-solid:hover {
+  background: var(--brand-strong);
+  transform: translateY(-1px);
+}
+.pill-ghost {
+  background: var(--surface);
+  border-color: var(--rule);
+  color: var(--foreground);
+}
+.pill-ghost:hover {
+  border-color: var(--brand-border);
+  background: var(--brand-soft);
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+.pill-ghost:active {
+  background: var(--surface-3);
+  color: var(--brand-strong);
+  transform: none;
+}
+.pill .arrow {
+  transition: transform 0.25s var(--ease-out);
+}
+.pill:hover .arrow { transform: translateX(3px); }
+
+/* Hairline list. The dominant sarvam layout: full-bleed rows split by 1px
+   rules, whole row tints and nudges right on hover. */
+.rows {
+  border-top: 1px solid var(--rule);
+}
+.row {
+  display: block;
+  position: relative;
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 22px 16px 22px 12px;
+  transition: background 0.3s var(--ease-out), padding 0.3s var(--ease-out);
+}
+/* The section boundary supplies the closing rule, so the last row stays open.
+   Without this the list ends on a stray hairline. */
+.row:last-child {
+  border-bottom: 0;
+}
+.row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  bottom: -1px;
+  width: 2px;
+  background: var(--brand);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+a.row:hover,
+.row-interactive:hover {
+  background: linear-gradient(90deg, var(--brand-soft), transparent 78%);
+  padding-left: 22px;
+}
+a.row:hover::before { opacity: 1; }
+a.row:active { background: var(--surface-3); }
+.row-index {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.3s var(--ease-out);
+}
+/* Orange, job 1 of 3: the hovered row index. */
+a.row:hover .row-index { color: var(--orange); }
+.row-title {
+  transition: color 0.3s var(--ease-out);
+}
+a.row:hover .row-title { color: var(--brand); }
+a.row:active .row-title { color: var(--brand-strong); }
+.row-arrow {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+a.row:hover .row-arrow { opacity: 1; transform: none; }
+
+/* Rounded card. Borders carry the separation on mobile where cards stack;
+   on desktop the grid gap does that job, so the border drops back to
+   transparent and only returns on hover. The white fill holds the shape. */
+.card-surface {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  transition: border-color 0.25s var(--ease-out), transform 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out);
+}
+@media (min-width: 768px) {
+  .card-surface { border-color: transparent; }
+}
+a.card-surface:hover,
+.card-surface-hover:hover {
+  border-color: var(--brand-border);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+a.card-surface:active {
+  background: var(--surface-2);
+  transform: none;
+  box-shadow: none;
+}
+/* Orange, job 2 of 3: outbound arrows on hover. */
+a.card-surface:hover .out-arrow { color: var(--orange); }
+
+/* Scroll reveal. Content is visible by default and only hides once the
+   observer is mounted, so a slow or failed hydration never blanks a section. */
+.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Keyboard focus ring for all interactive elements on the public site. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Selection - uses primary token so it follows theme + accent swaps */
@@ -92,6 +429,17 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Theme toggle icon swap — CSS-driven so SSR and client render identically. */
+.theme-icon-moon {
+  display: none;
+}
+.dark .theme-icon-sun {
+  display: none;
+}
+.dark .theme-icon-moon {
+  display: inline;
 }
 
 /* Syntax highlighting - shiki dual theme (github-light / github-dark) */
@@ -109,13 +457,31 @@ code[data-theme*=" "] {
   background-color: transparent !important;
 }
 
+/* Body links are colour-only and underline on hover/focus, the way sarvam
+   treats them. Focus keeps the underline so keyboard users still get a
+   non-colour cue. */
+.blog-prose a {
+  color: var(--brand);
+  text-decoration: none;
+  transition: color 0.15s var(--ease-out);
+}
+.blog-prose a:hover {
+  color: var(--brand-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.blog-prose a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* Blog post code blocks (rehype-pretty-code figures). Chrome lives here so
    the injected header bar and the <pre> body compose as one rounded card. */
 .blog-prose [data-rehype-pretty-code-figure] {
   position: relative;
-  border: 1px solid var(--border);
-  border-radius: 0.65rem;
-  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--surface);
   overflow: hidden;
 }
 .blog-prose [data-rehype-pretty-code-title] {
@@ -143,16 +509,24 @@ code[data-theme*=" "] {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.35rem 0.5rem 0.35rem 0.85rem;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--muted) 55%, transparent);
+  padding: 8px 8px 8px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface-2);
   font-family: var(--font-mono), monospace;
 }
+/* Language reads as a chip, matching sarvam's code-sample tabs. */
 .blog-prose .code-lang {
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--muted-foreground);
+  color: var(--ink-3);
 }
 .blog-prose .code-copy {
   display: inline-flex;
@@ -160,24 +534,26 @@ code[data-theme*=" "] {
   gap: 5px;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 5px;
-  padding: 3px 8px;
+  border-radius: 999px;
+  padding: 4px 11px;
   font: inherit;
   font-size: 11px;
   line-height: 1;
-  color: var(--muted-foreground);
+  color: var(--ink-2);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  transition: color 0.15s var(--ease-out), background 0.15s var(--ease-out),
+    border-color 0.15s var(--ease-out);
 }
 .blog-prose .code-copy:hover {
-  color: var(--foreground);
-  background: var(--muted);
-  border-color: var(--border);
+  color: var(--brand);
+  background: var(--brand-soft);
+  border-color: var(--brand-border);
 }
+/* Success reads green, not indigo - indigo means "link" everywhere else. */
 .blog-prose .code-copy.copied {
-  color: #16a34a;
-  border-color: transparent;
-  background: transparent;
+  color: var(--positive);
+  border-color: var(--positive-border);
+  background: var(--positive-soft);
 }
 .blog-prose .code-copy svg {
   width: 13px;
@@ -201,6 +577,67 @@ code[data-theme*=" "] {
   background: color-mix(in srgb, var(--primary) 16%, transparent);
   border-radius: 3px;
   padding: 1px 3px;
+}
+
+/* GitHub-style callouts (rehype rewrites `> [!NOTE]` blockquotes). Overrides
+   the generic blockquote utilities applied in the article className. */
+.blog-prose blockquote.callout {
+  font-style: normal;
+  border-left-width: 3px;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 22px 0;
+  color: var(--foreground);
+}
+.blog-prose blockquote.callout p {
+  margin: 0;
+  font-style: normal;
+  color: var(--foreground);
+}
+.blog-prose blockquote.callout p + p {
+  margin-top: 8px;
+}
+.blog-prose .callout-title {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.blog-prose blockquote.callout-note {
+  border-left-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
+}
+.blog-prose blockquote.callout-note .callout-title {
+  color: var(--primary);
+}
+.blog-prose blockquote.callout-tip {
+  border-left-color: #16a34a;
+  background: color-mix(in srgb, #16a34a 7%, transparent);
+}
+.blog-prose blockquote.callout-tip .callout-title {
+  color: #16a34a;
+}
+.blog-prose blockquote.callout-important {
+  border-left-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
+}
+.blog-prose blockquote.callout-important .callout-title {
+  color: var(--primary);
+}
+.blog-prose blockquote.callout-warning {
+  border-left-color: #d97706;
+  background: color-mix(in srgb, #d97706 9%, transparent);
+}
+.blog-prose blockquote.callout-warning .callout-title {
+  color: #b45309;
+}
+.blog-prose blockquote.callout-caution {
+  border-left-color: #dc2626;
+  background: color-mix(in srgb, #dc2626 7%, transparent);
+}
+.blog-prose blockquote.callout-caution .callout-title {
+  color: #dc2626;
 }
 
 /* Scrollbar styling for code editors */
@@ -370,4 +807,278 @@ code[data-theme*=" "] {
   img { max-width: 100% !important; page-break-inside: avoid; }
   h1, h2, h3, h4 { page-break-after: avoid; color: black !important; }
   p, li { color: #1a1a1a !important; }
+}
+
+/* ============================================================
+   /fun — clairo "charm" section. Warm 70s oat paper, film grain,
+   mustard-gold + terracotta + olive, elegant italic serif, jazzy
+   record-sleeve tracklist. Scoped under .candy; commits to its own
+   warm look regardless of the site's light/dark theme.
+   ============================================================ */
+.candy {
+  --c-paper: #ece2c6;       /* warm olive-cream (charm) */
+  --c-paper2: #ddcfa4;
+  --c-mat: #f3edd6;
+  --c-ink: #3d3714;          /* deep olive-brown */
+  --c-ink-soft: #7a7038;
+  --c-amber: #a49751;        /* muted gold (palette) */
+  --c-terra: #7e7437;        /* deep gold-olive (palette) */
+  --c-olive: #635920;        /* moss (palette) */
+  --c-rule: rgba(61, 55, 20, 0.2);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  color: var(--c-ink);
+  font-family: var(--font-body), Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  background:
+    radial-gradient(135% 85% at 50% -12%, #f2ecd2 0%, transparent 56%),
+    radial-gradient(130% 80% at 50% 118%, #cabb82 0%, transparent 55%),
+    linear-gradient(180deg, var(--c-paper) 0%, var(--c-paper2) 100%);
+  overflow-x: clip;
+}
+
+/* film-grain haze (clairo lo-fi) */
+.candy::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.candy > * { position: relative; z-index: 1; }
+
+/* calm staggered load reveal (no bounce) */
+@keyframes funRise { to { opacity: 1; transform: none; } }
+.candy .rise { opacity: 0; transform: translateY(14px); animation: funRise .85s var(--ease) forwards; }
+.candy .r1 { animation-delay: .04s; }
+.candy .r2 { animation-delay: .12s; }
+.candy .r3 { animation-delay: .22s; }
+.candy .r4 { animation-delay: .34s; }
+.candy .r5 { animation-delay: .46s; }
+
+/* ---------- landing ---------- */
+.candy .fun-word {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -.02em;
+  line-height: .9;
+  color: var(--c-ink);
+}
+.candy .fun-rule {
+  height: 1px;
+  width: 3.2rem;
+  margin-top: 1.4rem;
+  background: var(--c-amber);
+}
+
+.candy .fun-list { margin-top: 3rem; border-top: 1px solid var(--c-rule); }
+.candy .fun-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 1.15rem;
+  padding: 1.5rem .3rem;
+  border-bottom: 1px solid var(--c-rule);
+  transition: background .4s var(--ease), padding .4s var(--ease);
+}
+.candy .fun-row:hover {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c-amber) 24%, transparent), transparent 70%);
+  padding-left: .9rem;
+}
+.candy .fun-idx {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  color: var(--c-amber);
+  font-variant-numeric: tabular-nums;
+}
+.candy .fun-name {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 3.8vw, 1.7rem);
+  letter-spacing: -.015em;
+  color: var(--c-ink);
+  transition: color .3s var(--ease);
+}
+.candy .fun-row:hover .fun-name { color: var(--c-terra); font-style: italic; }
+.candy .fun-year {
+  font-family: var(--font-body), serif;
+  font-style: italic;
+  font-size: .95rem;
+  color: var(--c-ink-soft);
+  white-space: nowrap;
+}
+
+/* ---------- reading layout ---------- */
+.candy .fun-back {
+  font-family: var(--font-body), serif;
+  font-style: italic;
+  font-size: .95rem;
+  color: var(--c-ink-soft);
+  text-decoration: none;
+  transition: color .25s var(--ease);
+}
+.candy .fun-back:hover { color: var(--c-terra); }
+
+.candy .fun-post-title {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.02;
+  color: var(--c-ink);
+}
+.candy .fun-meta {
+  font-family: var(--font-body), serif;
+  font-style: italic;
+  font-size: .95rem;
+  letter-spacing: .01em;
+  color: var(--c-ink-soft);
+}
+.candy .fun-hero {
+  padding: 8px;
+  background: var(--c-mat);
+  border: 1px solid var(--c-rule);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--c-ink) 18%, transparent);
+  overflow: hidden;
+}
+
+.candy .fun-prose {
+  font-family: var(--font-body), Georgia, serif;
+  font-weight: 400;
+  color: var(--c-ink);
+  font-size: 18px;
+  line-height: 1.82;
+}
+.candy .fun-prose > * + * { margin-top: 1.2rem; }
+.candy .fun-prose h2 {
+  font-family: var(--font-display), serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1.55rem;
+  letter-spacing: .01em;
+  color: var(--c-terra);
+  margin-top: 2.8rem;
+  padding-bottom: .45rem;
+  border-bottom: 1px solid var(--c-rule);
+}
+.candy .fun-prose h3 {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: var(--c-ink);
+  margin-top: 2rem;
+}
+.candy .fun-prose strong { font-weight: 700; color: var(--c-ink); }
+.candy .fun-prose em { font-style: italic; }
+.candy .fun-prose a {
+  color: var(--c-terra);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--c-terra) 50%, transparent);
+  text-underline-offset: 3px;
+  transition: color .25s var(--ease), text-decoration-color .25s var(--ease);
+}
+.candy .fun-prose a:hover { color: var(--c-ink); text-decoration-color: var(--c-terra); }
+.candy .fun-prose ul { list-style: none; padding-left: 1.3rem; }
+.candy .fun-prose ul li { position: relative; margin-top: .3rem; }
+.candy .fun-prose ul li::before {
+  content: "\2013";
+  position: absolute;
+  left: -1.3rem;
+  color: var(--c-amber);
+  font-weight: 700;
+}
+.candy .fun-prose ol { padding-left: 1.4rem; list-style: decimal; }
+.candy .fun-prose ol li { margin-top: .3rem; }
+.candy .fun-prose hr {
+  border: none;
+  height: 1px;
+  width: 42%;
+  margin: 2.8rem auto;
+  background: linear-gradient(90deg, transparent, var(--c-rule) 30%, var(--c-rule) 70%, transparent);
+}
+.candy .fun-prose img,
+.candy .fun-prose video {
+  display: block;
+  max-width: 100%;
+  margin: 1.9rem auto;
+  padding: 7px;
+  background: var(--c-mat);
+  border: 1px solid var(--c-rule);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--c-ink) 16%, transparent);
+}
+.candy .fun-prose blockquote {
+  border-left: 3px solid var(--c-amber);
+  padding-left: 1rem;
+  color: var(--c-ink-soft);
+  font-style: italic;
+}
+.candy .fun-prose code {
+  font-family: var(--font-mono), monospace;
+  background: var(--c-mat);
+  border: 1px solid var(--c-rule);
+  border-radius: 4px;
+  padding: .05em .35em;
+  font-size: .85em;
+}
+
+.candy .fun-navlinks {
+  margin-top: 3.5rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--c-rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* ---------- alternate palette: "charmaine" dusk (mauve / plum / indigo) ---------- */
+.candy[data-fun-theme="dusk"] {
+  --c-paper: #efe1e7;
+  --c-paper2: #d8c2ce;
+  --c-mat: #f5eaef;
+  --c-ink: #3a1533;
+  --c-ink-soft: #6f4a64;
+  --c-amber: #3e3c7c;       /* indigo accent (palette) */
+  --c-terra: #542042;       /* deep plum (palette) */
+  --c-olive: #b896b3;
+  --c-rule: rgba(58, 21, 51, 0.2);
+  background:
+    radial-gradient(135% 85% at 50% -12%, #f3dfe9 0%, transparent 56%),
+    radial-gradient(130% 80% at 50% 118%, #c7a6bf 0%, transparent 55%),
+    linear-gradient(180deg, var(--c-paper) 0%, var(--c-paper2) 100%);
+}
+
+/* palette switch */
+.candy .fun-swatches {
+  position: absolute;
+  top: 1.4rem;
+  right: 1.4rem;
+  z-index: 3;
+  display: flex;
+  gap: .55rem;
+}
+.candy .fun-swatch {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--c-rule);
+  cursor: pointer;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.candy .fun-swatch-charm { background: linear-gradient(135deg, #a49751, #635920); }
+.candy .fun-swatch-dusk { background: linear-gradient(135deg, #b896b3, #3e3c7c); }
+.candy .fun-swatch:hover { transform: scale(1.15); }
+.candy .fun-swatch.is-on { box-shadow: 0 0 0 2px var(--c-paper), 0 0 0 3.5px var(--c-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .candy .rise { opacity: 1; transform: none; animation: none; }
 }

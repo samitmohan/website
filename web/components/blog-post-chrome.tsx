@@ -17,9 +17,14 @@ export function BackToTop() {
   return (
     <button
       type="button"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={() => {
+        const reduce =
+          window.matchMedia &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      }}
       aria-label="Back to top"
-      className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full border border-border bg-background text-muted-foreground hover:text-foreground flex items-center justify-center"
+      className="fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-rule bg-surface text-ink-2 shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-border hover:text-brand"
     >
       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
@@ -70,17 +75,21 @@ export function PostTOC({ scope }: { scope: string }) {
   if (headings.length < 4) return null;
 
   return (
-    <aside className="hidden xl:block fixed top-32 right-6 w-56 max-h-[70vh] overflow-y-auto text-[12px] leading-relaxed">
-      <div className="font-mono uppercase tracking-wider text-muted-foreground/70 mb-3 text-[10px]">
+    <aside className="fixed top-32 right-6 hidden max-h-[70vh] w-56 overflow-y-auto text-[12.5px] leading-relaxed xl:block 2xl:right-12">
+      <div className="label mb-4">
         Contents
       </div>
-      <ul className="space-y-1.5">
+      <ul className="space-y-0.5 border-l border-rule">
         {headings.map((h) => (
-          <li key={h.id} className={h.level === 3 ? "pl-3" : ""}>
+          <li key={h.id}>
             <a
               href={`#${h.id}`}
-              className={`block transition-colors hover:text-foreground ${
-                activeId === h.id ? "text-primary" : "text-muted-foreground/80"
+              className={`-ml-px block border-l py-1.5 transition-all duration-200 hover:border-brand hover:text-ink ${
+                h.level === 3 ? "pl-6" : "pl-4"
+              } ${
+                activeId === h.id
+                  ? "border-brand font-medium text-brand"
+                  : "border-transparent text-ink-3"
               }`}
             >
               {h.text}
