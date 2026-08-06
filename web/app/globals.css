@@ -68,7 +68,7 @@
   --radius-card: 24px;
   --radius-panel: 32px;
   /* Sarvam's easing curve verbatim: fast out of the gate, long settle. */
-  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
   /* Inner bottom edge that seats a surface without adding a border. */
   --lip: inset 0 -1px 0 1px rgba(0, 0, 0, 0.04);
   --hairline: 0 0 0 1px var(--rule);
@@ -291,9 +291,9 @@ body {
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out),
-    border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out),
-    box-shadow 0.2s var(--ease-out);
+  transition: background 0.2s var(--motion-ease), color 0.2s var(--motion-ease),
+    border-color 0.2s var(--motion-ease), transform 0.2s var(--motion-ease),
+    box-shadow 0.2s var(--motion-ease);
 }
 .pill-solid {
   background: var(--brand);
@@ -321,7 +321,7 @@ body {
   transform: none;
 }
 .pill .arrow {
-  transition: transform 0.25s var(--ease-out);
+  transition: transform 0.25s var(--motion-ease);
 }
 .pill:hover .arrow { transform: translateX(3px); }
 
@@ -335,7 +335,7 @@ body {
   position: relative;
   border-bottom: 1px solid var(--rule-soft);
   padding: 22px 16px 22px 12px;
-  transition: background 0.2s var(--ease-out), padding 0.2s var(--ease-out);
+  transition: background 0.2s var(--motion-ease), padding 0.2s var(--motion-ease);
 }
 /* The section boundary supplies the closing rule, so the last row stays open.
    Without this the list ends on a stray hairline. */
@@ -351,7 +351,7 @@ body {
   width: 2px;
   background: var(--orange);
   opacity: 0;
-  transition: opacity 0.2s var(--ease-out);
+  transition: opacity 0.2s var(--motion-ease);
 }
 a.row:hover,
 .row-interactive:hover {
@@ -367,19 +367,19 @@ a.row:active { background: var(--surface-3); }
   letter-spacing: 0.06em;
   color: var(--ink-4);
   font-variant-numeric: tabular-nums;
-  transition: color 0.2s var(--ease-out);
+  transition: color 0.2s var(--motion-ease);
 }
 /* Orange, job 1 of 3: the hovered row index. */
 a.row:hover .row-index { color: var(--orange); }
 .row-title {
-  transition: color 0.2s var(--ease-out);
+  transition: color 0.2s var(--motion-ease);
 }
 a.row:hover .row-title { color: var(--orange); }
 a.row:active .row-title { color: var(--orange-strong); }
 .row-arrow {
   opacity: 0;
   transform: translateX(-6px);
-  transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+  transition: opacity 0.2s var(--motion-ease), transform 0.2s var(--motion-ease);
 }
 a.row:hover .row-arrow { opacity: 1; transform: none; }
 
@@ -392,7 +392,7 @@ a.row:hover .row-arrow { opacity: 1; transform: none; }
   border-radius: var(--radius-card);
   background: var(--surface);
   box-shadow: var(--hairline), var(--lip);
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  transition: transform 0.2s var(--motion-ease), box-shadow 0.2s var(--motion-ease);
 }
 @media (min-width: 768px) {
   .card-surface { box-shadow: var(--lip); }
@@ -415,7 +415,7 @@ a.card-surface:hover .out-arrow { color: var(--orange); }
 .reveal-ready .reveal {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transition: opacity 0.5s var(--motion-ease), transform 0.5s var(--motion-ease);
 }
 .reveal-ready .reveal.is-visible {
   opacity: 1;
@@ -478,7 +478,7 @@ code[data-theme*=" "] {
 .blog-prose a {
   color: var(--brand);
   text-decoration: none;
-  transition: color 0.2s var(--ease-out);
+  transition: color 0.2s var(--motion-ease);
 }
 .blog-prose a:hover {
   color: var(--orange);
@@ -558,8 +558,8 @@ code[data-theme*=" "] {
   line-height: 1;
   color: var(--ink-2);
   cursor: pointer;
-  transition: color 0.2s var(--ease-out), background 0.2s var(--ease-out),
-    border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
+  transition: color 0.2s var(--motion-ease), background 0.2s var(--motion-ease),
+    border-color 0.2s var(--motion-ease), box-shadow 0.2s var(--motion-ease);
 }
 .blog-prose .code-copy:hover {
   color: var(--orange);
