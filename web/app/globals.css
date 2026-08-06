@@ -280,10 +280,13 @@ body {
 .pill {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   border-radius: 999px;
   border: 1px solid transparent;
   padding: 9px 18px;
+  /* Sarvam holds every interactive element to a 44px minimum. */
+  min-height: 44px;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;

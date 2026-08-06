@@ -242,7 +242,7 @@ export default async function HomePage() {
             <h2 className="section-title">From Scratch</h2>
             <Link
               href="/blog"
-              className="label group transition-colors duration-200 hover:text-orange"
+              className="label group -my-3 inline-flex min-h-[44px] items-center py-3 transition-colors duration-200 hover:text-orange"
             >
               View all
               <span
@@ -286,7 +286,7 @@ export default async function HomePage() {
               href="https://github.com/samitmohan"
               target="_blank"
               rel="noopener noreferrer"
-              className="label group transition-colors duration-200 hover:text-orange"
+              className="label group -my-3 inline-flex min-h-[44px] items-center py-3 transition-colors duration-200 hover:text-orange"
             >
               View all
               <span

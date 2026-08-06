@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export function PublicNav() {
   const pathname = usePathname();
   const onBlog = pathname === "/blog" || pathname.startsWith("/blog/");
+  const onHome = pathname === "/";
 
   // Hairline only once the page has moved, so the nav sits flush at rest.
   const [scrolled, setScrolled] = useState(false);
@@ -18,6 +19,11 @@ export function PublicNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // On the homepage the name is already the hero headline, so the nav copy of
+  // it is redundant until the hero scrolls away. Everywhere else it is the
+  // only identity anchor and the way back home, so it stays put.
+  const nameHidden = onHome && !scrolled;
+
   return (
     <nav
       className={`sticky top-0 z-50 border-b bg-[var(--nav-bg)] backdrop-blur-xl transition-colors duration-200 ${
@@ -27,7 +33,13 @@ export function PublicNav() {
       <div className="shell flex h-14 items-center justify-between">
         <Link
           href="/"
-          className="text-[15px] font-medium tracking-tight text-ink transition-colors hover:text-orange"
+          aria-hidden={nameHidden}
+          tabIndex={nameHidden ? -1 : undefined}
+          className={`-my-2 inline-flex min-h-[44px] items-center py-2 text-[15px] font-medium tracking-tight text-ink transition-[opacity,transform,color] duration-200 hover:text-orange ${
+            nameHidden
+              ? "pointer-events-none -translate-y-1 opacity-0"
+              : "translate-y-0 opacity-100"
+          }`}
         >
           Samit Mohan
         </Link>
@@ -35,7 +47,7 @@ export function PublicNav() {
           <Link
             href="/blog"
             aria-current={onBlog ? "page" : undefined}
-            className={`rounded-full px-3 py-1.5 text-[13px] transition-colors ${
+            className={`inline-flex min-h-[44px] items-center rounded-full px-3.5 text-[13px] transition-colors duration-200 ${
               onBlog ? "text-ink" : "text-ink-2 hover:text-ink"
             }`}
           >

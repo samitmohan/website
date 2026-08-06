@@ -45,7 +45,7 @@ export default function BlogPage() {
               {post.description && (
                 // One line keeps the row rhythm even; the full description
                 // is the first thing on the post itself.
-                <p className="mt-1.5 line-clamp-2 max-w-3xl text-[15px] leading-[155%] text-ink-2">
+                <p className="mt-1.5 line-clamp-2 min-h-[47px] max-w-3xl text-[15px] leading-[155%] text-ink-2">
                   {post.description}
                 </p>
               )}
