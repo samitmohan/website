@@ -20,7 +20,7 @@ export function PublicNav() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 border-b bg-[var(--nav-bg)] backdrop-blur-xl transition-colors duration-300 ${
+      className={`sticky top-0 z-50 border-b bg-[var(--nav-bg)] backdrop-blur-xl transition-colors duration-200 ${
         scrolled ? "border-rule" : "border-transparent"
       }`}
     >

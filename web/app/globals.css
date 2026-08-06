@@ -67,7 +67,11 @@
   --panel-foreground: #FAFAFA;
   --radius-card: 24px;
   --radius-panel: 32px;
-  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* Sarvam's easing curve verbatim: fast out of the gate, long settle. */
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  /* Inner bottom edge that seats a surface without adding a border. */
+  --lip: inset 0 -1px 0 1px rgba(0, 0, 0, 0.04);
+  --hairline: 0 0 0 1px var(--rule);
 }
 
 @theme inline {
@@ -184,6 +188,7 @@
   --positive: #90C85B;
   --positive-soft: rgba(110, 163, 53, 0.16);
   --positive-border: rgba(144, 200, 91, 0.3);
+  --lip: inset 0 -1px 0 1px rgba(0, 0, 0, 0.3);
   /* Dark holds a true indigo rather than washing out to pale blue.
      #6A88E2 on #0D0D0F measures 5.7:1, so body links still pass AA. */
   --brand-soft: rgba(51, 51, 204, 0.24);
@@ -256,6 +261,8 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--ink-3);
+  /* Structural caption, not content worth selecting. */
+  user-select: none;
 }
 
 /* Meta: dates, periods, reading times. Data rather than caption, so a step
@@ -282,7 +289,8 @@ body {
   line-height: 1;
   white-space: nowrap;
   transition: background 0.2s var(--ease-out), color 0.2s var(--ease-out),
-    border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+    border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out);
 }
 .pill-solid {
   background: var(--brand);
@@ -296,6 +304,7 @@ body {
   background: var(--surface);
   border-color: var(--rule);
   color: var(--foreground);
+  box-shadow: var(--lip);
 }
 .pill-ghost:hover {
   border-color: var(--orange-border);
@@ -323,7 +332,7 @@ body {
   position: relative;
   border-bottom: 1px solid var(--rule-soft);
   padding: 22px 16px 22px 12px;
-  transition: background 0.3s var(--ease-out), padding 0.3s var(--ease-out);
+  transition: background 0.2s var(--ease-out), padding 0.2s var(--ease-out);
 }
 /* The section boundary supplies the closing rule, so the last row stays open.
    Without this the list ends on a stray hairline. */
@@ -339,7 +348,7 @@ body {
   width: 2px;
   background: var(--orange);
   opacity: 0;
-  transition: opacity 0.3s var(--ease-out);
+  transition: opacity 0.2s var(--ease-out);
 }
 a.row:hover,
 .row-interactive:hover {
@@ -355,45 +364,45 @@ a.row:active { background: var(--surface-3); }
   letter-spacing: 0.06em;
   color: var(--ink-4);
   font-variant-numeric: tabular-nums;
-  transition: color 0.3s var(--ease-out);
+  transition: color 0.2s var(--ease-out);
 }
 /* Orange, job 1 of 3: the hovered row index. */
 a.row:hover .row-index { color: var(--orange); }
 .row-title {
-  transition: color 0.3s var(--ease-out);
+  transition: color 0.2s var(--ease-out);
 }
 a.row:hover .row-title { color: var(--orange); }
 a.row:active .row-title { color: var(--orange-strong); }
 .row-arrow {
   opacity: 0;
   transform: translateX(-6px);
-  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out);
 }
 a.row:hover .row-arrow { opacity: 1; transform: none; }
 
 /* Rounded card. Borders carry the separation on mobile where cards stack;
    on desktop the grid gap does that job, so the border drops back to
    transparent and only returns on hover. The white fill holds the shape. */
+/* Hairline is a ring shadow, not a border: it sits outside the box model,
+   so swapping its colour on hover cannot shift a single pixel. */
 .card-surface {
-  border: 1px solid var(--rule);
   border-radius: var(--radius-card);
   background: var(--surface);
-  transition: border-color 0.25s var(--ease-out), transform 0.25s var(--ease-out),
-    box-shadow 0.25s var(--ease-out);
+  box-shadow: var(--hairline), var(--lip);
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 @media (min-width: 768px) {
-  .card-surface { border-color: transparent; }
+  .card-surface { box-shadow: var(--lip); }
 }
 a.card-surface:hover,
 .card-surface-hover:hover {
-  border-color: var(--orange-border);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 0 0 1px var(--orange-border), var(--shadow-card), var(--lip);
 }
 a.card-surface:active {
   background: var(--surface-2);
   transform: none;
-  box-shadow: none;
+  box-shadow: 0 0 0 1px var(--orange-border), var(--lip);
 }
 /* Orange, job 2 of 3: outbound arrows on hover. */
 a.card-surface:hover .out-arrow { color: var(--orange); }
@@ -403,7 +412,7 @@ a.card-surface:hover .out-arrow { color: var(--orange); }
 .reveal-ready .reveal {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
 }
 .reveal-ready .reveal.is-visible {
   opacity: 1;
@@ -466,7 +475,7 @@ code[data-theme*=" "] {
 .blog-prose a {
   color: var(--brand);
   text-decoration: none;
-  transition: color 0.15s var(--ease-out);
+  transition: color 0.2s var(--ease-out);
 }
 .blog-prose a:hover {
   color: var(--orange);
@@ -530,6 +539,8 @@ code[data-theme*=" "] {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--ink-3);
+  /* Sarvam gives chips a coloured inner bottom edge. */
+  box-shadow: inset 0 -0.5px 1px 0 var(--rule-strong);
 }
 .blog-prose .code-copy {
   display: inline-flex;
@@ -544,8 +555,8 @@ code[data-theme*=" "] {
   line-height: 1;
   color: var(--ink-2);
   cursor: pointer;
-  transition: color 0.15s var(--ease-out), background 0.15s var(--ease-out),
-    border-color 0.15s var(--ease-out);
+  transition: color 0.2s var(--ease-out), background 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 .blog-prose .code-copy:hover {
   color: var(--orange);

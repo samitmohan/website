@@ -144,7 +144,7 @@ export default async function BlogPostPage({
             </span>
             <span className="meta ml-auto flex items-center gap-2">
               <time>{formatPostDate(post.date)}</time>
-              <span className="text-ink-4">·</span>
+              <span className="text-ink-4">・</span>
               <span>{post.readingTime} min</span>
             </span>
           </div>
@@ -171,9 +171,9 @@ export default async function BlogPostPage({
             className="
               blog-prose
               [&_h1]:font-[family-name:var(--font-display)] [&_h1]:text-[2rem] [&_h1]:font-normal [&_h1]:tracking-[-0.02em] [&_h1]:text-ink [&_h1]:mt-14 [&_h1]:mb-5
-              [&_h2]:font-[family-name:var(--font-display)] [&_h2]:text-[1.75rem] [&_h2]:font-normal [&_h2]:tracking-[-0.02em] [&_h2]:text-ink [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:pb-3 [&_h2]:border-b [&_h2]:border-rule
-              [&_h3]:text-[18px] [&_h3]:font-medium [&_h3]:tracking-tight [&_h3]:text-ink [&_h3]:mt-10 [&_h3]:mb-2
-              [&_h4]:text-[15px] [&_h4]:font-medium [&_h4]:text-ink [&_h4]:mt-7 [&_h4]:mb-2
+              [&_h2]:font-[family-name:var(--font-display)] [&_h2]:text-[1.75rem] [&_h2]:font-normal [&_h2]:tracking-[-0.02em] [&_h2]:leading-[130%] [&_h2]:text-ink [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:pb-3 [&_h2]:border-b [&_h2]:border-rule
+              [&_h3]:text-[18px] [&_h3]:font-medium [&_h3]:tracking-tight [&_h3]:leading-[135%] [&_h3]:text-ink [&_h3]:mt-10 [&_h3]:mb-2
+              [&_h4]:text-[15px] [&_h4]:font-medium [&_h4]:leading-[135%] [&_h4]:text-ink [&_h4]:mt-7 [&_h4]:mb-2
               [&_p]:text-[17.5px] [&_p]:text-ink-2 [&_p]:leading-[175%] [&_p]:mb-5 [&_p]:text-pretty
               [&_ul]:mb-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:marker:text-ink-4
               [&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:marker:text-ink-4 [&_ol]:marker:font-mono [&_ol]:marker:text-[13px]
@@ -204,7 +204,7 @@ export default async function BlogPostPage({
                   href={`/blog/${p.slug}`}
                   className="card-surface group flex flex-col p-4"
                 >
-                  <h3 className="text-[14.5px] font-medium leading-snug text-ink transition-colors group-hover:text-orange">
+                  <h3 className="text-[14.5px] font-medium leading-[135%] text-ink transition-colors group-hover:text-orange">
                     {p.title}
                   </h3>
                   <div className="meta mt-auto pt-4">

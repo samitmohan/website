@@ -123,7 +123,7 @@ function RoleRows({ items }: { items: RoleRow[] }) {
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
               <h3 className="text-[16px] text-ink">
                 <span className="row-title font-medium">{item.company}</span>
-                <span className="text-ink-2"> · {item.role}</span>
+                <span className="text-ink-2"> ・{item.role}</span>
               </h3>
               <span className="meta shrink-0">{item.period}</span>
             </div>
@@ -238,7 +238,21 @@ export default async function HomePage() {
         {/* Posts - from-scratch ladder */}
         <section className="reveal border-t border-rule">
           <div className="shell py-14">
-          <h2 className="section-title mb-8">From Scratch</h2>
+          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="section-title">From Scratch</h2>
+            <Link
+              href="/blog"
+              className="label group transition-colors duration-200 hover:text-orange"
+            >
+              View all
+              <span
+                aria-hidden
+                className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+          </div>
           <div className="rows">
             {ladder.map(({ post, gloss }, i) => (
               <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
@@ -266,7 +280,23 @@ export default async function HomePage() {
         {/* Projects */}
         <section className="reveal border-t border-rule">
           <div className="shell py-14">
-          <h2 className="section-title mb-8">Projects</h2>
+          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
+            <h2 className="section-title">Projects</h2>
+            <a
+              href="https://github.com/samitmohan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="label group transition-colors duration-200 hover:text-orange"
+            >
+              View all
+              <span
+                aria-hidden
+                className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </a>
+          </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {PROJECTS.map((p) => (
               <a
@@ -290,7 +320,7 @@ export default async function HomePage() {
                   </span>
                   <span
                     aria-hidden
-                    className="out-arrow ml-auto text-[12px] text-ink-4 transition-colors"
+                    className="out-arrow ml-auto scale-90 text-[12px] text-ink-4 transition-[color,transform] duration-200 group-hover:scale-100"
                   >
                     ↗
                   </span>
