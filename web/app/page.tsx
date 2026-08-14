@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
+import { RSS_ALTERNATE } from "@/lib/metadata";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
-import { RevealOnScroll } from "@/components/reveal";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: RSS_ALTERNATE },
 };
 
 export const revalidate = 30;
@@ -16,7 +16,7 @@ const CURRICULUM: { slug: string; gloss: string }[] = [
   { slug: "math", gloss: "gradients and the chain rule, from scratch" },
   { slug: "nn", gloss: "a digit classifier in pure NumPy" },
   { slug: "torch", gloss: "tensors and autograd, then the same net in PyTorch" },
-  { slug: "minitorch", gloss: "a working framework in ~1300 lines" },
+  { slug: "minitorch", gloss: "a working framework in ~1500 lines" },
   { slug: "attention-residuals", gloss: "why attention and residual streams work" },
   { slug: "microgpt", gloss: "a GPT built and trained end to end" },
   { slug: "how-chatgpt-works", gloss: "the full pipeline: data, alignment, inference" },
@@ -27,25 +27,25 @@ const PROJECTS = [
   {
     name: "mathLM",
     description:
-      "40M GPT trained from scratch on math. Custom BPE, GQA + RoPE + SwiGLU, sparse MoE, SFT + GRPO reasoning RL. Evaluated on GSM8K.",
+      "40M GPT trained from scratch on math. Custom BPE, GQA + RoPE + SwiGLU, SFT + GRPO reasoning RL. Evaluated on GSM8K.",
     url: "https://github.com/samitmohan/mathLM",
   },
   {
     name: "minitorch",
     description:
-      "PyTorch in ~1300 lines. Reverse-mode autograd, conv2d, optimizers, LR schedulers. 96%+ on MNIST.",
+      "PyTorch in ~1500 lines. Reverse-mode autograd, conv2d, optimizers, LR schedulers. 96%+ on MNIST with the CNN.",
     url: "https://github.com/samitmohan/minitorch",
   },
   {
     name: "mini-code",
     description:
-      "Built to figure out what's actually inside an agent loop. Turns out it's 250 lines: tool calls, shell exec, streaming.",
+      "Built to figure out what's actually inside an agent loop. Turns out it's ~350 lines: tool calls, shell exec, streamed command output.",
     url: "https://github.com/samitmohan/minicode",
   },
   {
     name: "tennis-analysis",
     description:
-      "YOLO + ResNet on match footage. Court detection, ball tracking, shot classification. Tested on Wimbledon clips.",
+      "YOLO + ResNet on match footage. Court keypoint regression, ball detection with interpolation, shot-event detection and speed estimation.",
     url: "https://github.com/samitmohan/tennis-analysis",
   },
 ];
@@ -73,6 +73,13 @@ const EXPERIENCE = [
       "Personalization API with multi-armed bandits and an RLHF reward model for itinerary ranking.",
   },
 ];
+
+const EDUCATION = {
+  company: "NHCE, VTU",
+  role: "B.Tech Information Technology",
+  period: "2020 - 2024",
+  summary: "CGPA **9.4 / 10** · Founder, Coding Club NHCE.",
+};
 
 const TEACHING = [
   {
@@ -155,19 +162,22 @@ function RoleRows({ items }: { items: RoleRow[] }) {
 
 export default async function HomePage() {
   const allPosts = getAllPosts();
-  const ladder = CURRICULUM.map(({ slug, gloss }) => {
-    const post = allPosts.find((p) => p.slug === slug);
-    return post ? { post, gloss } : null;
-  }).filter(Boolean) as { post: (typeof allPosts)[number]; gloss: string }[];
+  // Four on the homepage, not the full eight. Eight rows ran taller than a
+  // viewport and duplicated /blog, which the "View all" link sits next to.
+  const ladder = (
+    CURRICULUM.map(({ slug, gloss }) => {
+      const post = allPosts.find((p) => p.slug === slug);
+      return post ? { post, gloss } : null;
+    }).filter(Boolean) as { post: (typeof allPosts)[number]; gloss: string }[]
+  ).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <RevealOnScroll />
       <PublicNav />
 
       <main id="main">
         {/* Hero */}
-        <section className="shell py-16 md:py-24">
+        <section className="shell py-12 md:py-16">
           <div className="flex flex-col items-start gap-8 sm:flex-row sm:gap-10">
             <div className="min-w-0 shrink-0">
               <Image
@@ -180,7 +190,7 @@ export default async function HomePage() {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <h1 className="display text-[52px] text-ink md:text-[88px]">
+              <h1 className="display text-[26px] text-ink md:text-[34px]">
                 Samit Mohan
               </h1>
               <p className="mt-7 max-w-xl text-pretty text-[17px] leading-[155%] text-ink-2">
@@ -227,7 +237,12 @@ export default async function HomePage() {
                 >
                   Email
                 </a>
-                <a href="#" className="pill pill-ghost">
+                <a
+                  href="/samit-resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pill pill-ghost"
+                >
                   CV
                 </a>
               </div>
@@ -237,7 +252,7 @@ export default async function HomePage() {
 
         {/* Posts - from-scratch ladder */}
         <section className="reveal border-t border-rule">
-          <div className="shell py-14">
+          <div className="shell py-10">
           <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
             <h2 className="section-title">From Scratch</h2>
             <Link
@@ -279,7 +294,7 @@ export default async function HomePage() {
 
         {/* Projects */}
         <section className="reveal border-t border-rule">
-          <div className="shell py-14">
+          <div className="shell py-10">
           <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
             <h2 className="section-title">Projects</h2>
             <a
@@ -334,36 +349,21 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Experience */}
+        {/* Experience, with education folded in. One degree did not earn its
+            own bordered section: the heading and padding ran taller than the
+            single row they framed. */}
         <section className="reveal border-t border-rule">
-          <div className="shell py-14">
+          <div className="shell py-10">
             <h2 className="section-title mb-8">Experience</h2>
-            <RoleRows items={EXPERIENCE} />
+            <RoleRows items={[...EXPERIENCE, EDUCATION]} />
           </div>
         </section>
 
         {/* Teaching */}
         <section className="reveal border-t border-rule">
-          <div className="shell py-14">
+          <div className="shell py-10 pb-16">
             <h2 className="section-title mb-8">Teaching &amp; Writing</h2>
             <RoleRows items={TEACHING} />
-          </div>
-        </section>
-
-        {/* Education */}
-        <section className="reveal border-t border-rule">
-          <div className="shell py-14 pb-20">
-            <h2 className="section-title mb-8">Education</h2>
-            <RoleRows
-              items={[
-                {
-                  company: "NHCE, VTU",
-                  role: "B.Tech Information Technology",
-                  period: "2020 - 2024",
-                  summary: "CGPA **9.4 / 10** · Founder, Coding Club NHCE.",
-                },
-              ]}
-            />
           </div>
         </section>
       </main>

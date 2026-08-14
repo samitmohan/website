@@ -1,15 +1,10 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -18,20 +13,26 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// Stands in for Season Mix on the hero and section headings.
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-});
+// The site is class-themed and ignores prefers-color-scheme, so a media-keyed
+// themeColor would paint dark browser chrome around a light page for anyone on
+// an OS dark theme who has not toggled. Ship the default here and let
+// ThemeToggle rewrite it to track the theme actually in effect.
+export const viewport: Viewport = {
+  themeColor: "#FAFAFA",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
-  title: "Samit Mohan",
+  title: {
+    default: "Samit Mohan",
+    template: "%s - Samit Mohan",
+  },
   description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
   icons: {
     icon: "/favicon.svg",
+  },
+  alternates: {
+    types: RSS_ALTERNATE,
   },
   openGraph: {
     title: "Samit Mohan",
@@ -55,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">

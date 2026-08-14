@@ -10,6 +10,9 @@ import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
 import { visit } from "unist-util-visit";
 import { createHighlighter } from "shiki";
+import fs from "node:fs";
+import path from "node:path";
+import sharp from "sharp";
 import type { Element, Root, Text } from "hast";
 
 const highlighterPromise = createHighlighter({
@@ -17,19 +20,52 @@ const highlighterPromise = createHighlighter({
   langs: ["python", "bash", "json", "c", "cpp", "yaml", "markdown", "text"],
 });
 
+const PUBLIC_DIR = path.join(process.cwd(), "public");
+
+/** Widths the Next image optimizer will serve. Must come from the configured
+ *  deviceSizes, since /_next/image rejects any other `w`. */
+const SRCSET_WIDTHS = [640, 828, 1080, 1920];
+
+/** Prose column is max-w-[44rem] = 704px, so above the md breakpoint an image
+ *  never renders wider than that however large the viewport gets. */
+const SIZES_ATTR = "(min-width: 768px) 704px, 100vw";
+
+// Build-time only, and the same image repeats across posts, so cache by src.
+const dimCache = new Map<string, { width: number; height: number } | null>();
+
+async function intrinsicSize(src: string) {
+  const cached = dimCache.get(src);
+  if (cached !== undefined) return cached;
+
+  let dims: { width: number; height: number } | null = null;
+  // Local, root-relative paths only. Remote images have no file to measure
+  // and "//host/x" is protocol-relative, not a local path.
+  if (src.startsWith("/") && !src.startsWith("//")) {
+    const file = path.join(PUBLIC_DIR, decodeURIComponent(src.split("?")[0]));
+    // Keep the read inside public/ even if a post writes "/../../etc".
+    if (file.startsWith(PUBLIC_DIR) && fs.existsSync(file)) {
+      try {
+        const meta = await sharp(file).metadata();
+        if (meta.width && meta.height) {
+          dims = { width: meta.width, height: meta.height };
+        }
+      } catch {
+        // Unreadable or not an image. Fall through to null and emit the tag
+        // unchanged rather than failing the whole build over one asset.
+      }
+    }
+  }
+  dimCache.set(src, dims);
+  return dims;
+}
+
 function rehypeMediaPerf() {
-  return (tree: Root) => {
-    let imgIdx = 0;
+  return async (tree: Root) => {
+    const imgs: Element[] = [];
+
     visit(tree, "element", (node: Element) => {
       if (node.tagName === "img") {
-        node.properties = node.properties || {};
-        if (imgIdx === 0) {
-          if (!node.properties.fetchpriority) node.properties.fetchpriority = "high";
-        } else {
-          if (!node.properties.loading) node.properties.loading = "lazy";
-        }
-        if (!node.properties.decoding) node.properties.decoding = "async";
-        imgIdx++;
+        imgs.push(node);
       } else if (node.tagName === "video") {
         node.properties = node.properties || {};
         if (!node.properties.preload) node.properties.preload = "none";
@@ -41,8 +77,49 @@ function rehypeMediaPerf() {
         if (!node.properties.loading) node.properties.loading = "lazy";
       }
     });
+
+    await Promise.all(
+      imgs.map(async (node, i) => {
+        const props = (node.properties = node.properties || {});
+
+        if (i === 0) {
+          if (!props.fetchpriority) props.fetchpriority = "high";
+        } else {
+          if (!props.loading) props.loading = "lazy";
+        }
+        if (!props.decoding) props.decoding = "async";
+
+        const src = typeof props.src === "string" ? props.src : "";
+        if (!src) return;
+
+        const dims = await intrinsicSize(src);
+        if (!dims) return;
+
+        // Width and height reserve the box before the bytes land, so text
+        // below an image no longer jumps down as it decodes.
+        if (props.width === undefined) props.width = dims.width;
+        if (props.height === undefined) props.height = dims.height;
+
+        // Hand the optimizer the work: it re-encodes to AVIF/WebP per browser
+        // and ships a size that fits the column instead of the original.
+        // Never upscale, so only offer widths the source can actually fill.
+        if (props.srcset === undefined && props.srcSet === undefined) {
+          const widths = SRCSET_WIDTHS.filter((w) => w <= dims.width);
+          if (widths.length) {
+            props.srcset = widths
+              .map(
+                (w) =>
+                  `/_next/image?url=${encodeURIComponent(src)}&w=${w}&q=75 ${w}w`
+              )
+              .join(", ");
+            if (props.sizes === undefined) props.sizes = SIZES_ATTR;
+          }
+        }
+      })
+    );
   };
 }
+
 
 // GitHub-style alerts: `> [!NOTE]` blockquotes become styled callout boxes.
 const CALLOUT_LABELS: Record<string, string> = {
@@ -93,6 +170,21 @@ function rehypeCallouts() {
       });
     });
   };
+}
+
+/**
+ * Highlight a bare code string with the same dual-theme highlighter the blog
+ * uses, for code that arrives outside markdown (the interviews answers). The
+ * `code[data-theme*=" "]` rules in globals.css already swap light/dark, so the
+ * output themes itself with no extra CSS.
+ */
+export async function highlightCode(code: string, lang = "python"): Promise<string> {
+  const highlighter = await highlighterPromise;
+  return highlighter.codeToHtml(code, {
+    lang,
+    themes: { light: "github-light", dark: "github-dark" },
+    defaultColor: false,
+  });
 }
 
 export async function markdownToHtml(

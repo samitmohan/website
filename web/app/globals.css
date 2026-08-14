@@ -1,6 +1,26 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Berkeley Mono is licensed (usgraphics.com), so the files are not in the
+   repo. Drop BerkeleyMono-Regular.woff2 and BerkeleyMono-Bold.woff2 into
+   public/fonts/ and these faces activate. Until then the browser skips the
+   missing src and falls through the stack below: JetBrains Mono if the
+   visitor has it, then Geist Mono, then the platform mono. */
+@font-face {
+  font-family: "Berkeley Mono";
+  src: url("/fonts/BerkeleyMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Berkeley Mono";
+  src: url("/fonts/BerkeleyMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #FAFAFA;
   --foreground: #141414;
@@ -36,9 +56,14 @@
   --surface: #FFFFFF;
   --surface-2: #F5F5F5;
   --surface-3: #F0F0F0;
+  /* The grey ramp is compressed by WCAG AA. These carry 10-13px text (row
+     index, dates, outbound arrows), so the 3:1 large-text exemption never
+     applies and every step has to clear 4.5:1 on --background #FAFAFA.
+     Measured: 5.50 / 5.11 / 4.54. That leaves under a point of spread across
+     three steps, so lean on size and weight for hierarchy, not lightness. */
   --ink-2: #666666;
-  --ink-3: #999999;
-  --ink-4: #B3B3B3;
+  --ink-3: #6B6B6B;
+  --ink-4: #737373;
   /* One stroke colour at three weights rather than three greys, the way
      sarvam modulates border-st/25, /50, /80. Structural rules use --rule;
      rules inside a component use --rule-soft. */
@@ -63,6 +88,10 @@
   --orange-strong: #A5460F;
   --orange-soft: #FEEDE6;
   --orange-border: #FDDCCE;
+  /* --orange measures 3.22:1 on --background: fine for icons, arrows and
+     large text, short of AA for body copy. Use this darker step wherever
+     orange carries text at reading size. Measured 4.54:1. */
+  --orange-text: #BF5210;
   --panel: #141414;
   --panel-foreground: #FAFAFA;
   --radius-card: 24px;
@@ -125,9 +154,14 @@
   --color-orange-border: var(--orange-border);
   --color-panel: var(--panel);
   --color-panel-foreground: var(--panel-foreground);
-  --font-sans: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* System stack, so body text downloads nothing and paints on first frame.
+     Resolves to San Francisco on Apple, Segoe UI on Windows, Roboto on
+     Android. Mono carries the identity; body text gets out of the way. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  /* Same stack as body. Headings label the page in the same voice the prose
+     speaks in, which is how geohot/karpathy/simonwillison all read. */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "Berkeley Mono", "JetBrains Mono", var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -179,9 +213,11 @@
   --surface: #161618;
   --surface-2: #1B1B1E;
   --surface-3: #202024;
+  /* Measured on --background #0D0D0F: 7.46 / 5.66 / 4.62, descending to match
+     the light ramp. The old #77777D (4.36) and #5A5A60 (2.83) both failed AA. */
   --ink-2: #A0A0A5;
-  --ink-3: #77777D;
-  --ink-4: #5A5A60;
+  --ink-3: #8A8A90;
+  --ink-4: #7B7B81;
   --rule: #2A2A2E;
   --rule-soft: color-mix(in srgb, #2A2A2E 60%, transparent);
   --rule-strong: #3A3A40;
@@ -215,7 +251,7 @@ body {
 }
 
 /* ============================================================
-   Sarvam-style primitives. Wide shell, serif display headings,
+   Sarvam-style primitives. Wide shell, mono display headings,
    pill buttons, hairline rows, rounded card surfaces.
    ============================================================ */
 
@@ -229,27 +265,30 @@ body {
   .shell { padding-inline: 40px; }
 }
 
-/* Display face for hero + section headings. */
+/* Display face for hero + section headings. Deliberately quiet: regular
+   weight, no negative tracking (mono is already tight and letterspacing it
+   in reads as compression), and enough leading to sit calm. Headings here
+   label the page rather than announce it. */
 .display {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 0.94;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
 /* Explicit sizes per breakpoint rather than clamp, so mobile is chosen
    rather than interpolated. Sarvam uses no clamp anywhere. */
 .section-title {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 400;
-  font-size: 32px;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
   text-wrap: balance;
   color: var(--foreground);
 }
 @media (min-width: 768px) {
-  .section-title { font-size: 40px; }
+  .section-title { font-size: 20px; }
 }
 
 /* Micro label: sarvam's 10px uppercase mono, used for structural captions
@@ -301,7 +340,6 @@ body {
 }
 .pill-solid:hover {
   background: var(--brand-strong);
-  transform: translateY(-1px);
 }
 .pill-ghost {
   background: var(--surface);
@@ -313,7 +351,6 @@ body {
   border-color: var(--orange-border);
   background: var(--orange-soft);
   color: var(--orange);
-  transform: translateY(-1px);
 }
 .pill-ghost:active {
   background: var(--surface-3);
@@ -321,12 +358,12 @@ body {
   transform: none;
 }
 .pill .arrow {
-  transition: transform 0.25s var(--motion-ease);
+  transition: opacity 0.2s var(--motion-ease);
 }
-.pill:hover .arrow { transform: translateX(3px); }
 
 /* Hairline list. The dominant sarvam layout: full-bleed rows split by 1px
-   rules, whole row tints and nudges right on hover. */
+   rules, whole row tints on hover. Padding stays fixed so the title never
+   moves under the cursor. */
 .rows {
   border-top: 1px solid var(--rule);
 }
@@ -334,8 +371,8 @@ body {
   display: block;
   position: relative;
   border-bottom: 1px solid var(--rule-soft);
-  padding: 22px 16px 22px 12px;
-  transition: background 0.2s var(--motion-ease), padding 0.2s var(--motion-ease);
+  padding: 14px 16px 14px 12px;
+  transition: background 0.2s var(--motion-ease);
 }
 /* The section boundary supplies the closing rule, so the last row stays open.
    Without this the list ends on a stray hairline. */
@@ -356,7 +393,6 @@ body {
 a.row:hover,
 .row-interactive:hover {
   background: linear-gradient(90deg, var(--orange-soft), transparent 78%);
-  padding-left: 22px;
 }
 a.row:hover::before { opacity: 1; }
 a.row:active { background: var(--surface-3); }
@@ -378,10 +414,9 @@ a.row:hover .row-title { color: var(--orange); }
 a.row:active .row-title { color: var(--orange-strong); }
 .row-arrow {
   opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity 0.2s var(--motion-ease), transform 0.2s var(--motion-ease);
+  transition: opacity 0.2s var(--motion-ease);
 }
-a.row:hover .row-arrow { opacity: 1; transform: none; }
+a.row:hover .row-arrow { opacity: 1; }
 
 /* Rounded card. Borders carry the separation on mobile where cards stack;
    on desktop the grid gap does that job, so the border drops back to
@@ -392,19 +427,17 @@ a.row:hover .row-arrow { opacity: 1; transform: none; }
   border-radius: var(--radius-card);
   background: var(--surface);
   box-shadow: var(--hairline), var(--lip);
-  transition: transform 0.2s var(--motion-ease), box-shadow 0.2s var(--motion-ease);
+  transition: box-shadow 0.2s var(--motion-ease);
 }
 @media (min-width: 768px) {
   .card-surface { box-shadow: var(--lip); }
 }
 a.card-surface:hover,
 .card-surface-hover:hover {
-  transform: translateY(-2px);
   box-shadow: 0 0 0 1px var(--orange-border), var(--shadow-card), var(--lip);
 }
 a.card-surface:active {
   background: var(--surface-2);
-  transform: none;
   box-shadow: 0 0 0 1px var(--orange-border), var(--lip);
 }
 /* Orange, job 2 of 3: outbound arrows on hover. */
@@ -412,18 +445,10 @@ a.card-surface:hover .out-arrow { color: var(--orange); }
 
 /* Scroll reveal. Content is visible by default and only hides once the
    observer is mounted, so a slow or failed hydration never blanks a section. */
-.reveal-ready .reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.5s var(--motion-ease), transform 0.5s var(--motion-ease);
-}
-.reveal-ready .reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .reveal-ready .reveal { opacity: 1; transform: none; transition: none; }
-}
+/* Sections used to fade and slide up 18px as they scrolled into view. Same
+   moving-content problem as the old hover nudge, and on a long page it read
+   as slower rather than livelier. Content paints where it lands. The class
+   stays on the markup as a hook; it just no longer animates. */
 
 /* Keyboard focus ring for all interactive elements on the public site. */
 a:focus-visible,
@@ -519,7 +544,7 @@ code[data-theme*=" "] {
 }
 
 /* Header bar injected client-side by BlogContent */
-.blog-prose .code-header {
+:is(.blog-prose, .code-card) .code-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -530,7 +555,7 @@ code[data-theme*=" "] {
   font-family: var(--font-mono), monospace;
 }
 /* Language reads as a chip, matching sarvam's code-sample tabs. */
-.blog-prose .code-lang {
+:is(.blog-prose, .code-card) .code-lang {
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--rule);
@@ -545,7 +570,7 @@ code[data-theme*=" "] {
   /* Sarvam gives chips a coloured inner bottom edge. */
   box-shadow: inset 0 -0.5px 1px 0 var(--rule-strong);
 }
-.blog-prose .code-copy {
+:is(.blog-prose, .code-card) .code-copy {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -561,18 +586,18 @@ code[data-theme*=" "] {
   transition: color 0.2s var(--motion-ease), background 0.2s var(--motion-ease),
     border-color 0.2s var(--motion-ease), box-shadow 0.2s var(--motion-ease);
 }
-.blog-prose .code-copy:hover {
+:is(.blog-prose, .code-card) .code-copy:hover {
   color: var(--orange);
   background: var(--orange-soft);
   border-color: var(--orange-border);
 }
 /* Success reads green, not indigo - indigo means "link" everywhere else. */
-.blog-prose .code-copy.copied {
+:is(.blog-prose, .code-card) .code-copy.copied {
   color: var(--positive);
   border-color: var(--positive-border);
   background: var(--positive-soft);
 }
-.blog-prose .code-copy svg {
+:is(.blog-prose, .code-card) .code-copy svg {
   width: 13px;
   height: 13px;
 }
@@ -594,6 +619,135 @@ code[data-theme*=" "] {
   background: color-mix(in srgb, var(--primary) 16%, transparent);
   border-radius: 3px;
   padding: 1px 3px;
+}
+
+/* Numbered gutter, borrowed from Beautiful UI's Code Block primitive. The
+   counter rides the existing [data-line] grid rows, so no markup changes. */
+.blog-prose [data-rehype-pretty-code-figure] code {
+  counter-reset: line;
+}
+.blog-prose [data-rehype-pretty-code-figure] [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.35rem;
+  margin-right: 1rem;
+  text-align: right;
+  font-size: 0.85em;
+  color: color-mix(in srgb, var(--ink-3) 55%, transparent);
+  user-select: none;
+}
+
+/* Standalone code card (CodeCard) for code that never passed through markdown.
+   Mirrors the blog figure so both read as the same component; the chrome rules
+   above are shared via :is(). */
+.code-card {
+  position: relative;
+  margin: 12px 0;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.code-card pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  overflow-x: auto;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.code-card pre::-webkit-scrollbar {
+  height: 8px;
+}
+.code-card pre::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+  border-radius: 4px;
+}
+/* rehype-pretty-code marks the <code> with data-theme; calling shiki directly
+   does not, and puts the theme classes on <pre> instead. So the blog's
+   `code[data-theme*=" "]` rule never matches here and these tokens need their
+   own mapping off the same --shiki-* variables. */
+.code-card .shiki span {
+  color: var(--shiki-light);
+}
+.dark .code-card .shiki span {
+  color: var(--shiki-dark);
+}
+
+/* Shiki emits one .line span per row; the grid gives each a full-width row for
+   the number gutter to sit in. */
+.code-card code {
+  display: grid;
+  counter-reset: line;
+}
+.code-card .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.35rem;
+  margin-right: 1rem;
+  text-align: right;
+  font-size: 0.85em;
+  color: color-mix(in srgb, var(--ink-3) 55%, transparent);
+  user-select: none;
+}
+
+/* Motion shared by the selection bar and the palette loader. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes pixel-on {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+@keyframes shimmer-text {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+.pixel-cell {
+  opacity: 0.15;
+  animation: pixel-on 650ms ease-in-out infinite;
+}
+.shimmer-text {
+  color: transparent;
+  background-clip: text;
+  background-image: linear-gradient(
+    90deg,
+    var(--ink-3) 35%,
+    var(--foreground) 50%,
+    var(--ink-3) 65%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-text 1.4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pixel-cell,
+  .shimmer-text {
+    animation: none;
+  }
+  .shimmer-text {
+    color: var(--ink-2);
+    background-image: none;
+  }
 }
 
 /* GitHub-style callouts (rehype rewrites `> [!NOTE]` blockquotes). Overrides
@@ -674,6 +828,13 @@ code[data-theme*=" "] {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #4B5563;
+}
+
+/* InterviewFilters hides non-matching questions by setting [hidden] on the
+   server-rendered nodes. <details> carries its own display from the UA sheet,
+   so state the rule explicitly rather than trusting reset order. */
+#interviews-body [hidden] {
+  display: none !important;
 }
 
 /* Interviews guide answer/info HTML — reskinned to use portfolio theme tokens

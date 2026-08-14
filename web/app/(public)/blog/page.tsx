@@ -1,57 +1,38 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { getAllPosts, formatPostDate } from "@/lib/blog";
+import { getAllPosts, getAllTags, formatPostDate } from "@/lib/blog";
+import { RSS_ALTERNATE } from "@/lib/metadata";
+import { BlogTagFilter } from "@/components/blog-tag-filter";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
-import { RevealOnScroll } from "@/components/reveal";
 
 export const revalidate = 30;
 
 export const metadata: Metadata = {
-  title: "Blog — Samit Mohan",
+  // The root layout supplies the "- Samit Mohan" suffix via title.template.
+  title: "Blog",
   description: "Writing on ML, computer vision, and rebuilding things from scratch.",
-  alternates: { canonical: "/blog" },
+  alternates: { canonical: "/blog", types: RSS_ALTERNATE },
 };
 
 export default function BlogPage() {
-  const posts = getAllPosts();
+  const posts = getAllPosts().map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    dateLabel: formatPostDate(post.date),
+    description: post.description,
+    tags: post.tags,
+  }));
+  const tags = getAllTags();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <RevealOnScroll />
       <PublicNav />
 
       <main id="main" className="shell py-14 md:py-20">
-        <h1 className="display mb-10 text-balance text-[40px] text-ink md:text-[56px]">
+        <h1 className="display mb-10 text-balance text-[24px] text-ink md:text-[30px]">
           Blog
         </h1>
 
-        <div className="rows">
-          {posts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                <h2 className="row-title flex items-center gap-2.5 text-[18px] font-medium leading-snug tracking-tight text-ink">
-                  {post.title}
-                  <span
-                    aria-hidden
-                    className="row-arrow hidden text-[13px] text-orange sm:inline"
-                  >
-                    →
-                  </span>
-                </h2>
-                <span className="meta shrink-0">
-                  {formatPostDate(post.date)}
-                </span>
-              </div>
-              {post.description && (
-                // One line keeps the row rhythm even; the full description
-                // is the first thing on the post itself.
-                <p className="mt-1.5 line-clamp-2 min-h-[47px] max-w-3xl text-[15px] leading-[155%] text-ink-2">
-                  {post.description}
-                </p>
-              )}
-            </Link>
-          ))}
-        </div>
+        <BlogTagFilter posts={posts} tags={tags} />
       </main>
 
       <PublicFooter />
