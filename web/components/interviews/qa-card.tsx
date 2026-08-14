@@ -1,4 +1,5 @@
 import type { Difficulty, Tag } from "@/lib/interviews-data";
+import { CodeCard } from "@/components/ui/code-card";
 
 const SPECIAL_TAGS: Partial<Record<Tag, string>> = {
   frontier: "text-purple-600",
@@ -34,6 +35,12 @@ export function QACard({
   return (
     <details
       id={id}
+      // Facets live on the node so InterviewFilters can filter the painted DOM
+      // without any of this content entering the client bundle.
+      data-qa=""
+      data-difficulty={difficulty}
+      data-tags={tags.join(" ")}
+      data-q={q.toLowerCase()}
       className={`group mb-1 scroll-mt-24 border-l-2 pl-3 ${
         isKey ? "border-l-[#ca8a04]" : "border-l-transparent"
       }`}
@@ -61,11 +68,7 @@ export function QACard({
       </summary>
       <div className="interviews-prose pb-3 pt-1">
         {children}
-        {code && (
-          <pre className="text-[12px] leading-relaxed overflow-x-auto mt-3">
-            <code>{code}</code>
-          </pre>
-        )}
+        {code && <CodeCard code={code} />}
       </div>
     </details>
   );

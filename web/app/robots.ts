@@ -6,7 +6,15 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/admin", "/login", "/problems", "/syllabus"],
+        disallow: [
+          "/api/",
+          "/admin",
+          "/login",
+          "/problems",
+          "/syllabus",
+          // A search payload, not a page. Nothing to gain from indexing it.
+          "/blog/search-index.json",
+        ],
       },
     ],
     sitemap: "https://samitmohan.in/sitemap.xml",

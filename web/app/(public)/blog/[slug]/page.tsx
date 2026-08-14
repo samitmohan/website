@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPost, getAllPosts, getHiddenPosts, getAllSlugs, formatPostDate } from "@/lib/blog";
 import { markdownToHtml } from "@/lib/markdown";
+import { RSS_ALTERNATE } from "@/lib/metadata";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { BlogContent } from "@/components/blog-content";
+import { SelectionShare } from "@/components/selection-share";
 import { ViewBeacon } from "@/components/view-beacon";
 import { FunPost } from "@/components/fun-post";
 
@@ -36,7 +38,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.description,
-    alternates: { canonical: `/blog/${slug}` },
+    alternates: { canonical: `/blog/${slug}`, types: RSS_ALTERNATE },
     robots: post.hidden ? { index: false, follow: false } : undefined,
     openGraph: {
       title: post.title,
@@ -128,7 +130,7 @@ export default async function BlogPostPage({
 
         {/* Header */}
         <header className="mb-8">
-          <h1 className="display text-balance text-[36px] text-ink md:text-[56px]">
+          <h1 className="display text-balance text-[24px] text-ink md:text-[32px]">
             {post.title}
           </h1>
           <div className="mt-7 flex items-center gap-3 border-y border-rule py-4">
@@ -166,6 +168,7 @@ export default async function BlogPostPage({
 
         {/* Content */}
         <article className="mt-10">
+          <SelectionShare title={post.title}>
           <BlogContent
             html={html}
             className="
@@ -192,6 +195,7 @@ export default async function BlogPostPage({
               [&_td]:border [&_td]:border-rule [&_td]:px-3.5 [&_td]:py-2.5 [&_td]:text-ink-2
             "
           />
+          </SelectionShare>
         </article>
 
         {related.length > 0 && (

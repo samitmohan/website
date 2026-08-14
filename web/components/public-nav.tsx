@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SearchTrigger } from "@/components/search/search-trigger";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function PublicNav() {
@@ -53,6 +54,7 @@ export function PublicNav() {
           >
             Blog
           </Link>
+          <SearchTrigger />
           <ThemeToggle />
         </div>
       </div>
@@ -68,7 +70,7 @@ export function PublicFooter() {
           href="https://github.com/samitmohan"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-ink-2 transition-colors hover:text-orange"
+          className="inline-flex min-h-[44px] items-center text-ink-2 transition-colors hover:text-orange"
         >
           GitHub
         </a>
@@ -76,17 +78,22 @@ export function PublicFooter() {
           href="https://www.linkedin.com/in/samit-mohan/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-ink-2 transition-colors hover:text-orange"
+          className="inline-flex min-h-[44px] items-center text-ink-2 transition-colors hover:text-orange"
         >
           LinkedIn
         </a>
         <a
           href="mailto:samitmohan@gmail.com"
-          className="text-ink-2 transition-colors hover:text-orange"
+          className="inline-flex min-h-[44px] items-center text-ink-2 transition-colors hover:text-orange"
         >
           Email
         </a>
-        <a href="#" className="text-ink-2 transition-colors hover:text-orange">
+        <a
+          href="/samit-resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-[44px] items-center text-ink-2 transition-colors hover:text-orange"
+        >
           CV
         </a>
       </div>

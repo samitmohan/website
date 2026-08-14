@@ -1,6 +1,10 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useEffect } from "react";
+
+// Kept in step with --background in globals.css.
+const CHROME_COLOR = { light: "#FAFAFA", dark: "#0D0D0F" } as const;
 
 const SunIcon = (
   <svg
@@ -39,6 +43,15 @@ const MoonIcon = (
 
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
+
+  // The static themeColor in layout.tsx only covers the light default. Track
+  // the theme actually in effect, including a dark value restored from
+  // localStorage on load, so mobile browser chrome matches the page.
+  useEffect(() => {
+    const color = CHROME_COLOR[resolvedTheme === "dark" ? "dark" : "light"];
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (meta) meta.content = color;
+  }, [resolvedTheme]);
 
   return (
     <button

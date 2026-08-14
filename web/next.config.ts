@@ -8,6 +8,16 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // The feed lives at /blog/rss.xml. Readers and reviewers guess the root
+  // paths first, so send them on rather than 404.
+  async redirects() {
+    return [
+      { source: "/rss.xml", destination: "/blog/rss.xml", permanent: true },
+      { source: "/feed.xml", destination: "/blog/rss.xml", permanent: true },
+      { source: "/rss", destination: "/blog/rss.xml", permanent: true },
+      { source: "/feed", destination: "/blog/rss.xml", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
