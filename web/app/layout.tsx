@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     default: "Samit Mohan",
     template: "%s - Samit Mohan",
   },
-  description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
+  description: "AI Scientist at Beltech AI building computer-vision systems for city traffic. I rebuild ML from scratch and write about how it works.",
   icons: {
     icon: "/favicon.svg",
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Samit Mohan",
-    description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
+    description: "AI Scientist at Beltech AI building computer-vision systems for city traffic. I rebuild ML from scratch and write about how it works.",
     type: "website",
     siteName: "Samit Mohan",
     url: "https://samitmohan.in",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Samit Mohan",
-    description: "AI Scientist at Beltech AI building computer-vision systems. I rebuild ML from scratch and write engineering blogs.",
+    description: "AI Scientist at Beltech AI building computer-vision systems for city traffic. I rebuild ML from scratch and write about how it works.",
   },
 };
 
