@@ -194,7 +194,7 @@ export default async function HomePage() {
                 Samit Mohan
               </h1>
               <p className="mt-7 max-w-xl text-pretty text-[17px] leading-[155%] text-ink-2">
-                I&apos;m an AI Scientist at{" "}
+                AI Scientist at{" "}
                 <a
                   href="https://beltech.ai"
                   target="_blank"
@@ -203,14 +203,13 @@ export default async function HomePage() {
                 >
                   Beltech AI
                 </a>{" "}
-                in Bangalore, building computer-vision systems for city traffic:
-                live CCTV, ≤10ms inference, 0.9+ F1 in production. In my free
-                time I rebuild ML from scratch and write{" "}
+                in Bangalore, building computer-vision systems for city traffic
+                on live CCTV. I rebuild ML from scratch and{" "}
                 <Link
                   href="/blog"
                   className="text-ink underline decoration-brand/40 underline-offset-4 transition-colors hover:text-orange hover:decoration-orange"
                 >
-                  engineering blogs
+                  write about how it works
                 </Link>
                 .
               </p>
