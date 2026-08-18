@@ -1,25 +1,18 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Berkeley Mono is licensed (usgraphics.com), so the files are not in the
-   repo. Drop BerkeleyMono-Regular.woff2 and BerkeleyMono-Bold.woff2 into
-   public/fonts/ and these faces activate. Until then the browser skips the
-   missing src and falls through the stack below: JetBrains Mono if the
-   visitor has it, then Geist Mono, then the platform mono. */
-@font-face {
-  font-family: "Berkeley Mono";
-  src: url("/fonts/BerkeleyMono-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Berkeley Mono";
-  src: url("/fonts/BerkeleyMono-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Berkeley Mono is licensed (usgraphics.com), so the files are not in the repo.
+   There is deliberately no @font-face for it.
+
+   A @font-face pointing at a file the repo does not ship is not free: the
+   browser has to request the URL to find out it is missing, so every page using
+   --font-mono paid two 404s and a swap flash before falling through. Naming the
+   family in the stack below costs nothing and still picks it up for anyone who
+   has it installed locally.
+
+   To self-host it: drop BerkeleyMono-Regular.woff2 and BerkeleyMono-Bold.woff2
+   into public/fonts/ and add the two @font-face blocks back (weights 400/700,
+   font-display: swap). */
 
 :root {
   --background: #FAFAFA;
@@ -52,7 +45,7 @@
   --nav-bg: rgba(250, 250, 250, 0.82);
 
   /* Sarvam-derived extensions. Surfaces step 50 -> 300, ink steps down from
-     #141414, brand indigo + orange carry the two accent moments. */
+     #141414, brand indigo carries every interactive accent. */
   --surface: #FFFFFF;
   --surface-2: #F5F5F5;
   --surface-3: #F0F0F0;
@@ -82,8 +75,11 @@
   --brand-mid: #556ADC;
   --brand: #3333CC;
   --brand-strong: #212191;
-  /* Orange is accent punctuation only: hovered list index, outbound arrows,
-     blockquote rule. Never a fill, never a link colour. */
+  /* Orange ramp: kept defined but no longer referenced. It measured 3.22:1 on
+     --background, which fails AA for the 11-15px hover text it was carrying, so
+     every interactive accent moved to the brand ramp (8.09:1 light, 5.76:1
+     dark). Left in place because it is a complete, tuned ramp worth having if a
+     second accent is ever wanted for something non-textual. */
   --orange: #E6651B;
   --orange-strong: #A5460F;
   --orange-soft: #FEEDE6;
@@ -177,7 +173,7 @@
   --color-text-secondary: var(--muted-foreground);
 }
 
-/* Dark theme — toggled by next-themes via .dark on <html>. */
+/* Dark theme - .dark on <html>, set by THEME_SCRIPT then ThemeToggle. */
 .dark {
   --background: #0D0D0F;
   --foreground: #F2F2F2;
@@ -265,6 +261,51 @@ body {
   .shell { padding-inline: 40px; }
 }
 
+/* Nav scroll state, no JavaScript.
+
+   The hairline sits transparent while the page is at rest and fades in over the
+   first 8px of scroll. On the homepage the nav's copy of the name is redundant
+   until the hero scrolls away, so it fades in across the same range.
+
+   Everything lives behind @supports: browsers without scroll-driven animations
+   keep the settled state the markup already ships (hairline on, name visible),
+   which reads as a normal sticky nav rather than a broken one. */
+@supports (animation-timeline: scroll()) {
+  .nav-sticky {
+    border-bottom-color: transparent;
+    animation: nav-hairline linear both;
+    animation-timeline: scroll();
+    animation-range: 0 8px;
+  }
+
+  .nav-on-home .nav-name {
+    animation: nav-name-in linear both;
+    animation-timeline: scroll();
+    animation-range: 0 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-on-home .nav-name { animation-name: nav-name-fade; }
+  }
+}
+
+@keyframes nav-hairline {
+  from { border-bottom-color: transparent; }
+  to { border-bottom-color: var(--rule); }
+}
+
+/* pointer-events flips discretely at the halfway point, so the invisible link
+   never swallows clicks aimed at the hero underneath it. */
+@keyframes nav-name-in {
+  from { opacity: 0; transform: translateY(-4px); pointer-events: none; }
+  to { opacity: 1; transform: translateY(0); pointer-events: auto; }
+}
+
+@keyframes nav-name-fade {
+  from { opacity: 0; pointer-events: none; }
+  to { opacity: 1; pointer-events: auto; }
+}
+
 /* Display face for hero + section headings. Deliberately quiet: regular
    weight, no negative tracking (mono is already tight and letterspacing it
    in reads as compression), and enough leading to sit calm. Headings here
@@ -278,17 +319,25 @@ body {
 
 /* Explicit sizes per breakpoint rather than clamp, so mobile is chosen
    rather than interpolated. Sarvam uses no clamp anywhere. */
+/* Mono, because there is no display face to reach for: --font-display and
+   --font-sans resolve to the same system stack, so section headings used to
+   differ from body copy by weight alone and the page had no typographic voice.
+   The mono is already in the document for meta rows, so this costs no bytes and
+   reads like a section marker in a technical document rather than a heading in
+   a marketing page. */
 .section-title {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 18px;
-  letter-spacing: -0.01em;
+  font-family: var(--font-mono), monospace;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   line-height: 1.3;
-  text-wrap: balance;
+  /* Full ink, not --ink-2: the section marker now sits at 13px next to a 10px
+     --ink-3 "VIEW ALL" label, and at that size the two competed. */
   color: var(--foreground);
 }
 @media (min-width: 768px) {
-  .section-title { font-size: 20px; }
+  .section-title { font-size: 13px; }
 }
 
 /* Micro label: sarvam's 10px uppercase mono, used for structural captions
@@ -348,17 +397,43 @@ body {
   box-shadow: var(--lip);
 }
 .pill-ghost:hover {
-  border-color: var(--orange-border);
-  background: var(--orange-soft);
-  color: var(--orange);
+  border-color: var(--brand-border);
+  background: var(--brand-soft);
+  color: var(--brand);
 }
 .pill-ghost:active {
   background: var(--surface-3);
-  color: var(--orange-strong);
+  color: var(--brand-strong);
   transform: none;
 }
 .pill .arrow {
   transition: opacity 0.2s var(--motion-ease);
+}
+
+/* Hero links. These were 999px pills with a lip shadow, which is consumer-app
+   furniture on a page whose every other section is a hairline row. Now a single
+   mono meta line: same 44px tap target via padding, no border, no fill, no
+   radius. Orange on hover, matching every other interactive element. */
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 18px;
+}
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color 0.2s var(--motion-ease);
+}
+.hero-link:hover {
+  color: var(--brand);
 }
 
 /* Hairline list. The dominant sarvam layout: full-bleed rows split by 1px
@@ -386,13 +461,13 @@ body {
   top: -1px;
   bottom: -1px;
   width: 2px;
-  background: var(--orange);
+  background: var(--brand);
   opacity: 0;
   transition: opacity 0.2s var(--motion-ease);
 }
 a.row:hover,
 .row-interactive:hover {
-  background: linear-gradient(90deg, var(--orange-soft), transparent 78%);
+  background: linear-gradient(90deg, var(--brand-soft), transparent 78%);
 }
 a.row:hover::before { opacity: 1; }
 a.row:active { background: var(--surface-3); }
@@ -406,42 +481,68 @@ a.row:active { background: var(--surface-3); }
   transition: color 0.2s var(--motion-ease);
 }
 /* Orange, job 1 of 3: the hovered row index. */
-a.row:hover .row-index { color: var(--orange); }
+a.row:hover .row-index { color: var(--brand); }
+/* Outbound arrow on project rows. Every card on the site became a row, so this
+   is the only place the arrow lives now. */
+a.row:hover .out-arrow { color: var(--brand); }
 .row-title {
   transition: color 0.2s var(--motion-ease);
 }
-a.row:hover .row-title { color: var(--orange); }
-a.row:active .row-title { color: var(--orange-strong); }
+a.row:hover .row-title { color: var(--brand); }
+a.row:active .row-title { color: var(--brand-strong); }
 .row-arrow {
   opacity: 0;
   transition: opacity 0.2s var(--motion-ease);
 }
 a.row:hover .row-arrow { opacity: 1; }
 
-/* Rounded card. Borders carry the separation on mobile where cards stack;
-   on desktop the grid gap does that job, so the border drops back to
-   transparent and only returns on hover. The white fill holds the shape. */
-/* Hairline is a ring shadow, not a border: it sits outside the box model,
-   so swapping its colour on hover cannot shift a single pixel. */
-.card-surface {
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  box-shadow: var(--hairline), var(--lip);
-  transition: box-shadow 0.2s var(--motion-ease);
+/* Role bullets. Experience rows carry bullets now instead of one summary
+   sentence, so the list needs a marker that reads as structure without the
+   browser default's indent and oversized disc. Hanging indent keeps wrapped
+   lines aligned under the text, not under the marker. */
+.role-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
-@media (min-width: 768px) {
-  .card-surface { box-shadow: var(--lip); }
+.role-bullets li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 15px;
+  line-height: 155%;
+  color: var(--ink-2);
+  text-wrap: pretty;
 }
-a.card-surface:hover,
-.card-surface-hover:hover {
-  box-shadow: 0 0 0 1px var(--orange-border), var(--shadow-card), var(--lip);
+.role-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  /* Centre the 3px dot inside the first 1.55em line box. Percentages resolve
+     against the wrong axis inside calc here, so the line-height is restated in
+     em: (1.55em - dot) / 2. */
+  top: calc((1.55em - 3px) / 2);
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--ink-4);
 }
-a.card-surface:active {
+
+/* Tag chip. Frontmatter already carried tags on nearly every post and nothing
+   rendered them. Reads as metadata, not as a button: no hover, no link, mono
+   at meta size so it sits in the same line as date and reading time. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
   background: var(--surface-2);
-  box-shadow: 0 0 0 1px var(--orange-border), var(--lip);
+  box-shadow: inset 0 0 0 1px var(--rule-soft);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  text-transform: lowercase;
 }
-/* Orange, job 2 of 3: outbound arrows on hover. */
-a.card-surface:hover .out-arrow { color: var(--orange); }
+
 
 /* Scroll reveal. Content is visible by default and only hides once the
    observer is mounted, so a slow or failed hydration never blanks a section. */
@@ -506,7 +607,7 @@ code[data-theme*=" "] {
   transition: color 0.2s var(--motion-ease);
 }
 .blog-prose a:hover {
-  color: var(--orange);
+  color: var(--brand-strong);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -587,9 +688,9 @@ code[data-theme*=" "] {
     border-color 0.2s var(--motion-ease), box-shadow 0.2s var(--motion-ease);
 }
 :is(.blog-prose, .code-card) .code-copy:hover {
-  color: var(--orange);
-  background: var(--orange-soft);
-  border-color: var(--orange-border);
+  color: var(--brand);
+  background: var(--brand-soft);
+  border-color: var(--brand-border);
 }
 /* Success reads green, not indigo - indigo means "link" everywhere else. */
 :is(.blog-prose, .code-card) .code-copy.copied {

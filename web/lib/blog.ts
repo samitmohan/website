@@ -31,9 +31,26 @@ function fileToDate(filename: string): string {
   return m ? m[1] : "";
 }
 
+/**
+ * Words per minute over prose only.
+ *
+ * Counting raw markdown put the math post at 59 minutes and microGPT at 58,
+ * because LaTeX source and fenced code dominate the word count on exactly the
+ * posts that matter most. A `\frac{\partial L}{\partial w}` is one glance, not
+ * six words, and a 40-line code block is not 200 words of reading. Measured
+ * after stripping: math 59 -> 35, microGPT 58 -> 22, how-chatgpt-works 49 -> 40.
+ * The long ones are still long; they are no longer wrong.
+ */
 function readingTime(content: string): number {
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / 200);
+  const prose = content
+    .replace(/```[\s\S]*?```/g, "")      // fenced code
+    .replace(/\$\$[\s\S]*?\$\$/g, "")    // display math
+    .replace(/\$[^$\n]+\$/g, "")         // inline math
+    .replace(/`[^`\n]+`/g, "")           // inline code
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "") // images
+    .replace(/<[^>]+>/g, "");            // raw html
+  const words = prose.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
 }
 
 function formatDate(raw: string): string {
@@ -77,8 +94,8 @@ function readAllPosts() {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
-// Public posts: everything except hidden ones. Feeds the blog index, tags,
-// RSS, sitemap, homepage, and related/prev-next links.
+// Public posts: everything except hidden ones. Feeds the blog index, RSS,
+// sitemap, homepage, and related/prev-next links.
 export function getAllPosts(): PostMeta[] {
   return readAllPosts().filter((p) => !p.hidden);
 }
@@ -86,19 +103,6 @@ export function getAllPosts(): PostMeta[] {
 // Hidden ("fun") posts: unlisted, noindex, reachable only via /fun or direct URL.
 export function getHiddenPosts(): PostMeta[] {
   return readAllPosts().filter((p) => p.hidden);
-}
-
-// Distinct tags across published posts, ordered by frequency then name.
-export function getAllTags(): string[] {
-  const counts = new Map<string, number>();
-  for (const post of getAllPosts()) {
-    for (const tag of post.tags) {
-      counts.set(tag, (counts.get(tag) ?? 0) + 1);
-    }
-  }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([tag]) => tag);
 }
 
 // Strip Liquid tags. Rewrite internal Jekyll post links to /blog/[slug].

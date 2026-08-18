@@ -2,11 +2,15 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
-import { prefetchSearchIndex } from "@/lib/search/client";
+import { prefetchSearchIndex } from "@/lib/search/payload";
 
 // The palette pulls in MiniSearch and the index loader. Keeping it behind a
 // dynamic import means neither reaches the initial bundle; only this button and
 // its key listener ship on first paint.
+//
+// prefetchSearchIndex comes from lib/search/payload, not lib/search/client:
+// client imports MiniSearch, and importing it here would undo the split by
+// pulling the library into every page that renders the nav.
 const SearchCommand = dynamic(() => import("./search-command"), { ssr: false });
 
 export function SearchTrigger() {

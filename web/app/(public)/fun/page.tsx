@@ -4,7 +4,10 @@ import { getHiddenPosts } from "@/lib/blog";
 import { funFontVars } from "@/lib/fun-fonts";
 import { FunThemeToggle } from "@/components/fun-theme-toggle";
 
-export const revalidate = 30;
+// Everything on this page comes from files in the repo, so it can only change
+// when a deploy changes them. Revalidating on a timer re-renders pages that
+// cannot have changed.
+export const revalidate = false;
 
 export const metadata: Metadata = {
   title: "fun",

@@ -24,7 +24,7 @@ export function BackToTop() {
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
       }}
       aria-label="Back to top"
-      className="fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-rule bg-surface text-ink-2 shadow-[var(--shadow-card)] transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-orange-border hover:text-orange"
+      className="fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-rule bg-surface text-ink-2 shadow-[var(--shadow-card)] transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-border hover:text-brand"
     >
       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
@@ -84,7 +84,7 @@ export function PostTOC({ scope }: { scope: string }) {
           <li key={h.id}>
             <a
               href={`#${h.id}`}
-              className={`-ml-px block border-l py-1.5 transition-colors duration-200 hover:border-orange hover:text-orange ${
+              className={`-ml-px block border-l py-1.5 transition-colors duration-200 hover:border-brand hover:text-brand ${
                 h.level === 3 ? "pl-6" : "pl-4"
               } ${
                 activeId === h.id

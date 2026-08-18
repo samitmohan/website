@@ -13,3 +13,6 @@ server/.env
 # Original standalone source for the interviews guide (superseded by
 # web/lib/interviews-data.json). Kept locally as the editable source.
 ml-interview-guide.html
+
+# ignore stray resume copies outside public/
+/samit-resume.pdf

@@ -1,8 +1,7 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { THEME_SCRIPT } from "@/lib/theme-script";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
 
@@ -13,13 +12,9 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// The site is class-themed and ignores prefers-color-scheme, so a media-keyed
-// themeColor would paint dark browser chrome around a light page for anyone on
-// an OS dark theme who has not toggled. Ship the default here and let
-// ThemeToggle rewrite it to track the theme actually in effect.
-export const viewport: Viewport = {
-  themeColor: "#FAFAFA",
-};
+// No viewport.themeColor export on purpose: THEME_SCRIPT owns the theme-color
+// meta tag. Two writers on one tag means load order decides which wins, and the
+// loser paints light browser chrome around a dark page.
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
@@ -27,7 +22,7 @@ export const metadata: Metadata = {
     default: "Samit Mohan",
     template: "%s - Samit Mohan",
   },
-  description: "AI Scientist at Beltech AI building computer-vision systems for city traffic. I rebuild ML from scratch and write about how it works.",
+  description: "AI Scientist at Beltech AI in Bangalore. I rebuild ML from scratch and write about it.",
   icons: {
     icon: "/favicon.svg",
   },
@@ -36,7 +31,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Samit Mohan",
-    description: "AI Scientist at Beltech AI building computer-vision systems for city traffic. I rebuild ML from scratch and write about how it works.",
+    description: "AI Scientist at Beltech AI in Bangalore. I rebuild ML from scratch and write about it.",
     type: "website",
     siteName: "Samit Mohan",
     url: "https://samitmohan.in",
@@ -44,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Samit Mohan",
-    description: "AI Scientist at Beltech AI building computer-vision systems for city traffic. I rebuild ML from scratch and write about how it works.",
+    description: "AI Scientist at Beltech AI in Bangalore. I rebuild ML from scratch and write about it.",
   },
 };
 
@@ -59,6 +54,10 @@ export default function RootLayout({
       className={`${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Before first paint, so a stored dark preference never flashes light. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
           href="#main"
@@ -101,16 +100,8 @@ export default function RootLayout({
             }),
           }}
         />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
         <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

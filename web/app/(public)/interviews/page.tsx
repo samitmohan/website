@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PublicNav } from "@/components/public-nav";
-import { InterviewsGuide } from "@/components/interviews/interviews-guide";
+import { InterviewsIndex } from "@/components/interviews/interviews-index";
 
 export const metadata: Metadata = {
   title: "Interviews — Samit Mohan",
@@ -9,13 +9,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export const revalidate = 30;
+// Everything on this page comes from files in the repo, so it can only change
+// when a deploy changes them. Revalidating on a timer re-renders pages that
+// cannot have changed.
+export const revalidate = false;
 
 export default function InterviewsPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <PublicNav />
-      <InterviewsGuide />
+      <InterviewsIndex />
     </div>
   );
 }

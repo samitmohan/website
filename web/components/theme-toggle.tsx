@@ -1,10 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { useEffect } from "react";
-
-// Kept in step with --background in globals.css.
-const CHROME_COLOR = { light: "#FAFAFA", dark: "#0D0D0F" } as const;
+import { CHROME_COLOR, THEME_STORAGE_KEY } from "@/lib/theme-script";
 
 const SunIcon = (
   <svg
@@ -41,23 +37,23 @@ const MoonIcon = (
   </svg>
 );
 
+// No state and no effect. Both icons always render and .dark in globals.css
+// picks which one shows, so the button's markup never depends on the theme and
+// there is nothing to hydrate or mismatch.
+function toggleTheme() {
+  const dark = document.documentElement.classList.toggle("dark");
+  document.documentElement.style.colorScheme = dark ? "dark" : "light";
+  localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
+  const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (meta) meta.content = dark ? CHROME_COLOR.dark : CHROME_COLOR.light;
+}
+
 export function ThemeToggle({ className = "" }: { className?: string }) {
-  const { resolvedTheme, setTheme } = useTheme();
-
-  // The static themeColor in layout.tsx only covers the light default. Track
-  // the theme actually in effect, including a dark value restored from
-  // localStorage on load, so mobile browser chrome matches the page.
-  useEffect(() => {
-    const color = CHROME_COLOR[resolvedTheme === "dark" ? "dark" : "light"];
-    const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-    if (meta) meta.content = color;
-  }, [resolvedTheme]);
-
   return (
     <button
       type="button"
       aria-label="Toggle dark mode"
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      onClick={toggleTheme}
       className={`inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-ink-2 transition-colors duration-200 hover:border-rule hover:bg-surface hover:text-ink ${className}`}
     >
       {SunIcon}

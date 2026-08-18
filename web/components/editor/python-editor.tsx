@@ -9,7 +9,7 @@ import { bracketMatching, indentOnInput, syntaxHighlighting, HighlightStyle } fr
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { tags } from "@lezer/highlight";
-import { useTheme } from "next-themes";
+import { useIsDark } from "@/hooks/use-is-dark";
 
 const lightTheme = EditorView.theme({
   "&": {
@@ -66,8 +66,7 @@ export function PythonEditor({ value, onChange, readOnly = false, className = ""
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const isDark = useIsDark();
 
   useEffect(() => {
     if (!containerRef.current) return;

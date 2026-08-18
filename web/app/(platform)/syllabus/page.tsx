@@ -1,9 +1,7 @@
-"use client";
-
 import Link from "next/link";
 import { SYLLABUS } from "@/config/syllabus";
-import { PROBLEMS, getProblemsByWeek } from "@/config/problems";
-import { useUserProgress } from "@/hooks/use-api";
+import { getProblemsByWeek } from "@/config/problems";
+import { WeekProgress } from "@/components/syllabus/week-progress";
 
 const TYPE_COLORS: Record<string, string> = {
   coding: "bg-[#7F56D9]/10 text-[#9E77ED] border-[#7F56D9]/20",
@@ -23,8 +21,27 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   Hard: "text-red-400",
 };
 
+// Server component. It reads config/problems.ts at build time and paints only
+// the four fields a row needs, so none of the problem bodies reach the browser.
 export default function SyllabusPage() {
-  const { data: progress } = useUserProgress();
+  const weeks = SYLLABUS.map((week) => {
+    const problems = getProblemsByWeek(week.weekNumber);
+    return {
+      ...week,
+      counts: {
+        total: problems.length,
+        easy: problems.filter((p) => p.difficulty === "Easy").length,
+        med: problems.filter((p) => p.difficulty === "Medium").length,
+        hard: problems.filter((p) => p.difficulty === "Hard").length,
+      },
+      problems: problems.map((p) => ({
+        id: p.id,
+        title: p.title,
+        type: p.type,
+        difficulty: p.difficulty,
+      })),
+    };
+  });
 
   return (
     <div className="max-w-[720px] mx-auto px-6 py-10">
@@ -33,118 +50,102 @@ export default function SyllabusPage() {
       </div>
 
       <div>
-        {SYLLABUS.map((week, i) => {
-          const weekProblems = getProblemsByWeek(week.weekNumber);
-          const wp = progress?.weeks?.[`week-${week.weekNumber}`];
-          return (
-            <div
-              key={week.weekNumber}
-              className={`${
-                i < SYLLABUS.length - 1 ? "border-b border-border" : ""
-              }${week.supplementary ? " opacity-70" : ""}`}
-            >
-              <div className="flex gap-5 pt-5 pb-3">
-                <span className="text-[24px] font-bold text-muted-foreground/50 font-mono tabular-nums leading-none pt-0.5 w-9 shrink-0 select-none">
-                  {String(week.weekNumber).padStart(2, "0")}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/problems?week=${week.weekNumber}`}
-                      className="text-sm font-semibold text-foreground hover:text-[#9E77ED] transition-colors"
-                    >
-                      {week.title}
-                    </Link>
-                    {week.supplementary && (
-                      <span className="text-[11px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border">
-                        Supplementary
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[13px] text-muted-foreground mt-0.5 leading-relaxed">
-                    {week.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {week.topics.map((topic) => (
-                      <span
-                        key={topic}
-                        className="text-xs px-2 py-[2px] rounded-full bg-muted text-muted-foreground"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                  {weekProblems.length > 0 && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="text-xs text-muted-foreground/70">{weekProblems.length} problems</span>
-                      <span className="text-xs text-muted-foreground/50">|</span>
-                      {(() => {
-                        const e = weekProblems.filter((p) => p.difficulty === "Easy").length;
-                        const m = weekProblems.filter((p) => p.difficulty === "Medium").length;
-                        const h = weekProblems.filter((p) => p.difficulty === "Hard").length;
-                        return (
-                          <>
-                            {e > 0 && <span className="text-xs text-emerald-500/70">{e} Easy</span>}
-                            {m > 0 && <span className="text-xs text-amber-500/70">{m} Med</span>}
-                            {h > 0 && <span className="text-xs text-red-500/70">{h} Hard</span>}
-                          </>
-                        );
-                      })()}
-                      {wp && wp.completed > 0 && (
-                        <>
-                          <span className="text-xs text-muted-foreground/50">|</span>
-                          <span className="text-xs text-emerald-400">{wp.completed}/{wp.total} solved</span>
-                          <div className="w-16 h-1 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-emerald-500 rounded-full transition-all"
-                              style={{ width: `${Math.round(wp.percent * 100)}%` }}
-                            />
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
-                  {week.project && (
-                    <p className="text-[13px] text-muted-foreground/70 mt-2 font-medium">
-                      Project: {week.project}
-                    </p>
+        {weeks.map((week, i) => (
+          <div
+            key={week.weekNumber}
+            className={`${
+              i < weeks.length - 1 ? "border-b border-border" : ""
+            }${week.supplementary ? " opacity-70" : ""}`}
+          >
+            <div className="flex gap-5 pt-5 pb-3">
+              <span className="text-[24px] font-bold text-muted-foreground/50 font-mono tabular-nums leading-none pt-0.5 w-9 shrink-0 select-none">
+                {String(week.weekNumber).padStart(2, "0")}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/problems?week=${week.weekNumber}`}
+                    className="text-sm font-semibold text-foreground hover:text-[#9E77ED] transition-colors"
+                  >
+                    {week.title}
+                  </Link>
+                  {week.supplementary && (
+                    <span className="text-[11px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border">
+                      Supplementary
+                    </span>
                   )}
                 </div>
-              </div>
-
-              {/* Problems */}
-              {weekProblems.length > 0 ? (
-                <div className="ml-14 pb-5 space-y-0">
-                  {weekProblems.map((problem) => (
-                    <Link
-                      key={problem.id}
-                      href={`/problems/${problem.id}`}
-                      className="flex items-center gap-2.5 py-[5px] group"
+                <p className="text-[13px] text-muted-foreground mt-0.5 leading-relaxed">
+                  {week.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {week.topics.map((topic) => (
+                    <span
+                      key={topic}
+                      className="text-xs px-2 py-[2px] rounded-full bg-muted text-muted-foreground"
                     >
-                      <span
-                        className={`text-xs font-medium px-1.5 py-[1px] rounded border shrink-0 ${TYPE_COLORS[problem.type]}`}
-                      >
-                        {TYPE_LABELS[problem.type]}
-                      </span>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors flex-1 truncate">
-                        {problem.title}
-                      </span>
-                      <span
-                        className={`text-xs shrink-0 ${DIFFICULTY_COLORS[problem.difficulty]}`}
-                      >
-                        {problem.difficulty}
-                      </span>
-                    </Link>
+                      {topic}
+                    </span>
                   ))}
                 </div>
-              ) : (
-                <p className="ml-14 pb-5 text-[13px] text-muted-foreground/50">
-                  Coming soon
-                </p>
-              )}
+                {week.counts.total > 0 && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-xs text-muted-foreground/70">
+                      {week.counts.total} problems
+                    </span>
+                    <span className="text-xs text-muted-foreground/50">|</span>
+                    {week.counts.easy > 0 && (
+                      <span className="text-xs text-emerald-500/70">
+                        {week.counts.easy} Easy
+                      </span>
+                    )}
+                    {week.counts.med > 0 && (
+                      <span className="text-xs text-amber-500/70">{week.counts.med} Med</span>
+                    )}
+                    {week.counts.hard > 0 && (
+                      <span className="text-xs text-red-500/70">{week.counts.hard} Hard</span>
+                    )}
+                    <WeekProgress weekNumber={week.weekNumber} />
+                  </div>
+                )}
+                {week.project && (
+                  <p className="text-[13px] text-muted-foreground/70 mt-2 font-medium">
+                    Project: {week.project}
+                  </p>
+                )}
+              </div>
             </div>
-          );
-        })}
+
+            {/* Problems */}
+            {week.problems.length > 0 ? (
+              <div className="ml-14 pb-5 space-y-0">
+                {week.problems.map((problem) => (
+                  <Link
+                    key={problem.id}
+                    href={`/problems/${problem.id}`}
+                    className="flex items-center gap-2.5 py-[5px] group"
+                  >
+                    <span
+                      className={`text-xs font-medium px-1.5 py-[1px] rounded border shrink-0 ${TYPE_COLORS[problem.type]}`}
+                    >
+                      {TYPE_LABELS[problem.type]}
+                    </span>
+                    <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors flex-1 truncate">
+                      {problem.title}
+                    </span>
+                    <span
+                      className={`text-xs shrink-0 ${DIFFICULTY_COLORS[problem.difficulty]}`}
+                    >
+                      {problem.difficulty}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="ml-14 pb-5 text-[13px] text-muted-foreground/50">Coming soon</p>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

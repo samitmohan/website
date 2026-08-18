@@ -21,7 +21,10 @@ const PostTOC = dynamic(() =>
   import("@/components/blog-post-chrome").then((m) => m.PostTOC)
 );
 
-export const revalidate = 30;
+// Everything on this page comes from files in the repo, so it can only change
+// when a deploy changes them. Revalidating on a timer re-renders pages that
+// cannot have changed.
+export const revalidate = false;
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -113,14 +116,14 @@ export default async function BlogPostPage({
       <BackToTop />
       <PostTOC scope="article" />
       <PostKeyboardNav prevHref={prevHref} nextHref={nextHref} />
-      <PublicNav />
+      <PublicNav current="blog" />
 
       <main id="main" className="mx-auto max-w-[44rem] px-6 py-14 md:py-20">
         {/* Breadcrumb */}
         <div className="label mb-10 flex items-center gap-2">
           <Link
             href={post.hidden ? "/fun" : "/blog"}
-            className="transition-colors hover:text-orange"
+            className="transition-colors hover:text-brand"
           >
             {post.hidden ? "fun" : "Posts"}
           </Link>
@@ -183,7 +186,7 @@ export default async function BlogPostPage({
               [&_li]:text-[17.5px] [&_li]:text-ink-2 [&_li]:leading-[1.75] [&_li]:mb-1.5
               [&_strong]:text-ink [&_strong]:font-medium
               [&_em]:italic
-              [&_blockquote]:border-l-2 [&_blockquote]:border-orange [&_blockquote]:bg-surface-2 [&_blockquote]:rounded-r-lg [&_blockquote]:py-3 [&_blockquote]:pl-5 [&_blockquote]:pr-4 [&_blockquote]:text-ink-2 [&_blockquote]:not-italic [&_blockquote]:my-7
+              [&_blockquote]:border-l-2 [&_blockquote]:border-brand [&_blockquote]:bg-surface-2 [&_blockquote]:rounded-r-lg [&_blockquote]:py-3 [&_blockquote]:pl-5 [&_blockquote]:pr-4 [&_blockquote]:text-ink-2 [&_blockquote]:not-italic [&_blockquote]:my-7
               [&_pre]:overflow-x-auto [&_pre]:text-[13px] [&_pre]:leading-6
               [&_[data-rehype-pretty-code-figure]]:max-w-none [&_[data-rehype-pretty-code-figure]]:-mx-4 [&_[data-rehype-pretty-code-figure]]:my-7
               [&_code]:font-mono [&_code]:text-[0.875em]
@@ -201,19 +204,26 @@ export default async function BlogPostPage({
         {related.length > 0 && (
           <section className="mt-16 border-t border-rule pt-10">
             <h2 className="label mb-6">Related posts</h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {/* Rows, matching the blog index and the homepage. These were the
+                last rounded cards on the site; a 3-up card grid also had no room
+                for the description, so it asked readers to pick from titles
+                alone. */}
+            <div className="rows">
               {related.map((p) => (
-                <Link
-                  key={p.slug}
-                  href={`/blog/${p.slug}`}
-                  className="card-surface group flex flex-col p-4"
-                >
-                  <h3 className="text-[14.5px] font-medium leading-[135%] text-ink transition-colors group-hover:text-orange">
-                    {p.title}
-                  </h3>
-                  <div className="meta mt-auto pt-4">
-                    {formatPostDate(p.date)}
+                <Link key={p.slug} href={`/blog/${p.slug}`} className="row">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h3 className="row-title text-[16px] font-medium leading-snug text-ink">
+                      {p.title}
+                    </h3>
+                    <span className="meta shrink-0">
+                      {formatPostDate(p.date)} · {p.readingTime} min
+                    </span>
                   </div>
+                  {p.description ? (
+                    <p className="mt-1.5 max-w-3xl text-pretty text-[14px] leading-[155%] text-ink-2">
+                      {p.description}
+                    </p>
+                  ) : null}
                 </Link>
               ))}
             </div>
@@ -227,7 +237,7 @@ export default async function BlogPostPage({
                 <p className="label mb-2">
                   ← Older
                 </p>
-                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-orange">
+                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-brand">
                   {prevPost.title}
                 </p>
               </Link>
@@ -239,7 +249,7 @@ export default async function BlogPostPage({
                 <p className="label mb-2">
                   Newer →
                 </p>
-                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-orange">
+                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-brand">
                   {nextPost.title}
                 </p>
               </Link>

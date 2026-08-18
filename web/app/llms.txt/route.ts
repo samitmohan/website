@@ -16,8 +16,8 @@ export async function GET() {
 
   const body = `# Samit Mohan
 
-> AI Scientist at Beltech AI building computer-vision systems for city traffic.
-> I rebuild ML from scratch and write about how it works.
+> AI Scientist at Beltech AI in Bangalore.
+> I rebuild ML from scratch and write about it.
 
 - Site: ${BASE}
 - Blog: ${BASE}/blog

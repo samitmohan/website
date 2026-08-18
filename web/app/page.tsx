@@ -3,100 +3,127 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import { RSS_ALTERNATE } from "@/lib/metadata";
+import { SERIES, SERIES_TITLE } from "@/lib/series";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/", types: RSS_ALTERNATE },
 };
 
-export const revalidate = 30;
+// Everything on this page comes from files in the repo, so it can only change
+// when a deploy changes them. Revalidating on a timer re-renders pages that
+// cannot have changed.
+export const revalidate = false;
 
-// Ordered from-scratch ladder. Each rung assumes the last.
-const CURRICULUM: { slug: string; gloss: string }[] = [
-  { slug: "math", gloss: "gradients and the chain rule, from scratch" },
-  { slug: "nn", gloss: "a digit classifier in pure NumPy" },
-  { slug: "torch", gloss: "tensors and autograd, then the same net in PyTorch" },
-  { slug: "minitorch", gloss: "a working framework in ~1500 lines" },
-  { slug: "attention-residuals", gloss: "why attention and residual streams work" },
-  { slug: "microgpt", gloss: "a GPT built and trained end to end" },
-  { slug: "how-chatgpt-works", gloss: "the full pipeline: data, alignment, inference" },
-  { slug: "inference", gloss: "the KV cache, batching, what makes tokens fast" },
+const HERO_LINKS: { label: string; href: string; external?: boolean }[] = [
+  { label: "GitHub", href: "https://github.com/samitmohan", external: true },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/samit-mohan/",
+    external: true,
+  },
+  { label: "Email", href: "mailto:samitmohan@gmail.com" },
+  { label: "CV", href: "/samit-resume.pdf", external: true },
 ];
 
 const PROJECTS = [
   {
     name: "mathLM",
+    // Deliberately no benchmark number. A 40M model is not judged on absolute
+    // GSM8K, and naming a benchmark without a figure reads as hiding one. The
+    // honest result is the SFT -> GRPO delta on a held-out split.
+    // TODO: measure that delta, then state it here as "GRPO lifted pass@1 from
+    // X% to Y% over the SFT checkpoint".
+    stack: "PyTorch",
     description:
-      "40M GPT trained from scratch on math. Custom BPE, GQA + RoPE + SwiGLU, SFT + GRPO reasoning RL. Evaluated on GSM8K.",
+      "40M-param GPT trained from scratch on math. Custom BPE, GQA + RoPE + SwiGLU, then SFT and GRPO reasoning RL. The whole pipeline, tokenizer through policy gradient.",
     url: "https://github.com/samitmohan/mathLM",
   },
   {
     name: "minitorch",
+    stack: "NumPy · CuPy",
     description:
-      "PyTorch in ~1500 lines. Reverse-mode autograd, conv2d, optimizers, LR schedulers. 96%+ on MNIST with the CNN.",
+      "PyTorch in ~1500 lines. Reverse-mode autograd, conv2d, optimizers, LR schedulers. 96%+ on MNIST with the CNN, checked against numerical gradients.",
     url: "https://github.com/samitmohan/minitorch",
   },
   {
     name: "mini-code",
+    stack: "Python",
     description:
-      "Built to figure out what's actually inside an agent loop. Turns out it's ~350 lines: tool calls, shell exec, streamed command output.",
+      "Built to find out what is actually inside an agent loop. Turns out it is ~350 lines: tool calls, shell exec, streamed command output.",
     url: "https://github.com/samitmohan/minicode",
   },
   {
     name: "tennis-analysis",
+    stack: "PyTorch · OpenCV",
     description:
       "YOLO + ResNet on match footage. Court keypoint regression, ball detection with interpolation, shot-event detection and speed estimation.",
     url: "https://github.com/samitmohan/tennis-analysis",
   },
 ];
 
-const EXPERIENCE = [
+// Beltech carries bullets because it is the current job and the reason anyone
+// technical is on this page. The internships carry one line each. That
+// asymmetry is the point: it mirrors what is worth reading.
+const EXPERIENCE: RoleRow[] = [
   {
     company: "Beltech AI",
     role: "AI Scientist",
     period: "Jun 2025 - Present",
-    summary:
-      "City-traffic computer vision on live CCTV: **≤10ms** inference, **0.9+ F1** in production, **100+ cameras** per server.",
+    bullets: [
+      "Built and shipped **10+ detection modules** over live RTSP at **0.9+ F1** (LPR, helmet, seatbelt, side-view-mirror, make-model-colour, no-parking, wrong-way) into an estate of **60k+ cameras across 27+ cities**.",
+      "Wrote a custom **NVIDIA DeepStream pipeline in C** keeping decode → detect → track fully on-GPU with **no CPU↔GPU copies**, scaling one server to **100+ cameras on a single GPU**.",
+      "Cut detection latency **54% to ≤10 ms** on edge with NMS-free YOLOv10 on Triton/TensorRT at **0.90+ mAP** across 8 classes; an input-size sweep took weights to **1.2 MB** and inference to **30 ms/frame**.",
+      "Rebuilt LPR end to end (YOLOv11s text detection + PARSeq ViT recognition, **TensorRT FP16** on edge): **150 ms → 40 ms** with higher read accuracy.",
+      "Served a Triton deployment at **7000 fps / 20000 rps**, and a continuous-learning loop that ingests live misclassifications on a 2-week cadence, gates on **mAP50**, and hot-swaps models with **zero downtime**.",
+      "Led the Bangalore on-ground deployment with a **3-person team**: picked junctions, routed streams, trained models, managed annotators. **20k+ violations/day across 6 junctions**.",
+    ],
   },
   {
     company: "Genpact",
     role: "Data Science Intern",
     period: "Oct 2023 - Dec 2023",
     summary:
-      "Built an **NLP resume screener** for data-team hiring and a **churn-prediction model** (POC), plus dashboards and ETL. **Alteryx certified**.",
+      "An **NLP resume screener** for data-team hiring and a **churn-prediction** POC, plus dashboards and ETL.",
   },
   {
     company: "MakeMyTrip",
     role: "Machine Learning Intern",
     period: "Aug 2022 - Oct 2022",
     summary:
-      "Personalization API with multi-armed bandits and an RLHF reward model for itinerary ranking.",
+      "Personalization API with **multi-armed bandits** (epsilon-greedy, Thompson, UCB) and an RLHF reward model for itinerary ranking.",
+  },
+  {
+    company: "NHCE, VTU",
+    role: "B.Tech Information Technology",
+    period: "2020 - 2024",
+    summary: "CGPA **9.4 / 10** · Founder, Coding Club NHCE.",
   },
 ];
 
-const EDUCATION = {
-  company: "NHCE, VTU",
-  role: "B.Tech Information Technology",
-  period: "2020 - 2024",
-  summary: "CGPA **9.4 / 10** · Founder, Coding Club NHCE.",
-};
-
-const TEACHING = [
+const TEACHING: RoleRow[] = [
   {
     company: "aiengg.dev",
     role: "AI Cohort TA",
     period: "Dec 2025 - May 2026",
     href: "https://aiengg.dev/",
     summary:
-      "TA'd a 16-week AI engineering cohort for **200+ engineers**: RAG, agents, fine-tuning, inference.",
+      "TA'd a 16-week AI engineering cohort for **200+ engineers**: RAG, agents, fine-tuning, inference. Ran weekly classes, wrote assignments, built the syllabus.",
   },
   {
     company: "TensorTonic",
     role: "Contributor",
-    period: "Ongoing",
+    period: "Past",
     href: "https://www.tensortonic.com/ml-math",
     summary:
-      "**300+** implementation and system-design problems; the platform serves **40k+ users**.",
+      "**300+** implementation and system-design problems on a platform serving **40k+ users**.",
+  },
+  {
+    company: "InterviewReady",
+    role: "Technical Writer",
+    period: "Past",
+    summary:
+      "Restructured course content for **10k+ subscribers**; technical posts reaching **20,000+ readers**.",
   },
 ];
 
@@ -118,7 +145,8 @@ type RoleRow = {
   role: string;
   period: string;
   href?: string;
-  summary: string;
+  summary?: string;
+  bullets?: string[];
 };
 
 function RoleRows({ items }: { items: RoleRow[] }) {
@@ -134,9 +162,18 @@ function RoleRows({ items }: { items: RoleRow[] }) {
               </h3>
               <span className="meta shrink-0">{item.period}</span>
             </div>
-            <p className="mt-1.5 max-w-3xl text-pretty text-[15px] leading-[155%] text-ink-2">
-              {emphasize(item.summary)}
-            </p>
+            {item.summary ? (
+              <p className="mt-1.5 max-w-3xl text-pretty text-[15px] leading-[155%] text-ink-2">
+                {emphasize(item.summary)}
+              </p>
+            ) : null}
+            {item.bullets ? (
+              <ul className="role-bullets mt-2.5 max-w-3xl">
+                {item.bullets.map((b, i) => (
+                  <li key={i}>{emphasize(b)}</li>
+                ))}
+              </ul>
+            ) : null}
           </>
         );
 
@@ -160,12 +197,52 @@ function RoleRows({ items }: { items: RoleRow[] }) {
   );
 }
 
+function SectionHead({
+  title,
+  href,
+  external,
+  label = "View all",
+}: {
+  title: string;
+  href: string;
+  external?: boolean;
+  label?: string;
+}) {
+  const arrow = (
+    <span
+      aria-hidden
+      className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1"
+    >
+      →
+    </span>
+  );
+  const cls =
+    "label group -my-3 inline-flex min-h-[44px] items-center py-3 transition-colors duration-200 hover:text-brand";
+
+  return (
+    <div className="mb-6 flex flex-wrap items-baseline justify-between gap-4">
+      <h2 className="section-title">{title}</h2>
+      {external ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+          {label}
+          {arrow}
+        </a>
+      ) : (
+        <Link href={href} className={cls}>
+          {label}
+          {arrow}
+        </Link>
+      )}
+    </div>
+  );
+}
+
 export default async function HomePage() {
   const allPosts = getAllPosts();
   // Four on the homepage, not the full eight. Eight rows ran taller than a
   // viewport and duplicated /blog, which the "View all" link sits next to.
   const ladder = (
-    CURRICULUM.map(({ slug, gloss }) => {
+    SERIES.map(({ slug, gloss }) => {
       const post = allPosts.find((p) => p.slug === slug);
       return post ? { post, gloss } : null;
     }).filter(Boolean) as { post: (typeof allPosts)[number]; gloss: string }[]
@@ -173,7 +250,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <PublicNav />
+      <PublicNav current="home" />
 
       <main id="main">
         {/* Hero */}
@@ -193,175 +270,139 @@ export default async function HomePage() {
               <h1 className="display text-[26px] text-ink md:text-[34px]">
                 Samit Mohan
               </h1>
+              {/* Two sentences. An earlier version front-loaded the inference
+                  numbers here, which turned the hero into a stat sheet and said
+                  the same things the Experience bullets say one screen down with
+                  full context. The hero introduces; Experience argues. */}
               <p className="mt-7 max-w-xl text-pretty text-[17px] leading-[155%] text-ink-2">
                 AI Scientist at{" "}
                 <a
                   href="https://beltech.ai"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink underline decoration-brand/40 underline-offset-4 transition-colors hover:text-orange hover:decoration-orange"
+                  className="text-ink underline decoration-rule-strong underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
                 >
                   Beltech AI
                 </a>{" "}
-                in Bangalore, building computer-vision systems for city traffic
-                on live CCTV. I rebuild ML from scratch and{" "}
+                in Bangalore. I rebuild ML from scratch and{" "}
                 <Link
                   href="/blog"
-                  className="text-ink underline decoration-brand/40 underline-offset-4 transition-colors hover:text-orange hover:decoration-orange"
+                  className="text-ink underline decoration-rule-strong underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
                 >
-                  write about how it works
+                  write about it
                 </Link>
                 .
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-2">
-                <a
-                  href="https://github.com/samitmohan"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pill pill-ghost"
-                >
-                  GitHub
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/samit-mohan/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pill pill-ghost"
-                >
-                  LinkedIn
-                </a>
-                <a
-                  href="mailto:samitmohan@gmail.com"
-                  className="pill pill-ghost"
-                >
-                  Email
-                </a>
-                <a
-                  href="/samit-resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pill pill-ghost"
-                >
-                  CV
-                </a>
+              {/* Was four ghost pills. A 999px radius with a lip shadow is
+                  consumer-app furniture on a page built from hairline rows. */}
+              <div className="hero-links mt-5">
+                {HERO_LINKS.map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    {...(l.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="hero-link"
+                  >
+                    {l.label}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Posts - from-scratch ladder */}
+        {/* Experience sits directly under the hero. It used to be fourth, under
+            the blog ladder and the project grid, which put the hardest and most
+            verifiable work below two screens of scrolling. */}
         <section className="reveal border-t border-rule">
           <div className="shell py-10">
-          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
-            <h2 className="section-title">From Scratch</h2>
-            <Link
-              href="/blog"
-              className="label group -my-3 inline-flex min-h-[44px] items-center py-3 transition-colors duration-200 hover:text-orange"
-            >
-              View all
-              <span
-                aria-hidden
-                className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </Link>
-          </div>
-          <div className="rows">
-            {ladder.map(({ post, gloss }, i) => (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
-                <div className="flex items-baseline gap-4">
-                  <span className="row-index w-6 shrink-0">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p className="min-w-0 flex-1 text-[16px] leading-relaxed">
-                    <span className="row-title text-ink">{post.title}</span>
-                    <span className="text-ink-2"> - {gloss}</span>
-                  </p>
-                  <span
-                    aria-hidden
-                    className="row-arrow hidden shrink-0 text-[13px] text-orange sm:block"
-                  >
-                    →
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
+            <h2 className="section-title mb-6">Experience</h2>
+            <RoleRows items={EXPERIENCE} />
           </div>
         </section>
 
         {/* Projects */}
         <section className="reveal border-t border-rule">
           <div className="shell py-10">
-          <div className="mb-8 flex flex-wrap items-baseline justify-between gap-4">
-            <h2 className="section-title">Projects</h2>
-            <a
+            <SectionHead
+              title="Projects"
               href="https://github.com/samitmohan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="label group -my-3 inline-flex min-h-[44px] items-center py-3 transition-colors duration-200 hover:text-orange"
-            >
-              View all
-              <span
-                aria-hidden
-                className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-1"
-              >
-                →
-              </span>
-            </a>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {PROJECTS.map((p) => (
-              <a
-                key={p.name}
-                href={p.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-surface group flex flex-col p-5"
-              >
-                <div className="mb-2.5 flex items-center gap-2">
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden
-                    className="h-4 w-4 shrink-0 text-ink-3"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.34 9.34 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.85 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z" />
-                  </svg>
-                  <span className="font-mono text-[14px] font-medium text-ink transition-colors group-hover:text-orange">
-                    {p.name}
-                  </span>
-                  <span
-                    aria-hidden
-                    className="out-arrow ml-auto scale-90 text-[12px] text-ink-4 transition-[color,transform] duration-200 group-hover:scale-100"
-                  >
-                    ↗
-                  </span>
-                </div>
-                <p className="text-pretty text-[14px] leading-[155%] text-ink-2">
-                  {p.description}
-                </p>
-              </a>
-            ))}
-          </div>
+              external
+            />
+            {/* Rows, not cards. Four rounded cards in a 2x2 grid was the one
+                place this page ran a second visual system, and it was the more
+                generic of the two. The repo name sits where a company name sits
+                in Experience and the stack sits where the date does, so
+                Projects and Experience now scan as one list. */}
+            <div className="rows">
+              {PROJECTS.map((p) => (
+                <a
+                  key={p.name}
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="row"
+                >
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h3 className="flex items-baseline gap-2 font-mono text-[15px] font-medium">
+                      <span className="row-title text-ink">{p.name}</span>
+                      <span
+                        aria-hidden
+                        className="out-arrow text-[11px] text-ink-4 transition-colors duration-200"
+                      >
+                        ↗
+                      </span>
+                    </h3>
+                    <span className="meta shrink-0">{p.stack}</span>
+                  </div>
+                  <p className="mt-1.5 max-w-3xl text-pretty text-[15px] leading-[155%] text-ink-2">
+                    {p.description}
+                  </p>
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Experience, with education folded in. One degree did not earn its
-            own bordered section: the heading and padding ran taller than the
-            single row they framed. */}
+        {/* Writing. Titled by subject rather than by method: "From Scratch"
+            described how the posts are written, not what they are about, so a
+            reader scanning headings for LLM work saw nothing. */}
         <section className="reveal border-t border-rule">
           <div className="shell py-10">
-            <h2 className="section-title mb-8">Experience</h2>
-            <RoleRows items={[...EXPERIENCE, EDUCATION]} />
+            <SectionHead title={SERIES_TITLE} href="/blog" />
+            <div className="rows">
+              {ladder.map(({ post, gloss }, i) => (
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
+                  <div className="flex items-baseline gap-4">
+                    <span className="row-index w-6 shrink-0">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <p className="min-w-0 flex-1 text-[16px] leading-relaxed">
+                      <span className="row-title text-ink">{post.title}</span>
+                      <span className="text-ink-2"> - {gloss}</span>
+                    </p>
+                    <span className="meta hidden shrink-0 sm:block">
+                      {post.readingTime} min
+                    </span>
+                    <span
+                      aria-hidden
+                      className="row-arrow hidden shrink-0 text-[13px] text-brand sm:block"
+                    >
+                      →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Teaching */}
         <section className="reveal border-t border-rule">
           <div className="shell py-10 pb-16">
-            <h2 className="section-title mb-8">Teaching &amp; Writing</h2>
+            <h2 className="section-title mb-6">Teaching &amp; Writing</h2>
             <RoleRows items={TEACHING} />
           </div>
         </section>

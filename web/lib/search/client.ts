@@ -1,8 +1,9 @@
 import MiniSearch, { type SearchResult } from "minisearch";
 import { MINISEARCH_OPTIONS, SEARCH_OPTIONS } from "./config";
+import { loadSearchPayload } from "./payload";
 import type { SearchDoc, SearchPayload } from "./types";
 
-export const SEARCH_INDEX_URL = "/blog/search-index.json";
+export { SEARCH_INDEX_URL, prefetchSearchIndex } from "./payload";
 
 export interface Loaded {
   mini: MiniSearch<SearchDoc>;
@@ -35,9 +36,7 @@ export function loadSearchIndex(): Promise<Loaded> {
   if (loading) return loading;
 
   loading = (async () => {
-    const res = await fetch(SEARCH_INDEX_URL);
-    if (!res.ok) throw new Error(`search index ${res.status}`);
-    const payload = (await res.json()) as SearchPayload;
+    const payload = await loadSearchPayload();
 
     const docs: SearchDoc[] = payload.chunks.map((chunk, id) => {
       const section = payload.sections[chunk.s];
@@ -62,16 +61,6 @@ export function loadSearchIndex(): Promise<Loaded> {
   });
 
   return loading;
-}
-
-/** Warm the fetch without forcing the caller to await it. */
-export function prefetchSearchIndex(): void {
-  if (loading) return;
-  const conn = (navigator as { connection?: { saveData?: boolean; effectiveType?: string } })
-    .connection;
-  if (conn?.saveData) return;
-  if (conn?.effectiveType === "slow-2g" || conn?.effectiveType === "2g") return;
-  void loadSearchIndex().catch(() => {});
 }
 
 function toHits(results: SearchResult[]): Hit[] {

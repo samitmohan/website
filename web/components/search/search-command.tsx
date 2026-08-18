@@ -245,7 +245,7 @@ export default function SearchCommand({
                           p.hit ? (
                             <mark
                               key={j}
-                              className="bg-transparent font-medium text-orange"
+                              className="bg-transparent font-medium text-brand"
                             >
                               {p.text}
                             </mark>
