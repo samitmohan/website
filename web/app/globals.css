@@ -325,20 +325,8 @@ body {
    The mono is already in the document for meta rows, so this costs no bytes and
    reads like a section marker in a technical document rather than a heading in
    a marketing page. */
-.section-title {
-  font-family: var(--font-mono), monospace;
-  font-weight: 500;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  line-height: 1.3;
-  /* Full ink, not --ink-2: the section marker now sits at 13px next to a 10px
-     --ink-3 "VIEW ALL" label, and at that size the two competed. */
-  color: var(--foreground);
-}
 @media (min-width: 768px) {
-  .section-title { font-size: 13px; }
-}
+  }
 
 /* Micro label: sarvam's 10px uppercase mono, used for structural captions
    (CONTENTS, RELATED POSTS, OLDER/NEWER). */
@@ -414,27 +402,6 @@ body {
    furniture on a page whose every other section is a hairline row. Now a single
    mono meta line: same 44px tap target via padding, no border, no fill, no
    radius. Orange on hover, matching every other interactive element. */
-.hero-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 18px;
-}
-.hero-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-  transition: color 0.2s var(--motion-ease);
-}
-.hero-link:hover {
-  color: var(--foreground);
-}
 
 /* Hairline list. The dominant sarvam layout: full-bleed rows split by 1px
    rules, whole row tints on hover. Padding stays fixed so the title never
@@ -471,31 +438,14 @@ a.row:hover,
 }
 a.row:hover::before { opacity: 1; }
 a.row:active { background: var(--surface-3); }
-.row-index {
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--ink-4);
-  font-variant-numeric: tabular-nums;
-  transition: color 0.2s var(--motion-ease);
-}
-/* Orange, job 1 of 3: the hovered row index. */
-a.row:hover .row-index { color: var(--foreground); }
 /* Outbound arrow on project rows. Every card on the site became a row, so this
    is the only place the arrow lives now. */
-a.row:hover .out-arrow { color: var(--foreground); }
-.row-title {
+a.row:hover .row-title {
   transition: color 0.2s var(--motion-ease);
 }
 a.row:hover .row-title { color: var(--foreground); }
 a.row:active .row-title { color: var(--brand-strong); }
-.row-arrow {
-  opacity: 0;
-  transition: opacity 0.2s var(--motion-ease);
-}
-a.row:hover .row-arrow { opacity: 1; }
-
+a.row:hover 
 /* Role bullets. Experience rows carry bullets now instead of one summary
    sentence, so the list needs a marker that reads as structure without the
    browser default's indent and oversized disc. Hanging indent keeps wrapped
@@ -1418,14 +1368,14 @@ code[data-theme*=" "] {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 24px 18px;
+  padding: 8px 24px 10px;
   border-top: 1px solid var(--rule);
-  font-size: 13px;
-  color: var(--ink-2);
+  font-size: 12px;
+  color: var(--ink-3);
 }
 @media (min-width: 768px) {
   .site-bar { padding: 28px 40px 0; }
-  .site-foot { padding: 16px 40px 20px; }
+  .site-foot { padding: 8px 40px 12px; }
 }
 
 /* The house and the monogram are two separate destinations, so they get real
@@ -1504,7 +1454,8 @@ code[data-theme*=" "] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(150px, 24vh, 250px) 24px clamp(20px, 4vh, 48px);
+  justify-content: flex-start;
+  padding: clamp(150px, 23vh, 240px) 24px clamp(20px, 4vh, 48px);
 }
 
 /* ---- wordmark ---------------------------------------------------------- */
@@ -1513,37 +1464,61 @@ code[data-theme*=" "] {
   display: inline-flex;
   align-items: center;
   gap: 18px;
-  font-family: var(--font-mark), var(--font-display);
-  font-size: clamp(54px, 12vw, 96px);
-  line-height: 1;
   color: var(--foreground);
   transition: transform 240ms var(--motion-ease);
 }
 .wordmark:hover { transform: scale(1.04); }
 
-/* "samit" swaps to "about" on hover rather than growing a underline: the name
-   IS the link, and saying where it goes is more use than decorating it. Both
-   words share one box so the swap cannot reflow the line. */
-.wordmark-swap {
-  position: relative;
-  display: inline-grid;
+/* The ONLY handwritten thing on the site. Everything that labels it - the
+   hover tiles, the page headings - is set in the page's own face, so the hand
+   reads as a signature rather than as the site's typeface. */
+.wordmark-word {
+  font-family: var(--font-mark), var(--font-display);
+  font-size: clamp(54px, 12vw, 96px);
+  line-height: 1;
 }
-.wordmark-rest,
-.wordmark-hover {
-  grid-area: 1 / 1;
-  text-align: center;
-  transition: opacity 200ms var(--motion-ease);
-}
-.wordmark-hover { opacity: 0; }
-.wordmark:hover .wordmark-rest,
-.wordmark:focus-visible .wordmark-rest { opacity: 0; }
-.wordmark:hover .wordmark-hover,
-.wordmark:focus-visible .wordmark-hover { opacity: 1; }
 
 .wordmark-computer {
-  width: 0.62em;
-  height: 0.62em;
+  width: 0.5em;
+  height: 0.5em;
+  font-size: clamp(54px, 12vw, 96px);
   color: var(--ink-2);
+}
+
+/* ---- hover tile -------------------------------------------------------- */
+
+/* A small label that rises above whatever it names, on hover or keyboard
+   focus. It replaced two different things - a word swapped in place of the
+   name, and a caption under each figure - so the three doors now announce
+   themselves the same way.
+
+   Deliberately NOT the handwritten face: it is an interface label, and setting
+   it in the signature face made the site look like it had one typeface for
+   everything. It is also never the thing you click; the parent link is. */
+.hover-tile {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translate(-50%, 4px);
+  padding: 5px 11px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  font-family: var(--font-display);
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: var(--foreground);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms var(--motion-ease), transform 200ms var(--motion-ease);
+}
+:is(.wordmark, .door):hover .hover-tile,
+:is(.wordmark, .door):focus-visible .hover-tile {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 /* ---- doors ------------------------------------------------------------- */
@@ -1567,9 +1542,9 @@ code[data-theme*=" "] {
 /* No card. The figures sit on the page ground, and hover scales them the way
    the reference site enlarges its blocks - nothing tints or recolours. */
 .door {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 6px;
   width: 100%;
   max-width: 460px;
   transition: transform 260ms var(--motion-ease);
@@ -1578,20 +1553,6 @@ code[data-theme*=" "] {
 .door:hover,
 .door:focus-visible { transform: scale(1.06); }
 .door svg { display: block; width: 100%; height: auto; }
-
-/* The figure says what the door is; the word is confirmation, not a label.
-   Held at opacity 0 rather than display:none so revealing it cannot move the
-   card, and so it stays in the accessibility tree. */
-.door-label {
-  font-family: var(--font-mark), var(--font-display);
-  font-size: 24px;
-  line-height: 1;
-  color: var(--foreground);
-  opacity: 0;
-  transition: opacity 220ms var(--motion-ease);
-}
-.door:hover .door-label,
-.door:focus-visible .door-label { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .mark-link:hover,

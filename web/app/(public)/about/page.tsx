@@ -8,40 +8,15 @@ export const revalidate = false;
 export const metadata: Metadata = {
   title: "About",
   description:
-    "AI Scientist at Beltech AI in Bangalore. Detection over live video at city scale, and ML rebuilt from scratch on the side.",
+    "AI Scientist at beltech.ai, building models and optimising inference for security, surveillance and traffic management across 50+ cities.",
   alternates: { canonical: "/about", types: RSS_ALTERNATE },
 };
 
 /**
- * DRAFT COPY. Samit is writing the real text; this is rewritten from what the
- * old homepage said so the page is complete and true in the meantime.
- *
- * Prose only, on purpose. The dated role list this replaced was a CV rendered
- * in HTML, and the CV is already a PDF one click away in the header.
+ * Samit's own copy, verbatim. Prose and a photograph, nothing else - the dated
+ * role list this replaced was a CV rendered in HTML, and the CV is a PDF one
+ * click away in the header.
  */
-const PARAGRAPHS = [
-  `I am an AI Scientist at Beltech AI in Bangalore, where I work on computer
-   vision over live video: detection models that read number plates, helmets,
-   seatbelts and wrong-way traffic straight off RTSP streams. They run across an
-   estate of more than 60,000 cameras in 27 cities, which mostly means the
-   interesting problems are not the models. They are the decode pipeline that
-   has to stay on the GPU, the latency budget that has to hold at ten
-   milliseconds on an edge box, and the retraining loop that has to swap a model
-   under live traffic without dropping a frame.`,
-  `Before that I interned at Genpact and MakeMyTrip, working on an NLP resume
-   screener and a personalization API built on multi-armed bandits, and I
-   studied information technology at NHCE.`,
-  `Most of what I actually understand came from rebuilding things that already
-   exist. An autograd engine, a tokenizer, a small GPT trained on maths, an
-   agent loop that turned out to be about 350 lines. Not because the originals
-   needed replacing, but because writing the backward pass yourself is the only
-   way I have found to genuinely know what it does. I write those up as I go.`,
-  `I also teach. I TA'd a sixteen-week AI engineering cohort for a couple of
-   hundred engineers, wrote a few hundred implementation and system-design
-   problems for TensorTonic, and restructured course material that ended up in
-   front of rather more people than I expected.`,
-];
-
 export default function AboutPage() {
   return (
     <div className="page">
@@ -62,9 +37,60 @@ export default function AboutPage() {
         </div>
 
         <div className="about-prose">
-          {PARAGRAPHS.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+          <p>
+            I am an AI Scientist at{" "}
+            <a
+              href="https://beltech.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about-link"
+            >
+              beltech.ai
+            </a>
+            , working on building models and optimising inference for security,
+            surveillance, and traffic management across 50+ cities, processing
+            60k+ cameras, serving models with latency &lt;= 10ms on an edge box.
+            My work focuses on inference management, computer vision, and writing
+            business logic for detecting violations in India.
+          </p>
+
+          <p>
+            I graduated from New Horizon College of Engineering in 2024 with a
+            degree in Computer Science and a 9.4 cgpa. Holding multiple
+            programming competitions &amp; mentoring juniors in algorithms led me
+            to start a coding culture in my college &amp; create a club around
+            it. I interned at MakeMyTrip and Genpact where I worked on
+            reinforcement learning algorithms, classical ML, building an NLP
+            resume screener, churn predictor, and reward model for itinerary
+            ranking.
+          </p>
+
+          <p>
+            Apart from this, I love to teach and write. I TA&rsquo;d a 16 week AI
+            Engineering cohort for 200+ senior engineers at{" "}
+            <a
+              href="https://aiengg.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about-link"
+            >
+              aiengg.dev
+            </a>
+            , designing their curriculum, taking classes, and solving doubts.
+            Also wrote a few hundred deep learning implementation and system
+            design problems for{" "}
+            <a
+              href="https://www.tensortonic.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about-link"
+            >
+              tensortonic.com
+            </a>
+            , which serves 50k+ users. Writing the backward pass is the only way
+            I have found to learn anything which is why the blog exists. I want
+            to be the very best, like no one ever was.
+          </p>
         </div>
       </main>
 

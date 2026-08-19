@@ -48,7 +48,9 @@ export function PublicFooter() {
   return (
     <footer className="site-foot">
       <span>© 2026 samit</span>
-      <ThemeToggle className="-mr-3" />
+      {/* Negative margins so the 44px touch target does not set the bar
+          height. The footer reads as a hairline; the button is still 44px. */}
+      <ThemeToggle className="-my-2 -mr-3" />
     </footer>
   );
 }

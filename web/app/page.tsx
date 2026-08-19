@@ -32,25 +32,26 @@ export default function HomePage() {
       <Figure name="gradient-descent" className="home-hang" />
 
       <main id="main" className="home-stage">
+        {/* The page is a wordmark and three drawings, so there is no text to
+            promote into a heading - and a page with no h1 announces nothing to
+            a screen reader landing on it. */}
+        <h1 className="sr-only">Samit Mohan</h1>
+
         <Link href="/about" className="wordmark" aria-label="About">
-          <span className="wordmark-swap">
-            <span className="wordmark-rest">samit</span>
-            <span className="wordmark-hover" aria-hidden>
-              about
-            </span>
-          </span>
+          <span className="hover-tile">about</span>
+          <span className="wordmark-word">samit</span>
           <Mark name="computer" ext="png" className="wordmark-computer" />
         </Link>
       </main>
 
       <div className="home-doors">
         <Link href="/blog" className="door">
+          <span className="hover-tile">blog</span>
           <Figure name="blog-backprop" />
-          <span className="door-label">blog</span>
         </Link>
         <Link href="/projects" className="door">
+          <span className="hover-tile">projects</span>
           <Figure name="agent-loop" />
-          <span className="door-label">projects</span>
         </Link>
       </div>
 
