@@ -1645,6 +1645,16 @@ code[data-theme*=" "] {
   display: block;
 }
 
+.project-media-figure {
+  background: var(--surface-2);
+}
+.project-figure {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 .project-media-blank {
   display: grid;
   place-items: center;

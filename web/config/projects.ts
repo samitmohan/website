@@ -17,6 +17,10 @@ export type Project = {
   video?: string;
   poster?: string;
   image?: string;
+  /** A hand-authored animated SVG in public/projects/. Served as a plain <img>:
+   *  the site is light-only, so these carry literal colours and need none of
+   *  the inlining the homepage figures do. */
+  figure?: string;
 };
 
 export const PROJECTS: Project[] = [
@@ -27,7 +31,7 @@ export const PROJECTS: Project[] = [
     blurb:
       "A small GPT trained on maths from scratch, tokenizer through reasoning RL.",
     repoUrl: "https://github.com/samitmohan/mathLM",
-    image: "/assets/projects/mathlm.webp",
+    figure: "/projects/mathlm.svg",
   },
   {
     slug: "minitorch",
@@ -37,7 +41,7 @@ export const PROJECTS: Project[] = [
       "Reverse-mode autograd in a few hundred lines of NumPy, written to understand backward.",
     repoUrl: "https://github.com/samitmohan/minitorch",
     liveUrl: "https://samitmohan.github.io/minitorch/",
-    image: "/assets/projects/minitorch.webp",
+    figure: "/projects/minitorch.svg",
   },
   {
     slug: "mini-code",
@@ -45,7 +49,7 @@ export const PROJECTS: Project[] = [
     stack: "Python",
     blurb: "A coding agent in ~350 lines, to find out what is inside the loop.",
     repoUrl: "https://github.com/samitmohan/minicode",
-    image: "/assets/projects/minicode.webp",
+    figure: "/projects/minicode.svg",
   },
   {
     slug: "tennis-analysis",

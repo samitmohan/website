@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 200" width="380" height="200" role="img">
+<title>Training pipeline, tokenizer through reasoning RL</title>
+<desc>A run advances through tokenizer, pretrain, SFT and GRPO stages while a loss curve draws downward beneath them.</desc>
+<style><![CDATA[
+  svg { --ink:#141414; --grey:#8A8A90; --soft:#D8D8DC; }
+  .ml-stage { fill:none; stroke:var(--soft); stroke-width:1.1; }
+  .ml-lab { font:8.5px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+            fill:var(--grey); text-anchor:middle; }
+  .ml-cap { font:8.5px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+            fill:var(--grey); }
+  .ml-tick { stroke:var(--soft); stroke-width:1; }
+
+  /* Each stage lights while the run is inside it, then hands over. Four stages
+     across one 6s cycle, so each holds the page for a beat rather than
+     strobing. */
+  .ml-on { fill:none; stroke:var(--ink); stroke-width:1.4; opacity:0;
+           animation:ml-hold 6000ms linear infinite; }
+  .ml-on-lab { fill:var(--ink); opacity:0; animation:ml-hold 6000ms linear infinite; }
+  @keyframes ml-hold {
+    0%   { opacity:0; }
+    4%   { opacity:1; }
+    20%  { opacity:1; }
+    26%  { opacity:0; }
+    100% { opacity:0; }
+  }
+
+  /* The loss curve draws across the whole cycle: the thing all four stages are
+     for, and the only number on the card that means anything. */
+  .ml-loss { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round;
+             stroke-dasharray:300; stroke-dashoffset:300;
+             animation:ml-draw 6000ms linear infinite; }
+  @keyframes ml-draw {
+    0%   { stroke-dashoffset:300; }
+    88%  { stroke-dashoffset:0; }
+    96%  { stroke-dashoffset:0; }
+    100% { stroke-dashoffset:300; }
+  }
+
+  @media (prefers-reduced-motion:reduce) {
+    .ml-on, .ml-on-lab { animation:none; opacity:1; }
+    .ml-loss { animation:none; stroke-dashoffset:0; }
+  }
+]]></style>
+
+<text class="ml-cap" x="12" y="20">40M params &#183; from scratch</text>
+
+<!-- four stages -->
+<g>
+  <rect class="ml-stage" x="12"  y="40" width="80" height="30" rx="7"/>
+  <rect class="ml-on"    x="12"  y="40" width="80" height="30" rx="7" style="animation-delay:0ms"/>
+  <text class="ml-lab"   x="52"  y="59">tokenizer</text>
+  <text class="ml-lab ml-on-lab" x="52" y="59" style="animation-delay:0ms">tokenizer</text>
+
+  <rect class="ml-stage" x="108" y="40" width="80" height="30" rx="7"/>
+  <rect class="ml-on"    x="108" y="40" width="80" height="30" rx="7" style="animation-delay:1500ms"/>
+  <text class="ml-lab"   x="148" y="59">pretrain</text>
+  <text class="ml-lab ml-on-lab" x="148" y="59" style="animation-delay:1500ms">pretrain</text>
+
+  <rect class="ml-stage" x="204" y="40" width="80" height="30" rx="7"/>
+  <rect class="ml-on"    x="204" y="40" width="80" height="30" rx="7" style="animation-delay:3000ms"/>
+  <text class="ml-lab"   x="244" y="59">SFT</text>
+  <text class="ml-lab ml-on-lab" x="244" y="59" style="animation-delay:3000ms">SFT</text>
+
+  <rect class="ml-stage" x="300" y="40" width="68" height="30" rx="7"/>
+  <rect class="ml-on"    x="300" y="40" width="68" height="30" rx="7" style="animation-delay:4500ms"/>
+  <text class="ml-lab"   x="334" y="59">GRPO</text>
+  <text class="ml-lab ml-on-lab" x="334" y="59" style="animation-delay:4500ms">GRPO</text>
+</g>
+
+<!-- loss axis and curve -->
+<line class="ml-tick" x1="12" y1="176" x2="368" y2="176"/>
+<line class="ml-tick" x1="12" y1="98" x2="12" y2="176"/>
+<path class="ml-loss" d="M12 102 C60 128 84 140 120 148 C160 157 196 162 232 166 C276 170 320 172 368 173"/>
+<text class="ml-cap" x="330" y="112">loss</text>
+<text class="ml-cap" x="300" y="192">steps &#8594;</text>
+</svg>

@@ -30,6 +30,25 @@ export function ProjectMedia({
     );
   }
 
+  if (project.figure) {
+    return (
+      <div className="project-media project-media-figure">
+        {/* eslint-disable-next-line @next/next/no-img-element -- an animated SVG
+            must not go through the image optimizer, which would rasterise it
+            and drop the animation. */}
+        <img
+          src={project.figure}
+          alt={`${project.name} diagram`}
+          width={380}
+          height={200}
+          className="project-figure"
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+        />
+      </div>
+    );
+  }
+
   if (project.image) {
     return (
       <div className="project-media">
