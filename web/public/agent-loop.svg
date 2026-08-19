@@ -3,9 +3,13 @@
 <desc>A pulse circles a think, act and observe loop; four tool calls fire from the act step on every lap.</desc>
 <style><![CDATA[
   /* Two colour systems on purpose.
-     The geometry uses literals picked to hold on any ground: #8A8A90 measures
-     3.29:1 and #556ADC 3.86:1 worst case over #FAFAFA / #FFFFFF / #0D0D0F /
-     #161618, both clear of the 3:1 bar for graphical objects.
+     The geometry uses one literal picked to hold on any ground: #8A8A90
+     measures 3.29:1 worst case over #FAFAFA / #FFFFFF / #0D0D0F / #161618,
+     clear of the 3:1 bar for graphical objects. The accent that used to be
+     indigo (#556ADC) is currentColor now - the site's chrome is greyscale, and
+     the band of greys that clears 3:1 on both extremes is narrow enough that
+     --struct already sits in it, so a second grey could not be told apart from
+     the first. The accent reads by stroke weight and timing instead.
      The text uses currentColor, because text cannot be made ground-independent:
      the best single colour against #FFFFFF and #0D0D0F tops out at 4.41:1 and AA
      wants 4.50, while a scheme mismatch is 1.07:1 - invisible. currentColor
@@ -13,7 +17,7 @@
      correct in every theme state (17.65:1). The color below is only the fallback
      for an img element, which gets no CSS from its host and can therefore only
      follow prefers-color-scheme; it is scoped so inlining wins. */
-  svg { --struct:#8A8A90; --brand:#556ADC; }
+  svg { --struct:#8A8A90; --brand:currentColor; }
   /* svg:root matches only when this file IS the document, i.e. loaded through an
      img element - the one case that can see nothing but prefers-color-scheme.
      Inlined in HTML the svg is not the root, so this does not match and

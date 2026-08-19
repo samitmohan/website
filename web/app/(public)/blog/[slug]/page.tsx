@@ -103,7 +103,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="page">
       {post.math && (
         // eslint-disable-next-line @next/next/no-css-tags -- precedence-hoisted, loaded only for math posts
         <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />
@@ -116,7 +116,7 @@ export default async function BlogPostPage({
       <BackToTop />
       <PostTOC scope="article" />
       <PostKeyboardNav prevHref={prevHref} nextHref={nextHref} />
-      <PublicNav current="blog" />
+      <PublicNav />
 
       <main id="main" className="mx-auto max-w-[44rem] px-6 py-14 md:py-20">
         {/* Breadcrumb */}

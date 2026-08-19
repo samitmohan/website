@@ -433,7 +433,7 @@ body {
   transition: color 0.2s var(--motion-ease);
 }
 .hero-link:hover {
-  color: var(--brand);
+  color: var(--foreground);
 }
 
 /* Hairline list. The dominant sarvam layout: full-bleed rows split by 1px
@@ -481,14 +481,14 @@ a.row:active { background: var(--surface-3); }
   transition: color 0.2s var(--motion-ease);
 }
 /* Orange, job 1 of 3: the hovered row index. */
-a.row:hover .row-index { color: var(--brand); }
+a.row:hover .row-index { color: var(--foreground); }
 /* Outbound arrow on project rows. Every card on the site became a row, so this
    is the only place the arrow lives now. */
-a.row:hover .out-arrow { color: var(--brand); }
+a.row:hover .out-arrow { color: var(--foreground); }
 .row-title {
   transition: color 0.2s var(--motion-ease);
 }
-a.row:hover .row-title { color: var(--brand); }
+a.row:hover .row-title { color: var(--foreground); }
 a.row:active .row-title { color: var(--brand-strong); }
 .row-arrow {
   opacity: 0;
@@ -598,18 +598,20 @@ code[data-theme*=" "] {
   background-color: transparent !important;
 }
 
-/* Body links are colour-only and underline on hover/focus, the way sarvam
-   treats them. Focus keeps the underline so keyboard users still get a
-   non-colour cue. */
+/* Body links carry a permanent underline rather than a colour.
+   They used to be indigo with no underline, which is the one place the colour
+   swap could not simply be applied: a grey link with no underline is not a
+   link, it is body text. WCAG 1.4.1 wants a non-colour cue anyway, so the
+   underline is doing the work the colour used to and the hover just darkens. */
 .blog-prose a {
-  color: var(--brand);
-  text-decoration: none;
-  transition: color 0.2s var(--motion-ease);
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s var(--motion-ease);
 }
 .blog-prose a:hover {
-  color: var(--brand-strong);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-color: var(--foreground);
 }
 .blog-prose a:focus-visible {
   text-decoration: underline;
@@ -688,7 +690,7 @@ code[data-theme*=" "] {
     border-color 0.2s var(--motion-ease), box-shadow 0.2s var(--motion-ease);
 }
 :is(.blog-prose, .code-card) .code-copy:hover {
-  color: var(--brand);
+  color: var(--foreground);
   background: var(--brand-soft);
   border-color: var(--brand-border);
 }
@@ -1366,12 +1368,12 @@ code[data-theme*=" "] {
    Hand-drawn marks
    ============================================================
 
-   Every sketch in public/marks/ is painted as a CSS mask over
+   Every drawing in public/marks/ is painted as a CSS mask over
    `currentColor` rather than dropped in as an <img>. Three reasons, in
    order of how much they matter:
 
    1. Colour. The sources are black ink on white; an <img> of one is a
-      black rectangle on a dark page. As a mask, the ink IS the shape and
+      black rectangle on a dark page. As a mask the ink IS the shape and
       the colour comes from the element, so hover states and both themes
       work with no second copy of any file.
    2. Weight. Traced from the rasters, these run 7-16 KB of path data
@@ -1397,68 +1399,54 @@ code[data-theme*=" "] {
 }
 
 /* The sm monogram carries its own underline, so it is 1.64:1, not square. */
-.mark-sm {
-  width: 46px;
-  height: 28px;
-}
-
-.mark-icon {
-  width: 21px;
-  height: 21px;
-}
-
-/* preserveAspectRatio="none" in the file, and mask-size is overridden to
-   stretch rather than fit: this one is meant to take the width of whatever it
-   sits under, the way a drawn underline does, and its thickness is set here
-   rather than by the source stroke - which was traced off a mark drawn to be
-   read at 40px, not 100. */
-.mark-underline {
-  width: 100%;
-  height: 0.055em;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
+.mark-sm { width: 34px; height: 21px; }
+.mark-home { width: 17px; height: 22px; }
+.mark-icon { width: 20px; height: 20px; }
 
 /* ============================================================
-   Home
-   ============================================================
-
-   One screen: corner marks, the figure, the name, two doors, a rule.
-   `min-height` rather than `height` so a short viewport scrolls instead of
-   clipping the doors - the one thing that would actually break the page. */
-.home {
-  min-height: 100dvh;
-  display: grid;
-  grid-template-rows: auto 1fr auto auto;
-  gap: 24px;
-  padding: 22px 24px 0;
-}
-@media (min-width: 768px) {
-  .home {
-    padding: 28px 40px 0;
-    gap: 32px;
-  }
-}
-
-.home-bar {
+   Site chrome - identical on every page
+   ============================================================ */
+.site-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  padding: 22px 24px 0;
 }
-
-.home-marks,
-.home-socials {
+.site-foot {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px 18px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--ink-2);
 }
 @media (min-width: 768px) {
-  .home-socials { gap: 18px; }
+  .site-bar { padding: 28px 40px 0; }
+  .site-foot { padding: 16px 40px 20px; }
 }
 
-/* 44px hit area on a 21px mark, without the padding pushing the row apart. */
-.home-link {
+/* The house and the monogram are two separate destinations, so they get real
+   space between them rather than reading as one lockup. */
+.site-marks {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.site-socials {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+@media (min-width: 768px) {
+  .site-socials { gap: 19px; }
+}
+
+/* 44px hit area on a 20px mark, without the padding pushing the row apart. */
+.mark-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1468,129 +1456,148 @@ code[data-theme*=" "] {
   color: var(--ink-2);
   transition: color 200ms var(--motion-ease), transform 200ms var(--motion-ease);
 }
-.home-link:hover {
+.mark-link:hover {
   color: var(--foreground);
   transform: translateY(-1px);
 }
 
-/* The stage holds the figure and the name as one centred column. The figure
-   sits above the optical centre, which is where the diagram puts it. */
+/* Inner pages get the chrome at the page edges with the content between. */
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.page > main { flex: 1; }
+
+/* ============================================================
+   Home
+   ============================================================ */
+.home {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+}
+
+/* Hung from the top edge. The drawing is a weight on a thread and the thread
+   starts at y=0 of its viewBox, so anywhere below the top of the page it reads
+   as hanging from nothing. pointer-events off: it sits across the header's
+   dead centre and must not eat clicks aimed at the marks in either corner. */
+.home-hang {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(400px, 74vw);
+  pointer-events: none;
+  z-index: 0;
+}
+.home-hang svg { display: block; width: 100%; height: auto; }
+
+/* The file captions itself "gradient descent with momentum", which is right
+   inside a post and wrong here, where it reads as a diagram label under a
+   name. The <title>/<desc> still carry it for assistive tech. */
+.home-hang .gd-cap { display: none; }
+
 .home-stage {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(20px, 5vh, 56px);
-  padding: clamp(8px, 2vh, 32px) 0;
+  padding: clamp(150px, 24vh, 250px) 24px clamp(20px, 4vh, 48px);
 }
 
-.home-figure {
-  display: block;
-  width: min(360px, 78vw);
-}
-.home-figure svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* The file captions itself "gradient descent with momentum", which is right
-   when it sits inside a post and wrong on a landing page - there it reads as a
-   diagram label under a name. The <title>/<desc> inside the SVG still carry it
-   for assistive tech, so nothing is lost by hiding the drawn text. */
-.home-figure .gd-cap { display: none; }
-
-/* The name is the largest thing on the page and the main door, so it gets the
-   drawn hand and a drawn underline rather than a text-decoration rule. */
+/* ---- wordmark ---------------------------------------------------------- */
 .wordmark {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
   font-family: var(--font-mark), var(--font-display);
-  font-size: clamp(56px, 13vw, 104px);
-  line-height: 0.95;
-  letter-spacing: 0.01em;
+  font-size: clamp(54px, 12vw, 96px);
+  line-height: 1;
   color: var(--foreground);
-  padding-bottom: 0.18em;
-  transition: color 200ms var(--motion-ease);
+  transition: transform 240ms var(--motion-ease);
 }
-.wordmark:hover { color: var(--brand); }
-/* Inset from the letters on both sides: stretched to the full text width the
-   stroke reads as a rule under a heading rather than a mark drawn under a
-   name. */
-.wordmark .mark-underline {
-  position: absolute;
-  left: 4%;
-  bottom: 0.02em;
-  width: 92%;
-  opacity: 0.8;
+.wordmark:hover { transform: scale(1.04); }
+
+/* "samit" swaps to "about" on hover rather than growing a underline: the name
+   IS the link, and saying where it goes is more use than decorating it. Both
+   words share one box so the swap cannot reflow the line. */
+.wordmark-swap {
+  position: relative;
+  display: inline-grid;
+}
+.wordmark-rest,
+.wordmark-hover {
+  grid-area: 1 / 1;
+  text-align: center;
+  transition: opacity 200ms var(--motion-ease);
+}
+.wordmark-hover { opacity: 0; }
+.wordmark:hover .wordmark-rest,
+.wordmark:focus-visible .wordmark-rest { opacity: 0; }
+.wordmark:hover .wordmark-hover,
+.wordmark:focus-visible .wordmark-hover { opacity: 1; }
+
+.wordmark-computer {
+  width: 0.62em;
+  height: 0.62em;
+  color: var(--ink-2);
 }
 
-/* Two doors, pinned to the outer edges the way the sketch has them.
-   They are capped rather than fluid: stretched across half the viewport each,
-   the two figures read as the subject of the page and the name stops being the
-   largest thing on it. */
+/* ---- doors ------------------------------------------------------------- */
 .home-doors {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 24px;
+  padding: 0 24px;
+  justify-items: center;
 }
 @media (min-width: 768px) {
   .home-doors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px;
+    gap: 32px;
+    padding: 0 40px;
   }
   .home-doors > :first-child { justify-self: start; }
   .home-doors > :last-child { justify-self: end; }
 }
 
+/* No card. The figures sit on the page ground, and hover scales them the way
+   the reference site enlarges its blocks - nothing tints or recolours. */
 .door {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  max-width: 290px;
-  padding: 6px;
-  transition: transform 220ms var(--motion-ease);
+  max-width: 460px;
+  transition: transform 260ms var(--motion-ease);
+  transform-origin: bottom center;
 }
-.door:hover { transform: translateY(-3px); }
-.door svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
+.door:hover,
+.door:focus-visible { transform: scale(1.06); }
+.door svg { display: block; width: 100%; height: auto; }
 
 /* The figure says what the door is; the word is confirmation, not a label.
-   Held at opacity 0 rather than display:none so it still occupies its line -
-   revealing it must not move the card - and so it is still in the accessibility
-   tree for anyone who cannot see the drawing at all. */
+   Held at opacity 0 rather than display:none so revealing it cannot move the
+   card, and so it stays in the accessibility tree. */
 .door-label {
   font-family: var(--font-mark), var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1;
   color: var(--foreground);
   opacity: 0;
-  transition: opacity 220ms var(--motion-ease), color 220ms var(--motion-ease);
+  transition: opacity 220ms var(--motion-ease);
 }
 .door:hover .door-label,
 .door:focus-visible .door-label { opacity: 1; }
 
-.home-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 4px;
-  padding: 14px 0 16px;
-  border-top: 1px solid var(--rule);
-  font-size: 13px;
-  color: var(--ink-2);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .home-link:hover,
-  .door:hover {
-    transform: none;
-  }
+  .mark-link:hover,
+  .wordmark:hover,
+  .door:hover,
+  .door:focus-visible { transform: none; }
 }
 
 /* ============================================================
@@ -1637,9 +1644,11 @@ code[data-theme*=" "] {
     text-decoration-color 180ms var(--motion-ease);
 }
 
+/* Hover darkens toward ink instead of colouring. The accent ramp is reserved
+   for the artwork now; chrome states are all greyscale. */
 .post-row:hover .post-title {
-  color: var(--brand);
-  text-decoration-color: var(--brand);
+  color: var(--foreground);
+  text-decoration-color: var(--rule-strong);
 }
 .post-row:hover .post-date { color: var(--ink-2); }
 
@@ -1658,8 +1667,7 @@ code[data-theme*=" "] {
 .about-head {
   display: flex;
   align-items: center;
-  gap: 26px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
 .about-photo {
@@ -1673,10 +1681,6 @@ code[data-theme*=" "] {
   .about-photo { width: 128px; height: 128px; }
 }
 
-.about-mark {
-  width: 118px;
-  height: 72px;
-}
 
 .about-prose {
   max-width: 40rem;
@@ -1698,8 +1702,8 @@ code[data-theme*=" "] {
     text-decoration-color 180ms var(--motion-ease);
 }
 .about-link:hover {
-  color: var(--brand);
-  text-decoration-color: var(--brand);
+  color: var(--foreground);
+  text-decoration-color: var(--foreground);
 }
 
 /* ============================================================
@@ -1763,9 +1767,13 @@ code[data-theme*=" "] {
   padding: 24px;
 }
 
+/* The handwritten face is homepage-only. On /projects it would be the largest
+   thing on a page whose own heading is set in the page's face. */
 .project-media-word {
-  font-family: var(--font-mark), var(--font-display);
-  font-size: clamp(34px, 5.5vw, 52px);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: clamp(26px, 3.6vw, 38px);
   line-height: 1;
   color: var(--ink-4);
   text-align: center;
@@ -1788,7 +1796,7 @@ code[data-theme*=" "] {
   color: var(--foreground);
   transition: color 180ms var(--motion-ease);
 }
-.project-face:hover .project-name { color: var(--brand); }
+.project-face:hover .project-name { color: var(--foreground); }
 
 .project-blurb {
   font-size: 15px;
@@ -1809,7 +1817,7 @@ code[data-theme*=" "] {
   color: var(--ink-3);
   transition: color 180ms var(--motion-ease);
 }
-.project-link:hover { color: var(--brand); }
+.project-link:hover { color: var(--foreground); }
 
 @media (prefers-reduced-motion: reduce) {
   .project-face:hover .project-media { transform: none; }

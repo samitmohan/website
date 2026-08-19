@@ -29,11 +29,11 @@ export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <PublicNav current="blog" />
+    <div className="page">
+      <PublicNav />
 
       <main id="main" className="shell py-14 md:py-20">
-        <h1 className="mb-10 font-[family-name:var(--font-mark)] text-[40px] leading-none text-ink md:text-[52px]">
+        <h1 className="display mb-10 text-[26px] text-ink md:text-[32px]">
           blog
         </h1>
 

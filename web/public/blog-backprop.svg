@@ -9,7 +9,7 @@
      #161618: #556ADC 3.86:1, #8A8A90 3.29:1 - both clear the 3:1 bar for
      graphical objects on all four. That way a scheme mismatch only shifts the
      forward pass and the labels; the structure and the gradients stay right. */
-  svg { --struct:#8A8A90; --brand:#556ADC; }
+  svg { --struct:#8A8A90; --brand:currentColor; }
   /* Ink and the label grey are currentColor rather than their own literals, so an
      inlined copy inherits the host page's colour and tracks a .dark class. The
      fallback is scoped to svg:root, which matches only when this file IS the

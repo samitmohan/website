@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Figure } from "@/components/figure";
 import { Mark } from "@/components/mark";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { SOCIAL_LINKS } from "@/config/links";
+import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -14,57 +13,40 @@ export const metadata: Metadata = {
 export const revalidate = false;
 
 /**
- * The landing page is one screen and four doors: the name (about), the two
- * cards (blog, projects) and the corner marks. It deliberately carries no
- * copy - the argument for the work lives on /about, and the writing lives on
- * /blog. Everything that used to be on this page moved to one of those.
+ * One screen, three doors: the name (about) and the two figures (blog,
+ * projects). No copy - the argument for the work is on /about and the writing
+ * is on /blog.
  *
- * Server component, no client JS. The three figures animate in CSS inside their
- * own files; the only interactive thing on the page is the theme toggle.
+ * The gradient-descent figure hangs from the top edge rather than sitting in
+ * the column: the drawing is a weight on a thread, so anywhere below the top of
+ * the page it reads as hung from nothing.
+ *
+ * Server component, no client JS beyond the theme toggle. The figures animate
+ * in CSS inside their own files.
  */
 export default function HomePage() {
   return (
     <div className="home">
-      <header className="home-bar">
-        <div className="home-marks">
-          <Link href="/" aria-label="Home" className="home-link">
-            <Mark name="home" className="mark-icon" />
-          </Link>
-          <Link href="/about" aria-label="About" className="home-link">
-            <Mark name="sm" className="mark-sm" />
-          </Link>
-        </div>
+      <PublicNav />
 
-        <nav className="home-socials" aria-label="Elsewhere">
-          {SOCIAL_LINKS.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              aria-label={l.label}
-              className="home-link"
-              {...(l.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              <Mark name={l.mark} className="mark-icon" />
-            </a>
-          ))}
-        </nav>
-      </header>
+      <Figure name="gradient-descent" className="home-hang" />
 
       <main id="main" className="home-stage">
-        <Figure name="gradient-descent" className="home-figure" />
-
-        <Link href="/about" className="wordmark">
-          samit
-          <Mark name="underline" className="mark-underline" aria-hidden />
+        <Link href="/about" className="wordmark" aria-label="About">
+          <span className="wordmark-swap">
+            <span className="wordmark-rest">samit</span>
+            <span className="wordmark-hover" aria-hidden>
+              about
+            </span>
+          </span>
+          <Mark name="computer" ext="png" className="wordmark-computer" />
         </Link>
       </main>
 
       <div className="home-doors">
         <Link href="/blog" className="door">
           <Figure name="blog-backprop" />
-          <span className="door-label">blogs</span>
+          <span className="door-label">blog</span>
         </Link>
         <Link href="/projects" className="door">
           <Figure name="agent-loop" />
@@ -72,13 +54,7 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <footer className="home-foot">
-        <span>© 2026 samit</span>
-        {/* The only control on the page. It sits down here rather than up in
-            the mark row because the top corners are for identity and the feed
-            it replaced is still discoverable from <head>. */}
-        <ThemeToggle className="-mr-3" />
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

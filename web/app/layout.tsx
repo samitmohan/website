@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sriracha, Geist_Mono } from "next/font/google";
+import { Caveat, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { THEME_SCRIPT } from "@/lib/theme-script";
 import { RSS_ALTERNATE } from "@/lib/metadata";
@@ -9,12 +9,17 @@ import "./globals.css";
 // the "samit" wordmark, the two door labels, and the /about heading. The sm
 // monogram beside it is not type at all - it is the original chalk drawing,
 // traced (public/marks/sm.svg) - so this is chosen to sit next to that hand
-// rather than to reproduce it: a dry-brush hand with uneven stroke weight,
-// which is the part of the original that a font can actually carry.
-const sriracha = Sriracha({
+// rather than to reproduce it. Actual handwriting rather than a marker face:
+// the marks around it are already brush drawings, so a second brush in type
+// competed with them instead of sitting alongside.
+//
+// It is used ONLY by the wordmark and the two door labels on the homepage.
+// /blog and /projects set their headings in the page's own face - a
+// handwritten heading over a list of post titles reads as decoration.
+const caveat = Caveat({
   variable: "--font-mark",
   subsets: ["latin"],
-  weight: "400",
+  weight: "700",
   display: "swap",
 });
 
@@ -64,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} ${sriracha.variable} h-full antialiased`}
+      className={`${geistMono.variable} ${caveat.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
