@@ -20,6 +20,8 @@ export async function GET() {
 > I rebuild ML from scratch and write about it.
 
 - Site: ${BASE}
+- About: ${BASE}/about
+- Projects: ${BASE}/projects
 - Blog: ${BASE}/blog
 - Feed: ${BASE}/blog/rss.xml
 - CV: ${BASE}/samit-resume.pdf

@@ -1361,3 +1361,456 @@ code[data-theme*=" "] {
 @media (prefers-reduced-motion: reduce) {
   .candy .rise { opacity: 1; transform: none; animation: none; }
 }
+
+/* ============================================================
+   Hand-drawn marks
+   ============================================================
+
+   Every sketch in public/marks/ is painted as a CSS mask over
+   `currentColor` rather than dropped in as an <img>. Three reasons, in
+   order of how much they matter:
+
+   1. Colour. The sources are black ink on white; an <img> of one is a
+      black rectangle on a dark page. As a mask, the ink IS the shape and
+      the colour comes from the element, so hover states and both themes
+      work with no second copy of any file.
+   2. Weight. Traced from the rasters, these run 7-16 KB of path data
+      each. Inlined, seven of them would have eaten most of the 15 KB
+      gzipped HTML budget on `/`. As mask URLs they are separate files,
+      fetched in parallel and cached immutably.
+   3. One knob. `--mark` is the only thing a call site sets.
+
+   The animated figures are the opposite case and are inlined - see
+   lib/inline-svg.ts for why. */
+.mark {
+  display: inline-block;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask-image: var(--mark);
+  mask-image: var(--mark);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* The sm monogram carries its own underline, so it is 1.64:1, not square. */
+.mark-sm {
+  width: 46px;
+  height: 28px;
+}
+
+.mark-icon {
+  width: 21px;
+  height: 21px;
+}
+
+/* preserveAspectRatio="none" in the file, and mask-size is overridden to
+   stretch rather than fit: this one is meant to take the width of whatever it
+   sits under, the way a drawn underline does, and its thickness is set here
+   rather than by the source stroke - which was traced off a mark drawn to be
+   read at 40px, not 100. */
+.mark-underline {
+  width: 100%;
+  height: 0.055em;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* ============================================================
+   Home
+   ============================================================
+
+   One screen: corner marks, the figure, the name, two doors, a rule.
+   `min-height` rather than `height` so a short viewport scrolls instead of
+   clipping the doors - the one thing that would actually break the page. */
+.home {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: 24px;
+  padding: 22px 24px 0;
+}
+@media (min-width: 768px) {
+  .home {
+    padding: 28px 40px 0;
+    gap: 32px;
+  }
+}
+
+.home-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.home-marks,
+.home-socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+@media (min-width: 768px) {
+  .home-socials { gap: 18px; }
+}
+
+/* 44px hit area on a 21px mark, without the padding pushing the row apart. */
+.home-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -11px;
+  color: var(--ink-2);
+  transition: color 200ms var(--motion-ease), transform 200ms var(--motion-ease);
+}
+.home-link:hover {
+  color: var(--foreground);
+  transform: translateY(-1px);
+}
+
+/* The stage holds the figure and the name as one centred column. The figure
+   sits above the optical centre, which is where the diagram puts it. */
+.home-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 5vh, 56px);
+  padding: clamp(8px, 2vh, 32px) 0;
+}
+
+.home-figure {
+  display: block;
+  width: min(360px, 78vw);
+}
+.home-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The file captions itself "gradient descent with momentum", which is right
+   when it sits inside a post and wrong on a landing page - there it reads as a
+   diagram label under a name. The <title>/<desc> inside the SVG still carry it
+   for assistive tech, so nothing is lost by hiding the drawn text. */
+.home-figure .gd-cap { display: none; }
+
+/* The name is the largest thing on the page and the main door, so it gets the
+   drawn hand and a drawn underline rather than a text-decoration rule. */
+.wordmark {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-mark), var(--font-display);
+  font-size: clamp(56px, 13vw, 104px);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: var(--foreground);
+  padding-bottom: 0.18em;
+  transition: color 200ms var(--motion-ease);
+}
+.wordmark:hover { color: var(--brand); }
+/* Inset from the letters on both sides: stretched to the full text width the
+   stroke reads as a rule under a heading rather than a mark drawn under a
+   name. */
+.wordmark .mark-underline {
+  position: absolute;
+  left: 4%;
+  bottom: 0.02em;
+  width: 92%;
+  opacity: 0.8;
+}
+
+/* Two doors, pinned to the outer edges the way the sketch has them.
+   They are capped rather than fluid: stretched across half the viewport each,
+   the two figures read as the subject of the page and the name stops being the
+   largest thing on it. */
+.home-doors {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .home-doors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .home-doors > :first-child { justify-self: start; }
+  .home-doors > :last-child { justify-self: end; }
+}
+
+.door {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 290px;
+  padding: 6px;
+  transition: transform 220ms var(--motion-ease);
+}
+.door:hover { transform: translateY(-3px); }
+.door svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The figure says what the door is; the word is confirmation, not a label.
+   Held at opacity 0 rather than display:none so it still occupies its line -
+   revealing it must not move the card - and so it is still in the accessibility
+   tree for anyone who cannot see the drawing at all. */
+.door-label {
+  font-family: var(--font-mark), var(--font-display);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--foreground);
+  opacity: 0;
+  transition: opacity 220ms var(--motion-ease), color 220ms var(--motion-ease);
+}
+.door:hover .door-label,
+.door:focus-visible .door-label { opacity: 1; }
+
+.home-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 4px;
+  padding: 14px 0 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-link:hover,
+  .door:hover {
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Blog index
+   ============================================================
+
+   Date column, then title. The date is set in mono at a fixed width so the
+   titles line up as one edge down the page - which is the whole reason to put
+   the date first rather than trailing it after the title. */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 46rem;
+}
+
+.post-row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 9px 0;
+  min-height: 44px;
+  transition: color 180ms var(--motion-ease);
+}
+
+.post-date {
+  flex: none;
+  width: 6.5rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  transition: color 180ms var(--motion-ease);
+}
+
+.post-title {
+  font-size: 16.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: color 180ms var(--motion-ease),
+    text-decoration-color 180ms var(--motion-ease);
+}
+
+.post-row:hover .post-title {
+  color: var(--brand);
+  text-decoration-color: var(--brand);
+}
+.post-row:hover .post-date { color: var(--ink-2); }
+
+@media (max-width: 520px) {
+  .post-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .post-date { width: auto; }
+}
+
+/* ============================================================
+   About
+   ============================================================ */
+.about-head {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-bottom: 32px;
+}
+
+.about-photo {
+  width: 108px;
+  height: 108px;
+  border-radius: 20px;
+  object-fit: cover;
+  flex: none;
+}
+@media (min-width: 768px) {
+  .about-photo { width: 128px; height: 128px; }
+}
+
+.about-mark {
+  width: 118px;
+  height: 72px;
+}
+
+.about-prose {
+  max-width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  font-size: 17px;
+  line-height: 1.62;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.about-link {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 4px;
+  transition: color 180ms var(--motion-ease),
+    text-decoration-color 180ms var(--motion-ease);
+}
+.about-link:hover {
+  color: var(--brand);
+  text-decoration-color: var(--brand);
+}
+
+/* ============================================================
+   Projects
+   ============================================================ */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 720px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px 32px;
+  }
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.project-face {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 16:10 rather than 16:9: a terminal recording and a tennis clip are the two
+   shapes going in here, and 16:10 letterboxes both less badly than either
+   native ratio letterboxes the other. */
+.project-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--radius-card);
+  /* No fill. A tinted panel behind a transparent recording reads as a second
+     background colour sitting on the page; the hairline is enough to say where
+     the frame is until a video fills it. */
+  background: transparent;
+  transition: border-color 220ms var(--motion-ease),
+    transform 220ms var(--motion-ease);
+}
+.project-face:hover .project-media {
+  border-color: var(--rule-strong);
+  transform: translateY(-3px);
+}
+
+.project-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-media-blank {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.project-media-word {
+  font-family: var(--font-mark), var(--font-display);
+  font-size: clamp(34px, 5.5vw, 52px);
+  line-height: 1;
+  color: var(--ink-4);
+  text-align: center;
+  transition: color 220ms var(--motion-ease);
+}
+.project-face:hover .project-media-word { color: var(--ink-2); }
+
+.project-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+}
+
+.project-name {
+  font-family: var(--font-mono), monospace;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+  transition: color 180ms var(--motion-ease);
+}
+.project-face:hover .project-name { color: var(--brand); }
+
+.project-blurb {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.project-links {
+  display: flex;
+  gap: 18px;
+}
+
+.project-link {
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  transition: color 180ms var(--motion-ease);
+}
+.project-link:hover { color: var(--brand); }
+
+@media (prefers-reduced-motion: reduce) {
+  .project-face:hover .project-media { transform: none; }
+}

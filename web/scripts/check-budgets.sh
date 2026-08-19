@@ -20,14 +20,15 @@ check() { # name actual ceiling unit
 }
 
 # ---------------------------------------------------------------- line count
-# config/ is excluded on purpose: it is problem and syllabus data, not code,
-# and it does not reach the public routes. Everything that is actually code
-# lives under this ceiling.
-LOC_CEILING=9000
-loc=$(find app components lib hooks stores types \( -name '*.ts' -o -name '*.tsx' \) \
+# The 988 KB problem catalogue this used to exclude is deleted, so config/ is
+# now four dozen lines of links and project entries and counts like everything
+# else. The ceiling came down with the platform: 9000 was sized for a codebase
+# that no longer exists.
+LOC_CEILING=5000
+loc=$(find app components lib config \( -name '*.ts' -o -name '*.tsx' \) \
   | xargs cat | wc -l | tr -d ' ')
 
-echo "line count (app components lib hooks stores types, config/ excluded):"
+echo "line count (app components lib config):"
 check "source" "$loc" "$LOC_CEILING" ""
 
 # ------------------------------------------------------------- bundle bytes
@@ -58,15 +59,20 @@ echo "route JS (gzip, modern browsers):"
 # is the floor for any route in this app. The headroom here is what the site's
 # own code is allowed to add on top.
 check "/"           "$(route_js_kb .next/server/app/index.html)"      160 "KB"
+check "/about"      "$(route_js_kb .next/server/app/about.html)"      156 "KB"
+check "/projects"   "$(route_js_kb .next/server/app/projects.html)"   158 "KB"
 check "/blog"       "$(route_js_kb .next/server/app/blog.html)"       156 "KB"
 check "/fun"        "$(route_js_kb .next/server/app/fun.html)"        154 "KB"
 check "/interviews" "$(route_js_kb .next/server/app/interviews.html)" 158 "KB"
-check "/problems"   "$(route_js_kb .next/server/app/problems.html)"   185 "KB"
-check "/syllabus"   "$(route_js_kb .next/server/app/syllabus.html)"   185 "KB"
 
 echo
 echo "route HTML (gzip):"
+# The homepage inlines three animated SVGs (see lib/inline-svg.ts for why they
+# cannot be <img>). That is what this number buys; the seven hand-drawn marks
+# around them are masks, not markup, and cost the HTML nothing.
 check "/"           "$(route_html_kb .next/server/app/index.html)"       15 "KB"
+check "/about"      "$(route_html_kb .next/server/app/about.html)"       15 "KB"
+check "/projects"   "$(route_html_kb .next/server/app/projects.html)"    15 "KB"
 check "/blog"       "$(route_html_kb .next/server/app/blog.html)"        15 "KB"
 check "/interviews" "$(route_html_kb .next/server/app/interviews.html)"  50 "KB"
 
@@ -78,14 +84,15 @@ if [ -n "${worst_section:-}" ]; then
   check "/interviews/* (largest)" "$((worst_section / 1024))" 60 "KB"
 fi
 
-# ------------------------------------------------------- platform/public leak
-# The lint rule in eslint.config.mjs blocks direct imports. This catches the
-# transitive case it cannot see, by looking for fingerprints of platform-only
-# modules inside the chunks a public route actually loads.
+# ----------------------------------------------------------- heavy-dep check
+# Every route is public now, so the old platform/public firewall is gone. What
+# is still worth catching is a heavy library sneaking into a route that should
+# be static markup: the blog and the homepage render on the server and have no
+# business shipping a markdown parser or a search index to the client.
 echo
-echo "platform code in public bundles:"
+echo "heavy deps in static routes:"
 leaks=0
-for html in .next/server/app/index.html .next/server/app/blog.html .next/server/app/fun.html; do
+for html in .next/server/app/index.html .next/server/app/about.html .next/server/app/projects.html .next/server/app/blog.html; do
   [ -f "$html" ] || continue
   route=$(basename "$html" .html)
   { grep -o '<script src="[^"]*\.js"[^>]*>' "$html" || true; } \
@@ -95,9 +102,7 @@ for html in .next/server/app/index.html .next/server/app/blog.html .next/server/
     | while read -r p; do
         fp=".next${p#/_next}"
         [ -f "$fp" ] || continue
-        # weekNumber: config/problems. cm-content: CodeMirror. minisearch must
-        # stay behind the palette's dynamic import, not ride along in the nav.
-        for marker in weekNumber cm-content QueryClientProvider better-auth ReactMarkdown minisearch; do
+        for marker in ReactMarkdown minisearch cm-content katex-html; do
           if grep -q "$marker" "$fp"; then
             echo "  LEAK /$route: $marker in $(basename "$p")"
           fi

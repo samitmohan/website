@@ -17,14 +17,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * One flat reverse-chronological list.
+ * One flat reverse-chronological list: date, title, nothing else.
  *
- * An earlier pass split this into the from-scratch ladder and "everything else",
- * which meant maintaining two orderings of one set and pushing recent posts
- * below eight older ones. The homepage already presents the ladder in dependency
- * order for anyone who wants a path through it; the index is for finding a post.
- * Tags came out for the same reason: they were three more chips per row and the
- * titles already say what the posts are.
+ * The descriptions and reading times that used to sit under each row were
+ * doing the work of the post itself. An index is for finding something you
+ * half-remember, and a title plus a date is what you remember. Descriptions
+ * are still in the frontmatter and still feed RSS, the OG cards and llms.txt -
+ * they just are not this page's job.
  */
 export default function BlogPage() {
   const posts = getAllPosts();
@@ -34,37 +33,22 @@ export default function BlogPage() {
       <PublicNav current="blog" />
 
       <main id="main" className="shell py-14 md:py-20">
-        {/* No standfirst. The count and the topic list restated what the list
-            below already shows, and RSS is in the footer on every page. */}
-        <h1 className="display mb-10 text-balance text-[24px] text-ink md:text-[30px]">
-          Blog
+        <h1 className="mb-10 font-[family-name:var(--font-mark)] text-[40px] leading-none text-ink md:text-[52px]">
+          blog
         </h1>
 
-        <div className="rows">
+        <ul className="post-list">
           {posts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="row">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <h2 className="row-title text-[17px] font-medium leading-snug tracking-tight text-ink">
-                  {post.title}
-                  <span
-                    aria-hidden
-                    className="row-arrow ml-2 hidden text-[13px] text-brand sm:inline"
-                  >
-                    →
-                  </span>
-                </h2>
-                <span className="meta shrink-0">
-                  {formatPostDate(post.date)} · {post.readingTime} min
-                </span>
-              </div>
-              {post.description ? (
-                <p className="mt-1.5 max-w-3xl text-pretty text-[15px] leading-[155%] text-ink-2">
-                  {post.description}
-                </p>
-              ) : null}
-            </Link>
+            <li key={post.slug}>
+              <Link href={`/blog/${post.slug}`} className="post-row">
+                <time className="post-date" dateTime={post.date}>
+                  {formatPostDate(post.date)}
+                </time>
+                <span className="post-title">{post.title}</span>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </main>
 
       <PublicFooter />

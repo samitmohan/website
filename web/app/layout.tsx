@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { Sriracha, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { THEME_SCRIPT } from "@/lib/theme-script";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
+
+// The one display face on the site, and it is only ever used by three things:
+// the "samit" wordmark, the two door labels, and the /about heading. The sm
+// monogram beside it is not type at all - it is the original chalk drawing,
+// traced (public/marks/sm.svg) - so this is chosen to sit next to that hand
+// rather than to reproduce it: a dry-brush hand with uneven stroke weight,
+// which is the part of the original that a font can actually carry.
+const sriracha = Sriracha({
+  variable: "--font-mark",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -51,7 +64,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} h-full antialiased`}
+      className={`${geistMono.variable} ${sriracha.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
