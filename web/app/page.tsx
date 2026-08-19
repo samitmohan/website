@@ -39,7 +39,22 @@ export default function HomePage() {
 
         <Link href="/about" className="wordmark" aria-label="About">
           <span className="hover-tile">About</span>
-          <span className="wordmark-word">samit</span>
+          {/* Streamed a glyph at a time, the way a completion arrives. Done
+              with per-glyph animation-delay rather than a script, so the
+              homepage still ships no JavaScript. */}
+          <span className="wordmark-word" aria-label="samit">
+            {"samit".split("").map((ch, i) => (
+              <span
+                key={i}
+                aria-hidden
+                className="wm-g"
+                style={{ animationDelay: `${120 + i * 145}ms` }}
+              >
+                {ch}
+              </span>
+            ))}
+            <span aria-hidden className="wm-caret" />
+          </span>
           <Mark name="computer" ext="png" className="wordmark-computer" />
         </Link>
       </main>

@@ -173,69 +173,6 @@
   --color-text-secondary: var(--muted-foreground);
 }
 
-/* Dark theme - .dark on <html>, set by THEME_SCRIPT then ThemeToggle. */
-.dark {
-  --background: #0D0D0F;
-  --foreground: #F2F2F2;
-  --card: #161618;
-  --card-foreground: #F2F2F2;
-  --popover: #161618;
-  --popover-foreground: #F2F2F2;
-  --primary: #6A88E2;
-  --primary-foreground: #0D0D0F;
-  --secondary: #1B1B1E;
-  --secondary-foreground: #F2F2F2;
-  --muted: #1B1B1E;
-  --muted-foreground: #A0A0A5;
-  --accent: #202024;
-  --accent-foreground: #F2F2F2;
-  --destructive: #F59970;
-  --destructive-foreground: #0D0D0F;
-  --border: #2A2A2E;
-  --input: #2A2A2E;
-  --ring: #6A88E2;
-  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.5);
-  --sidebar-bg: #111113;
-  --sidebar-border: #2A2A2E;
-  --sidebar-text: #A0A0A5;
-  --sidebar-text-hover: #F2F2F2;
-  --sidebar-active-bg: color-mix(in srgb, var(--primary) 16%, transparent);
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
-  --nav-bg: rgba(13, 13, 15, 0.8);
-  --color-background-secondary: var(--muted);
-  --color-text-primary: var(--foreground);
-  --color-text-secondary: var(--muted-foreground);
-
-  --surface: #161618;
-  --surface-2: #1B1B1E;
-  --surface-3: #202024;
-  /* Measured on --background #0D0D0F: 7.46 / 5.66 / 4.62, descending to match
-     the light ramp. The old #77777D (4.36) and #5A5A60 (2.83) both failed AA. */
-  --ink-2: #A0A0A5;
-  --ink-3: #8A8A90;
-  --ink-4: #7B7B81;
-  --rule: #2A2A2E;
-  --rule-soft: color-mix(in srgb, #2A2A2E 60%, transparent);
-  --rule-strong: #3A3A40;
-  --positive: #90C85B;
-  --positive-soft: rgba(110, 163, 53, 0.16);
-  --positive-border: rgba(144, 200, 91, 0.3);
-  --lip: inset 0 -1px 0 1px rgba(0, 0, 0, 0.3);
-  /* Dark holds a true indigo rather than washing out to pale blue.
-     #6A88E2 on #0D0D0F measures 5.7:1, so body links still pass AA. */
-  --brand-soft: rgba(51, 51, 204, 0.24);
-  --brand-border: #3A3F8F;
-  --brand-mid: #556ADC;
-  --brand: #6A88E2;
-  --brand-strong: #A7C0F1;
-  --orange: #F38858;
-  --orange-strong: #F9BB9E;
-  --orange-soft: rgba(230, 101, 27, 0.18);
-  --orange-border: rgba(243, 136, 88, 0.35);
-  --panel: #161618;
-  --panel-foreground: #F2F2F2;
-}
-
 html {
   scroll-padding-top: 4.5rem;
 }
@@ -522,25 +459,10 @@ button:focus-visible {
   }
 }
 
-/* Theme toggle icon swap — CSS-driven so SSR and client render identically. */
-.theme-icon-moon {
-  display: none;
-}
-.dark .theme-icon-sun {
-  display: none;
-}
-.dark .theme-icon-moon {
-  display: inline;
-}
-
 /* Syntax highlighting - shiki dual theme (github-light / github-dark) */
 code[data-theme*=" "] span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg, transparent);
-}
-.dark code[data-theme*=" "] span {
-  color: var(--shiki-dark);
-  background-color: var(--shiki-dark-bg, transparent);
 }
 /* Token backgrounds that shiki injects (e.g. highlighted lines) should
    not override the pre background set via Tailwind bg-card */
@@ -725,9 +647,6 @@ code[data-theme*=" "] {
    own mapping off the same --shiki-* variables. */
 .code-card .shiki span {
   color: var(--shiki-light);
-}
-.dark .code-card .shiki span {
-  color: var(--shiki-dark);
 }
 
 /* Shiki emits one .line span per row; the grid gives each a full-width row for
@@ -1469,13 +1388,42 @@ code[data-theme*=" "] {
 }
 .wordmark:hover { transform: scale(1.04); }
 
-/* The ONLY handwritten thing on the site. Everything that labels it - the
-   hover tiles, the page headings - is set in the page's own face, so the hand
+/* The one place the display face appears. Everything that labels it - the
+   hover tiles, the page headings - is set in the page's own face, so this
    reads as a signature rather than as the site's typeface. */
 .wordmark-word {
   font-family: var(--font-mark), var(--font-display);
   font-size: clamp(54px, 12vw, 96px);
   line-height: 1;
+}
+
+/* Streamed reveal: one glyph at a time behind a caret, at the pace a model
+   emits tokens. Each glyph carries its own delay inline, so this needs no
+   JavaScript at all - the homepage ships none.
+
+   `both` holds the pre-state before the delay elapses, which is what stops all
+   five letters flashing on for one frame before the sequence starts. */
+.wm-g {
+  display: inline-block;
+  opacity: 0;
+  animation: wm-in 1ms linear both;
+}
+@keyframes wm-in { to { opacity: 1; } }
+
+.wm-caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.66em;
+  margin-left: 0.05em;
+  background: currentColor;
+  animation: wm-blink 1080ms steps(1) infinite;
+}
+@keyframes wm-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
+/* Motion off: the name is simply there, and the caret stops flashing. */
+@media (prefers-reduced-motion: reduce) {
+  .wm-g { opacity: 1; animation: none; }
+  .wm-caret { animation: none; opacity: 1; }
 }
 
 .wordmark-computer {
@@ -1695,11 +1643,12 @@ code[data-theme*=" "] {
   gap: 12px;
 }
 
-/* 16:9 matches the clip exactly and the three banners to within a few percent,
-   so `contain` letterboxes almost nothing. */
+/* 19:10 is the shape of the artwork: the three banners run 1.83 to 1.94, so
+   they fill the frame with almost nothing cropped, and the 16:9 clip loses a
+   few percent top and bottom rather than sitting in letterbox bars. */
 .project-media {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 19 / 10;
   overflow: hidden;
   border: 1px solid var(--rule-soft);
   border-radius: var(--radius-card);
@@ -1719,9 +1668,9 @@ code[data-theme*=" "] {
 .project-still {
   width: 100%;
   height: 100%;
-  /* contain, not cover: these are wide banners with text at their edges, and
-     cropping to fill the frame eats it. */
-  object-fit: contain;
+  /* cover, against a frame cut to the artwork's own ratio - so it fills edge
+     to edge without the letterbox bars `contain` left top and bottom. */
+  object-fit: cover;
   display: block;
 }
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Caveat, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { THEME_SCRIPT } from "@/lib/theme-script";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
 
@@ -30,9 +29,10 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// No viewport.themeColor export on purpose: THEME_SCRIPT owns the theme-color
-// meta tag. Two writers on one tag means load order decides which wins, and the
-// loser paints light browser chrome around a dark page.
+// The site is light-only, so the theme-color meta is a constant. It used to be
+// written at runtime by a pre-paint script that read a stored preference; with
+// one theme there is nothing to read and nothing to flash.
+export const viewport = { themeColor: "#FAFAFA" };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
@@ -72,10 +72,6 @@ export default function RootLayout({
       className={`${geistMono.variable} ${caveat.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Before first paint, so a stored dark preference never flashes light. */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
-      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
           href="#main"

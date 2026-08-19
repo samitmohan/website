@@ -93,7 +93,10 @@ export default function AboutPage() {
             <Link href="/blog" className="about-link">
               blog
             </Link>{" "}
-            exists.{" "}
+            exists.
+          </p>
+
+          <p>
             <a
               href="https://www.youtube.com/watch?v=JuYeHPFR3f0"
               target="_blank"
