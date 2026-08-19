@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Caveat, Geist_Mono } from "next/font/google";
+import { Instrument_Serif, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
@@ -8,17 +8,18 @@ import "./globals.css";
 // the "samit" wordmark, the two door labels, and the /about heading. The sm
 // monogram beside it is not type at all - it is the original chalk drawing,
 // traced (public/marks/sm.svg) - so this is chosen to sit next to that hand
-// rather than to reproduce it. Actual handwriting rather than a marker face:
-// the marks around it are already brush drawings, so a second brush in type
-// competed with them instead of sitting alongside.
+// A high-contrast display serif, deliberately not a fourth attempt at
+// handwriting: every mark around the name is already a brush drawing, so
+// another hand in type was competing with them rather than sitting alongside.
+// Refined type against rough ink is the contrast the page was missing.
 //
 // It is used ONLY by the wordmark and the two door labels on the homepage.
 // /blog and /projects set their headings in the page's own face - a
 // handwritten heading over a list of post titles reads as decoration.
-const caveat = Caveat({
+const instrumentSerif = Instrument_Serif({
   variable: "--font-mark",
   subsets: ["latin"],
-  weight: "700",
+  weight: "400",
   display: "swap",
 });
 
@@ -69,7 +70,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} ${caveat.variable} h-full antialiased`}
+      className={`${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">

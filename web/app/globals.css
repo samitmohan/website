@@ -1397,35 +1397,6 @@ code[data-theme*=" "] {
   line-height: 1;
 }
 
-/* Streamed reveal: one glyph at a time behind a caret, at the pace a model
-   emits tokens. Each glyph carries its own delay inline, so this needs no
-   JavaScript at all - the homepage ships none.
-
-   `both` holds the pre-state before the delay elapses, which is what stops all
-   five letters flashing on for one frame before the sequence starts. */
-.wm-g {
-  display: inline-block;
-  opacity: 0;
-  animation: wm-in 1ms linear both;
-}
-@keyframes wm-in { to { opacity: 1; } }
-
-.wm-caret {
-  display: inline-block;
-  width: 0.06em;
-  height: 0.66em;
-  margin-left: 0.05em;
-  background: currentColor;
-  animation: wm-blink 1080ms steps(1) infinite;
-}
-@keyframes wm-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
-
-/* Motion off: the name is simply there, and the caret stops flashing. */
-@media (prefers-reduced-motion: reduce) {
-  .wm-g { opacity: 1; animation: none; }
-  .wm-caret { animation: none; opacity: 1; }
-}
-
 .wordmark-computer {
   width: 0.5em;
   height: 0.5em;
