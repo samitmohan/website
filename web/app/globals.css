@@ -1501,7 +1501,7 @@ code[data-theme*=" "] {
   left: 50%;
   transform: translate(-50%, 4px);
   padding: 5px 11px;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--foreground);
   border-radius: 8px;
   background: var(--surface);
   box-shadow: var(--shadow-card);
@@ -1526,14 +1526,15 @@ code[data-theme*=" "] {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  padding: 0 24px;
+  /* Bottom padding so the figures sit off the footer rule rather than on it. */
+  padding: 0 24px clamp(28px, 7vh, 72px);
   justify-items: center;
 }
 @media (min-width: 768px) {
   .home-doors {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 32px;
-    padding: 0 40px;
+    padding: 0 40px clamp(28px, 7vh, 72px);
   }
   .home-doors > :first-child { justify-self: start; }
   .home-doors > :last-child { justify-self: end; }
@@ -1694,12 +1695,11 @@ code[data-theme*=" "] {
   gap: 12px;
 }
 
-/* 16:10 rather than 16:9: a terminal recording and a tennis clip are the two
-   shapes going in here, and 16:10 letterboxes both less badly than either
-   native ratio letterboxes the other. */
+/* 16:9 matches the clip exactly and the three banners to within a few percent,
+   so `contain` letterboxes almost nothing. */
 .project-media {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--rule-soft);
   border-radius: var(--radius-card);
@@ -1715,10 +1715,13 @@ code[data-theme*=" "] {
   transform: translateY(-3px);
 }
 
-.project-video {
+.project-video,
+.project-still {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* contain, not cover: these are wide banners with text at their edges, and
+     cropping to fill the frame eats it. */
+  object-fit: contain;
   display: block;
 }
 

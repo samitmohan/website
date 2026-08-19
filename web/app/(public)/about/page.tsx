@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 
@@ -56,7 +57,7 @@ export default function AboutPage() {
 
           <p>
             I graduated from New Horizon College of Engineering in 2024 with a
-            degree in Computer Science and a 9.4 cgpa. Holding multiple
+            degree in Computer Science and a 9.4 CGPA. Creating multiple
             programming competitions &amp; mentoring juniors in algorithms led me
             to start a coding culture in my college &amp; create a club around
             it. I interned at MakeMyTrip and Genpact where I worked on
@@ -87,9 +88,20 @@ export default function AboutPage() {
             >
               tensortonic.com
             </a>
-            , which serves 50k+ users. Writing the backward pass is the only way
-            I have found to learn anything which is why the blog exists. I want
-            to be the very best, like no one ever was.
+            , which serves 50k+ users. Writing the backward pass is the only
+            way I have found to learn anything which is why the{" "}
+            <Link href="/blog" className="about-link">
+              blog
+            </Link>{" "}
+            exists.{" "}
+            <a
+              href="https://www.youtube.com/watch?v=JuYeHPFR3f0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="about-link"
+            >
+              I want to be the very best, like no one ever was.
+            </a>
           </p>
         </div>
       </main>

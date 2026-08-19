@@ -38,7 +38,7 @@ export default function HomePage() {
         <h1 className="sr-only">Samit Mohan</h1>
 
         <Link href="/about" className="wordmark" aria-label="About">
-          <span className="hover-tile">about</span>
+          <span className="hover-tile">About</span>
           <span className="wordmark-word">samit</span>
           <Mark name="computer" ext="png" className="wordmark-computer" />
         </Link>
@@ -46,11 +46,11 @@ export default function HomePage() {
 
       <div className="home-doors">
         <Link href="/blog" className="door">
-          <span className="hover-tile">blog</span>
+          <span className="hover-tile">Blog</span>
           <Figure name="blog-backprop" />
         </Link>
         <Link href="/projects" className="door">
-          <span className="hover-tile">projects</span>
+          <span className="hover-tile">Projects</span>
           <Figure name="agent-loop" />
         </Link>
       </div>

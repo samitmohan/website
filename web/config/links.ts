@@ -32,5 +32,7 @@ export const SOCIAL_LINKS: SiteLink[] = [
     external: true,
   },
   { label: "Email", href: "mailto:samitmohan@gmail.com", mark: "email" },
-  { label: "CV", href: "/samit-resume.pdf", mark: "cv", external: true },
+  // CV is out until the PDF is refreshed. samit-resume.pdf and
+  // public/marks/cv.svg both stay put, so restoring it is this line:
+  // { label: "CV", href: "/samit-resume.pdf", mark: "cv", external: true },
 ];

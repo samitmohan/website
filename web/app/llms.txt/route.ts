@@ -24,7 +24,6 @@ export async function GET() {
 - Projects: ${BASE}/projects
 - Blog: ${BASE}/blog
 - Feed: ${BASE}/blog/rss.xml
-- CV: ${BASE}/samit-resume.pdf
 
 ## Posts
 

@@ -33,8 +33,8 @@ export default function BlogPage() {
       <PublicNav />
 
       <main id="main" className="shell py-14 md:py-20">
-        <h1 className="display mb-10 text-[26px] text-ink md:text-[32px]">
-          blog
+        <h1 className="display mb-10 text-[26px] font-semibold text-ink md:text-[32px]">
+          Blog
         </h1>
 
         <ul className="post-list">

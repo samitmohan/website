@@ -24,12 +24,12 @@ export default function ProjectsPage() {
       <PublicNav />
 
       <main id="main" className="shell py-14 md:py-20">
-        <h1 className="display mb-10 text-[26px] text-ink md:text-[32px]">
-          projects
+        <h1 className="display mb-10 text-[26px] font-semibold text-ink md:text-[32px]">
+          Projects
         </h1>
 
         <div className="project-grid">
-          {PROJECTS.map((p) => (
+          {PROJECTS.map((p, i) => (
             <article key={p.slug} className="project">
               <a
                 href={p.repoUrl}
@@ -37,7 +37,7 @@ export default function ProjectsPage() {
                 rel="noopener noreferrer"
                 className="project-face"
               >
-                <ProjectMedia project={p} />
+                <ProjectMedia project={p} priority={i < 2} />
                 <div className="project-head">
                   <h2 className="project-name">{p.name}</h2>
                   <span className="meta shrink-0">{p.stack}</span>
