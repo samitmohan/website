@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SECTIONS } from "@/lib/interviews-data";
 import { getSection, stripNum } from "@/lib/interviews";
-import { PublicNav } from "@/components/public-nav";
+import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { InterviewsSection } from "@/components/interviews/interviews-section";
 
 // Everything on this page comes from files in the repo, so it can only change
@@ -23,7 +23,7 @@ export async function generateMetadata({
   const sec = getSection(section);
   if (!sec) return {};
   return {
-    title: `${stripNum(sec.title)} — Interviews`,
+    title: `${stripNum(sec.title)} - Interviews`,
     robots: { index: false, follow: true },
   };
 }
@@ -38,9 +38,10 @@ export default async function InterviewsSectionPage({
   if (!sec) notFound();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="page">
       <PublicNav />
       <InterviewsSection section={sec} />
+      <PublicFooter />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getAllPosts, formatPostDate } from "@/lib/blog";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
+import { Figure } from "@/components/figure";
 
 // Everything on this page comes from files in the repo, so it can only change
 // when a deploy changes them.
@@ -29,11 +30,16 @@ export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <div className="page">
+    <div className="page accent-blue">
       <PublicNav />
 
-      <main id="main" className="shell py-14 md:py-20">
-        <h1 className="display mb-10 text-[26px] font-semibold text-ink md:text-[32px]">
+      <main id="main" className="shell relative py-14 md:py-20">
+        {/* The drawing behind the /blog door on the homepage, reappearing on
+            the page it opens onto. Absolutely positioned, so nothing in the
+            column below moves to accommodate it. */}
+        <Figure name="blog-backprop" className="page-figure page-figure-blog" />
+
+        <h1 className="display display-accent mb-10 text-[34px] text-ink md:text-[44px]">
           Blog
         </h1>
 

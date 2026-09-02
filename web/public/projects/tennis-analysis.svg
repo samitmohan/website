@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 200" width="380" height="200" role="img">
+<title>Tracking a rally</title>
+<desc>Court keypoints lock on one by one, two player boxes follow their ends of the court, and the ball travels a rally arc with its interpolated path drawn behind it.</desc>
+<style><![CDATA[
+  /* The site is light-only and this is served through an img element, so it
+     carries literals throughout - there is no theme for it to track. Greys are
+     the site's ramp, warmed for the cream ground: #877F70 measures 3.55:1 on
+     the #F7F2E6 figure backing where the old #8A8A90 was 3.07:1, barely over
+     the 3:1 bar for graphical objects.
+
+     The ball takes the /projects accent so the card and its drawing agree.
+     #E6651B is 3.01:1 on that backing - too close to the line for a 4px dot to
+     be the only thing carrying it, so it is drawn with a darker rim. */
+  /* Type comes from the page, not from a literal. These files are inlined, so
+     var(--font-mono) resolves to the same stack the rest of the site uses -
+     Berkeley Mono for anyone who owns it, then the Geist Mono that next/font
+     actually ships. Hardcoding "Berkeley Mono" here meant the labels inside a
+     drawing fell through to the OS monospace while the text directly beside it
+     rendered in Geist Mono. The fallback sits inside var() on purpose: an
+     undefined custom property invalidates the whole `font` shorthand, and the
+     families after it would not rescue the declaration - and font-size is kept
+     out of the shorthand for the same reason, so a renderer that cannot
+     resolve the variable loses the typeface and not the text size. */
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --ink:#141414; --grey:#877F70; --soft:#D5CFC0;
+        --accent:#E6651B; --accent-rim:#A8470D; }
+
+  .tn-court { fill:none; stroke:var(--grey); stroke-width:1.1; stroke-linejoin:round; }
+  .tn-inner { fill:none; stroke:var(--soft); stroke-width:1; }
+  .tn-net   { stroke:var(--grey); stroke-width:1; }
+  .tn-mesh  { stroke:var(--soft); stroke-width:.6; }
+  .tn-lab   { font-size:8.5px;
+              fill:var(--grey); }
+  .tn-cap   { font-size:8.5px;
+              fill:var(--grey); }
+
+  /* Keypoints lock on one at a time over the first fifth of the cycle, then
+     hold for the rest of it. The regression is the first thing the pipeline
+     does, so it is the first thing the drawing does. */
+  .tn-kp { fill:var(--ink); opacity:0; animation:tn-lock 6000ms linear infinite; }
+  @keyframes tn-lock {
+    0%   { opacity:0; transform:scale(2.6); }
+    4%   { opacity:1; transform:scale(1); }
+    92%  { opacity:1; transform:scale(1); }
+    97%  { opacity:0; transform:scale(1); }
+    100% { opacity:0; transform:scale(2.6); }
+  }
+
+  /* Boxes drift rather than sit still: a detector that never moves reads as a
+     rectangle drawn on a picture, not as tracking. */
+  .tn-box { fill:none; stroke:var(--ink); stroke-width:1.2; }
+  .tn-p1 { animation:tn-drift-far 6000ms ease-in-out infinite alternate; }
+  .tn-p2 { animation:tn-drift-near 3000ms ease-in-out infinite alternate; }
+  @keyframes tn-drift-far  { from { transform:translateX(-14px); } to { transform:translateX(16px); } }
+  @keyframes tn-drift-near { from { transform:translateX(20px); } to { transform:translateX(-24px); } }
+
+  /* The interpolated path: dashed, sitting under the ball, because filling
+     detection gaps is the part of this worth showing. --grey held back with
+     opacity rather than --soft, which at 1.39:1 on the backing was so close to
+     invisible that the one idea the drawing exists to show did not read. */
+  .tn-path { fill:none; stroke:var(--grey); stroke-width:1; stroke-dasharray:3 4;
+             opacity:.5; }
+
+  /* The rally, as translate keyframes sampled off the two quadratics in the
+     dashed path below - not offset-path. offset-path is the tidier way to write
+     this and it is exactly the wrong tool here: where it is unsupported the
+     property is simply dropped, which parks the ball at the user-space origin.
+     A ball in the top-left corner of the card is a worse failure than a ball
+     that does not move, and transform has no such gap.
+
+     Sampled at t = 0, .25, .5, .75, 1 on each half. Uniform steps in t rather
+     than in arc length, so the ball is quick off the racket and slow over the
+     net, which is what a lob does anyway. */
+  .tn-ball { animation:tn-rally 3000ms linear infinite; }
+  @keyframes tn-rally {
+    0%     { transform:translate(206px,140px); }
+    12.5%  { transform:translate(187px,115px); }
+    25%    { transform:translate(176px,92px); }
+    37.5%  { transform:translate(173px,74px); }
+    50%    { transform:translate(178px,58px); }
+    62.5%  { transform:translate(198px,79px); }
+    75%    { transform:translate(209px,100px); }
+    87.5%  { transform:translate(212px,120px); }
+    100%   { transform:translate(206px,140px); }
+  }
+
+  /* Fires as the ball reaches the far end and again on the return. */
+  .tn-chip { opacity:0; animation:tn-chip 3000ms linear infinite; }
+  @keyframes tn-chip {
+    0%,38%   { opacity:0; }
+    44%      { opacity:1; }
+    76%      { opacity:1; }
+    84%,100% { opacity:0; }
+  }
+
+  @media (prefers-reduced-motion:reduce) {
+    .tn-kp   { animation:none; opacity:1; transform:none; }
+    .tn-p1, .tn-p2 { animation:none; }
+    .tn-ball { animation:none; transform:translate(176px,92px); }
+    .tn-chip { animation:none; opacity:1; }
+  }
+]]></style>
+
+<!-- court, in broadcast perspective: far baseline short, near baseline wide -->
+<path class="tn-court" d="M132,52 L248,52 L320,168 L60,168 Z"/>
+<!-- service boxes -->
+<line class="tn-inner" x1="115" y1="80"  x2="265" y2="80"/>
+<line class="tn-inner" x1="77"  y1="140" x2="303" y2="140"/>
+<line class="tn-inner" x1="190" y1="80"  x2="190" y2="140"/>
+
+<!-- net: a band rather than a line, so the court reads as three dimensions -->
+<line class="tn-net" x1="96" y1="100" x2="284" y2="100"/>
+<line class="tn-net" x1="96" y1="110" x2="284" y2="110"/>
+<line class="tn-net" x1="96" y1="100" x2="96"  y2="110"/>
+<line class="tn-net" x1="284" y1="100" x2="284" y2="110"/>
+<line class="tn-mesh" x1="120" y1="100" x2="120" y2="110"/>
+<line class="tn-mesh" x1="144" y1="100" x2="144" y2="110"/>
+<line class="tn-mesh" x1="168" y1="100" x2="168" y2="110"/>
+<line class="tn-mesh" x1="192" y1="100" x2="192" y2="110"/>
+<line class="tn-mesh" x1="216" y1="100" x2="216" y2="110"/>
+<line class="tn-mesh" x1="240" y1="100" x2="240" y2="110"/>
+<line class="tn-mesh" x1="264" y1="100" x2="264" y2="110"/>
+
+<!-- keypoints. transform-box/origin so the scale in tn-lock pops about the
+     dot itself rather than about the svg origin. -->
+<g style="transform-box:fill-box;transform-origin:center">
+  <circle class="tn-kp" cx="132" cy="52"  r="2.4" style="animation-delay:0ms"/>
+  <circle class="tn-kp" cx="248" cy="52"  r="2.4" style="animation-delay:90ms"/>
+  <circle class="tn-kp" cx="115" cy="80"  r="2.4" style="animation-delay:180ms"/>
+  <circle class="tn-kp" cx="265" cy="80"  r="2.4" style="animation-delay:270ms"/>
+  <circle class="tn-kp" cx="190" cy="80"  r="2.4" style="animation-delay:360ms"/>
+  <circle class="tn-kp" cx="190" cy="140" r="2.4" style="animation-delay:450ms"/>
+  <circle class="tn-kp" cx="77"  cy="140" r="2.4" style="animation-delay:540ms"/>
+  <circle class="tn-kp" cx="303" cy="140" r="2.4" style="animation-delay:630ms"/>
+  <circle class="tn-kp" cx="60"  cy="168" r="2.4" style="animation-delay:720ms"/>
+  <circle class="tn-kp" cx="320" cy="168" r="2.4" style="animation-delay:810ms"/>
+</g>
+
+<!-- players -->
+<g class="tn-p1">
+  <rect class="tn-box" x="170" y="29" width="15" height="20" rx="2"/>
+  <text class="tn-lab" x="188" y="38">P1</text>
+</g>
+<g class="tn-p2">
+  <rect class="tn-box" x="196" y="132" width="21" height="31" rx="2"/>
+  <text class="tn-lab" x="221" y="142">P2</text>
+</g>
+
+<!-- rally -->
+<path class="tn-path" d="M206,140 Q160,86 178,58 Q226,100 206,140"/>
+<g class="tn-ball">
+  <circle cx="0" cy="0" r="4" fill="var(--accent)" stroke="var(--accent-rim)" stroke-width="1"/>
+</g>
+
+<g class="tn-chip">
+  <rect x="286" y="44" width="74" height="15" rx="4" fill="none" stroke="var(--soft)"/>
+  <text class="tn-lab" x="293" y="55">118 km/h</text>
+</g>
+
+<text class="tn-cap" x="14" y="188">court keypoints &#183; player + ball tracking</text>
+</svg>

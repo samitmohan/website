@@ -37,7 +37,7 @@ export default async function OGImage({
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          background: "#FAFAFA",
+          background: "#FFFDF8",
           color: "#141414",
         }}
       >
@@ -47,7 +47,7 @@ export default async function OGImage({
             alignItems: "center",
             gap: "12px",
             fontSize: "18px",
-            color: "#999999",
+            color: "#767369",
             letterSpacing: "2px",
           }}
         >
@@ -79,14 +79,14 @@ export default async function OGImage({
             style={{
               display: "flex",
               gap: "14px",
-              borderTop: "1px solid #E6E6E6",
+              borderTop: "1px solid #E8E3D8",
               paddingTop: "28px",
               fontSize: "22px",
-              color: "#666666",
+              color: "#5C5A55",
             }}
           >
-            <span style={{ color: "#3333CC" }}>Samit Mohan</span>
-            {date ? <span style={{ color: "#B3B3B3" }}>·</span> : null}
+            <span style={{ color: "#2C2CE8" }}>Samit Mohan</span>
+            {date ? <span style={{ color: "#CFC9BB" }}>·</span> : null}
             {date ? <span>{date}</span> : null}
           </div>
         </div>

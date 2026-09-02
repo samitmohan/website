@@ -17,7 +17,7 @@ export default function OGImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          background: "#FAFAFA",
+          background: "#FFFDF8",
           color: "#141414",
         }}
       >
@@ -28,7 +28,7 @@ export default function OGImage() {
             justifyContent: "space-between",
             fontSize: "18px",
             letterSpacing: "2px",
-            color: "#999999",
+            color: "#767369",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
@@ -60,7 +60,7 @@ export default function OGImage() {
           <div
             style={{
               fontSize: "26px",
-              color: "#666666",
+              color: "#5C5A55",
               lineHeight: 1.45,
               maxWidth: "760px",
               marginTop: "28px",
@@ -75,10 +75,10 @@ export default function OGImage() {
           style={{
             display: "flex",
             gap: "48px",
-            borderTop: "1px solid #E6E6E6",
+            borderTop: "1px solid #E8E3D8",
             paddingTop: "28px",
             fontSize: "20px",
-            color: "#3333CC",
+            color: "#2C2CE8",
           }}
         >
           <div>≤10ms inference</div>

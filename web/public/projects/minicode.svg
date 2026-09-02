@@ -2,11 +2,21 @@
 <title>An agent editing a file</title>
 <desc>A prompt arrives, the agent reads a file, edits it, and reports back, one line at a time.</desc>
 <style><![CDATA[
-  svg { --ink:#141414; --grey:#8A8A90; --soft:#D8D8DC; }
+  /* Type comes from the page, not from a literal. These files are inlined, so
+     var(--font-mono) resolves to the same stack the rest of the site uses -
+     Berkeley Mono for anyone who owns it, then the Geist Mono that next/font
+     actually ships. Hardcoding "Berkeley Mono" here meant the labels inside a
+     drawing fell through to the OS monospace while the text directly beside it
+     rendered in Geist Mono. The fallback sits inside var() on purpose: an
+     undefined custom property invalidates the whole `font` shorthand, and the
+     families after it would not rescue the declaration - and font-size is kept
+     out of the shorthand for the same reason, so a renderer that cannot
+     resolve the variable loses the typeface and not the text size. */
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --ink:#141414; --grey:#877F70; --soft:#D5CFC0; }
   .mc-win { fill:none; stroke:var(--soft); stroke-width:1.1; }
   .mc-dot { fill:var(--soft); }
-  .mc-t { font:9px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace; fill:var(--ink); }
-  .mc-d { font:9px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace; fill:var(--grey); }
+  .mc-t { font-size:9px; fill:var(--ink); }
+  .mc-d { font-size:9px; fill:var(--grey); }
   .mc-chip { fill:none; stroke:var(--grey); stroke-width:1; }
 
   /* Lines land one after another, the way a transcript actually fills. Held on

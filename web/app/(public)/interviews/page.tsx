@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { PublicNav } from "@/components/public-nav";
+import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { InterviewsIndex } from "@/components/interviews/interviews-index";
 
 export const metadata: Metadata = {
-  title: "Interviews — Samit Mohan",
+  // The root layout appends " - Samit Mohan" via title.template. Repeating
+  // it here rendered "Interviews - Samit Mohan - Samit Mohan".
+  title: "Interviews",
   description:
     "ML interview prep for 2026: math, deep learning, LLMs, CV, systems, inference/MLOps, NeetCode 150, and projects to build.",
   robots: { index: false, follow: true },
@@ -16,9 +18,10 @@ export const revalidate = false;
 
 export default function InterviewsPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="page">
       <PublicNav />
       <InterviewsIndex />
+      <PublicFooter />
     </div>
   );
 }

@@ -3,27 +3,41 @@
 <desc>A pulse circles a think, act and observe loop; four tool calls fire from the act step on every lap.</desc>
 <style><![CDATA[
   /* Two colour systems on purpose.
-     The geometry uses one literal picked to hold on any ground: #8A8A90
-     measures 3.29:1 worst case over #FAFAFA / #FFFFFF / #0D0D0F / #161618,
-     clear of the 3:1 bar for graphical objects. The accent that used to be
-     indigo (#556ADC) is currentColor now - the site's chrome is greyscale, and
-     the band of greys that clears 3:1 on both extremes is narrow enough that
-     --struct already sits in it, so a second grey could not be told apart from
-     the first. The accent reads by stroke weight and timing instead.
-     The text uses currentColor, because text cannot be made ground-independent:
-     the best single colour against #FFFFFF and #0D0D0F tops out at 4.41:1 and AA
-     wants 4.50, while a scheme mismatch is 1.07:1 - invisible. currentColor
-     inherits the host page's colour, so inlining this file makes the labels
-     correct in every theme state (17.65:1). The color below is only the fallback
-     for an img element, which gets no CSS from its host and can therefore only
-     follow prefers-color-scheme; it is scoped so inlining wins. */
-  svg { --struct:#8A8A90; --brand:currentColor; }
-  /* svg:root matches only when this file IS the document, i.e. loaded through an
-     img element - the one case that can see nothing but prefers-color-scheme.
-     Inlined in HTML the svg is not the root, so this does not match and
-     currentColor inherits the page's colour instead of overriding it. */
+
+     The geometry uses --struct, a single literal that has to clear the 3:1 bar
+     for graphical objects on every ground this file lands on. The site is
+     light-only now - there is no theme toggle and no .dark class - so that is
+     #FFFDF8 and #FFFFFF rather than the four grounds this comment used to
+     list. globals.css overrides --struct to a warmed #877F70 (3.90:1 on
+     #FFFDF8) when the file is inlined; the #8A8A90 below is the img fallback.
+
+     --brand is the accent. It was demoted to currentColor when the site's
+     chrome went greyscale and a second grey could not be told apart from the
+     first. There are three accent ramps now - blue on /blog, orange on
+     /projects, teal on /about - and globals.css sets --brand to whichever one
+     the host page carries, so the drawing is painted in the colour of the page
+     it belongs to. currentColor stays as the fallback for the img case.
+
+     The text uses currentColor, because text cannot be made ground-independent.
+     Inlined, currentColor inherits the host page's colour and the labels are
+     correct; the svg:root rule below is scoped so that inlining always wins. */
+  /* Type comes from the page, not from a literal. These files are inlined, so
+     var(--font-mono) resolves to the same stack the rest of the site uses -
+     Berkeley Mono for anyone who owns it, then the Geist Mono that next/font
+     actually ships. Hardcoding "Berkeley Mono" here meant the labels inside a
+     drawing fell through to the OS monospace while the text directly beside it
+     rendered in Geist Mono. The fallback sits inside var() on purpose: an
+     undefined custom property invalidates the whole `font` shorthand, and the
+     families after it would not rescue the declaration - and font-size is kept
+     out of the shorthand for the same reason, so a renderer that cannot
+     resolve the variable loses the typeface and not the text size. */
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --struct:#8A8A90; --brand:currentColor; }
+  /* svg:root matches only when this file IS the document, i.e. loaded through
+     an img element - the one case that gets no CSS from a host. Inlined in
+     HTML the svg is not the root, this does not match, and currentColor
+     inherits the page's colour instead. The site is light-only, so there is no
+     prefers-color-scheme override here any more. */
   svg:root { color:#141414; }
-  @media (prefers-color-scheme:dark) { svg:root { color:#F2F2F2; } }
   .al-trace { fill:none; stroke:var(--struct); stroke-width:1; opacity:.3; }
   /* 46 units lit out of a 548 perimeter, chased at constant speed.
      Because the speed is constant, a gate lights at exactly T * s / perimeter and
@@ -48,11 +62,11 @@
   @keyframes al-call { 0%{opacity:0} 3%{opacity:.9} 14%{opacity:0} 100%{opacity:0} }
   /* Muted text is currentColor at reduced opacity rather than its own grey, so
      it tracks the host colour too instead of drifting off it. */
-  .al-lab  { font:8px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  .al-lab  { font-size:8px;
              letter-spacing:.08em; fill:currentColor; opacity:.6; }
-  .al-name { font:7.5px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  .al-name { font-size:7.5px;
              letter-spacing:.04em; fill:currentColor; }
-  .al-cap  { font:7.5px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  .al-cap  { font-size:7.5px;
              letter-spacing:.03em; fill:currentColor; opacity:.6; }
   /* Motion off: hold one composed frame with the pulse inside act and the tool
      call raised, rather than freezing wherever the lap happened to be. */

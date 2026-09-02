@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
+import { Figure } from "@/components/figure";
 import { ProjectMedia } from "@/components/project-media";
 import { PROJECTS } from "@/config/projects";
 import { RSS_ALTERNATE } from "@/lib/metadata";
@@ -20,16 +21,18 @@ export const metadata: Metadata = {
  */
 export default function ProjectsPage() {
   return (
-    <div className="page">
+    <div className="page accent-crimson">
       <PublicNav />
 
-      <main id="main" className="shell py-14 md:py-20">
-        <h1 className="display mb-10 text-[26px] font-semibold text-ink md:text-[32px]">
+      <main id="main" className="shell relative py-14 md:py-20">
+        <Figure name="agent-loop" className="page-figure page-figure-projects" />
+
+        <h1 className="display display-accent mb-10 text-[34px] text-ink md:text-[44px]">
           Projects
         </h1>
 
         <div className="project-grid">
-          {PROJECTS.map((p, i) => (
+          {PROJECTS.map((p) => (
             <article key={p.slug} className="project">
               <a
                 href={p.repoUrl}
@@ -37,7 +40,7 @@ export default function ProjectsPage() {
                 rel="noopener noreferrer"
                 className="project-face"
               >
-                <ProjectMedia project={p} priority={i < 2} />
+                <ProjectMedia project={p} />
                 <div className="project-head">
                   <h2 className="project-name">{p.name}</h2>
                   <span className="meta shrink-0">{p.stack}</span>

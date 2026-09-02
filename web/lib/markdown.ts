@@ -121,6 +121,26 @@ function rehypeMediaPerf() {
 }
 
 
+/**
+ * Demote an in-content `# heading` to h2.
+ *
+ * The page already renders the post title as the document's h1, so a markdown
+ * h1 is a second one - which is invalid, and reads to a screen reader as two
+ * documents. It also fell out of the table of contents, which collects h2 and
+ * h3 only: the "gradient descent" section of the neural-networks post was
+ * invisible in the TOC for exactly this reason.
+ *
+ * Only h1 moves. Shifting the whole ladder would push every other post's h2
+ * sections down a level to fix one post's mistake.
+ */
+function rehypeDemoteH1() {
+  return (tree: Root) => {
+    visit(tree, "element", (node: Element) => {
+      if (node.tagName === "h1") node.tagName = "h2";
+    });
+  };
+}
+
 // GitHub-style alerts: `> [!NOTE]` blockquotes become styled callout boxes.
 const CALLOUT_LABELS: Record<string, string> = {
   note: "Note",
@@ -197,6 +217,8 @@ export async function markdownToHtml(
     .use(hasMath ? remarkMath : () => {})
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
+    // Before rehypeSlug, so the demoted heading keeps the id its text produces.
+    .use(rehypeDemoteH1)
     .use(rehypeSlug)
     .use(rehypeCallouts)
     .use(rehypeMediaPerf)

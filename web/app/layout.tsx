@@ -4,18 +4,22 @@ import { Analytics } from "@vercel/analytics/next";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
 
-// The one display face on the site, and it is only ever used by three things:
-// the "samit" wordmark, the two door labels, and the /about heading. The sm
-// monogram beside it is not type at all - it is the original chalk drawing,
-// traced (public/marks/sm.svg) - so this is chosen to sit next to that hand
-// A high-contrast display serif, deliberately not a fourth attempt at
-// handwriting: every mark around the name is already a brush drawing, so
-// another hand in type was competing with them rather than sitting alongside.
-// Refined type against rough ink is the contrast the page was missing.
+// The display face for the whole site: the "samit" wordmark and every heading,
+// through --font-display in globals.css.
 //
-// It is used ONLY by the wordmark and the two door labels on the homepage.
-// /blog and /projects set their headings in the page's own face - a
-// handwritten heading over a list of post titles reads as decoration.
+// A high-contrast serif, deliberately not a fourth attempt at handwriting:
+// every mark around the name is already a brush drawing, so another hand in
+// type was competing with them rather than sitting alongside. Refined type
+// against rough ink is the contrast the page was missing.
+//
+// It was scoped to the wordmark alone on the argument that "a handwritten
+// heading over a list of post titles reads as decoration". That argument is
+// against a handwriting face, and this is not one - it was pointing at the
+// wrong conclusion. The cost of the narrow scope was a site whose headings
+// were all set in the same system sans as its body text, differing from the
+// prose only in size, which is the most templated thing a page can do.
+//
+// preload stays on: this is now on the critical path for every route.
 const instrumentSerif = Instrument_Serif({
   variable: "--font-mark",
   subsets: ["latin"],
@@ -23,17 +27,23 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
+// preload: false because the fonts declared here are preloaded on every route,
+// and the homepage - the one page most people see first - sets nothing in mono.
+// It was fetching 23 KB to render nothing. Where the mono does appear it carries
+// dates, project names and source links, all inside boxes with a stated width
+// (.post-date is 6.5rem), so it swaps in without moving anything.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
   display: "swap",
+  preload: false,
 });
 
 // The site is light-only, so the theme-color meta is a constant. It used to be
 // written at runtime by a pre-paint script that read a stored preference; with
 // one theme there is nothing to read and nothing to flash.
-export const viewport = { themeColor: "#FAFAFA" };
+export const viewport = { themeColor: "#FFFDF8" };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),

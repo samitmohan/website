@@ -13,7 +13,7 @@ export default function GlobalError({
         <p className="label mb-4">
           Error
         </p>
-        <h1 className="display text-balance text-[22px] text-ink md:text-[26px]">
+        <h1 className="display text-balance text-[28px] text-ink md:text-[34px]">
           Something went wrong
         </h1>
         <p className="mt-4 text-[15px] text-ink-2">

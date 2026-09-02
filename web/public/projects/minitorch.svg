@@ -4,14 +4,26 @@
 <style><![CDATA[
   /* The site is light-only, so unlike the homepage figures this one is served
      through an img element and can use literals throughout - there is no theme
-     for it to track. Greys are the site's own ramp. */
-  svg { --ink:#141414; --grey:#8A8A90; --soft:#D8D8DC; }
+     for it to track. Greys are the site's own ramp, warmed for the cream
+     ground: #877F70 measures 3.55:1 on the #F7F2E6 figure backing where the
+     old #8A8A90 was 3.07:1, barely over the 3:1 bar. */
+  /* Type comes from the page, not from a literal. These files are inlined, so
+     var(--font-mono) resolves to the same stack the rest of the site uses -
+     Berkeley Mono for anyone who owns it, then the Geist Mono that next/font
+     actually ships. Hardcoding "Berkeley Mono" here meant the labels inside a
+     drawing fell through to the OS monospace while the text directly beside it
+     rendered in Geist Mono. The fallback sits inside var() on purpose: an
+     undefined custom property invalidates the whole `font` shorthand, and the
+     families after it would not rescue the declaration - and font-size is kept
+     out of the shorthand for the same reason, so a renderer that cannot
+     resolve the variable loses the typeface and not the text size. */
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --ink:#141414; --grey:#877F70; --soft:#D5CFC0; }
   .mt-box { fill:none; stroke:var(--grey); stroke-width:1.1; }
-  .mt-lab { font:10px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  .mt-lab { font-size:10px;
             fill:var(--ink); text-anchor:middle; }
-  .mt-sub { font:8px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  .mt-sub { font-size:8px;
             fill:var(--grey); text-anchor:middle; }
-  .mt-cap { font:8.5px "Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  .mt-cap { font-size:8.5px;
             fill:var(--grey); }
 
   /* Forward edges: drawn in over the first half of the cycle. */

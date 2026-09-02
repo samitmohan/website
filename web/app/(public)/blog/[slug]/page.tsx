@@ -8,7 +8,6 @@ import { RSS_ALTERNATE } from "@/lib/metadata";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { BlogContent } from "@/components/blog-content";
 import { SelectionShare } from "@/components/selection-share";
-import { ViewBeacon } from "@/components/view-beacon";
 import { FunPost } from "@/components/fun-post";
 
 const BackToTop = dynamic(() =>
@@ -103,7 +102,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="page">
+    <div className="page accent-blue">
       {post.math && (
         // eslint-disable-next-line @next/next/no-css-tags -- precedence-hoisted, loaded only for math posts
         <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />
@@ -112,7 +111,6 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <ViewBeacon slug={slug} />
       <BackToTop />
       <PostTOC scope="article" />
       <PostKeyboardNav prevHref={prevHref} nextHref={nextHref} />
@@ -133,7 +131,7 @@ export default async function BlogPostPage({
 
         {/* Header */}
         <header className="mb-8">
-          <h1 className="display text-balance text-[24px] text-ink md:text-[32px]">
+          <h1 className="display text-balance text-[30px] text-ink md:text-[40px]">
             {post.title}
           </h1>
           <div className="mt-7 flex items-center gap-3 border-y border-rule py-4">
@@ -172,32 +170,7 @@ export default async function BlogPostPage({
         {/* Content */}
         <article className="mt-10">
           <SelectionShare title={post.title}>
-          <BlogContent
-            html={html}
-            className="
-              blog-prose
-              [&_h1]:font-[family-name:var(--font-display)] [&_h1]:text-[2rem] [&_h1]:font-normal [&_h1]:tracking-[-0.02em] [&_h1]:text-ink [&_h1]:mt-14 [&_h1]:mb-5
-              [&_h2]:font-[family-name:var(--font-display)] [&_h2]:text-[1.75rem] [&_h2]:font-normal [&_h2]:tracking-[-0.02em] [&_h2]:leading-[130%] [&_h2]:text-ink [&_h2]:mt-14 [&_h2]:mb-4 [&_h2]:pb-3 [&_h2]:border-b [&_h2]:border-rule
-              [&_h3]:text-[18px] [&_h3]:font-medium [&_h3]:tracking-tight [&_h3]:leading-[135%] [&_h3]:text-ink [&_h3]:mt-10 [&_h3]:mb-2
-              [&_h4]:text-[15px] [&_h4]:font-medium [&_h4]:leading-[135%] [&_h4]:text-ink [&_h4]:mt-7 [&_h4]:mb-2
-              [&_p]:text-[17.5px] [&_p]:text-ink-2 [&_p]:leading-[175%] [&_p]:mb-5 [&_p]:text-pretty
-              [&_ul]:mb-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:marker:text-ink-4
-              [&_ol]:mb-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:marker:text-ink-4 [&_ol]:marker:font-mono [&_ol]:marker:text-[13px]
-              [&_li]:text-[17.5px] [&_li]:text-ink-2 [&_li]:leading-[1.75] [&_li]:mb-1.5
-              [&_strong]:text-ink [&_strong]:font-medium
-              [&_em]:italic
-              [&_blockquote]:border-l-2 [&_blockquote]:border-brand [&_blockquote]:bg-surface-2 [&_blockquote]:rounded-r-lg [&_blockquote]:py-3 [&_blockquote]:pl-5 [&_blockquote]:pr-4 [&_blockquote]:text-ink-2 [&_blockquote]:not-italic [&_blockquote]:my-7
-              [&_pre]:overflow-x-auto [&_pre]:text-[13px] [&_pre]:leading-6
-              [&_[data-rehype-pretty-code-figure]]:max-w-none [&_[data-rehype-pretty-code-figure]]:-mx-4 [&_[data-rehype-pretty-code-figure]]:my-7
-              [&_code]:font-mono [&_code]:text-[0.875em]
-              [&_:not(pre)>code]:bg-surface-2 [&_:not(pre)>code]:border [&_:not(pre)>code]:border-rule [&_:not(pre)>code]:text-ink [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:rounded-md [&_:not(pre)>code]:text-[0.85em]
-              [&_img]:rounded-[var(--radius-card)] [&_img]:max-w-full [&_img]:my-7 [&_img]:border [&_img]:border-rule
-              [&_hr]:border-rule [&_hr]:my-12
-              [&_table]:w-full [&_table]:text-[14px] [&_table]:my-7 [&_table]:border-collapse [&_table]:overflow-hidden [&_table]:rounded-xl
-              [&_th]:border [&_th]:border-rule [&_th]:px-3.5 [&_th]:py-2.5 [&_th]:text-left [&_th]:font-medium [&_th]:bg-surface-2 [&_th]:text-ink [&_th]:font-mono [&_th]:text-[11px] [&_th]:uppercase [&_th]:tracking-[0.08em]
-              [&_td]:border [&_td]:border-rule [&_td]:px-3.5 [&_td]:py-2.5 [&_td]:text-ink-2
-            "
-          />
+          <BlogContent html={html} className="blog-prose" />
           </SelectionShare>
         </article>
 

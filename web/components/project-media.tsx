@@ -1,71 +1,25 @@
-import Image from "next/image";
 import type { Project } from "@/config/projects";
-import { ProjectVideo } from "@/components/project-video";
+import { Figure } from "@/components/figure";
 
 /**
- * The panel at the top of a project card: a hover-to-play recording, a still,
- * or - with neither - the project's name set large. That last state is meant to
- * look finished rather than pending: no grey rectangle, no "screenshot coming
- * soon".
- *
- * `contain` rather than `cover`, because these are wide banners with text at
- * their edges and cropping eats it.
+ * The panel at the top of a project card: a hand-authored animated SVG, or -
+ * without one - the project's name set large. That fallback is meant to look
+ * finished rather than pending: no grey rectangle, no "screenshot coming soon".
  */
-export function ProjectMedia({
-  project,
-  priority = false,
-}: {
-  project: Project;
-  priority?: boolean;
-}) {
-  if (project.video) {
-    return (
-      <div className="project-media">
-        <ProjectVideo
-          src={project.video}
-          poster={project.poster}
-          label={project.name}
-        />
-      </div>
-    );
-  }
-
+export function ProjectMedia({ project }: { project: Project }) {
   if (project.figure) {
     return (
       <div className="project-media project-media-figure">
-        {/* eslint-disable-next-line @next/next/no-img-element -- an animated SVG
-            must not go through the image optimizer, which would rasterise it
-            and drop the animation. */}
-        <img
-          src={project.figure}
-          alt={`${project.name} diagram`}
-          width={380}
-          height={200}
-          className="project-figure"
-          loading={priority ? "eager" : "lazy"}
-          decoding="async"
-        />
-      </div>
-    );
-  }
+        {/* Inlined rather than served through <img>. An <img> SVG is its own
+            document: it cannot see the page's --font-mono, so its labels fell
+            back to the OS monospace while the project name directly beneath
+            them rendered in Geist Mono - two monos on one card. Inlined, the
+            drawing reads the page's type and its accent.
 
-  if (project.image) {
-    return (
-      <div className="project-media">
-        {/* unoptimized on purpose: these are already hand-encoded WebP at
-            1400px and 31-48 KB apiece, so the optimizer would spend a
-            round-trip re-encoding a file that is smaller than what it would
-            produce. width/height are the real dimensions, so the frame still
-            reserves its space and nothing shifts on load. */}
-        <Image
-          src={project.image}
-          alt={`${project.name} preview`}
-          width={1400}
-          height={740}
-          className="project-still"
-          unoptimized
-          priority={priority}
-        />
+            Costs 13.7 KB of markup across the four cards, which is 2.7 KB
+            gzipped: /projects goes 6.4 -> 9.1 KB against a 15 KB ceiling. It
+            also drops four requests. */}
+        <Figure name={project.figure} className="project-figure" />
       </div>
     );
   }

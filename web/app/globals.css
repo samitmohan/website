@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
 /* Berkeley Mono is licensed (usgraphics.com), so the files are not in the repo.
    There is deliberately no @font-face for it.
@@ -15,117 +14,108 @@
    font-display: swap). */
 
 :root {
-  --background: #FAFAFA;
+  /* Warm ground. #FAFAFA was a cold near-white and the site read as blank
+     paper; every hue below is measured against this value, not against the
+     old one. */
+  --background: #FFFDF8;
   --foreground: #141414;
   --card: #FFFFFF;
-  --card-foreground: #141414;
-  --popover: #FFFFFF;
-  --popover-foreground: #141414;
-  --primary: #3333CC;
+  --primary: #2C2CE8;
   --primary-foreground: #FFFFFF;
-  --secondary: #F5F5F5;
-  --secondary-foreground: #141414;
-  --muted: #F5F5F5;
-  --muted-foreground: #666666;
-  --accent: #F0F0F0;
-  --accent-foreground: #141414;
+  --muted: #F7F2E6;
+  --muted-foreground: #5C5A55;
   --destructive: #B81514;
-  --destructive-foreground: #FFFFFF;
-  --border: #E6E6E6;
-  --input: #E6E6E6;
-  --ring: #3333CC;
+  --border: #E8E3D8;
+  --ring: #2C2CE8;
   --radius: 0.5rem;
-  --shadow-card: 0 6px 24px rgba(20, 20, 20, 0.05);
-  --sidebar-bg: #F9F9F9;
-  --sidebar-border: #E6E6E6;
-  --sidebar-text: #666666;
-  --sidebar-text-hover: #141414;
-  --sidebar-active-bg: color-mix(in srgb, var(--primary) 8%, transparent);
-  --sidebar-hover-bg: rgba(0, 0, 0, 0.03);
-  --nav-bg: rgba(250, 250, 250, 0.82);
+  --shadow-card: 0 6px 24px rgba(32, 26, 12, 0.06);
 
-  /* Sarvam-derived extensions. Surfaces step 50 -> 300, ink steps down from
-     #141414, brand indigo carries every interactive accent. */
+  /* Surfaces warm with the ground rather than staying neutral grey: a #F5F5F5
+     panel on a cream page reads as a colour mistake, not as a step. */
   --surface: #FFFFFF;
-  --surface-2: #F5F5F5;
-  --surface-3: #F0F0F0;
-  /* The grey ramp is compressed by WCAG AA. These carry 10-13px text (row
-     index, dates, outbound arrows), so the 3:1 large-text exemption never
-     applies and every step has to clear 4.5:1 on --background #FAFAFA.
-     Measured: 5.50 / 5.11 / 4.54. That leaves under a point of spread across
-     three steps, so lean on size and weight for hierarchy, not lightness. */
-  --ink-2: #666666;
-  --ink-3: #6B6B6B;
-  --ink-4: #737373;
-  /* One stroke colour at three weights rather than three greys, the way
-     sarvam modulates border-st/25, /50, /80. Structural rules use --rule;
-     rules inside a component use --rule-soft. */
-  --rule: #E6E6E6;
-  --rule-soft: color-mix(in srgb, #E6E6E6 55%, transparent);
-  --rule-strong: #CCCCCC;
-  /* Positive/success. Sarvam pairs green-600 text with a green-50/75 fill
-     and a green-200/75 border. */
-  --positive: #6EA335;
-  --positive-soft: color-mix(in srgb, #F2F8EB 75%, transparent);
+  --surface-2: #F7F2E6;
+  --surface-3: #EFE9DA;
+  /* The grey ramp is compressed by WCAG AA. These carry 11-13px text (dates,
+     stack labels, footer), so the 3:1 large-text exemption never applies and
+     every step has to clear 4.5:1 on --background #FFFDF8.
+     Measured: 6.78 / 5.46 / 4.67. Warmed off the old neutral greys, which
+     went muddy against cream. Under two points of spread across three steps,
+     so lean on size and weight for hierarchy, not lightness. */
+  --ink-2: #5C5A55;
+  --ink-3: #6B6862;
+  --ink-4: #767369;
+  /* One stroke colour at three weights rather than three greys. Structural
+     rules use --rule; rules inside a component use --rule-soft. */
+  --rule: #E8E3D8;
+  --rule-soft: color-mix(in srgb, #E8E3D8 55%, transparent);
+  --rule-strong: #CFC9BB;
+  /* Positive/success. Only the code-copy confirmation uses it. */
+  --positive: #4F7F2A;
+  --positive-soft: color-mix(in srgb, #EFF6E6 75%, transparent);
   --positive-border: color-mix(in srgb, #C8E4B0 75%, transparent);
-  /* Indigo runs four steps so hover has depth: soft fills, border tints,
-     base text, deep press. Mirrors sarvam's indigo-100/200/800/900 usage. */
-  --brand-soft: #E8EFFC;
-  --brand-border: #D2DFF9;
-  --brand-mid: #556ADC;
-  --brand: #3333CC;
-  --brand-strong: #212191;
-  /* Orange ramp: kept defined but no longer referenced. It measured 3.22:1 on
-     --background, which fails AA for the 11-15px hover text it was carrying, so
-     every interactive accent moved to the brand ramp (8.09:1 light, 5.76:1
-     dark). Left in place because it is a complete, tuned ramp worth having if a
-     second accent is ever wanted for something non-textual. */
-  --orange: #E6651B;
-  --orange-strong: #A5460F;
-  --orange-soft: #FEEDE6;
-  --orange-border: #FDDCCE;
-  /* --orange measures 3.22:1 on --background: fine for icons, arrows and
-     large text, short of AA for body copy. Use this darker step wherever
-     orange carries text at reading size. Measured 4.54:1. */
-  --orange-text: #BF5210;
-  --panel: #141414;
-  --panel-foreground: #FAFAFA;
+
+  /* ---- accent ramps -------------------------------------------------
+     Three ramps, one per surface: blue on /blog, crimson on /projects, teal
+     on /about. Each is soft fill, border tint, base, deep press, plus a
+     separate text step where the base is too light to carry type.
+
+     Every ratio below is measured on --background #FFFDF8. The `-text` steps
+     exist because a hover state tints the row behind the label, so the text
+     step is measured on its own soft fill as well - the tighter of the two
+     numbers is the one quoted. */
+
+  /* Blue clears AA at the base, so --brand doubles as its own text step.
+     Measured 7.85:1 on ground, 6.55:1 on --brand-soft. */
+  --brand-soft: #E7E7FD;
+  --brand-border: #C9C9F6;
+  --brand: #2C2CE8;
+  --brand-strong: #1C1CA8;
+  --brand-text: #2C2CE8;
+
+  /* Crimson, replacing an orange whose base measured 3.31:1 - clear of the 3:1
+     bar for a frame or a mark, and failing AA for anything at reading size.
+     That one ramp is why --accent-text exists as a separate step at all.
+     This base measures 4.62:1 on ground and 4.69:1 for white on it, so it
+     carries text on its own; the text step below is kept for parity with the
+     other two ramps and for the case where a row tints behind it (5.91:1 on
+     --crimson-soft). Warm, which matters: blue and teal are both cool, and
+     losing the orange left the palette with no warm accent at all. */
+  --crimson-soft: #FDEAE6;
+  --crimson-border: #F5CDC5;
+  --crimson: #D0412B;
+  --crimson-strong: #7C2214;
+  --crimson-text: #A6301D;
+
+  /* Teal scrapes AA at the base (4.52:1), which is too little margin for
+     11px meta, so the text step carries anything smaller than a heading.
+     Measured 6.13:1 on ground, 5.37:1 on --teal-soft. */
+  --teal-soft: #E0F2EE;
+  --teal-border: #B8E0D7;
+  --teal: #108474;
+  --teal-strong: #08544A;
+  --teal-text: #0C6D60;
+
   --radius-card: 24px;
-  --radius-panel: 32px;
   /* Sarvam's easing curve verbatim: fast out of the gate, long settle. */
   --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  /* Overshoot for entrances and hover lifts. Nothing decorative should use
+     --motion-ease; it settles too politely to read as motion. */
+  --motion-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
   /* Inner bottom edge that seats a surface without adding a border. */
-  --lip: inset 0 -1px 0 1px rgba(0, 0, 0, 0.04);
-  --hairline: 0 0 0 1px var(--rule);
+  --lip: inset 0 -1px 0 1px rgba(32, 26, 12, 0.05);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-sidebar-bg: var(--sidebar-bg);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-text: var(--sidebar-text);
-  --color-sidebar-text-hover: var(--sidebar-text-hover);
-  --color-sidebar-active-bg: var(--sidebar-active-bg);
-  --color-sidebar-hover-bg: var(--sidebar-hover-bg);
-  --color-nav-bg: var(--nav-bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
@@ -141,22 +131,38 @@
   --color-positive-border: var(--positive-border);
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
-  --color-brand-mid: var(--brand-mid);
   --color-brand-soft: var(--brand-soft);
   --color-brand-border: var(--brand-border);
-  --color-orange: var(--orange);
-  --color-orange-strong: var(--orange-strong);
-  --color-orange-soft: var(--orange-soft);
-  --color-orange-border: var(--orange-border);
-  --color-panel: var(--panel);
-  --color-panel-foreground: var(--panel-foreground);
+  --color-brand-text: var(--brand-text);
+  --color-crimson: var(--crimson);
+  --color-crimson-soft: var(--crimson-soft);
+  --color-crimson-border: var(--crimson-border);
+  --color-crimson-strong: var(--crimson-strong);
+  --color-crimson-text: var(--crimson-text);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-teal-border: var(--teal-border);
+  --color-teal-strong: var(--teal-strong);
+  --color-teal-text: var(--teal-text);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-border: var(--accent-border);
+  --color-accent-text: var(--accent-text);
   /* System stack, so body text downloads nothing and paints on first frame.
      Resolves to San Francisco on Apple, Segoe UI on Windows, Roboto on
      Android. Mono carries the identity; body text gets out of the way. */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  /* Same stack as body. Headings label the page in the same voice the prose
-     speaks in, which is how geohot/karpathy/simonwillison all read. */
-  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Instrument Serif, the face the "samit" wordmark is set in.
+     This used to be the sans stack above, character for character, which meant
+     the site had a display face used by three elements on one page and every
+     other heading set in the same San Francisco as the body. The identity
+     stopped at the front door.
+     It costs nothing to fix: the face is already loaded on every route by the
+     root layout, so pointing this at it downloads no new bytes.
+     Weight 400 is the only weight it ships. Nothing setting .display may add a
+     bold class - the browser would synthesise it and smear the contrast that
+     is the whole reason to use a high-contrast serif. */
+  --font-display: var(--font-mark), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-mono: "Berkeley Mono", "JetBrains Mono", var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -171,6 +177,46 @@
   --color-background-secondary: var(--muted);
   --color-text-primary: var(--foreground);
   --color-text-secondary: var(--muted-foreground);
+}
+
+/* ============================================================
+   Per-page accent
+
+   Every accented rule downstream reads var(--accent) and is written once.
+   The page wrapper picks which ramp those resolve to, so /blog is blue,
+   /projects is crimson and /about is teal without a single rule being
+   duplicated three times.
+
+   The default is blue, so anything that forgets to set a class still gets a
+   working accent rather than an unresolved variable.
+   ============================================================ */
+:root {
+  --accent: var(--brand);
+  --accent-text: var(--brand-text);
+  --accent-soft: var(--brand-soft);
+  --accent-border: var(--brand-border);
+  --accent-strong: var(--brand-strong);
+}
+.accent-blue {
+  --accent: var(--brand);
+  --accent-text: var(--brand-text);
+  --accent-soft: var(--brand-soft);
+  --accent-border: var(--brand-border);
+  --accent-strong: var(--brand-strong);
+}
+.accent-crimson {
+  --accent: var(--crimson);
+  --accent-text: var(--crimson-text);
+  --accent-soft: var(--crimson-soft);
+  --accent-border: var(--crimson-border);
+  --accent-strong: var(--crimson-strong);
+}
+.accent-teal {
+  --accent: var(--teal);
+  --accent-text: var(--teal-text);
+  --accent-soft: var(--teal-soft);
+  --accent-border: var(--teal-border);
+  --accent-strong: var(--teal-strong);
 }
 
 html {
@@ -198,98 +244,66 @@ body {
   .shell { padding-inline: 40px; }
 }
 
-/* Nav scroll state, no JavaScript.
+/* Every heading on the site. Instrument Serif at 400, which is the only
+   weight it has.
 
-   The hairline sits transparent while the page is at rest and fades in over the
-   first 8px of scroll. On the homepage the nav's copy of the name is redundant
-   until the hero scrolls away, so it fades in across the same range.
+   Tighter leading and less negative tracking than the sans this replaced: a
+   display serif at 34px+ already sets close, and the -0.01em that kept a sans
+   heading from looking loose collides the serifs here. 1.12 leading is what
+   lets a two-line post title read as one block.
 
-   Everything lives behind @supports: browsers without scroll-driven animations
-   keep the settled state the markup already ships (hairline on, name visible),
-   which reads as a normal sticky nav rather than a broken one. */
-@supports (animation-timeline: scroll()) {
-  .nav-sticky {
-    border-bottom-color: transparent;
-    animation: nav-hairline linear both;
-    animation-timeline: scroll();
-    animation-range: 0 8px;
-  }
-
-  .nav-on-home .nav-name {
-    animation: nav-name-in linear both;
-    animation-timeline: scroll();
-    animation-range: 0 8px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .nav-on-home .nav-name { animation-name: nav-name-fade; }
-  }
-}
-
-@keyframes nav-hairline {
-  from { border-bottom-color: transparent; }
-  to { border-bottom-color: var(--rule); }
-}
-
-/* pointer-events flips discretely at the halfway point, so the invisible link
-   never swallows clicks aimed at the hero underneath it. */
-@keyframes nav-name-in {
-  from { opacity: 0; transform: translateY(-4px); pointer-events: none; }
-  to { opacity: 1; transform: translateY(0); pointer-events: auto; }
-}
-
-@keyframes nav-name-fade {
-  from { opacity: 0; pointer-events: none; }
-  to { opacity: 1; pointer-events: auto; }
-}
-
-/* Display face for hero + section headings. Deliberately quiet: regular
-   weight, no negative tracking (mono is already tight and letterspacing it
-   in reads as compression), and enough leading to sit calm. Headings here
-   label the page rather than announce it. */
+   Sizes live on the call sites rather than here because they differ by three
+   steps across the site (error pages, post titles, index headings), but the
+   floor is 30px: this face has a small x-height for its cap height, so a 26px
+   serif heading reads smaller than the 26px sans it replaced. */
 .display {
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+  letter-spacing: -0.002em;
+  line-height: 1.12;
 }
 
-/* Explicit sizes per breakpoint rather than clamp, so mobile is chosen
-   rather than interpolated. Sarvam uses no clamp anywhere. */
-/* Mono, because there is no display face to reach for: --font-display and
-   --font-sans resolve to the same system stack, so section headings used to
-   differ from body copy by weight alone and the page had no typographic voice.
-   The mono is already in the document for meta rows, so this costs no bytes and
-   reads like a section marker in a technical document rather than a heading in
-   a marketing page. */
-@media (min-width: 768px) {
-  }
+/* The two micro tiers: .label for structural captions (CONTENTS, RELATED
+   POSTS, OLDER/NEWER), .meta for data (dates, stacks, reading times).
 
-/* Micro label: sarvam's 10px uppercase mono, used for structural captions
-   (CONTENTS, RELATED POSTS, OLDER/NEWER). */
-.label {
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  /* Structural caption, not content worth selecting. */
-  user-select: none;
-}
+   They used to be 10px and 11px on --ink-3 and --ink-3, which is a 1px step
+   and no colour step at all. Two tiers separated by one pixel are one tier
+   with a rounding error, and 10px uppercase mono is under the size where
+   letterspacing stops helping legibility and starts costing it.
 
-/* Meta: dates, periods, reading times. Data rather than caption, so a step
-   larger than .label and tabular so digits don't jitter in a right column. */
+   One size now, 11px, and the tier moves onto weight and lightness: 500 on
+   --ink-2 for a caption that names a region, 400 on --ink-3 for data inside
+   one. Both axes are real. 600 would not be: Geist Mono is loaded at 400 and
+   500 only (see layout.tsx), so the browser would synthesise the third weight
+   and smear an 11px glyph to do it. */
+.label,
 .meta {
   font-family: var(--font-mono), monospace;
   font-size: 11px;
-  letter-spacing: 0.06em;
   text-transform: uppercase;
-  font-variant-numeric: tabular-nums;
+}
+.label {
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  color: var(--ink-2);
+  /* Structural caption, not content worth selecting. */
+  user-select: none;
+}
+.meta {
+  font-weight: 400;
+  letter-spacing: 0.06em;
   color: var(--ink-3);
+  /* Tabular so digits don't jitter in a right-aligned column. */
+  font-variant-numeric: tabular-nums;
 }
 
-/* Pill buttons. Solid = primary action, ghost = everything else. */
+/* Pill buttons. Solid = primary action, ghost = everything else.
+   Two live call sites, both error pages: error.tsx (solid, "Try Again") and
+   not-found.tsx (two ghosts). Nothing on the public site uses them, so this
+   block is sized for those three buttons and nothing more.
+   What was here before transitioned transform and box-shadow and set
+   `transform: none` on :active - three declarations against properties no
+   rule in the block ever changes. */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -305,15 +319,14 @@ body {
   line-height: 1;
   white-space: nowrap;
   transition: background 0.2s var(--motion-ease), color 0.2s var(--motion-ease),
-    border-color 0.2s var(--motion-ease), transform 0.2s var(--motion-ease),
-    box-shadow 0.2s var(--motion-ease);
+    border-color 0.2s var(--motion-ease);
 }
 .pill-solid {
-  background: var(--brand);
+  background: var(--accent);
   color: var(--primary-foreground);
 }
 .pill-solid:hover {
-  background: var(--brand-strong);
+  background: var(--accent-strong);
 }
 .pill-ghost {
   background: var(--surface);
@@ -322,23 +335,14 @@ body {
   box-shadow: var(--lip);
 }
 .pill-ghost:hover {
-  border-color: var(--brand-border);
-  background: var(--brand-soft);
-  color: var(--brand);
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 .pill-ghost:active {
   background: var(--surface-3);
-  color: var(--brand-strong);
-  transform: none;
+  color: var(--accent-strong);
 }
-.pill .arrow {
-  transition: opacity 0.2s var(--motion-ease);
-}
-
-/* Hero links. These were 999px pills with a lip shadow, which is consumer-app
-   furniture on a page whose every other section is a hairline row. Now a single
-   mono meta line: same 44px tap target via padding, no border, no fill, no
-   radius. Orange on hover, matching every other interactive element. */
 
 /* Hairline list. The dominant sarvam layout: full-bleed rows split by 1px
    rules, whole row tints on hover. Padding stays fixed so the title never
@@ -358,6 +362,10 @@ body {
 .row:last-child {
   border-bottom: 0;
 }
+/* --accent, not --brand. The block above the accent ramps says every accented
+   rule downstream reads var(--accent) and is written once; these two were the
+   exceptions, hardcoded blue. They only appear on blue pages today, so the bug
+   was invisible - which is exactly how it survives to the first non-blue one. */
 .row::before {
   content: "";
   position: absolute;
@@ -365,91 +373,50 @@ body {
   top: -1px;
   bottom: -1px;
   width: 2px;
-  background: var(--brand);
+  background: var(--accent);
   opacity: 0;
   transition: opacity 0.2s var(--motion-ease);
 }
-a.row:hover,
-.row-interactive:hover {
-  background: linear-gradient(90deg, var(--brand-soft), transparent 78%);
+a.row:hover {
+  background: linear-gradient(90deg, var(--accent-soft), transparent 78%);
 }
 a.row:hover::before { opacity: 1; }
 a.row:active { background: var(--surface-3); }
-/* Outbound arrow on project rows. Every card on the site became a row, so this
-   is the only place the arrow lives now. */
-a.row:hover .row-title {
-  transition: color 0.2s var(--motion-ease);
-}
-a.row:hover .row-title { color: var(--foreground); }
-a.row:active .row-title { color: var(--brand-strong); }
-a.row:hover 
-/* Role bullets. Experience rows carry bullets now instead of one summary
-   sentence, so the list needs a marker that reads as structure without the
-   browser default's indent and oversized disc. Hanging indent keeps wrapped
-   lines aligned under the text, not under the marker. */
-.role-bullets {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.role-bullets li {
-  position: relative;
-  padding-left: 15px;
-  font-size: 15px;
-  line-height: 155%;
-  color: var(--ink-2);
-  text-wrap: pretty;
-}
-.role-bullets li::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  /* Centre the 3px dot inside the first 1.55em line box. Percentages resolve
-     against the wrong axis inside calc here, so the line-height is restated in
-     em: (1.55em - dot) / 2. */
-  top: calc((1.55em - 3px) / 2);
-  width: 3px;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--ink-4);
-}
 
-/* Tag chip. Frontmatter already carried tags on nearly every post and nothing
-   rendered them. Reads as metadata, not as a button: no hover, no link, mono
-   at meta size so it sits in the same line as date and reading time. */
-.tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: var(--surface-2);
-  box-shadow: inset 0 0 0 1px var(--rule-soft);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  color: var(--ink-3);
-  text-transform: lowercase;
-}
-
-
-/* Scroll reveal. Content is visible by default and only hides once the
-   observer is mounted, so a slow or failed hydration never blanks a section. */
-/* Sections used to fade and slide up 18px as they scrolled into view. Same
-   moving-content problem as the old hover nudge, and on a long page it read
-   as slower rather than livelier. Content paints where it lands. The class
-   stays on the markup as a hook; it just no longer animates. */
-
-/* Keyboard focus ring for all interactive elements on the public site. */
+/* Keyboard focus ring for all interactive elements on the public site.
+   --accent rather than the --ring token, which Tailwind's ring-* utilities
+   also read: the ring should follow the page, the utilities should not.
+   All three ramp bases clear the 3:1 bar for a non-text indicator on
+   #FFFDF8 - brand 8.15:1, crimson 4.62:1, teal 4.52:1. */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--ring);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Selection - uses primary token so it follows theme + accent swaps */
+/* Selection takes the page accent at its --strong step, not the base. Every
+   base is mixed to sit on the cream ground, and selection puts white text on
+   top of it: the old --orange at 3.31:1 failed behind the text it highlighted.
+   The strong steps are all dark enough to carry it (#1C1CA8 / #8F3C0A /
+   #08544A). */
 ::selection {
-  background: var(--primary);
+  background: var(--accent-strong);
   color: var(--primary-foreground);
+}
+
+/* Section heading bar. Until this, a page's accent existed only under the
+   cursor: /projects was its accent in a 2px hover tint and nowhere else, so the
+   colour a whole ramp was mixed for never appeared until you moved a mouse
+   over a row - and never at all on a touch screen. */
+.display-accent::before {
+  content: "";
+  display: block;
+  width: 34px;
+  height: 3px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  background: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -469,6 +436,154 @@ code[data-theme*=" "] span {
 code[data-theme*=" "] {
   background-color: transparent !important;
 }
+
+/* ============================================================
+   Blog post prose
+   ============================================================
+
+   These rules lived on the article element as ~28 arbitrary Tailwind variants
+   ([&_h2]:text-[1.75rem] and so on) while .blog-prose already existed here for
+   links, code and callouts. Two systems styling the same elements, and the
+   Tailwind half was one unreadable line in every diff. Same output, one home.
+
+   h1 is listed with h2 because the markdown pipeline demotes in-content h1 to
+   h2 (see rehypeDemoteH1) - the selector is belt and braces, not a live path. */
+.blog-prose h1,
+.blog-prose h2 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 130%;
+  color: var(--foreground);
+  margin-top: 3.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.blog-prose h3 {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 135%;
+  color: var(--foreground);
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.blog-prose h4 {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 135%;
+  color: var(--foreground);
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-prose p {
+  font-size: 17.5px;
+  line-height: 175%;
+  color: var(--ink-2);
+  margin-bottom: 1.25rem;
+  text-wrap: pretty;
+}
+
+.blog-prose ul,
+.blog-prose ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.25rem;
+}
+.blog-prose ul { list-style: disc; }
+.blog-prose ol { list-style: decimal; }
+.blog-prose li {
+  font-size: 17.5px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin-bottom: 0.375rem;
+}
+.blog-prose ul > li::marker { color: var(--ink-4); }
+.blog-prose ol > li::marker {
+  color: var(--ink-4);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+}
+
+.blog-prose strong {
+  color: var(--foreground);
+  font-weight: 500;
+}
+.blog-prose em { font-style: italic; }
+
+.blog-prose blockquote {
+  margin: 1.75rem 0;
+  padding: 0.75rem 1rem 0.75rem 1.25rem;
+  border-left: 2px solid var(--brand);
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-style: normal;
+}
+
+.blog-prose pre {
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5rem;
+}
+.blog-prose [data-rehype-pretty-code-figure] {
+  max-width: none;
+  margin: 1.75rem -1rem;
+}
+
+.blog-prose code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875em;
+}
+/* Inline code only. Fenced blocks are shiki's, and their rules are below. */
+.blog-prose :not(pre) > code {
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--rule);
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--surface-2);
+  color: var(--foreground);
+  font-size: 0.85em;
+}
+
+.blog-prose img {
+  max-width: 100%;
+  margin: 1.75rem 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+}
+
+.blog-prose hr {
+  margin: 3rem 0;
+  border-color: var(--rule);
+}
+
+.blog-prose table {
+  width: 100%;
+  margin: 1.75rem 0;
+  font-size: 14px;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 4px);
+}
+.blog-prose th,
+.blog-prose td {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--rule);
+}
+.blog-prose th {
+  background: var(--surface-2);
+  color: var(--foreground);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.blog-prose td { color: var(--ink-2); }
 
 /* Body links carry a permanent underline rather than a colour.
    They used to be indigo with no underline, which is the one place the colour
@@ -668,60 +783,6 @@ code[data-theme*=" "] {
 }
 
 /* Motion shared by the selection bar and the palette loader. */
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes pixel-on {
-  0%,
-  100% {
-    opacity: 0.15;
-  }
-  40% {
-    opacity: 1;
-  }
-}
-@keyframes shimmer-text {
-  from {
-    background-position: 150% 0;
-  }
-  to {
-    background-position: -50% 0;
-  }
-}
-.pixel-cell {
-  opacity: 0.15;
-  animation: pixel-on 650ms ease-in-out infinite;
-}
-.shimmer-text {
-  color: transparent;
-  background-clip: text;
-  background-image: linear-gradient(
-    90deg,
-    var(--ink-3) 35%,
-    var(--foreground) 50%,
-    var(--ink-3) 65%
-  );
-  background-size: 200% 100%;
-  animation: shimmer-text 1.4s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .pixel-cell,
-  .shimmer-text {
-    animation: none;
-  }
-  .shimmer-text {
-    color: var(--ink-2);
-    background-image: none;
-  }
-}
-
 /* GitHub-style callouts (rehype rewrites `> [!NOTE]` blockquotes). Overrides
    the generic blockquote utilities applied in the article className. */
 .blog-prose blockquote.callout {
@@ -781,25 +842,6 @@ code[data-theme*=" "] {
 }
 .blog-prose blockquote.callout-caution .callout-title {
   color: #dc2626;
-}
-
-/* Scrollbar styling for code editors */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #4B5563;
 }
 
 /* InterviewFilters hides non-matching questions by setting [hidden] on the
@@ -973,7 +1015,6 @@ code[data-theme*=" "] {
   --c-ink-soft: #7a7038;
   --c-amber: #a49751;        /* muted gold (palette) */
   --c-terra: #7e7437;        /* deep gold-olive (palette) */
-  --c-olive: #635920;        /* moss (palette) */
   --c-rule: rgba(61, 55, 20, 0.2);
   --ease: cubic-bezier(.22, .61, .36, 1);
 
@@ -1198,7 +1239,6 @@ code[data-theme*=" "] {
   --c-ink-soft: #6f4a64;
   --c-amber: #3e3c7c;       /* indigo accent (palette) */
   --c-terra: #542042;       /* deep plum (palette) */
-  --c-olive: #b896b3;
   --c-rule: rgba(58, 21, 51, 0.2);
   background:
     radial-gradient(135% 85% at 50% -12%, #f3dfe9 0%, transparent 56%),
@@ -1282,16 +1322,26 @@ code[data-theme*=" "] {
   gap: 16px;
   padding: 22px 24px 0;
 }
+/* The footer rule takes the page accent. It is the one hairline that appears
+   on every route at a fixed position, so it is the cheapest place to make the
+   section colour visible without touching the content. --accent-border rather
+   than --accent: a full-bleed rule at the base value reads as a UI chrome
+   line, and this should register as a tint you notice on the second visit. */
 .site-foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 8px 24px 10px;
-  border-top: 1px solid var(--rule);
+  gap: 8px 16px;
+  padding: 10px 24px 12px;
+  border-top: 1px solid var(--accent-border);
   font-size: 12px;
   color: var(--ink-3);
 }
+
+/* Every page can now reach every section. The header is five drawings and no
+   words, so /blog had no link to /projects and back through the homepage was
+   the only route between them. */
 @media (min-width: 768px) {
   .site-bar { padding: 28px 40px 0; }
   .site-foot { padding: 8px 40px 12px; }
@@ -1363,81 +1413,168 @@ code[data-theme*=" "] {
 }
 .home-hang svg { display: block; width: 100%; height: auto; }
 
-/* The file captions itself "gradient descent with momentum", which is right
-   inside a post and wrong here, where it reads as a diagram label under a
-   name. The <title>/<desc> still carry it for assistive tech. */
-.home-hang .gd-cap { display: none; }
+/* The figure used to caption itself "gradient descent with momentum" and this
+   hid it, because a diagram label under a name reads as a diagram label under
+   a name. scripts/gen-hero-figure.mjs emits no caption at all now; the
+   <title>/<desc> carry it for assistive tech, as they always did. */
 
 .home-stage {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   justify-content: flex-start;
   padding: clamp(150px, 23vh, 240px) 24px clamp(20px, 4vh, 48px);
 }
 
 /* ---- wordmark ---------------------------------------------------------- */
+
+/* The hover gesture used to be transform: scale(1.11) on --motion-spring,
+   which is a bezier that overshoots past 1. Two problems: scaling live text
+   re-rasters it, so the name went soft for the length of the transition, and a
+   name that bounces is the one gesture on the site that read as cute rather
+   than drawn. It now does what every other mark here does - it draws itself.
+   See .wordmark-rule below. */
 .wordmark {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 18px;
   color: var(--foreground);
-  transition: transform 240ms var(--motion-ease);
 }
-.wordmark:hover { transform: scale(1.04); }
 
-/* The one place the display face appears. Everything that labels it - the
-   hover tiles, the page headings - is set in the page's own face, so this
-   reads as a signature rather than as the site's typeface. */
+/* The wordmark's face, which the page headings now share. It is a step larger
+   here and a signature rather than a label, so it keeps its own block. */
 .wordmark-word {
-  font-family: var(--font-mark), var(--font-display);
+  position: relative;
+  font-family: var(--font-display);
   font-size: clamp(54px, 12vw, 96px);
   line-height: 1;
 }
 
+/* Generated stroke from public/rough/, sized to the word and hung just under
+   its baseline. The file carries no styling of its own: everything below is
+   reachable only because an inlined svg is not the document root.
+
+   pathLength="100" is set in the generator, so `stroke-dasharray: 100` is the
+   whole path no matter how long the geometry actually is. That is what lets
+   this animate with no JS - the alternative is getTotalLength() on mount,
+   which would make the homepage's only client component a decoration. */
+/* Where the stroke sits, derived rather than nudged. Instrument Serif's real
+   metrics, from the ascent/descent overrides next/font generates for its
+   fallback face: ascent 117.94%, descent 36.93%, so the content area is
+   1.5487em against a 1em line box (line-height: 1 on .wordmark-word). Half
+   leading is (1 - 1.5487) / 2 = -0.2744em, which puts the baseline
+   0.9051em below the top of the box and 0.0949em above its bottom.
+   top: 100% lands the svg's top edge on that bottom; the stroke is at 7/14 of
+   the file's 14-unit height, so it falls half the rendered svg height lower.
+   -0.06em leaves the ink 0.108em under the baseline, inside the 0.05-0.15em a
+   text underline would use.
+   That offset holds across the clamp because the svg keeps its aspect ratio,
+   so its height tracks the width of the word, which tracks the font size:
+   0.108em at 96px, 0.107em at 54px. */
+.wordmark-rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: -0.06em;
+  pointer-events: none;
+  color: var(--accent);
+}
+.wordmark-rule svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.wordmark-rule path {
+  fill: none;
+  stroke: currentColor;
+  /* The svg is stretched from 200 units to the width of the word, so a
+     stroke-width in user units would thin out as the viewport grows. */
+  vector-effect: non-scaling-stroke;
+  stroke-width: 2.5px;
+  stroke-linecap: round;
+  /* Both in the units pathLength normalised the geometry to, so 100 is exactly
+     one full path whatever the real arc length is. The offset carries a unit
+     because CSS has no unitless length: 1px is 1 user unit inside an svg, and
+     without it the minifier appends the px anyway. */
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100px;
+  transition: stroke-dashoffset 420ms var(--motion-ease);
+}
+.wordmark:hover .wordmark-rule path,
+.wordmark:focus-visible .wordmark-rule path {
+  stroke-dashoffset: 0;
+}
+
+/* One line of copy under the name. Same face as the rest of the page's prose
+   at reading size, not another label: this is the only sentence on the route
+   and it should read as a sentence. */
+.home-line {
+  max-width: 30rem;
+  margin-top: clamp(26px, 4vh, 40px);
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+@media (min-width: 768px) {
+  .home-line { font-size: 17px; }
+}
+
 .wordmark-computer {
-  width: 0.5em;
-  height: 0.5em;
+  width: 0.66em;
+  height: 0.66em;
   font-size: clamp(54px, 12vw, 96px);
   color: var(--ink-2);
 }
 
-/* ---- hover tile -------------------------------------------------------- */
+/* ---- door label ------------------------------------------------------- */
 
-/* A small label that rises above whatever it names, on hover or keyboard
-   focus. It replaced two different things - a word swapped in place of the
-   name, and a caption under each figure - so the three doors now announce
-   themselves the same way.
+/* The word under each figure. This was a tile that rose on hover, which meant
+   the two drawings on the homepage were unlabelled on every touch device: no
+   hover, no label, and nothing else on the page said which one was the blog.
+   A caption under a drawing costs nothing and works on every input.
 
-   Deliberately NOT the handwritten face: it is an interface label, and setting
-   it in the signature face made the site look like it had one typeface for
-   everything. It is also never the thing you click; the parent link is. */
-.hover-tile {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  transform: translate(-50%, 4px);
-  padding: 5px 11px;
-  border: 1px solid var(--foreground);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: var(--shadow-card);
-  font-family: var(--font-display);
+   Mono at meta size, matching every other label on the site (post dates,
+   project names, source/live links) rather than the display face. */
+.door-label {
+  text-align: center;
+  font-family: var(--font-mono), monospace;
   font-size: 13px;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  color: var(--foreground);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 200ms var(--motion-ease), transform 200ms var(--motion-ease);
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+  transition: color 200ms var(--motion-ease);
 }
-:is(.wordmark, .door):hover .hover-tile,
-:is(.wordmark, .door):focus-visible .hover-tile {
-  opacity: 1;
-  transform: translate(-50%, 0);
+.door:hover .door-label,
+.door:focus-visible .door-label {
+  color: var(--accent-text);
+}
+
+/* ---- figure colour ----------------------------------------------------
+
+   The three drawings are inlined, so they are not the document root and the
+   `svg { --struct; --brand }` block inside each file is overridable from here.
+   That block was written when the site's chrome was greyscale: it demoted
+   --brand from an indigo literal to currentColor because "a second grey could
+   not be told apart from the first". There are three accents now, so each
+   drawing takes the accent of the page it is a door to.
+
+   --struct is warmed off the old #8A8A90, a cool grey mixed for a #FAFAFA
+   ground that goes slightly blue against cream. #877F70 measures 3.90:1 on
+   #FFFDF8, clear of the 3:1 bar for graphical objects.
+
+   gradient-descent keeps its own amber and green literals - it is the one
+   figure that was never desaturated, and the lemon is meant to be a lemon. */
+.door svg,
+.page-figure svg {
+  --struct: #877F70;
+  --brand: var(--accent);
+}
+.home-hang svg {
+  --struct: #877F70;
 }
 
 /* ---- doors ------------------------------------------------------------- */
@@ -1465,18 +1602,23 @@ code[data-theme*=" "] {
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: 10px;
   width: 100%;
   max-width: 460px;
-  transition: transform 260ms var(--motion-ease);
+  transition: transform 260ms var(--motion-spring);
   transform-origin: bottom center;
 }
 .door:hover,
 .door:focus-visible { transform: scale(1.06); }
+.door-figure { display: block; width: 100%; }
 .door svg { display: block; width: 100%; height: auto; }
 
+/* The wordmark is not listed: it no longer transforms, and the global kill
+   switch already collapses its stroke transition to 0.01ms, so the underline
+   lands drawn instead of drawing. That is the right reading of reduced motion
+   for a mark whose final state carries the meaning. */
 @media (prefers-reduced-motion: reduce) {
   .mark-link:hover,
-  .wordmark:hover,
   .door:hover,
   .door:focus-visible { transform: none; }
 }
@@ -1496,42 +1638,96 @@ code[data-theme*=" "] {
 }
 
 .post-row {
+  position: relative;
   display: flex;
   align-items: baseline;
   gap: 18px;
-  padding: 9px 0;
+  padding: 9px 12px 9px 0;
   min-height: 44px;
+  border-radius: 6px;
   transition: color 180ms var(--motion-ease);
 }
 
+/* The hover wipe. A pseudo-element rather than a background on the row itself,
+   because it has to sweep in from the left rather than cross-fade: a fill that
+   simply appears reads as a state change, one that travels reads as a
+   response. Sits behind the text via a negative z-index on a positioned row.
+
+   Inset -8px on the left so the tint runs past the date column's edge and the
+   row reads as one target, not two.
+
+   No z-index: -1 here. A negative z-index escapes the row (which creates no
+   stacking context) and can slide behind an ancestor's background entirely.
+   Instead the two children below are positioned, which puts them in the same
+   paint layer as this pseudo and later in DOM order - so they land on top. */
+.post-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -8px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--accent-soft), transparent 92%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  transition: transform 320ms var(--motion-ease), opacity 200ms var(--motion-ease);
+}
+.post-row:hover::before,
+.post-row:focus-visible::before {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* The date carries the accent at rest. It is the only always-on colour in the
+   list and it is what makes the column read as part of a link rather than as a
+   timestamp printed beside one. --accent-text, not --accent: on /blog those
+   are the same blue, but this rule has to stay correct if the page's ramp
+   changes to one whose base fails AA at 12.5px. */
 .post-date {
+  position: relative;
   flex: none;
   width: 6.5rem;
   font-family: var(--font-mono), monospace;
   font-size: 12.5px;
-  color: var(--ink-3);
+  color: var(--accent-text);
+  opacity: 0.75;
   font-variant-numeric: tabular-nums;
-  transition: color 180ms var(--motion-ease);
+  transition: opacity 180ms var(--motion-ease);
 }
 
+/* The underline is visible at rest.
+
+   It used to be `transparent` and only appeared under the cursor, which meant
+   a page of twenty-five titles gave no indication that any of them were links
+   until you happened to point at one. A 35% mix of the accent is enough to
+   read as a rule without competing with the title.
+
+   text-decoration-thickness is animated rather than swapped so the underline
+   thickens under the cursor instead of blinking to a second state. */
 .post-title {
+  position: relative;
   font-size: 16.5px;
   line-height: 1.45;
   color: var(--ink-2);
   text-decoration: underline;
-  text-decoration-color: transparent;
+  text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  text-decoration-thickness: 1px;
   text-underline-offset: 4px;
   transition: color 180ms var(--motion-ease),
-    text-decoration-color 180ms var(--motion-ease);
+    text-decoration-color 180ms var(--motion-ease),
+    text-decoration-thickness 180ms var(--motion-ease);
 }
 
-/* Hover darkens toward ink instead of colouring. The accent ramp is reserved
-   for the artwork now; chrome states are all greyscale. */
-.post-row:hover .post-title {
-  color: var(--foreground);
-  text-decoration-color: var(--rule-strong);
+/* Hover colours rather than darkening toward ink. The accent ramp used to be
+   reserved for the artwork, which left every chrome state greyscale and the
+   whole page reading as blank paper; it carries interaction now. */
+.post-row:hover .post-title,
+.post-row:focus-visible .post-title {
+  color: var(--accent-text);
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
 }
-.post-row:hover .post-date { color: var(--ink-2); }
+.post-row:hover .post-date,
+.post-row:focus-visible .post-date { opacity: 1; }
 
 @media (max-width: 520px) {
   .post-row {
@@ -1540,6 +1736,44 @@ code[data-theme*=" "] {
     gap: 2px;
   }
   .post-date { width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global kill switch collapses durations to 0.01ms, which would make the
+     wipe snap rather than not happen. Removing the transform entirely leaves a
+     plain tint, which is the honest reduced-motion equivalent. */
+  .post-row::before { transform: none; }
+}
+
+/* ============================================================
+   Page figure
+
+   The same drawings the homepage uses as doors, reappearing on the page each
+   door leads to. Absolutely positioned inside the page's <main>, so the
+   heading and the list below it sit exactly where they sat before - nothing
+   in the column reflows to make room.
+
+   Hidden under 900px. There is no space beside a heading on a phone, and a
+   drawing stacked above the list would push the content the page exists for
+   below the fold.
+   ============================================================ */
+.page-figure {
+  display: none;
+}
+@media (min-width: 900px) {
+  .page-figure {
+    display: block;
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 240px;
+    pointer-events: none;
+  }
+  .page-figure svg { display: block; width: 100%; height: auto; }
+  /* The file captions itself, which is right inside a post and wrong here
+     where it reads as a diagram label beside a page heading. The <title> and
+     <desc> still carry it for assistive tech. */
+  .page-figure .gd-cap { display: none; }
 }
 
 /* ============================================================
@@ -1561,7 +1795,6 @@ code[data-theme*=" "] {
 @media (min-width: 768px) {
   .about-photo { width: 128px; height: 128px; }
 }
-
 
 .about-prose {
   max-width: 40rem;
@@ -1621,38 +1854,53 @@ code[data-theme*=" "] {
   position: relative;
   aspect-ratio: 19 / 10;
   overflow: hidden;
-  border: 1px solid var(--rule-soft);
+  /* The frame carries the accent at rest, at 45%. --crimson measures 4.62:1 on
+     the ground, which clears the 3:1 bar for a graphical object; mixed down to
+     45% it is a tint, not a border, and the full-strength edge on hover is
+     what does the work. This is what tells you a card is a link before your
+     cursor arrives - the old --rule-soft hairline told you nothing. */
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: var(--radius-card);
   /* No fill. A tinted panel behind a transparent recording reads as a second
-     background colour sitting on the page; the hairline is enough to say where
-     the frame is until a video fills it. */
+     background colour sitting on the page; the frame is enough to say where
+     the boundary is until a video fills it. */
   background: transparent;
   transition: border-color 220ms var(--motion-ease),
-    transform 220ms var(--motion-ease);
+    transform 260ms var(--motion-spring),
+    box-shadow 260ms var(--motion-ease);
 }
-.project-face:hover .project-media {
-  border-color: var(--rule-strong);
-  transform: translateY(-3px);
+.project-face:hover .project-media,
+.project-face:focus-visible .project-media {
+  border-color: var(--accent);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
-.project-video,
-.project-still {
-  width: 100%;
-  height: 100%;
-  /* cover, against a frame cut to the artwork's own ratio - so it fills edge
-     to edge without the letterbox bars `contain` left top and bottom. */
-  object-fit: cover;
-  display: block;
+/* The media scales inside its own frame. overflow: hidden is already on the
+   frame and the frame's box does not move, so this costs no layout - the
+   picture grows into the crop it already had. */
+.project-figure {
+  transition: transform 420ms var(--motion-ease);
+}
+.project-face:hover .project-figure {
+  transform: scale(1.045);
 }
 
 .project-media-figure {
   background: var(--surface-2);
 }
+/* A <span> around an inlined <svg>, not an <img>. The svg carries a viewBox
+   and the default preserveAspectRatio, so 100%/100% letterboxes it inside the
+   frame the way object-fit: contain did for the img it replaced. */
 .project-figure {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+}
+.project-figure svg {
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .project-media-blank {
@@ -1673,7 +1921,7 @@ code[data-theme*=" "] {
   text-align: center;
   transition: color 220ms var(--motion-ease);
 }
-.project-face:hover .project-media-word { color: var(--ink-2); }
+.project-face:hover .project-media-word { color: var(--accent-text); }
 
 .project-head {
   display: flex;
@@ -1690,7 +1938,7 @@ code[data-theme*=" "] {
   color: var(--foreground);
   transition: color 180ms var(--motion-ease);
 }
-.project-face:hover .project-name { color: var(--foreground); }
+.project-face:hover .project-name { color: var(--accent-text); }
 
 .project-blurb {
   font-size: 15px;
@@ -1702,17 +1950,149 @@ code[data-theme*=" "] {
 .project-links {
   display: flex;
   gap: 18px;
+  /* Nudged down and dimmed at rest, settling into place when the card is
+     hovered. They are the only real actions on the page and they were the
+     quietest thing on it at --ink-3. */
+  opacity: 0.7;
+  transform: translateY(3px);
+  transition: opacity 220ms var(--motion-ease), transform 260ms var(--motion-spring);
+}
+.project:hover .project-links,
+.project:focus-within .project-links {
+  opacity: 1;
+  transform: none;
 }
 
+/* --accent-text, not --accent: these are 12px labels, and on /projects the
+   base crimson is 4.62:1. The text step measures 6.75:1 on the ground. */
 .project-link {
   font-family: var(--font-mono), monospace;
   font-size: 12px;
   letter-spacing: 0.04em;
-  color: var(--ink-3);
-  transition: color 180ms var(--motion-ease);
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 180ms var(--motion-ease),
+    text-decoration-color 180ms var(--motion-ease);
 }
-.project-link:hover { color: var(--foreground); }
+.project-link:hover {
+  color: var(--accent-strong);
+  text-decoration-color: currentColor;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .project-face:hover .project-media { transform: none; }
+  .project-face:hover .project-media,
+  .project-face:hover .project-figure { transform: none; }
+  .project-links { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Entrance
+
+   A load stagger, not a scroll-linked reveal. `animation-timeline: view()`
+   was the other option and it is tempting - it would hold rows below the
+   fold until you reach them - but it has a failure mode this does not: any
+   element whose timeline never resolves stays at opacity 0 forever, and a
+   blank list is a worse outcome than an animation nobody sees. A load
+   stagger cannot fail closed. It is also what /fun already does
+   (.candy .rise with .r1-.r5), so the site has one entrance idiom.
+
+   The delay is capped: past the tenth item everything shares the last step,
+   so a twenty-five post index does not spend two seconds assembling itself.
+   ============================================================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* fill-mode is `backwards`, not `both`, and the difference is load-bearing.
+
+   A running or filling animation outranks normal declarations in the cascade.
+   With `both`, an element keeps the final keyframe's `transform: none` for the
+   rest of the page's life - which silently beat `.wordmark:hover { transform:
+   scale() }` and made the name the one thing on the homepage that would not
+   answer the cursor. The two door figures grew because they never carried this
+   class.
+
+   `backwards` applies the from-state during the delay, then hands the element
+   back to its own styles once the animation finishes. The to-state here is
+   already the natural resting state - opacity 1, no transform - so nothing is
+   lost by not retaining it, and hover transforms work again. Anything given
+   .rise-in later gets that for free. */
+.rise-in {
+  animation: rise 520ms var(--motion-ease) backwards;
+}
+
+/* Rows and cards. nth-child rather than a class per index, so the markup
+   carries no numbering. */
+.post-list > li,
+.project-grid > .project {
+  animation: rise 520ms var(--motion-ease) backwards;
+}
+.post-list > li:nth-child(1),  .project-grid > .project:nth-child(1)  { animation-delay:  40ms; }
+.post-list > li:nth-child(2),  .project-grid > .project:nth-child(2)  { animation-delay:  85ms; }
+.post-list > li:nth-child(3),  .project-grid > .project:nth-child(3)  { animation-delay: 130ms; }
+.post-list > li:nth-child(4),  .project-grid > .project:nth-child(4)  { animation-delay: 175ms; }
+.post-list > li:nth-child(5),  .project-grid > .project:nth-child(5)  { animation-delay: 220ms; }
+.post-list > li:nth-child(6),  .project-grid > .project:nth-child(6)  { animation-delay: 265ms; }
+.post-list > li:nth-child(7),  .project-grid > .project:nth-child(7)  { animation-delay: 310ms; }
+.post-list > li:nth-child(8),  .project-grid > .project:nth-child(8)  { animation-delay: 355ms; }
+.post-list > li:nth-child(9),  .project-grid > .project:nth-child(9)  { animation-delay: 400ms; }
+.post-list > li:nth-child(n+10),
+.project-grid > .project:nth-child(n+10) { animation-delay: 445ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global kill switch collapses animation-duration but says nothing
+     about delay, so without this a row would sit invisible for its delay and
+     then pop. Zeroing both lands every element on its final frame at paint. */
+  .rise-in,
+  .post-list > li,
+  .project-grid > .project { animation-delay: 0ms !important; }
+}
+
+/* ============================================================
+   View transitions
+
+   next.config.ts sets experimental.viewTransition, which wraps client-side
+   route changes in document.startViewTransition. That is the whole
+   integration - React's <ViewTransition> component is not involved and is not
+   available in react 19.2.4 stable anyway, so these named pairs are the API.
+
+   A name has to be unique within a document. Each name below appears on
+   exactly one element per page: the door figure on /, and the page figure on
+   the route that door opens. The browser matches them across the navigation
+   and animates the drawing from one position and size to the other.
+   ============================================================ */
+.door-blog .door-figure,
+.page-figure-blog { view-transition-name: figure-blog; }
+
+.door-projects .door-figure,
+.page-figure-projects { view-transition-name: figure-projects; }
+
+::view-transition-old(figure-blog),
+::view-transition-new(figure-blog),
+::view-transition-old(figure-projects),
+::view-transition-new(figure-projects) {
+  /* The drawing is the thing being continued, so it should not also fade
+     while it travels. */
+  animation-duration: 420ms;
+  animation-timing-function: var(--motion-ease);
+}
+
+::view-transition-old(root) { animation-duration: 160ms; }
+::view-transition-new(root) { animation-duration: 260ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global kill switch does not reach pseudo-elements the browser
+     generates for a transition, so they are named explicitly. Dropping the
+     names as well means the morph does not run at all rather than running
+     instantly, which is the difference between "no animation" and "a flicker". */
+  .door-blog .door-figure,
+  .page-figure-blog,
+  .door-projects .door-figure,
+  .page-figure-projects { view-transition-name: none; }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none; }
 }

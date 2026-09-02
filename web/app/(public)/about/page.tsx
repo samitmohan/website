@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { RSS_ALTERNATE } from "@/lib/metadata";
@@ -20,20 +19,29 @@ export const metadata: Metadata = {
  */
 export default function AboutPage() {
   return (
-    <div className="page">
+    <div className="page accent-teal">
       <PublicNav />
 
-      <main id="main" className="shell py-14 md:py-20">
+      <main id="main" className="shell relative py-14 md:py-20">
         <h1 className="sr-only">About Samit Mohan</h1>
 
         <div className="about-head">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element -- next/image
+              is the only thing on this route that pulls a client bundle: 8.4 KB
+              gzip of image runtime, which is what put /about at 153 KB against
+              a 156 KB ceiling while every other route sat at 148 KB. It buys
+              nothing here. The source is a 21 KB 460x460 JPEG that never
+              changes, displayed at a fixed 108-128 px, so there is no srcset
+              worth generating and no layout to reserve beyond the width and
+              height already on the element. */}
+          <img
             src="/photo.jpeg"
             alt="Samit Mohan"
-            width={400}
-            height={400}
+            width={460}
+            height={460}
             className="about-photo"
-            priority
+            decoding="async"
+            fetchPriority="high"
           />
         </div>
 
@@ -61,9 +69,7 @@ export default function AboutPage() {
             programming competitions &amp; mentoring juniors in algorithms led me
             to start a coding culture in my college &amp; create a club around
             it. I interned at MakeMyTrip and Genpact where I worked on
-            reinforcement learning algorithms, classical ML, building an NLP
-            resume screener, churn predictor, and reward model for itinerary
-            ranking.
+            reinforcement learning algorithms and classical ML.
           </p>
 
           <p>
