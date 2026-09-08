@@ -32,8 +32,8 @@ export function PublicNav() {
   return (
     <header className="site-bar">
       <nav className="site-nav" aria-label="Sections">
-        <Link href="/" className="site-id">
-          samit
+        <Link href="/" className="site-link">
+          home
         </Link>
         {SECTION_LINKS.map((l) => (
           <Link key={l.href} href={l.href} className="site-link">

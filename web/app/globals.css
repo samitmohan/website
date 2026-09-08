@@ -1497,7 +1497,10 @@ code[data-theme*=" "] {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  /* Centred, to match the header. It ran space-between with the meta pinned
+     left and the toggle right, which looked like a different layout system
+     from the row of centred names at the top of the page. */
+  justify-content: center;
   gap: 8px 16px;
   padding: 10px 24px 12px;
   border-top: 1px solid var(--accent-border);
@@ -1513,7 +1516,12 @@ code[data-theme*=" "] {
 /* Words, in the site's mono, at the smallest rung. The chrome reads as chrome
    because it is the only mono on the page; Charter is for content. Lowercase,
    not the tracked-out caps the old .label idiom uses - a nav is names, not
-   labels, and it matches the wordmark. */
+   labels, and it matches the wordmark.
+
+   Four peers, no identity link. The first one used to be "samit" at
+   --foreground and weight 500, which repeated the wordmark two lines below it
+   and claimed a hierarchy the row does not have. It says "home" now and looks
+   like what it is. */
 .site-nav,
 .site-socials,
 .site-meta {
@@ -1530,7 +1538,6 @@ code[data-theme*=" "] {
   .site-socials { gap: 20px; }
 }
 
-.site-id,
 .site-link {
   display: inline-flex;
   align-items: center;
@@ -1542,17 +1549,9 @@ code[data-theme*=" "] {
   letter-spacing: 0.04em;
   transition: color 200ms var(--motion-ease);
 }
-/* The name is the identity, the rest are destinations, so weight and lightness
-   separate them rather than a size step - the two are one rung apart on the
-   scale and 11px against 14px in a single row reads as a mistake. */
-.site-id {
-  color: var(--foreground);
-  font-weight: 500;
-}
 .site-link {
   color: var(--ink-3);
 }
-.site-id:hover,
 .site-link:hover {
   color: var(--accent-text);
 }
@@ -1561,27 +1560,71 @@ code[data-theme*=" "] {
    before hydration and with JS off - see components/theme-toggle.tsx. The
    label names the theme you would switch to, which is the opposite of the one
    you are in. */
+/* The switch. 34x18 track, 10px knob, 3px inset, so the knob travels
+   34 - 2 (borders) - 6 (insets) - 10 (knob) = 16px. */
 .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px of touch target without the box pushing the row apart. */
+  min-height: 44px;
+  margin-block: -13px;
+  padding: 0;
   border: 0;
   background: none;
-  padding: 0;
   cursor: pointer;
-  /* No `font: inherit` here. It is the usual way to stop a button using the
-     UA's own font, but it is a shorthand: it resets font-family to inherited,
-     which is Charter, and beats the mono .site-link sets on the same element.
-     The toggle came out in the body serif beside four mono links. .site-link
-     already states family, size and tracking, so there is nothing to reset. */
 }
-.theme-to-light { display: none; }
+.theme-track {
+  position: relative;
+  display: block;
+  box-sizing: content-box;
+  width: 34px;
+  height: 16px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  transition: border-color 200ms var(--motion-ease);
+}
+/* Hollow and left is light; filled and right is dark. That is the whole
+   legend, and it needs no sun and no moon. */
+.theme-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 10px;
+  height: 10px;
+  box-sizing: border-box;
+  border: 1px solid var(--ink-3);
+  border-radius: 999px;
+  background: transparent;
+  transition: transform 240ms var(--motion-ease),
+    background 200ms var(--motion-ease), border-color 200ms var(--motion-ease);
+}
+.theme-toggle:hover .theme-track,
+.theme-toggle:focus-visible .theme-track { border-color: var(--accent); }
+
+/* Dark, from the OS and from an explicit choice. Same pair of selectors the
+   palette uses, for the same reason. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-to-dark { display: none; }
-  :root:not([data-theme="light"]) .theme-to-light { display: inline; }
+  :root:not([data-theme="light"]) .theme-track { border-color: var(--accent-border); }
+  :root:not([data-theme="light"]) .theme-knob {
+    transform: translateX(16px);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
 }
-:root[data-theme="dark"] .theme-to-dark { display: none; }
-:root[data-theme="dark"] .theme-to-light { display: inline; }
+:root[data-theme="dark"] .theme-track { border-color: var(--accent-border); }
+:root[data-theme="dark"] .theme-knob {
+  transform: translateX(16px);
+  background: var(--accent);
+  border-color: var(--accent);
+}
 /* An explicit light choice has to win over the OS preference above. */
-:root[data-theme="light"] .theme-to-dark { display: inline; }
-:root[data-theme="light"] .theme-to-light { display: none; }
+:root[data-theme="light"] .theme-track { border-color: var(--rule-strong); }
+:root[data-theme="light"] .theme-knob {
+  transform: none;
+  background: transparent;
+  border-color: var(--ink-3);
+}
 
 /* Inner pages get the chrome at the page edges with the content between. */
 .page {
