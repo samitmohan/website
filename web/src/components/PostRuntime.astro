@@ -52,7 +52,7 @@
   // Videos play when they are on screen and pause when they are not, so a post
   // with a dozen clips is not decoding a dozen streams. Reduced motion gets
   // controls and no autoplay instead.
-  const videos = Array.from(document.querySelectorAll(".blog-prose video"));
+  const videos = Array.from(document.querySelectorAll<HTMLVideoElement>(".blog-prose video"));
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   for (const v of videos) {
     v.pause();
@@ -66,7 +66,7 @@
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
-          const v = e.target;
+          const v = e.target as HTMLVideoElement;
           if (e.isIntersecting) v.play()?.catch(() => {});
           else v.pause();
         }
@@ -79,7 +79,8 @@
   // One listener for every copy button on the page. The markup, both icons
   // included, comes from the build; this only moves the class and the word.
   document.addEventListener("click", (e) => {
-    const btn = e.target instanceof Element ? e.target.closest("[data-code-copy]") : null;
+    const btn =
+      e.target instanceof Element ? e.target.closest<HTMLElement>("[data-code-copy]") : null;
     if (!btn) return;
     e.preventDefault();
     const code = btn.closest("figure")?.querySelector("pre code");

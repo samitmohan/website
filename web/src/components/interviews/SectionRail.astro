@@ -56,16 +56,18 @@ const { sections } = Astro.props;
 </nav>
 
 <script>
-  const list = document.querySelector("[data-rail-list]");
-  const box = document.querySelector("[data-rail-box]");
+  const list = document.querySelector<HTMLElement>("[data-rail-list]");
+  const box = document.querySelector<HTMLElement>("[data-rail-box]");
   if (list && box) {
-    const links = Array.from(list.querySelectorAll("[data-rail-id]"));
-    let activeId = null;
-    let hovered = null;
+    const links = Array.from(list.querySelectorAll<HTMLElement>("[data-rail-id]"));
+    let activeId: string | null = null;
+    let hovered: string | null = null;
 
     function place() {
+      // The `if (list && box)` guard above does not narrow inside a closure.
+      if (!list || !box) return;
       const key = hovered ?? activeId;
-      const target = key ? list.querySelector(`[data-rail-id="${key}"]`) : null;
+      const target = key ? list.querySelector<HTMLElement>(`[data-rail-id="${key}"]`) : null;
       if (!target) {
         box.style.opacity = "0";
         return;
@@ -78,7 +80,7 @@ const { sections } = Astro.props;
     function mark() {
       for (const a of links) {
         const on = a.dataset.railId === activeId;
-        const label = a.querySelector("[data-rail-label]");
+        const label = a.querySelector<HTMLElement>("[data-rail-label]");
         if (on) a.setAttribute("aria-current", "true");
         else a.removeAttribute("aria-current");
         label?.classList.toggle("font-medium", on);
@@ -90,8 +92,8 @@ const { sections } = Astro.props;
     // Track the topmost section intersecting the upper band of the viewport,
     // so the rail marks what you are reading rather than what scrolled past.
     const targets = links
-      .map((a) => document.getElementById(a.dataset.railId))
-      .filter((el) => el);
+      .map((a) => document.getElementById(a.dataset.railId ?? ""))
+      .filter((el): el is HTMLElement => el !== null);
     if (targets.length && "IntersectionObserver" in window) {
       const io = new IntersectionObserver(
         (entries) => {
@@ -115,11 +117,11 @@ const { sections } = Astro.props;
     });
     for (const a of links) {
       a.addEventListener("mouseenter", () => {
-        hovered = a.dataset.railId;
+        hovered = a.dataset.railId ?? null;
         place();
       });
       a.addEventListener("focus", () => {
-        hovered = a.dataset.railId;
+        hovered = a.dataset.railId ?? null;
         place();
       });
       a.addEventListener("blur", () => {

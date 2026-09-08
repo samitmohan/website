@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node --experimental-strip-types ./scripts/gen-images.mjs && bash ./scripts/check-budgets.sh",
+    "build": "astro check && astro build && node --experimental-strip-types ./scripts/gen-images.mjs && bash ./scripts/check-budgets.sh",
     "preview": "astro preview",
     "check": "astro check",
     "figure": "node ./scripts/gen-wordmark.mjs",
@@ -32,11 +32,12 @@
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@types/node": "^20",
     "fontkit": "^2.0.4",
     "satori": "^0.33.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   },
   "type": "module"
 }

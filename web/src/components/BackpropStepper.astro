@@ -43,8 +43,8 @@ const STEPS = [
 </div>
 
 <script define:vars={{ STEPS }}>
-  const stage = document.querySelector("[data-bp-stage]");
-  const caption = document.querySelector("[data-bp-caption]");
+  const stage = document.querySelector<HTMLElement>("[data-bp-stage]");
+  const caption = document.querySelector<HTMLElement>("[data-bp-caption]");
   let step = 0;
   stage?.addEventListener("click", () => {
     step = (step + 1) % STEPS.length;

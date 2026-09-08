@@ -64,7 +64,7 @@ const articleSchema = {
     <FunPost post={post} html={html} prevPost={prevPost} nextPost={nextPost} />
   ) : (
   <div class="page">
-    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
     <PostRuntime />
     <Nav />
 

@@ -18,7 +18,7 @@
  * The old card's accent square was #E6651B, an orange left over from a
  * colourway the site has not had for two redesigns. It is the current accent.
  */
-import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync } from "fs";
 import path from "path";
 import satori from "satori";
 import sharp from "sharp";

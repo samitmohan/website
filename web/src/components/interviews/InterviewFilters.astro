@@ -87,23 +87,23 @@ const tags = Object.entries(facets.tags).filter(([, n]) => n > 0);
 </div>
 
 <script>
-  const bar = document.querySelector("[data-iv-filters]");
+  const bar = document.querySelector<HTMLElement>("[data-iv-filters]");
   if (bar) {
-    const input = bar.querySelector("[data-iv-query]");
-    const count = bar.querySelector("[data-iv-count]");
-    const clear = bar.querySelector("[data-iv-clear]");
-    const chips = Array.from(bar.querySelectorAll(".iv-chip"));
-    const toc = document.querySelector("[data-iv-toc]");
+    const input = bar.querySelector<HTMLInputElement>("[data-iv-query]");
+    const count = bar.querySelector<HTMLElement>("[data-iv-count]");
+    const clear = bar.querySelector<HTMLElement>("[data-iv-clear]");
+    const chips = Array.from(bar.querySelectorAll<HTMLElement>(".iv-chip"));
+    const toc = document.querySelector<HTMLElement>("[data-iv-toc]");
 
-    let difficulty = null;
-    let tag = null;
+    let difficulty: string | null = null;
+    let tag: string | null = null;
 
     function apply() {
       const q = (input?.value ?? "").trim().toLowerCase();
       const active = Boolean(difficulty || tag || q);
       let shown = 0;
 
-      for (const card of document.querySelectorAll("[data-qa]")) {
+      for (const card of document.querySelectorAll<HTMLElement>("[data-qa]")) {
         const ok =
           (!difficulty || card.dataset.difficulty === difficulty) &&
           (!tag || (card.dataset.tags ?? "").split(" ").includes(tag)) &&
@@ -113,10 +113,10 @@ const tags = Object.entries(facets.tags).filter(([, n]) => n > 0);
       }
       // A sub-heading with nothing left under it, and a section with nothing
       // left in it, both go too.
-      for (const sub of document.querySelectorAll("[data-sub]")) {
+      for (const sub of document.querySelectorAll<HTMLElement>("[data-sub]")) {
         sub.hidden = !sub.querySelector("[data-qa]:not([hidden])");
       }
-      for (const section of document.querySelectorAll("[data-section]")) {
+      for (const section of document.querySelectorAll<HTMLElement>("[data-section]")) {
         // Company Guide, Reading List and NeetCode hold no tagged questions,
         // so they drop out entirely once a facet is on rather than sit empty.
         section.hidden =

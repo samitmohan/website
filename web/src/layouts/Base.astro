@@ -104,7 +104,7 @@ const person = {
 
     {math && <link rel="stylesheet" href="/katex/katex.min.css" />}
 
-    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(person)} />
   </head>
 
   <body class="min-h-full flex flex-col bg-background text-foreground">

@@ -26,12 +26,12 @@ const THEMES = ["charm", "dusk"] as const;
 </div>
 
 <script>
-  const group = document.querySelector("[data-fun-swatches]");
+  const group = document.querySelector<HTMLElement>("[data-fun-swatches]");
   const candy = group?.closest(".candy");
   if (group && candy) {
-    const apply = (t) => {
+    const apply = (t: string) => {
       candy.setAttribute("data-fun-theme", t);
-      group.querySelectorAll(".fun-swatch").forEach((b) => {
+      group.querySelectorAll<HTMLElement>(".fun-swatch").forEach((b) => {
         const on = b.dataset.theme === t;
         b.classList.toggle("is-on", on);
         b.setAttribute("aria-pressed", String(on));
@@ -42,7 +42,8 @@ const THEMES = ["charm", "dusk"] as const;
       if (saved === "charm" || saved === "dusk") apply(saved);
     } catch {}
     group.addEventListener("click", (e) => {
-      const b = e.target instanceof Element ? e.target.closest(".fun-swatch") : null;
+      const b =
+        e.target instanceof Element ? e.target.closest<HTMLElement>(".fun-swatch") : null;
       const t = b?.dataset.theme;
       if (!t) return;
       try {
