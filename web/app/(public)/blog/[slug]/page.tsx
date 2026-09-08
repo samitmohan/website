@@ -102,7 +102,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="page accent-blue">
+    <div className="page">
       {post.math && (
         // eslint-disable-next-line @next/next/no-css-tags -- precedence-hoisted, loaded only for math posts
         <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />
@@ -131,7 +131,7 @@ export default async function BlogPostPage({
 
         {/* Header */}
         <header className="mb-8">
-          <h1 className="display text-balance text-[30px] text-ink md:text-[40px]">
+          <h1 className="display text-balance text-title text-ink md:text-head">
             {post.title}
           </h1>
           <div className="mt-7 flex items-center gap-3 border-y border-rule py-4">
@@ -142,7 +142,7 @@ export default async function BlogPostPage({
               height={72}
               className="h-9 w-9 rounded-full object-cover"
             />
-            <span className="text-[14px] font-medium text-ink">
+            <span className="text-small font-medium text-ink">
               Samit Mohan
             </span>
             <span className="meta ml-auto flex items-center gap-2">
@@ -185,7 +185,7 @@ export default async function BlogPostPage({
               {related.map((p) => (
                 <Link key={p.slug} href={`/blog/${p.slug}`} className="row">
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <h3 className="row-title text-[16px] font-medium leading-snug text-ink">
+                    <h3 className="row-title text-body font-medium leading-snug text-ink">
                       {p.title}
                     </h3>
                     <span className="meta shrink-0">
@@ -193,7 +193,7 @@ export default async function BlogPostPage({
                     </span>
                   </div>
                   {p.description ? (
-                    <p className="mt-1.5 max-w-3xl text-pretty text-[14px] leading-[155%] text-ink-2">
+                    <p className="mt-1.5 max-w-3xl text-pretty text-small leading-[155%] text-ink-2">
                       {p.description}
                     </p>
                   ) : null}
@@ -210,7 +210,7 @@ export default async function BlogPostPage({
                 <p className="label mb-2">
                   ← Older
                 </p>
-                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-brand">
+                <p className="text-small leading-snug text-ink-2 transition-colors group-hover:text-brand">
                   {prevPost.title}
                 </p>
               </Link>
@@ -222,7 +222,7 @@ export default async function BlogPostPage({
                 <p className="label mb-2">
                   Newer →
                 </p>
-                <p className="text-[15px] leading-snug text-ink-2 transition-colors group-hover:text-brand">
+                <p className="text-small leading-snug text-ink-2 transition-colors group-hover:text-brand">
                   {nextPost.title}
                 </p>
               </Link>

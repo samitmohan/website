@@ -14,42 +14,28 @@
      resolve the variable loses the typeface and not the text size. */
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --ink:#141414; --grey:#877F70; --soft:#D5CFC0; }
   .ml-stage { fill:none; stroke:var(--soft); stroke-width:1.1; }
-  .ml-lab { font-size:8.5px;
+  .ml-lab { font-size:9.2px;
             fill:var(--grey); text-anchor:middle; }
-  .ml-cap { font-size:8.5px;
+  .ml-cap { font-size:9.2px;
             fill:var(--grey); }
   .ml-tick { stroke:var(--soft); stroke-width:1; }
 
-  /* Each stage lights while the run is inside it, then hands over. Four stages
-     across one 6s cycle, so each holds the page for a beat rather than
-     strobing. */
-  .ml-on { fill:none; stroke:var(--ink); stroke-width:1.4; opacity:0;
-           animation:ml-hold 6000ms linear infinite; }
-  .ml-on-lab { fill:var(--ink); opacity:0; animation:ml-hold 6000ms linear infinite; }
-  @keyframes ml-hold {
-    0%   { opacity:0; }
-    4%   { opacity:1; }
-    20%  { opacity:1; }
-    26%  { opacity:0; }
-    100% { opacity:0; }
-  }
+  /* All four stages lit. They used to light one at a time across a 6s cycle,
+     which turned a pipeline diagram into a chase light; the pipeline is the
+     point and all of it is true at once. */
+  .ml-on { fill:none; stroke:var(--ink); stroke-width:1.4; opacity:1 }
+  .ml-on-lab { fill:var(--ink); opacity:1; }
 
-  /* The loss curve draws across the whole cycle: the thing all four stages are
-     for, and the only number on the card that means anything. */
-  .ml-loss { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round;
-             stroke-dasharray:300; stroke-dashoffset:300;
-             animation:ml-draw 6000ms linear infinite; }
-  @keyframes ml-draw {
-    0%   { stroke-dashoffset:300; }
-    88%  { stroke-dashoffset:0; }
-    96%  { stroke-dashoffset:0; }
-    100% { stroke-dashoffset:300; }
-  }
+  /* The loss curve: the thing all four stages are for, and the only quantity
+     on the card that means anything. */
+  .ml-loss { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; }
 
-  @media (prefers-reduced-motion:reduce) {
-    .ml-on, .ml-on-lab { animation:none; opacity:1; }
-    .ml-loss { animation:none; stroke-dashoffset:0; }
-  }
+  /* This drawing holds still. It ran on a 6s loop, and with every figure on
+     the site looping at once nothing on any page was ever at rest, which is
+     what made these read as cartoons rather than as diagrams. What is drawn is
+     the state the loop used to settle into - the state the reduced-motion
+     branch already specified, and now the only one there is. */
+
 ]]></style>
 
 <text class="ml-cap" x="12" y="20">40M params &#183; from scratch</text>
@@ -57,24 +43,24 @@
 <!-- four stages -->
 <g>
   <rect class="ml-stage" x="12"  y="40" width="80" height="30" rx="7"/>
-  <rect class="ml-on"    x="12"  y="40" width="80" height="30" rx="7" style="animation-delay:0ms"/>
+  <rect class="ml-on"    x="12"  y="40" width="80" height="30" rx="7"/>
   <text class="ml-lab"   x="52"  y="59">tokenizer</text>
-  <text class="ml-lab ml-on-lab" x="52" y="59" style="animation-delay:0ms">tokenizer</text>
+  <text class="ml-lab ml-on-lab" x="52" y="59">tokenizer</text>
 
   <rect class="ml-stage" x="108" y="40" width="80" height="30" rx="7"/>
-  <rect class="ml-on"    x="108" y="40" width="80" height="30" rx="7" style="animation-delay:1500ms"/>
+  <rect class="ml-on"    x="108" y="40" width="80" height="30" rx="7"/>
   <text class="ml-lab"   x="148" y="59">pretrain</text>
-  <text class="ml-lab ml-on-lab" x="148" y="59" style="animation-delay:1500ms">pretrain</text>
+  <text class="ml-lab ml-on-lab" x="148" y="59">pretrain</text>
 
   <rect class="ml-stage" x="204" y="40" width="80" height="30" rx="7"/>
-  <rect class="ml-on"    x="204" y="40" width="80" height="30" rx="7" style="animation-delay:3000ms"/>
+  <rect class="ml-on"    x="204" y="40" width="80" height="30" rx="7"/>
   <text class="ml-lab"   x="244" y="59">SFT</text>
-  <text class="ml-lab ml-on-lab" x="244" y="59" style="animation-delay:3000ms">SFT</text>
+  <text class="ml-lab ml-on-lab" x="244" y="59">SFT</text>
 
   <rect class="ml-stage" x="300" y="40" width="68" height="30" rx="7"/>
-  <rect class="ml-on"    x="300" y="40" width="68" height="30" rx="7" style="animation-delay:4500ms"/>
+  <rect class="ml-on"    x="300" y="40" width="68" height="30" rx="7"/>
   <text class="ml-lab"   x="334" y="59">GRPO</text>
-  <text class="ml-lab ml-on-lab" x="334" y="59" style="animation-delay:4500ms">GRPO</text>
+  <text class="ml-lab ml-on-lab" x="334" y="59">GRPO</text>
 </g>
 
 <!-- loss axis and curve -->

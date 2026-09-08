@@ -1,38 +1,34 @@
 /**
- * The five marks in the top-right corner, in the order they are drawn.
+ * The outbound links in the top-right corner, in the order they appear.
  *
- * `mark` names a file in public/marks/. They are hand-drawn sketches traced from
- * the originals, painted with a CSS mask rather than an <img>, so they take the
- * page's colour and work in both themes without a second copy of each file.
+ * `label` is the visible text and the accessible name at once - there is no
+ * aria-label on these any more, because the link text used to be a drawing
+ * with the name hidden in an attribute. Lowercase to match the rest of the
+ * site's chrome and the wordmark.
  */
 export type SiteLink = {
   label: string;
   href: string;
-  mark: string;
   external?: boolean;
 };
 
 export const SOCIAL_LINKS: SiteLink[] = [
+  { label: "github", href: "https://github.com/samitmohan", external: true },
   {
-    label: "Spotify",
-    href: "https://open.spotify.com/user/rajabetaa",
-    mark: "spotify",
-    external: true,
-  },
-  {
-    label: "GitHub",
-    href: "https://github.com/samitmohan",
-    mark: "github",
-    external: true,
-  },
-  {
-    label: "LinkedIn",
+    label: "linkedin",
     href: "https://www.linkedin.com/in/samit-mohan/",
-    mark: "linkedin",
     external: true,
   },
-  { label: "Email", href: "mailto:samitmohan@gmail.com", mark: "email" },
-  // CV is out until the PDF is refreshed. samit-resume.pdf and
-  // public/marks/cv.svg both stay put, so restoring it is this line:
-  // { label: "CV", href: "/samit-resume.pdf", mark: "cv", external: true },
+  { label: "spotify", href: "https://open.spotify.com/user/rajabetaa", external: true },
+  { label: "email", href: "mailto:samitmohan@gmail.com" },
+  // CV is out until the PDF is refreshed. public/samit-resume.pdf stays put,
+  // so restoring it is this line:
+  // { label: "cv", href: "/samit-resume.pdf", external: true },
+];
+
+/** The site's own sections, left of the outbound links. */
+export const SECTION_LINKS: SiteLink[] = [
+  { label: "about", href: "/about" },
+  { label: "blog", href: "/blog" },
+  { label: "projects", href: "/projects" },
 ];

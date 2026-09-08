@@ -19,6 +19,42 @@ check() { # name actual ceiling unit
   fi
 }
 
+# ------------------------------------------------------- dark theme integrity
+# The dark palette is written twice in app/globals.css - once under the OS
+# media query, once under [data-theme="dark"] - because CSS cannot share a
+# value set between a media query and a selector. A comment saying "keep these
+# identical" is a wish; this is the check.
+echo
+echo "dark theme:"
+dark_blocks=$(python3 - <<'PY_EOF'
+import re, sys
+s = open("app/globals.css").read()
+blocks = []
+for sel in [r':root:not\(\[data-theme="light"\]\)\s*\{', r':root\[data-theme="dark"\]\s*\{']:
+    m = re.search(sel, s)
+    if not m:
+        print("MISSING"); sys.exit(0)
+    i = s.index("{", m.start()); d = 0
+    for j in range(i, len(s)):
+        if s[j] == "{": d += 1
+        elif s[j] == "}":
+            d -= 1
+            if d == 0: break
+    decls = re.findall(r"(--[\w-]+|color-scheme)\s*:\s*([^;]+);", s[i:j])
+    blocks.append(tuple(sorted((k, v.strip()) for k, v in decls)))
+print("MATCH" if blocks[0] == blocks[1] else "DIFFER")
+print(len(blocks[0]))
+PY_EOF
+)
+verdict=$(echo "$dark_blocks" | head -1)
+count=$(echo "$dark_blocks" | tail -1)
+if [ "$verdict" = "MATCH" ]; then
+  note "palette copies" "$count" "$count" "ok"
+else
+  note "palette copies" "$verdict" "MATCH" "OVER"
+  fail=1
+fi
+
 # ---------------------------------------------------------------- line count
 # The 988 KB problem catalogue this used to exclude is deleted, so config/ is
 # now four dozen lines of links and project entries and counts like everything

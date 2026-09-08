@@ -1,31 +1,20 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import "./globals.css";
 
-// The display face for the whole site: the "samit" wordmark and every heading,
-// through --font-display in globals.css.
+// Charter carries both the headings and the prose, so there is no display
+// face declared here at all - it is self-hosted from public/fonts/ by two
+// @font-face blocks at the top of globals.css, which is also where the licence
+// note explaining why the files may be committed lives.
 //
-// A high-contrast serif, deliberately not a fourth attempt at handwriting:
-// every mark around the name is already a brush drawing, so another hand in
-// type was competing with them rather than sitting alongside. Refined type
-// against rough ink is the contrast the page was missing.
-//
-// It was scoped to the wordmark alone on the argument that "a handwritten
-// heading over a list of post titles reads as decoration". That argument is
-// against a handwriting face, and this is not one - it was pointing at the
-// wrong conclusion. The cost of the narrow scope was a site whose headings
-// were all set in the same system sans as its body text, differing from the
-// prose only in size, which is the most templated thing a page can do.
-//
-// preload stays on: this is now on the critical path for every route.
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-mark",
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-});
+// This used to load Instrument Serif for --font-display. It is a high-contrast
+// display serif, and a high-contrast serif over a cream ground is the pairing
+// every generated page arrives with; Charter is a text face from 1987 drawn for
+// 300dpi laser printers, which is a different and older idea about what type on
+// a screen is for. Dropping it also drops a Google Fonts request from every
+// route.
 
 // preload: false because the fonts declared here are preloaded on every route,
 // and the homepage - the one page most people see first - sets nothing in mono.
@@ -40,10 +29,20 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-// The site is light-only, so the theme-color meta is a constant. It used to be
-// written at runtime by a pre-paint script that read a stored preference; with
-// one theme there is nothing to read and nothing to flash.
-export const viewport = { themeColor: "#FFFDF8" };
+// One entry per scheme, so the browser chrome matches whichever theme is
+// showing. Next emits two <meta name="theme-color"> with media attributes.
+export const viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FFFDF8" },
+    { media: "(prefers-color-scheme: dark)", color: "#0D0C09" },
+  ],
+};
+
+// Read before first paint, so an explicit choice never flashes the other
+// theme. Nothing here touches the DOM beyond documentElement.dataset, and with
+// no stored value it does nothing at all - the CSS media query already handles
+// following the OS. Inline and blocking on purpose: any deferral is the flash.
+const THEME_INIT = `try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t}catch(e){}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
@@ -52,9 +51,6 @@ export const metadata: Metadata = {
     template: "%s - Samit Mohan",
   },
   description: "AI Scientist at Beltech AI in Bangalore. I rebuild ML from scratch and write about it.",
-  icons: {
-    icon: "/favicon.svg",
-  },
   alternates: {
     types: RSS_ALTERNATE,
   },
@@ -80,13 +76,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:px-3 focus:py-1.5 focus:rounded-md focus:bg-primary focus:text-primary-foreground focus:text-[13px]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:px-3 focus:py-1.5 focus:rounded-md focus:bg-primary focus:text-primary-foreground focus:text-small"
         >
           Skip to content
         </a>

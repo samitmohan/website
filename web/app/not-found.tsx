@@ -7,10 +7,10 @@ export default function NotFound() {
         <p className="label mb-4">
           404
         </p>
-        <h1 className="display text-balance text-[30px] text-ink md:text-[36px]">
+        <h1 className="display text-balance text-title text-ink md:text-head">
           page not found
         </h1>
-        <p className="mt-4 text-[15px] text-ink-2">
+        <p className="mt-4 text-small text-ink-2">
           the link is wrong or the post moved.
         </p>
         <div className="mt-7 flex items-center justify-center gap-2">

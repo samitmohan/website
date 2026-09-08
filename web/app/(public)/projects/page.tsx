@@ -21,13 +21,13 @@ export const metadata: Metadata = {
  */
 export default function ProjectsPage() {
   return (
-    <div className="page accent-crimson">
+    <div className="page">
       <PublicNav />
 
       <main id="main" className="shell relative py-14 md:py-20">
         <Figure name="agent-loop" className="page-figure page-figure-projects" />
 
-        <h1 className="display display-accent mb-10 text-[34px] text-ink md:text-[44px]">
+        <h1 className="display mb-10 text-head text-ink md:text-display">
           Projects
         </h1>
 

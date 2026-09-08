@@ -50,19 +50,19 @@ export function QACard({
           className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${DIFFICULTY_DOT[difficulty]}`}
           title={difficulty}
         />
-        <span className="flex-1 min-w-0 text-[14px] text-foreground leading-snug">
+        <span className="flex-1 min-w-0 text-small text-foreground leading-snug">
           {q}
           {specialTags.length > 0 && (
             <span className="ml-2">
               {specialTags.map((t) => (
-                <span key={t} className={`text-[10px] font-medium mr-1.5 ${SPECIAL_TAGS[t]}`}>
+                <span key={t} className={`text-micro font-medium mr-1.5 ${SPECIAL_TAGS[t]}`}>
                   {t}
                 </span>
               ))}
             </span>
           )}
         </span>
-        <span className="text-muted-foreground/50 text-[9px] flex-shrink-0 group-open:rotate-90">
+        <span className="text-muted-foreground/50 text-micro flex-shrink-0 group-open:rotate-90">
           ▶
         </span>
       </summary>

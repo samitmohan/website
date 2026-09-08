@@ -13,10 +13,8 @@
 
      --brand is the accent. It was demoted to currentColor when the site's
      chrome went greyscale and a second grey could not be told apart from the
-     first. There are three accent ramps now - blue on /blog, orange on
-     /projects, teal on /about - and globals.css sets --brand to whichever one
-     the host page carries, so the drawing is painted in the colour of the page
-     it belongs to. currentColor stays as the fallback for the img case.
+     first. globals.css sets --brand to the site's one accent when the file is
+     inlined; currentColor stays as the fallback for the img case.
 
      The text uses currentColor, because text cannot be made ground-independent.
      Inlined, currentColor inherits the host page's colour and the labels are
@@ -39,27 +37,22 @@
      prefers-color-scheme override here any more. */
   svg:root { color:#141414; }
   .al-trace { fill:none; stroke:var(--struct); stroke-width:1; opacity:.3; }
-  /* 46 units lit out of a 548 perimeter, chased at constant speed.
-     Because the speed is constant, a gate lights at exactly T * s / perimeter and
-     nothing can drift out of sync. A loop also never needs a still frame. */
-  .al-comet {
-    fill:none; stroke:var(--brand); stroke-width:1.6; stroke-linecap:round;
-    stroke-dasharray:46 502;
-    animation:al-run 4200ms linear infinite;
-  }
-  @keyframes al-run { from { stroke-dashoffset:0; } to { stroke-dashoffset:-548; } }
+  /* A lit 46-unit comet used to chase the 548-unit perimeter and light each
+     gate as it passed. Held still it was a second copy of .al-trace in full
+     accent, which read as a box drawn around the three words rather than as a
+     cycle through them, so it is gone.
+
+     What the comet was carrying, though, was direction, and without it the
+     path is a rectangle with three pills on its top edge. So the direction is
+     stated instead of animated: chevrons on the two long edges, in the accent,
+     pointing the way round. Motion is not the only way to say which way
+     something goes, and an arrow still works when the tab is in the
+     background. */
+  .al-dir { fill:none; stroke:var(--brand); stroke-width:1.2; stroke-linecap:round;
+            stroke-linejoin:round; opacity:.8; }
   .al-gate { fill:none; stroke:var(--struct); stroke-width:1; opacity:.55; }
-  .al-gate-lit { fill:var(--brand); stroke:none; opacity:0;
-    animation:al-hit 4200ms linear infinite; }
-  /* Window is (gate + comet) / perimeter, so the highlight lasts exactly as long
-     as the comet overlaps the gate and two gates can never be lit together. */
-  @keyframes al-hit { 0%{opacity:0} 2%{opacity:.24} 10.77%{opacity:.24}
-                      12.77%,100%{opacity:0} }
-  .al-tool { fill:none; stroke:var(--brand); stroke-width:1; opacity:0;
-    animation:al-call 4200ms linear infinite; }
-  .al-stub { stroke:var(--brand); stroke-width:1; fill:none; opacity:0;
-    animation:al-call 4200ms linear infinite; }
-  @keyframes al-call { 0%{opacity:0} 3%{opacity:.9} 14%{opacity:0} 100%{opacity:0} }
+  .al-tool { fill:none; stroke:var(--brand); stroke-width:1; opacity:.65 }
+  .al-stub { stroke:var(--brand); stroke-width:1; fill:none; opacity:.65 }
   /* Muted text is currentColor at reduced opacity rather than its own grey, so
      it tracks the host colour too instead of drifting off it. */
   .al-lab  { font-size:8px;
@@ -68,12 +61,6 @@
              letter-spacing:.04em; fill:currentColor; }
   /* Motion off: hold one composed frame with the pulse inside act and the tool
      call raised, rather than freezing wherever the lap happened to be. */
-  @media (prefers-reduced-motion:reduce) {
-    .al-comet, .al-gate-lit, .al-tool, .al-stub { animation:none; }
-    .al-comet { stroke-dasharray:none; opacity:.45; }
-    .al-gate-lit { opacity:0; }
-    .al-tool, .al-stub { opacity:.65; }
-  }
 ]]></style>
-<path class="al-trace" d="M45 74 H275 V118 H45 Z"/><path class="al-comet" d="M45 74 H275 V118 H45 Z"/><line class="al-stub" style="animation-delay:929ms" x1="132.0" y1="40" x2="132.0" y2="52"/><rect class="al-tool" style="animation-delay:929ms" x="124" y="26" width="16" height="14" rx="3"/><line class="al-stub" style="animation-delay:999ms" x1="154.0" y1="40" x2="154.0" y2="52"/><rect class="al-tool" style="animation-delay:999ms" x="146" y="26" width="16" height="14" rx="3"/><line class="al-stub" style="animation-delay:1069ms" x1="176.0" y1="40" x2="176.0" y2="52"/><rect class="al-tool" style="animation-delay:1069ms" x="168" y="26" width="16" height="14" rx="3"/><line class="al-stub" style="animation-delay:1139ms" x1="198.0" y1="40" x2="198.0" y2="52"/><rect class="al-tool" style="animation-delay:1139ms" x="190" y="26" width="16" height="14" rx="3"/><line class="al-stub" style="animation-delay:929ms" x1="132.0" y1="52" x2="198.0" y2="52"/><line class="al-stub" style="animation-delay:929ms" x1="160" y1="52" x2="160" y2="68"/><text class="al-lab" x="165" y="20" text-anchor="middle">tools</text><rect class="al-gate" x="66.0" y="68" width="24" height="12" rx="3"/><rect class="al-gate-lit" style="animation-delay:161ms" x="66.0" y="68" width="24" height="12" rx="3"/><text class="al-name" x="78" y="92" text-anchor="middle">think</text><rect class="al-gate" x="148.0" y="68" width="24" height="12" rx="3"/><rect class="al-gate-lit" style="animation-delay:789ms" x="148.0" y="68" width="24" height="12" rx="3"/><text class="al-name" x="160" y="92" text-anchor="middle">act</text><rect class="al-gate" x="230.0" y="68" width="24" height="12" rx="3"/><rect class="al-gate-lit" style="animation-delay:1418ms" x="230.0" y="68" width="24" height="12" rx="3"/><text class="al-name" x="242" y="92" text-anchor="middle">observe</text>
+<path class="al-trace" d="M45 74 H275 V118 H45 Z"/><polyline class="al-dir" points="116,70.6 119,74 116,77.4"/><polyline class="al-dir" points="198,70.6 201,74 198,77.4"/><polyline class="al-dir" points="163,114.6 160,118 163,121.4"/><line class="al-stub" x1="132.0" y1="40" x2="132.0" y2="52"/><rect class="al-tool" x="124" y="26" width="16" height="14" rx="3"/><line class="al-stub" x1="154.0" y1="40" x2="154.0" y2="52"/><rect class="al-tool" x="146" y="26" width="16" height="14" rx="3"/><line class="al-stub" x1="176.0" y1="40" x2="176.0" y2="52"/><rect class="al-tool" x="168" y="26" width="16" height="14" rx="3"/><line class="al-stub" x1="198.0" y1="40" x2="198.0" y2="52"/><rect class="al-tool" x="190" y="26" width="16" height="14" rx="3"/><line class="al-stub" x1="132.0" y1="52" x2="198.0" y2="52"/><line class="al-stub" x1="160" y1="52" x2="160" y2="68"/><text class="al-lab" x="165" y="20" text-anchor="middle">tools</text><rect class="al-gate" x="66.0" y="68" width="24" height="12" rx="3"/><text class="al-name" x="78" y="92" text-anchor="middle">think</text><rect class="al-gate" x="148.0" y="68" width="24" height="12" rx="3"/><text class="al-name" x="160" y="92" text-anchor="middle">act</text><rect class="al-gate" x="230.0" y="68" width="24" height="12" rx="3"/><text class="al-name" x="242" y="92" text-anchor="middle">observe</text>
 </svg>

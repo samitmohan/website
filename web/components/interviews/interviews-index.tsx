@@ -45,10 +45,10 @@ export function InterviewsIndex() {
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2 leading-[1.1]">
             Interview Preparation
           </h1>
-          <p className="text-[15px] text-muted-foreground leading-relaxed">
+          <p className="text-small text-muted-foreground leading-relaxed">
             Questions I need to prepare for interviews 2026.
           </p>
-          <p className="text-[12px] font-mono text-muted-foreground/60 mt-2">
+          <p className="text-small font-mono text-muted-foreground/60 mt-2">
             {facets.total} questions across {sections.length} sections
           </p>
         </header>
@@ -62,12 +62,12 @@ export function InterviewsIndex() {
 
             const heading = (
               <div className="mb-4 flex items-baseline justify-between gap-4 border-b border-border pb-2">
-                <h2 className="text-[17px] font-semibold tracking-tight text-foreground">
+                <h2 className="text-body font-semibold tracking-tight text-foreground">
                   <Link href={href} className="hover:text-primary">
                     {title}
                   </Link>
                 </h2>
-                <span className="shrink-0 font-mono text-[11px] text-muted-foreground/60">
+                <span className="shrink-0 font-mono text-micro text-muted-foreground/60">
                   {isQASection(sec) ? `${questionCount(sec)} questions` : "read"}
                 </span>
               </div>
@@ -84,7 +84,7 @@ export function InterviewsIndex() {
                   {heading}
                   <Link
                     href={href}
-                    className="text-[14px] text-muted-foreground hover:text-primary"
+                    className="text-small text-muted-foreground hover:text-primary"
                   >
                     Open section →
                   </Link>

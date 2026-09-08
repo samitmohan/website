@@ -5,7 +5,7 @@ import path from "path";
 /**
  * Reads an SVG out of public/ and returns its markup for inlining.
  *
- * The three figures on the site (gradient-descent, blog-backprop, agent-loop)
+ * The three figures on the site (wordmark, blog-backprop, agent-loop)
  * are inlined rather than served through <img> on purpose: their text and ink
  * use `currentColor`, and an SVG loaded through <img> is its own document, so
  * `currentColor` there resolves against the SVG's own root rather than the

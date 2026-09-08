@@ -70,7 +70,7 @@ export function SectionRail({
       aria-label="Sections"
       className="fixed top-28 left-[max(1.5rem,calc(50%-38rem))] z-30 hidden w-52 xl:block"
     >
-      <div className="mb-2 px-2 font-mono text-[10.5px] uppercase tracking-[0.08em] text-muted-foreground/60">
+      <div className="mb-2 px-2 font-mono text-micro uppercase tracking-[0.08em] text-muted-foreground/60">
         Sections
       </div>
       <div
@@ -98,9 +98,9 @@ export function SectionRail({
               onFocus={() => setHovered(s.id)}
               onBlur={() => setHovered(null)}
               aria-current={isActive ? "true" : undefined}
-              className="relative z-10 flex items-center gap-2 rounded-md px-2 py-1.5 text-[12.5px] transition-colors duration-150"
+              className="relative z-10 flex items-center gap-2 rounded-md px-2 py-1.5 text-small transition-colors duration-150"
             >
-              <span className="font-mono text-[10.5px] tabular-nums text-muted-foreground/40">
+              <span className="font-mono text-micro tabular-nums text-muted-foreground/40">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span

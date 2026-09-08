@@ -23,7 +23,7 @@ export function InterviewsSection({ section }: { section: Section }) {
   return (
     <>
       <main id="main" className="flex-1 w-full max-w-2xl mx-auto px-6 py-12 md:py-16">
-        <div className="mb-8 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground/70">
+        <div className="mb-8 flex items-center gap-2 font-mono text-micro uppercase tracking-[0.08em] text-muted-foreground/70">
           <Link href="/interviews" className="hover:text-primary">
             Interviews
           </Link>
@@ -36,7 +36,7 @@ export function InterviewsSection({ section }: { section: Section }) {
             {title}
           </h1>
           {facets.total > 0 && (
-            <p className="text-[12px] font-mono text-muted-foreground/60 mt-2">
+            <p className="text-small font-mono text-muted-foreground/60 mt-2">
               {facets.total} questions
             </p>
           )}
@@ -80,10 +80,10 @@ export function InterviewsSection({ section }: { section: Section }) {
           <div>
             {prev && (
               <Link href={sectionHref(prev.id)} className="group block">
-                <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground/60">
+                <p className="mb-1 font-mono text-micro uppercase tracking-[0.08em] text-muted-foreground/60">
                   ← Previous
                 </p>
-                <p className="text-[14px] leading-snug text-muted-foreground group-hover:text-primary">
+                <p className="text-small leading-snug text-muted-foreground group-hover:text-primary">
                   {stripNum(prev.title)}
                 </p>
               </Link>
@@ -92,10 +92,10 @@ export function InterviewsSection({ section }: { section: Section }) {
           <div className="sm:text-right">
             {next && (
               <Link href={sectionHref(next.id)} className="group block">
-                <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground/60">
+                <p className="mb-1 font-mono text-micro uppercase tracking-[0.08em] text-muted-foreground/60">
                   Next →
                 </p>
-                <p className="text-[14px] leading-snug text-muted-foreground group-hover:text-primary">
+                <p className="text-small leading-snug text-muted-foreground group-hover:text-primary">
                   {stripNum(next.title)}
                 </p>
               </Link>

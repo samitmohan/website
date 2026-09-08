@@ -75,7 +75,7 @@ export function PostTOC({ scope }: { scope: string }) {
   if (headings.length < 4) return null;
 
   return (
-    <aside className="fixed top-32 right-6 hidden max-h-[70vh] w-56 overflow-y-auto text-[12.5px] leading-relaxed xl:block 2xl:right-12">
+    <aside className="fixed top-32 right-6 hidden max-h-[70vh] w-56 overflow-y-auto text-small leading-relaxed xl:block 2xl:right-12">
       <div className="label mb-4">
         Contents
       </div>

@@ -13,10 +13,10 @@ export default function GlobalError({
         <p className="label mb-4">
           Error
         </p>
-        <h1 className="display text-balance text-[28px] text-ink md:text-[34px]">
+        <h1 className="display text-balance text-title text-ink md:text-head">
           Something went wrong
         </h1>
-        <p className="mt-4 text-[15px] text-ink-2">
+        <p className="mt-4 text-small text-ink-2">
           {error.message || "An unexpected error occurred. Please try again."}
         </p>
         <button onClick={reset} className="pill pill-solid mt-7">

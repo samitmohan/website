@@ -44,7 +44,7 @@ const ICON = {
 };
 
 const control =
-  "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12.5px] text-ink-2 transition-[background-color,color,transform] duration-200 hover:bg-surface-2 hover:text-ink active:scale-[0.96]";
+  "inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-small text-ink-2 transition-[background-color,color,transform] duration-200 hover:bg-surface-2 hover:text-ink active:scale-[0.96]";
 
 /** Scroll-to-text fragment. Long selections use the start,end form so a quote
  *  spanning paragraphs still resolves. */
@@ -275,7 +275,7 @@ export function SelectionShare({
                   )}
                 </>
               ) : (
-                <span className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap px-2.5 text-[12.5px] text-positive">
+                <span className="inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap px-2.5 text-small text-positive">
                   {ICON.check}
                   {mode === "copied" ? "Copied" : "Link copied"}
                 </span>

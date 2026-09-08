@@ -78,7 +78,7 @@ export default function OGImage() {
             borderTop: "1px solid #E8E3D8",
             paddingTop: "28px",
             fontSize: "20px",
-            color: "#2C2CE8",
+            color: "#1C1CA8",
           }}
         >
           <div>≤10ms inference</div>

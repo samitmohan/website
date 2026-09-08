@@ -33,7 +33,7 @@ const DIFFICULTY_DOT: Record<Difficulty, string> = {
 };
 
 const chip =
-  "flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium transition-[background-color,box-shadow,color] duration-200";
+  "flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-small font-medium transition-[background-color,box-shadow,color] duration-200";
 
 function Chip({
   active,
@@ -68,7 +68,7 @@ function Chip({
       )}
       {label}
       <span
-        className={`rounded px-1 text-[10.5px] tabular-nums ${
+        className={`rounded px-1 text-micro tabular-nums ${
           active ? "bg-muted text-muted-foreground" : "text-muted-foreground/60"
         }`}
       >
@@ -179,9 +179,9 @@ export function InterviewFilters({ facets }: { facets: Facets }) {
           aria-label="Filter questions"
           autoComplete="off"
           spellCheck={false}
-          className="min-w-0 flex-1 bg-transparent text-[13px] text-foreground outline-none placeholder:text-muted-foreground/60"
+          className="min-w-0 flex-1 bg-transparent text-small text-foreground outline-none placeholder:text-muted-foreground/60"
         />
-        <kbd className="hidden shrink-0 rounded border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground/60 sm:block">
+        <kbd className="hidden shrink-0 rounded border border-border px-1.5 py-0.5 text-micro text-muted-foreground/60 sm:block">
           /
         </kbd>
       </div>
@@ -214,7 +214,7 @@ export function InterviewFilters({ facets }: { facets: Facets }) {
       <div className="mt-3 flex items-center gap-3">
         <span
           ref={countRef}
-          className="font-mono text-[12px] text-muted-foreground/60"
+          className="font-mono text-small text-muted-foreground/60"
         >
           {facets.total} questions
         </span>
@@ -222,7 +222,7 @@ export function InterviewFilters({ facets }: { facets: Facets }) {
           <button
             type="button"
             onClick={clear}
-            className="text-[12px] text-primary underline-offset-2 hover:underline"
+            className="text-small text-primary underline-offset-2 hover:underline"
           >
             Clear
           </button>

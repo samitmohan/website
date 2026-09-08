@@ -19,7 +19,7 @@ export const metadata: Metadata = {
  */
 export default function AboutPage() {
   return (
-    <div className="page accent-teal">
+    <div className="page">
       <PublicNav />
 
       <main id="main" className="shell relative py-14 md:py-20">

@@ -8,8 +8,8 @@
     "measure": "bash ./scripts/measure-routes.sh",
     "start": "next start",
     "lint": "eslint",
-    "rough": "node ./scripts/gen-rough.mjs",
-    "figure": "node ./scripts/gen-hero-figure.mjs"
+    "figure": "node ./scripts/gen-wordmark.mjs",
+    "icons": "node ./scripts/gen-icons.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -38,9 +38,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drawably": "^0.3.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "fontkit": "^2.0.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

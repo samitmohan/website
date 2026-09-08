@@ -4,6 +4,7 @@ import { getAllPosts, formatPostDate } from "@/lib/blog";
 import { RSS_ALTERNATE } from "@/lib/metadata";
 import { PublicNav, PublicFooter } from "@/components/public-nav";
 import { Figure } from "@/components/figure";
+import { BackpropStepper } from "@/components/backprop-stepper";
 
 // Everything on this page comes from files in the repo, so it can only change
 // when a deploy changes them.
@@ -30,16 +31,21 @@ export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <div className="page accent-blue">
+    <div className="page">
       <PublicNav />
 
       <main id="main" className="shell relative py-14 md:py-20">
         {/* The drawing behind the /blog door on the homepage, reappearing on
             the page it opens onto. Absolutely positioned, so nothing in the
-            column below moves to accommodate it. */}
-        <Figure name="blog-backprop" className="page-figure page-figure-blog" />
+            column below moves to accommodate it - and steppable here, which
+            is the one thing on the site that answers a click. The stepper owns
+            the positioning classes now, because it is the element the view
+            transition from the homepage door has to match. */}
+        <BackpropStepper>
+          <Figure name="blog-backprop" className="bp-art" />
+        </BackpropStepper>
 
-        <h1 className="display display-accent mb-10 text-[34px] text-ink md:text-[44px]">
+        <h1 className="display mb-10 text-head text-ink md:text-display">
           Blog
         </h1>
 

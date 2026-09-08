@@ -85,7 +85,7 @@ export default async function OGImage({
               color: "#5C5A55",
             }}
           >
-            <span style={{ color: "#2C2CE8" }}>Samit Mohan</span>
+            <span style={{ color: "#1C1CA8" }}>Samit Mohan</span>
             {date ? <span style={{ color: "#CFC9BB" }}>·</span> : null}
             {date ? <span>{date}</span> : null}
           </div>

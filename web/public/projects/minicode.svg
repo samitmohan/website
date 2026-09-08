@@ -15,28 +15,27 @@
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --ink:#141414; --grey:#877F70; --soft:#D5CFC0; }
   .mc-win { fill:none; stroke:var(--soft); stroke-width:1.1; }
   .mc-dot { fill:var(--soft); }
-  .mc-t { font-size:9px; fill:var(--ink); }
-  .mc-d { font-size:9px; fill:var(--grey); }
+  .mc-t { font-size:9.7px; fill:var(--ink); }
+  .mc-d { font-size:9.7px; fill:var(--grey); }
   .mc-chip { fill:none; stroke:var(--grey); stroke-width:1; }
 
-  /* Lines land one after another, the way a transcript actually fills. Held on
-     screen for most of the cycle, then the whole thing clears and repeats. */
-  .mc-line { opacity:0; animation:mc-in 7000ms linear infinite; }
-  @keyframes mc-in {
-    0%   { opacity:0; }
-    3%   { opacity:1; }
-    88%  { opacity:1; }
-    93%  { opacity:0; }
-    100% { opacity:0; }
-  }
+  /* The whole transcript, shown at once. The lines used to land one after
+     another the way a transcript fills, then clear and repeat - a card that
+     retypes itself every seven seconds is asking to be watched rather than
+     read, and the finished transcript is what says what the tool does. */
+  .mc-line { opacity:1; }
 
-  .mc-caret { fill:var(--ink); animation:mc-blink 1100ms steps(1) infinite; }
-  @keyframes mc-blink { 0%,50% { opacity:1; } 50.01%,100% { opacity:0; } }
+  /* The caret is a block, not a blink. It marks where the session is waiting;
+     a blinking one on a static card was the only thing on /projects still
+     ticking. */
+  .mc-caret { fill:var(--ink); }
 
-  @media (prefers-reduced-motion:reduce) {
-    .mc-line { animation:none; opacity:1; }
-    .mc-caret { animation:none; }
-  }
+  /* This drawing holds still. It ran on a 7s loop, and with every figure on
+     the site looping at once nothing on any page was ever at rest, which is
+     what made these read as cartoons rather than as diagrams. What is drawn is
+     the state the loop used to settle into - the state the reduced-motion
+     branch already specified, and now the only one there is. */
+
 ]]></style>
 
 <rect class="mc-win" x="10" y="14" width="360" height="172" rx="10"/>
@@ -46,28 +45,28 @@
 <circle class="mc-dot" cx="50" cy="26" r="3"/>
 <text class="mc-d" x="66" y="29">minicode &#183; ~350 lines</text>
 
-<g class="mc-line" style="animation-delay:200ms">
+<g class="mc-line">
   <text class="mc-t" x="24" y="62">&#8250; add binary search</text>
 </g>
-<g class="mc-line" style="animation-delay:900ms">
+<g class="mc-line">
   <rect class="mc-chip" x="24" y="74" width="46" height="15" rx="4"/>
   <text class="mc-d" x="31" y="85">Read</text>
   <text class="mc-d" x="78" y="85">binary_search.py</text>
 </g>
-<g class="mc-line" style="animation-delay:1700ms">
+<g class="mc-line">
   <rect class="mc-chip" x="24" y="96" width="46" height="15" rx="4"/>
   <text class="mc-d" x="33" y="107">Edit</text>
   <text class="mc-d" x="78" y="107">+ bisect_left()</text>
 </g>
-<g class="mc-line" style="animation-delay:2500ms">
+<g class="mc-line">
   <rect class="mc-chip" x="24" y="118" width="46" height="15" rx="4"/>
   <text class="mc-d" x="31" y="129">Bash</text>
   <text class="mc-d" x="78" y="129">pytest &#8212; 4 passed</text>
 </g>
-<g class="mc-line" style="animation-delay:3400ms">
+<g class="mc-line">
   <text class="mc-t" x="24" y="152">done. leftmost insertion point.</text>
 </g>
-<g class="mc-line" style="animation-delay:3400ms">
+<g class="mc-line">
   <rect class="mc-caret" x="24" y="163" width="6" height="11"/>
 </g>
 </svg>

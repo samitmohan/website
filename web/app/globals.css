@@ -13,22 +13,85 @@
    into public/fonts/ and add the two @font-face blocks back (weights 400/700,
    font-display: swap). */
 
+/* Charter, Matthew Carter 1987, drawn to hold up on 300dpi laser printers and
+   fax machines - so it is rugged at small sizes and reads as an engineer's
+   book rather than a fashion serif. It replaced Instrument Serif, which is a
+   high-contrast display face, and a high-contrast serif on a cream ground is
+   the one type-and-colour pairing every generated page in 2026 arrives with.
+
+   Bitstream released these to the X Consortium for any purpose without
+   restriction, on the condition that the notice travels with the files:
+   public/fonts/LICENSE.fonts.txt is that notice and has to stay there.
+
+   One family carries both display and body here, so there is no second face
+   to keep in tune. Mono is for data only.
+
+   No 700 face: nothing is set in bold Charter, and letting the browser
+   synthesise one would smear the contrast. Italic is real, because prose
+   needs it. */
+@font-face {
+  font-family: "Charter";
+  src: url("/fonts/charter_regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Charter";
+  src: url("/fonts/charter_italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   /* Warm ground. #FAFAFA was a cold near-white and the site read as blank
      paper; every hue below is measured against this value, not against the
      old one. */
+  /* Light is the default and the theme the site was designed in. The dark
+     block below is a flip of these, derived rather than picked - see it for
+     how. color-scheme is set in both so form controls and scrollbars follow. */
+  color-scheme: light;
   --background: #FFFDF8;
   --foreground: #141414;
   --card: #FFFFFF;
-  --primary: #2C2CE8;
+  /* Aliases, not a second blue. Both used to hold the accent's hex, so a
+     change to the ramp left the skip link, the callout tints and the
+     Tailwind ring utilities on the old colour. They point at it now. */
+  --primary: var(--brand);
   --primary-foreground: #FFFFFF;
   --muted: #F7F2E6;
   --muted-foreground: #5C5A55;
   --destructive: #B81514;
   --border: #E8E3D8;
-  --ring: #2C2CE8;
+  --ring: var(--brand);
   --radius: 0.5rem;
   --shadow-card: 0 6px 24px rgba(32, 26, 12, 0.06);
+  /* The geometry colour inside the inlined figures. 3.90:1 on the ground,
+     clear of the 3:1 a graphical object needs. */
+  --struct-ink: #877F70;
+  /* The three literals the /projects drawings define for themselves. They have
+     to live out here or they cannot flip: each file sets
+     `svg { --ink; --grey; --soft }` and in dark mode every primary label in
+     those figures was #141414 on a near-black card, which is to say invisible.
+     The rule further down overrides the files' own values by specificity, the
+     same way --struct already worked.
+     --grey carries 8.5px caption text inside the drawings and measured 3.90:1,
+     under AA, before this - it is 4.56:1 now. --soft only ever strokes a
+     hairline, so it is matched by weight rather than to a text ratio. */
+  --fig-ink: #141414;
+  --fig-grey: #7B7465;
+  --fig-soft: #D5CFC0;
+  /* Callout hues, one token per kind so both themes can carry them. They were
+     four literals - #16a34a, #d97706/#b45309, #dc2626 - and two of those
+     measured 3.24:1 and 3.13:1 on the ground while carrying the callout's
+     title text, so light mode was failing AA here before dark mode existed.
+     Solved for 4.55-4.75:1 light and ~5:1 dark, chroma capped at 0.14 so they
+     stay in gamut on both grounds. */
+  --note-tip: #1E863F;
+  --note-warn: #B25E00;
+  --note-caution: #BB5047;
+  --note-purple: #8B60BB;
 
   /* Surfaces warm with the ground rather than staying neutral grey: a #F5F5F5
      panel on a cream page reads as a colour mistake, not as a step. */
@@ -47,60 +110,84 @@
   /* One stroke colour at three weights rather than three greys. Structural
      rules use --rule; rules inside a component use --rule-soft. */
   --rule: #E8E3D8;
-  --rule-soft: color-mix(in srgb, #E8E3D8 55%, transparent);
+  --rule-soft: color-mix(in srgb, var(--rule) 55%, transparent);
   --rule-strong: #CFC9BB;
   /* Positive/success. Only the code-copy confirmation uses it. */
   --positive: #4F7F2A;
-  --positive-soft: color-mix(in srgb, #EFF6E6 75%, transparent);
-  --positive-border: color-mix(in srgb, #C8E4B0 75%, transparent);
+  --positive-soft: color-mix(in srgb, var(--positive) 12%, transparent);
+  --positive-border: color-mix(in srgb, var(--positive) 32%, transparent);
 
-  /* ---- accent ramps -------------------------------------------------
-     Three ramps, one per surface: blue on /blog, crimson on /projects, teal
-     on /about. Each is soft fill, border tint, base, deep press, plus a
-     separate text step where the base is too light to carry type.
+  /* ---- accent ramp --------------------------------------------------
+     One ramp: soft fill, border tint, base, deep press, plus a separate text
+     step for where the base is too light to carry type. There were three -
+     crimson and teal are gone; see the accent block further down for why.
 
-     Every ratio below is measured on --background #FFFDF8. The `-text` steps
-     exist because a hover state tints the row behind the label, so the text
-     step is measured on its own soft fill as well - the tighter of the two
-     numbers is the one quoted. */
+     Every ratio below is measured on --background #FFFDF8. The `-text` step
+     exists because a hover state tints the row behind the label, so it is
+     measured on its own soft fill as well - the tighter of the two numbers is
+     the one quoted. */
 
-  /* Blue clears AA at the base, so --brand doubles as its own text step.
-     Measured 7.85:1 on ground, 6.55:1 on --brand-soft. */
+  /* The base was #2C2CE8, a violet-leaning electric blue that measured
+     7.85:1 and popped off the cream hard enough to read as candy - and it
+     fought Charter's warm black rather than sitting with it. #1C1CA8 was
+     already in the ramp as the press step; promoting it to the base gives
+     fountain-pen ink instead, which is the register the rest of the site is
+     in. Compared side by side on /blog before choosing.
+
+     Measured on --background #FFFDF8:
+       soft    1.20:1  - a fill, never carries type on its own
+       border  3.04:1  - clears the 3:1 bar for a graphical object. It was
+                         #C9C9F6 at 1.68:1, mixed for the old bright base and
+                         invisible under this one.
+       base   11.60:1  - so far past AA that it doubles as its own text step
+                         and carries 11px meta; 9.68:1 on its own soft fill.
+       strong 14.69:1, and white on it 14.94:1 for the solid pill. */
   --brand-soft: #E7E7FD;
-  --brand-border: #C9C9F6;
-  --brand: #2C2CE8;
-  --brand-strong: #1C1CA8;
-  --brand-text: #2C2CE8;
+  --brand-border: #8D8CD0;
+  --brand: #1C1CA8;
+  --brand-strong: #141479;
+  --brand-text: #1C1CA8;
 
-  /* Crimson, replacing an orange whose base measured 3.31:1 - clear of the 3:1
-     bar for a frame or a mark, and failing AA for anything at reading size.
-     That one ramp is why --accent-text exists as a separate step at all.
-     This base measures 4.62:1 on ground and 4.69:1 for white on it, so it
-     carries text on its own; the text step below is kept for parity with the
-     other two ramps and for the case where a row tints behind it (5.91:1 on
-     --crimson-soft). Warm, which matters: blue and teal are both cool, and
-     losing the orange left the palette with no warm accent at all. */
-  --crimson-soft: #FDEAE6;
-  --crimson-border: #F5CDC5;
-  --crimson: #D0412B;
-  --crimson-strong: #7C2214;
-  --crimson-text: #A6301D;
 
-  /* Teal scrapes AA at the base (4.52:1), which is too little margin for
-     11px meta, so the text step carries anything smaller than a heading.
-     Measured 6.13:1 on ground, 5.37:1 on --teal-soft. */
-  --teal-soft: #E0F2EE;
-  --teal-border: #B8E0D7;
-  --teal: #108474;
-  --teal-strong: #08544A;
-  --teal-text: #0C6D60;
+  /* ---- type scale ---------------------------------------------------
+     One ratio, 1.25, anchored on the prose size, written as a calc chain so
+     the ratio is in the code and no rung can drift off it.
+
+     There was no scale at all before this: 48 hand-written px values in here
+     and ~54 arbitrary text-[NNpx] utilities in the components, with .display
+     carrying no size so five call sites each invented their own responsive
+     pair (28/34, 30/36, 30/40, 34/44). Sizes chosen one at a time never
+     compose into a voice - macwright.com ships two for a whole site.
+
+     Seven rungs, not five: the content spans 11px mono meta to a 44px index
+     heading, which is a factor of four, and log(4)/log(1.25) is 6.2 steps.
+     Anything fewer would have to stretch the ratio.
+
+     Rounded values: 11.2 / 14 / 17.5 / 21.875 / 27.34 / 34.18 / 42.72.
+     ------------------------------------------------------------------- */
+  --fs-body: 17.5px;
+  --fs-small: calc(var(--fs-body) / 1.25);
+  --fs-micro: calc(var(--fs-small) / 1.25);
+  --fs-sub: calc(var(--fs-body) * 1.25);
+  --fs-title: calc(var(--fs-sub) * 1.25);
+  --fs-head: calc(var(--fs-title) * 1.25);
+  --fs-display: calc(var(--fs-head) * 1.25);
 
   --radius-card: 24px;
   /* Sarvam's easing curve verbatim: fast out of the gate, long settle. */
   --motion-ease: cubic-bezier(0.2, 0, 0, 1);
-  /* Overshoot for entrances and hover lifts. Nothing decorative should use
-     --motion-ease; it settles too politely to read as motion. */
-  --motion-spring: cubic-bezier(0.34, 1.42, 0.64, 1);
+  /* For a stroke that draws itself. An expo-out curve: almost all the distance
+     is covered in the first third, then it settles for a long time - which is
+     how a pen actually moves and what --motion-ease, a gentler decelerate,
+     does not do. It reads as one confident stroke rather than a constant sweep.
+     Taken from beautifului.dev's --ease-link. */
+  --motion-draw: cubic-bezier(0.16, 1, 0.3, 1);
+  /* There is no spring token. There was one - cubic-bezier(0.34, 1.42, 0.64, 1),
+     which overshoots past 1 - and it drove a scale on the doors, a lift on the
+     project frames and the reveal of their links. Overshoot is the single most
+     cartoon-coded easing in interface design: things that bounce when you point
+     at them read as toys. --motion-ease settles without passing its target,
+     which is what a hover should do. */
   /* Inner bottom edge that seats a surface without adding a border. */
   --lip: inset 0 -1px 0 1px rgba(32, 26, 12, 0.05);
 }
@@ -134,36 +221,28 @@
   --color-brand-soft: var(--brand-soft);
   --color-brand-border: var(--brand-border);
   --color-brand-text: var(--brand-text);
-  --color-crimson: var(--crimson);
-  --color-crimson-soft: var(--crimson-soft);
-  --color-crimson-border: var(--crimson-border);
-  --color-crimson-strong: var(--crimson-strong);
-  --color-crimson-text: var(--crimson-text);
-  --color-teal: var(--teal);
-  --color-teal-soft: var(--teal-soft);
-  --color-teal-border: var(--teal-border);
-  --color-teal-strong: var(--teal-strong);
-  --color-teal-text: var(--teal-text);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-border: var(--accent-border);
   --color-accent-text: var(--accent-text);
-  /* System stack, so body text downloads nothing and paints on first frame.
-     Resolves to San Francisco on Apple, Segoe UI on Windows, Roboto on
-     Android. Mono carries the identity; body text gets out of the way. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  /* Instrument Serif, the face the "samit" wordmark is set in.
-     This used to be the sans stack above, character for character, which meant
-     the site had a display face used by three elements on one page and every
-     other heading set in the same San Francisco as the body. The identity
-     stopped at the front door.
-     It costs nothing to fix: the face is already loaded on every route by the
-     root layout, so pointing this at it downloads no new bytes.
-     Weight 400 is the only weight it ships. Nothing setting .display may add a
-     bold class - the browser would synthesise it and smear the contrast that
-     is the whole reason to use a high-contrast serif. */
-  --font-display: var(--font-mark), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  /* One family for prose and for headings. The site used to run a system sans
+     for body and a display serif for headings, which is two voices for no
+     reason - Charter was drawn as a text face and holds at 96px, so it does
+     both jobs and there is only one thing to keep in tune.
+
+     29 KB for the two faces. The fallbacks are the serifs that are already on
+     the machine, not the sans stack, so a swap changes the weight of the page
+     and not its voice. */
+  --font-sans: "Charter", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: var(--font-sans);
   --font-mono: "Berkeley Mono", "JetBrains Mono", var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --text-micro: var(--fs-micro);
+  --text-small: var(--fs-small);
+  --text-body: var(--fs-body);
+  --text-sub: var(--fs-sub);
+  --text-title: var(--fs-title);
+  --text-head: var(--fs-head);
+  --text-display: var(--fs-display);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -180,15 +259,128 @@
 }
 
 /* ============================================================
-   Per-page accent
+   Dark
 
-   Every accented rule downstream reads var(--accent) and is written once.
-   The page wrapper picks which ramp those resolve to, so /blog is blue,
-   /projects is crimson and /about is teal without a single rule being
-   duplicated three times.
+   Derived, not picked. Every light token above converts to oklch at hue 85-93
+   with almost no chroma - one warm family, which is what the cream ground
+   actually is. So dark is the same hues with the lightness flipped, and the
+   ground stays warm (#0D0C09 is hue 88.6, not a tinted neutral) rather than
+   going the cold grey a hand-picked dark theme drifts to.
 
-   The default is blue, so anything that forgets to set a class still gets a
-   working accent rather than an unresolved variable.
+   The text steps are not eyeballed either: each one's L was solved for a
+   target contrast on the dark ground, matching what the light theme measures.
+   Measured on #0D0C09:
+     foreground  14.96:1   ink-2 7.04:1   ink-3 5.53:1   ink-4 4.73:1
+     brand        7.00:1   brand-border 3.05:1 (graphical)
+     destructive  5.98:1   positive 4.99:1   struct 3.88:1
+   Not pure white on near-black: #E1E1E1 at 14.96:1 is legible without the
+   glare 21:1 gives you.
+
+   Surfaces go UP in lightness here, not down. Elevation in a dark theme reads
+   as closer to the light, and a panel darker than the page reads as a hole.
+
+   The accent inverts direction too: --brand-strong is the press state and is
+   *lighter* than --brand in dark, because press means "more", and more on a
+   dark ground is brighter.
+
+   This block is written twice on purpose. One copy answers the OS preference,
+   the other answers an explicit choice stored by the toggle, and CSS has no
+   way to share a value set between a media query and a selector. They have to
+   stay identical - change one, change the other.
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  color-scheme: dark;
+  --background: #0D0C09;
+  --foreground: #E1E1E1;
+  --card: #161512;
+  --surface: #161512;
+  --surface-2: #1D1C18;
+  --surface-3: #26241F;
+  --muted: #1D1C18;
+  --muted-foreground: #9D9B95;
+  --ink-2: #9D9B95;
+  --ink-3: #8B8881;
+  --ink-4: #7F7D73;
+  --rule: #2A2925;
+  --rule-strong: #3F3D38;
+  --border: #2A2925;
+  --destructive: #E16A5D;
+  --positive: #628C46;
+  --brand-soft: #1D1C34;
+  --brand-border: #5A5991;
+  --brand: #7796F9;
+  --brand-strong: #9EB7FF;
+  --brand-text: #7796F9;
+  --primary-foreground: #0D0C09;
+  --struct-ink: #756E62;
+  --note-tip: #2F924B;
+  --note-warn: #C16B14;
+  --note-caution: #CC5F55;
+  --note-purple: #986EC9;
+  --fig-ink: #E1E1E1;
+  --fig-grey: #887F70;
+  --fig-soft: #3F3B2E;
+  /* A drop shadow does nothing on a dark ground - there is no light for it to
+     block. What separates a surface here is the lip, so it goes the other way:
+     a hairline of light along the top edge instead of shade under the bottom. */
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.45);
+  --lip: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0D0C09;
+  --foreground: #E1E1E1;
+  --card: #161512;
+  --surface: #161512;
+  --surface-2: #1D1C18;
+  --surface-3: #26241F;
+  --muted: #1D1C18;
+  --muted-foreground: #9D9B95;
+  --ink-2: #9D9B95;
+  --ink-3: #8B8881;
+  --ink-4: #7F7D73;
+  --rule: #2A2925;
+  --rule-strong: #3F3D38;
+  --border: #2A2925;
+  --destructive: #E16A5D;
+  --positive: #628C46;
+  --brand-soft: #1D1C34;
+  --brand-border: #5A5991;
+  --brand: #7796F9;
+  --brand-strong: #9EB7FF;
+  --brand-text: #7796F9;
+  --primary-foreground: #0D0C09;
+  --struct-ink: #756E62;
+  --note-tip: #2F924B;
+  --note-warn: #C16B14;
+  --note-caution: #CC5F55;
+  --note-purple: #986EC9;
+  --fig-ink: #E1E1E1;
+  --fig-grey: #887F70;
+  --fig-soft: #3F3B2E;
+  /* A drop shadow does nothing on a dark ground - there is no light for it to
+     block. What separates a surface here is the lip, so it goes the other way:
+     a hairline of light along the top edge instead of shade under the bottom. */
+  --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.45);
+  --lip: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================================
+   Accent
+
+   There is one. Every accented rule downstream reads var(--accent) and is
+   written once; this is the single place that says what it resolves to.
+
+   There used to be three ramps switched by a class on each page wrapper -
+   blue on /blog, crimson on /projects, teal on /about - which put three
+   accents on a five-page site and, on the homepage, three on one screen.
+   Three accents is not three identities, it is none: nothing is emphatic if
+   everything is a different colour. The indirection stays because every rule
+   downstream is written against it, and because it is the seam a second
+   colourway would come back through if one is ever earned.
    ============================================================ */
 :root {
   --accent: var(--brand);
@@ -196,27 +388,6 @@
   --accent-soft: var(--brand-soft);
   --accent-border: var(--brand-border);
   --accent-strong: var(--brand-strong);
-}
-.accent-blue {
-  --accent: var(--brand);
-  --accent-text: var(--brand-text);
-  --accent-soft: var(--brand-soft);
-  --accent-border: var(--brand-border);
-  --accent-strong: var(--brand-strong);
-}
-.accent-crimson {
-  --accent: var(--crimson);
-  --accent-text: var(--crimson-text);
-  --accent-soft: var(--crimson-soft);
-  --accent-border: var(--crimson-border);
-  --accent-strong: var(--crimson-strong);
-}
-.accent-teal {
-  --accent: var(--teal);
-  --accent-text: var(--teal-text);
-  --accent-soft: var(--teal-soft);
-  --accent-border: var(--teal-border);
-  --accent-strong: var(--teal-strong);
 }
 
 html {
@@ -263,6 +434,24 @@ body {
   line-height: 1.12;
 }
 
+/* The size floor, in a layer on purpose. .display used to carry no size at
+   all, which is how five call sites came to invent five different responsive
+   pairs; every one now names two rungs from the scale and this is only what
+   catches one that forgets.
+
+   It has to be layered because everything else in this file is unlayered, and
+   unlayered rules beat every @layer - including the `utilities` layer that
+   `text-head` and `md:text-display` live in. Written as a plain rule here it
+   won on source order and silently clamped every heading on the site to
+   --fs-title. Measured on the rendered page: the /blog h1 carried 26px of ink
+   with the floor unlayered and 41px with it layered, which is the difference
+   between the title rung and the display one. `components` loses to
+   `utilities`, so a real utility always wins and this only catches a heading
+   with none. */
+@layer components {
+  .display { font-size: var(--fs-title); }
+}
+
 /* The two micro tiers: .label for structural captions (CONTENTS, RELATED
    POSTS, OLDER/NEWER), .meta for data (dates, stacks, reading times).
 
@@ -279,7 +468,7 @@ body {
 .label,
 .meta {
   font-family: var(--font-mono), monospace;
-  font-size: 11px;
+  font-size: var(--fs-micro);
   text-transform: uppercase;
 }
 .label {
@@ -314,7 +503,7 @@ body {
   padding: 9px 18px;
   /* Sarvam holds every interactive element to a 44px minimum. */
   min-height: 44px;
-  font-size: 14px;
+  font-size: var(--fs-small);
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -386,8 +575,8 @@ a.row:active { background: var(--surface-3); }
 /* Keyboard focus ring for all interactive elements on the public site.
    --accent rather than the --ring token, which Tailwind's ring-* utilities
    also read: the ring should follow the page, the utilities should not.
-   All three ramp bases clear the 3:1 bar for a non-text indicator on
-   #FFFDF8 - brand 8.15:1, crimson 4.62:1, teal 4.52:1. */
+   The ramp base measures 8.15:1 on #FFFDF8, well past the 3:1 a non-text
+   indicator needs. */
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent);
@@ -398,26 +587,14 @@ button:focus-visible {
 /* Selection takes the page accent at its --strong step, not the base. Every
    base is mixed to sit on the cream ground, and selection puts white text on
    top of it: the old --orange at 3.31:1 failed behind the text it highlighted.
-   The strong steps are all dark enough to carry it (#1C1CA8 / #8F3C0A /
-   #08544A). */
+   There is one ramp now, and --brand-strong is dark enough to carry white
+   text in light mode; in dark it is the light end of the ramp and carries the
+   dark ground colour, which --primary-foreground follows. */
 ::selection {
   background: var(--accent-strong);
   color: var(--primary-foreground);
 }
 
-/* Section heading bar. Until this, a page's accent existed only under the
-   cursor: /projects was its accent in a 2px hover tint and nowhere else, so the
-   colour a whole ramp was mixed for never appeared until you moved a mouse
-   over a row - and never at all on a touch screen. */
-.display-accent::before {
-  content: "";
-  display: block;
-  width: 34px;
-  height: 3px;
-  margin-bottom: 20px;
-  border-radius: 2px;
-  background: var(--accent);
-}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -426,10 +603,22 @@ button:focus-visible {
   }
 }
 
-/* Syntax highlighting - shiki dual theme (github-light / github-dark) */
+/* Syntax highlighting. lib/markdown.ts already asks shiki for both themes with
+   defaultColor: false, so every token carries --shiki-light and --shiki-dark;
+   only the light half was ever mapped. */
 code[data-theme*=" "] span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) code[data-theme*=" "] span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg, transparent);
+  }
+}
+:root[data-theme="dark"] code[data-theme*=" "] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg, transparent);
 }
 /* Token backgrounds that shiki injects (e.g. highlighted lines) should
    not override the pre background set via Tailwind bg-card */
@@ -451,7 +640,7 @@ code[data-theme*=" "] {
 .blog-prose h1,
 .blog-prose h2 {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: var(--fs-title);
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 130%;
@@ -462,7 +651,7 @@ code[data-theme*=" "] {
   border-bottom: 1px solid var(--rule);
 }
 .blog-prose h3 {
-  font-size: 18px;
+  font-size: var(--fs-sub);
   font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 135%;
@@ -471,7 +660,7 @@ code[data-theme*=" "] {
   margin-bottom: 0.5rem;
 }
 .blog-prose h4 {
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 500;
   line-height: 135%;
   color: var(--foreground);
@@ -479,9 +668,14 @@ code[data-theme*=" "] {
   margin-bottom: 0.5rem;
 }
 
+/* Charter is a serif, and a serif wants more leading than the system sans this
+   used to be set in: the serifs themselves give each line a stronger horizontal
+   grain, so the lines need more air to stop binding to each other. 1.68 rather
+   than 1.75 because Charter's x-height is large for its point size, so the same
+   17.5px sets a visually bigger line and 175% started to look loose. */
 .blog-prose p {
-  font-size: 17.5px;
-  line-height: 175%;
+  font-size: var(--fs-body);
+  line-height: 1.68;
   color: var(--ink-2);
   margin-bottom: 1.25rem;
   text-wrap: pretty;
@@ -495,7 +689,7 @@ code[data-theme*=" "] {
 .blog-prose ul { list-style: disc; }
 .blog-prose ol { list-style: decimal; }
 .blog-prose li {
-  font-size: 17.5px;
+  font-size: var(--fs-body);
   line-height: 1.75;
   color: var(--ink-2);
   margin-bottom: 0.375rem;
@@ -504,7 +698,7 @@ code[data-theme*=" "] {
 .blog-prose ol > li::marker {
   color: var(--ink-4);
   font-family: var(--font-mono), monospace;
-  font-size: 13px;
+  font-size: var(--fs-small);
 }
 
 .blog-prose strong {
@@ -526,7 +720,7 @@ code[data-theme*=" "] {
 
 .blog-prose pre {
   overflow-x: auto;
-  font-size: 13px;
+  font-size: var(--fs-small);
   line-height: 1.5rem;
 }
 .blog-prose [data-rehype-pretty-code-figure] {
@@ -563,7 +757,7 @@ code[data-theme*=" "] {
 .blog-prose table {
   width: 100%;
   margin: 1.75rem 0;
-  font-size: 14px;
+  font-size: var(--fs-small);
   border-collapse: collapse;
   overflow: hidden;
   border-radius: calc(var(--radius) + 4px);
@@ -577,7 +771,7 @@ code[data-theme*=" "] {
   background: var(--surface-2);
   color: var(--foreground);
   font-family: var(--font-mono), monospace;
-  font-size: 11px;
+  font-size: var(--fs-micro);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-align: left;
@@ -652,7 +846,7 @@ code[data-theme*=" "] {
   border-radius: 999px;
   background: var(--surface);
   padding: 3px 10px;
-  font-size: 10px;
+  font-size: var(--fs-micro);
   font-weight: 500;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -669,7 +863,7 @@ code[data-theme*=" "] {
   border-radius: 999px;
   padding: 4px 11px;
   font: inherit;
-  font-size: 11px;
+  font-size: var(--fs-micro);
   line-height: 1;
   color: var(--ink-2);
   cursor: pointer;
@@ -746,7 +940,7 @@ code[data-theme*=" "] {
   border-radius: 0;
   background: transparent !important;
   overflow-x: auto;
-  font-size: 12.5px;
+  font-size: var(--fs-small);
   line-height: 1.7;
 }
 .code-card pre::-webkit-scrollbar {
@@ -803,7 +997,7 @@ code[data-theme*=" "] {
 }
 .blog-prose .callout-title {
   font-weight: 600;
-  font-size: 12px;
+  font-size: var(--fs-small);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 6px;
@@ -816,11 +1010,11 @@ code[data-theme*=" "] {
   color: var(--primary);
 }
 .blog-prose blockquote.callout-tip {
-  border-left-color: #16a34a;
-  background: color-mix(in srgb, #16a34a 7%, transparent);
+  border-left-color: var(--note-tip);
+  background: color-mix(in srgb, var(--note-tip) 8%, transparent);
 }
 .blog-prose blockquote.callout-tip .callout-title {
-  color: #16a34a;
+  color: var(--note-tip);
 }
 .blog-prose blockquote.callout-important {
   border-left-color: var(--primary);
@@ -830,18 +1024,18 @@ code[data-theme*=" "] {
   color: var(--primary);
 }
 .blog-prose blockquote.callout-warning {
-  border-left-color: #d97706;
-  background: color-mix(in srgb, #d97706 9%, transparent);
+  border-left-color: var(--note-warn);
+  background: color-mix(in srgb, var(--note-warn) 9%, transparent);
 }
 .blog-prose blockquote.callout-warning .callout-title {
-  color: #b45309;
+  color: var(--note-warn);
 }
 .blog-prose blockquote.callout-caution {
-  border-left-color: #dc2626;
-  background: color-mix(in srgb, #dc2626 7%, transparent);
+  border-left-color: var(--note-caution);
+  background: color-mix(in srgb, var(--note-caution) 8%, transparent);
 }
 .blog-prose blockquote.callout-caution .callout-title {
-  color: #dc2626;
+  color: var(--note-caution);
 }
 
 /* InterviewFilters hides non-matching questions by setting [hidden] on the
@@ -855,7 +1049,7 @@ code[data-theme*=" "] {
    so it works in both light and dark mode (source content authored once,
    originally for a dark-only standalone page). */
 .interviews-prose {
-  font-size: 13.5px;
+  font-size: var(--fs-small);
   line-height: 1.75;
   color: var(--muted-foreground);
 }
@@ -884,7 +1078,7 @@ code[data-theme*=" "] {
   border-radius: 3px;
   padding: 1px 5px;
   font-family: var(--font-mono), monospace;
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--primary);
 }
 .interviews-prose pre {
@@ -899,7 +1093,7 @@ code[data-theme*=" "] {
   background: none;
   border: none;
   padding: 0;
-  font-size: 12px;
+  font-size: var(--fs-small);
   color: var(--foreground);
   white-space: pre;
   line-height: 1.6;
@@ -909,7 +1103,7 @@ code[data-theme*=" "] {
 .interviews-prose .gnote {
   padding: 2px 0 2px 12px;
   margin: 10px 0;
-  font-size: 12.5px;
+  font-size: var(--fs-small);
   line-height: 1.6;
 }
 .interviews-prose .anote {
@@ -928,10 +1122,10 @@ code[data-theme*=" "] {
   border-left: 2px solid var(--border);
 }
 .interviews-prose .gnote strong {
-  color: #16a34a;
+  color: var(--note-tip);
 }
 .interviews-prose .sub-title {
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -951,7 +1145,7 @@ code[data-theme*=" "] {
   padding: 14px;
 }
 .interviews-prose .icard h3 {
-  font-size: 13px;
+  font-size: var(--fs-small);
   font-weight: 700;
   color: var(--foreground);
   margin-bottom: 8px;
@@ -965,7 +1159,7 @@ code[data-theme*=" "] {
   margin-bottom: 0;
 }
 .interviews-prose .icard li {
-  font-size: 12.5px;
+  font-size: var(--fs-small);
   padding: 2px 0 2px 14px;
   position: relative;
 }
@@ -974,16 +1168,16 @@ code[data-theme*=" "] {
   position: absolute;
   left: 0;
   color: var(--primary);
-  font-size: 10px;
+  font-size: var(--fs-micro);
   top: 3px;
 }
 .interviews-prose .badge {
-  font-size: 10px;
+  font-size: var(--fs-micro);
   font-weight: 600;
   margin-left: 4px;
 }
 .interviews-prose .badge.bf {
-  color: #a855f7;
+  color: var(--note-purple);
 }
 .interviews-prose .badge.bs {
   color: var(--primary);
@@ -1274,52 +1468,24 @@ code[data-theme*=" "] {
 }
 
 /* ============================================================
-   Hand-drawn marks
-   ============================================================
-
-   Every drawing in public/marks/ is painted as a CSS mask over
-   `currentColor` rather than dropped in as an <img>. Three reasons, in
-   order of how much they matter:
-
-   1. Colour. The sources are black ink on white; an <img> of one is a
-      black rectangle on a dark page. As a mask the ink IS the shape and
-      the colour comes from the element, so hover states and both themes
-      work with no second copy of any file.
-   2. Weight. Traced from the rasters, these run 7-16 KB of path data
-      each. Inlined, seven of them would have eaten most of the 15 KB
-      gzipped HTML budget on `/`. As mask URLs they are separate files,
-      fetched in parallel and cached immutably.
-   3. One knob. `--mark` is the only thing a call site sets.
-
-   The animated figures are the opposite case and are inlined - see
-   lib/inline-svg.ts for why. */
-.mark {
-  display: inline-block;
-  flex: none;
-  background-color: currentColor;
-  -webkit-mask-image: var(--mark);
-  mask-image: var(--mark);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-}
-
-/* The sm monogram carries its own underline, so it is 1.64:1, not square. */
-.mark-sm { width: 34px; height: 21px; }
-.mark-home { width: 17px; height: 22px; }
-.mark-icon { width: 20px; height: 20px; }
-
-/* ============================================================
    Site chrome - identical on every page
    ============================================================ */
+/* Wraps. The chrome used to be six 20px marks and fitted any width; it is
+   eight words now, which need about 417px plus padding, and on a 390px phone
+   that made the *document* 465px wide - so every page clipped its content at
+   the same right edge, not just the header. Two rows on a narrow screen, one
+   row as soon as there is room, and no media query needed to decide which. */
 .site-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  /* Centred, not space-between. With the outbound links moved to the footer
+     the header holds a single group, and space-between pinned it to the left
+     with the rest of the row empty - which read as a layout that had lost
+     something. Centred it balances the footer, where the meta and the toggle
+     hold both ends. */
+  justify-content: center;
+  gap: 10px 16px;
   padding: 22px 24px 0;
 }
 /* The footer rule takes the page accent. It is the one hairline that appears
@@ -1335,50 +1501,87 @@ code[data-theme*=" "] {
   gap: 8px 16px;
   padding: 10px 24px 12px;
   border-top: 1px solid var(--accent-border);
-  font-size: 12px;
+  font-size: var(--fs-micro);
   color: var(--ink-3);
 }
 
-/* Every page can now reach every section. The header is five drawings and no
-   words, so /blog had no link to /projects and back through the homepage was
-   the only route between them. */
 @media (min-width: 768px) {
   .site-bar { padding: 28px 40px 0; }
   .site-foot { padding: 8px 40px 12px; }
 }
 
-/* The house and the monogram are two separate destinations, so they get real
-   space between them rather than reading as one lockup. */
-.site-marks {
+/* Words, in the site's mono, at the smallest rung. The chrome reads as chrome
+   because it is the only mono on the page; Charter is for content. Lowercase,
+   not the tracked-out caps the old .label idiom uses - a nav is names, not
+   labels, and it matches the wordmark. */
+.site-nav,
+.site-socials,
+.site-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 22px;
+  gap: 10px 16px;
 }
-
-.site-socials {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
+/* The copyright and the outbound links read as one group; the toggle is the
+   only control down here and sits opposite them. */
+.site-meta { row-gap: 6px; }
 @media (min-width: 768px) {
-  .site-socials { gap: 19px; }
+  .site-nav,
+  .site-socials { gap: 20px; }
 }
 
-/* 44px hit area on a 20px mark, without the padding pushing the row apart. */
-.mark-link {
+.site-id,
+.site-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 44px;
+  /* 44px of touch target without the box pushing the row apart. */
   min-height: 44px;
-  margin: -11px;
-  color: var(--ink-2);
-  transition: color 200ms var(--motion-ease), transform 200ms var(--motion-ease);
+  margin-block: -11px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  transition: color 200ms var(--motion-ease);
 }
-.mark-link:hover {
+/* The name is the identity, the rest are destinations, so weight and lightness
+   separate them rather than a size step - the two are one rung apart on the
+   scale and 11px against 14px in a single row reads as a mistake. */
+.site-id {
   color: var(--foreground);
-  transform: translateY(-1px);
+  font-weight: 500;
 }
+.site-link {
+  color: var(--ink-3);
+}
+.site-id:hover,
+.site-link:hover {
+  color: var(--accent-text);
+}
+
+/* The toggle carries both labels and CSS picks one, so it reads correctly
+   before hydration and with JS off - see components/theme-toggle.tsx. The
+   label names the theme you would switch to, which is the opposite of the one
+   you are in. */
+.theme-toggle {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  /* No `font: inherit` here. It is the usual way to stop a button using the
+     UA's own font, but it is a shorthand: it resets font-family to inherited,
+     which is Charter, and beats the mono .site-link sets on the same element.
+     The toggle came out in the body serif beside four mono links. .site-link
+     already states family, size and tracking, so there is nothing to reset. */
+}
+.theme-to-light { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-to-dark { display: none; }
+  :root:not([data-theme="light"]) .theme-to-light { display: inline; }
+}
+:root[data-theme="dark"] .theme-to-dark { display: none; }
+:root[data-theme="dark"] .theme-to-light { display: inline; }
+/* An explicit light choice has to win over the OS preference above. */
+:root[data-theme="light"] .theme-to-dark { display: inline; }
+:root[data-theme="light"] .theme-to-light { display: none; }
 
 /* Inner pages get the chrome at the page edges with the content between. */
 .page {
@@ -1398,20 +1601,6 @@ code[data-theme*=" "] {
   grid-template-rows: auto 1fr auto auto;
 }
 
-/* Hung from the top edge. The drawing is a weight on a thread and the thread
-   starts at y=0 of its viewBox, so anywhere below the top of the page it reads
-   as hanging from nothing. pointer-events off: it sits across the header's
-   dead centre and must not eat clicks aimed at the marks in either corner. */
-.home-hang {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(400px, 74vw);
-  pointer-events: none;
-  z-index: 0;
-}
-.home-hang svg { display: block; width: 100%; height: auto; }
 
 /* The figure used to caption itself "gradient descent with momentum" and this
    hid it, because a diagram label under a name reads as a diagram label under
@@ -1425,110 +1614,113 @@ code[data-theme*=" "] {
   justify-content: flex-start;
   padding: clamp(150px, 23vh, 240px) 24px clamp(20px, 4vh, 48px);
 }
+/* The top padding was sized for a screen where the two doors sit side by side
+   below the fold. On a phone they stack, so the page is already tall and 23vh
+   of dead space above the name only pushes the first door further out of
+   sight. */
+@media (max-width: 520px) {
+  .home-stage { padding-top: clamp(72px, 12vh, 130px); }
+}
 
 /* ---- wordmark ---------------------------------------------------------- */
 
-/* The hover gesture used to be transform: scale(1.11) on --motion-spring,
-   which is a bezier that overshoots past 1. Two problems: scaling live text
-   re-rasters it, so the name went soft for the length of the transition, and a
-   name that bounces is the one gesture on the site that read as cute rather
-   than drawn. It now does what every other mark here does - it draws itself.
-   See .wordmark-rule below. */
+/* The name is a drawing, not text: public/wordmark.svg, generated by
+   scripts/gen-wordmark.mjs from the same Charter woff2 the rest of the page is
+   set in. It draws itself as one unbroken pen stroke and then inks in solid,
+   once, and its resting state is what the word would look like if it were live
+   type. Everything that makes it move lives inside the file.
+
+   It used to be live text in Instrument Serif with a rough underline that drew
+   on hover, next to a PNG of a computer. Two gestures and a sticker on one
+   name. */
+.wordmark-head {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1;
+}
 .wordmark {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 18px;
+  gap: clamp(16px, 2.2vw, 30px);
   color: var(--foreground);
 }
 
-/* The wordmark's face, which the page headings now share. It is a step larger
-   here and a signature rather than a label, so it keeps its own block. */
+/* The CRT, as a mask over currentColor - the same trick the deleted .mark
+   subsystem used, kept for the one drawing that still needs it. It is a
+   dry-brush raster, so its greyscale ink is the alpha and there is nothing to
+   trace. public/marks/computer.png is also what scripts/gen-icons.mjs cuts the
+   favicon from, so the tab and the title carry the same drawing.
+
+   Sized off the same clamp as the word and held at --ink-2, a step back from
+   the name: they are one lockup, not two marks of equal weight. */
+.wordmark-computer {
+  flex: none;
+  width: calc(clamp(58px, 13vw, 120px) * 0.62);
+  aspect-ratio: 240 / 197;
+  color: var(--ink-2);
+  background-color: currentColor;
+  -webkit-mask-image: url(/marks/computer.png);
+  mask-image: url(/marks/computer.png);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  /* Arrives on the same 250ms at 1400ms that the letterforms ink in on, so the
+     pen finishes and then the whole lockup resolves at once. Named apart from
+     the svg's own wm-ink: an inlined svg's <style> is document-global, so two
+     @keyframes of one name would collide. */
+  opacity: 0;
+  animation: wordmark-arrive 250ms linear 1400ms forwards;
+}
+@keyframes wordmark-arrive {
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-computer { animation: none; opacity: 1; }
+}
+
+/* Sized off a font size it no longer has one of. The mark is 1.891em wide at
+   whatever size the word is set at - 189.1 viewBox units, 10 font units to the
+   unit, against Instrument Serif's 1000/em - so a font-size clamp still
+   governs how big the name is and the width follows from it.
+
+   `npm run figure` prints this multiplier and the live advance width, and this
+   number has to match it. It has changed with every face: 2.351 for Charter,
+   2.344 for Latin Modern, 1.891 here. Instrument Serif is the narrowest of the
+   three, so the same clamp gives a more compact name.
+
+   The cap is 120px, up from the 96px the live text used. The name used to have
+   a drawing hanging over it from the top edge of the page and two more below
+   it; with the hanging one gone it has to hold the top of the page by itself,
+   and at 96px against the two door figures it did not - the diagrams were the
+   loudest thing on the screen and the name read as a caption on them. The
+   figures came down and the name went up.
+
+   Width rather than height because the word has to fit the column; the aspect
+   ratio carries the height. */
 .wordmark-word {
-  position: relative;
-  font-family: var(--font-display);
-  font-size: clamp(54px, 12vw, 96px);
-  line-height: 1;
+  display: block;
+  width: calc(clamp(58px, 13vw, 120px) * 1.891);
 }
-
-/* Generated stroke from public/rough/, sized to the word and hung just under
-   its baseline. The file carries no styling of its own: everything below is
-   reachable only because an inlined svg is not the document root.
-
-   pathLength="100" is set in the generator, so `stroke-dasharray: 100` is the
-   whole path no matter how long the geometry actually is. That is what lets
-   this animate with no JS - the alternative is getTotalLength() on mount,
-   which would make the homepage's only client component a decoration. */
-/* Where the stroke sits, derived rather than nudged. Instrument Serif's real
-   metrics, from the ascent/descent overrides next/font generates for its
-   fallback face: ascent 117.94%, descent 36.93%, so the content area is
-   1.5487em against a 1em line box (line-height: 1 on .wordmark-word). Half
-   leading is (1 - 1.5487) / 2 = -0.2744em, which puts the baseline
-   0.9051em below the top of the box and 0.0949em above its bottom.
-   top: 100% lands the svg's top edge on that bottom; the stroke is at 7/14 of
-   the file's 14-unit height, so it falls half the rendered svg height lower.
-   -0.06em leaves the ink 0.108em under the baseline, inside the 0.05-0.15em a
-   text underline would use.
-   That offset holds across the clamp because the svg keeps its aspect ratio,
-   so its height tracks the width of the word, which tracks the font size:
-   0.108em at 96px, 0.107em at 54px. */
-.wordmark-rule {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  margin-top: -0.06em;
-  pointer-events: none;
-  color: var(--accent);
-}
-.wordmark-rule svg {
+.wordmark-word svg {
   display: block;
   width: 100%;
   height: auto;
+  /* The pen strokes past the letterforms at the edges of the box and the round
+     caps sit outside the viewBox by a hair at some render sizes. */
   overflow: visible;
 }
-.wordmark-rule path {
-  fill: none;
-  stroke: currentColor;
-  /* The svg is stretched from 200 units to the width of the word, so a
-     stroke-width in user units would thin out as the viewport grows. */
-  vector-effect: non-scaling-stroke;
-  stroke-width: 2.5px;
-  stroke-linecap: round;
-  /* Both in the units pathLength normalised the geometry to, so 100 is exactly
-     one full path whatever the real arc length is. The offset carries a unit
-     because CSS has no unitless length: 1px is 1 user unit inside an svg, and
-     without it the minifier appends the px anyway. */
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100px;
-  transition: stroke-dashoffset 420ms var(--motion-ease);
-}
-.wordmark:hover .wordmark-rule path,
-.wordmark:focus-visible .wordmark-rule path {
-  stroke-dashoffset: 0;
-}
 
-/* One line of copy under the name. Same face as the rest of the page's prose
-   at reading size, not another label: this is the only sentence on the route
-   and it should read as a sentence. */
 .home-line {
   max-width: 30rem;
   margin-top: clamp(26px, 4vh, 40px);
   text-align: center;
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: var(--fs-body);
+  line-height: 1.6;
   color: var(--ink-2);
   text-wrap: pretty;
-}
-@media (min-width: 768px) {
-  .home-line { font-size: 17px; }
-}
-
-.wordmark-computer {
-  width: 0.66em;
-  height: 0.66em;
-  font-size: clamp(54px, 12vw, 96px);
-  color: var(--ink-2);
 }
 
 /* ---- door label ------------------------------------------------------- */
@@ -1543,7 +1735,7 @@ code[data-theme*=" "] {
 .door-label {
   text-align: center;
   font-family: var(--font-mono), monospace;
-  font-size: 13px;
+  font-size: var(--fs-small);
   letter-spacing: 0.04em;
   color: var(--ink-2);
   transition: color 200ms var(--motion-ease);
@@ -1555,27 +1747,25 @@ code[data-theme*=" "] {
 
 /* ---- figure colour ----------------------------------------------------
 
-   The three drawings are inlined, so they are not the document root and the
+   The drawings are inlined, so they are not the document root and the
    `svg { --struct; --brand }` block inside each file is overridable from here.
-   That block was written when the site's chrome was greyscale: it demoted
-   --brand from an indigo literal to currentColor because "a second grey could
-   not be told apart from the first". There are three accents now, so each
-   drawing takes the accent of the page it is a door to.
 
    --struct is warmed off the old #8A8A90, a cool grey mixed for a #FAFAFA
    ground that goes slightly blue against cream. #877F70 measures 3.90:1 on
-   #FFFDF8, clear of the 3:1 bar for graphical objects.
-
-   gradient-descent keeps its own amber and green literals - it is the one
-   figure that was never desaturated, and the lemon is meant to be a lemon. */
+   #FFFDF8, clear of the 3:1 bar for graphical objects. */
 .door svg,
-.page-figure svg {
-  --struct: #877F70;
+.page-figure svg,
+.project-figure svg {
+  --struct: var(--struct-ink);
   --brand: var(--accent);
+  /* tennis-analysis draws the ball's rim with this. */
+  --brand-strong: var(--accent-strong);
+  /* The /projects drawings' own palette, so it follows the theme. */
+  --ink: var(--fig-ink);
+  --grey: var(--fig-grey);
+  --soft: var(--fig-soft);
 }
-.home-hang svg {
-  --struct: #877F70;
-}
+
 
 /* ---- doors ------------------------------------------------------------- */
 .home-doors {
@@ -1596,8 +1786,11 @@ code[data-theme*=" "] {
   .home-doors > :last-child { justify-self: end; }
 }
 
-/* No card. The figures sit on the page ground, and hover scales them the way
-   the reference site enlarges its blocks - nothing tints or recolours. */
+/* No card, and no hover transform. This used to scale to 1.06 on a bezier that
+   overshoots, which made both drawings bounce whenever the pointer crossed
+   them. The figures are diagrams; a diagram that springs when you look at it is
+   not a diagram. The label underneath takes the accent instead - see
+   .door-label - which says the same thing without moving anything. */
 .door {
   position: relative;
   display: flex;
@@ -1605,23 +1798,14 @@ code[data-theme*=" "] {
   gap: 10px;
   width: 100%;
   max-width: 460px;
-  transition: transform 260ms var(--motion-spring);
-  transform-origin: bottom center;
 }
-.door:hover,
-.door:focus-visible { transform: scale(1.06); }
 .door-figure { display: block; width: 100%; }
 .door svg { display: block; width: 100%; height: auto; }
 
-/* The wordmark is not listed: it no longer transforms, and the global kill
-   switch already collapses its stroke transition to 0.01ms, so the underline
-   lands drawn instead of drawing. That is the right reading of reduced motion
-   for a mark whose final state carries the meaning. */
-@media (prefers-reduced-motion: reduce) {
-  .mark-link:hover,
-  .door:hover,
-  .door:focus-visible { transform: none; }
-}
+/* Nothing in this section has a reduced-motion branch because nothing in it
+   moves: the doors lost their hover scale with --motion-spring, and the
+   wordmark carries its own branch inside public/wordmark.svg, which lands it
+   drawn and inked rather than mid-stroke. */
 
 /* ============================================================
    Blog index
@@ -1687,7 +1871,7 @@ code[data-theme*=" "] {
   flex: none;
   width: 6.5rem;
   font-family: var(--font-mono), monospace;
-  font-size: 12.5px;
+  font-size: var(--fs-micro);
   color: var(--accent-text);
   opacity: 0.75;
   font-variant-numeric: tabular-nums;
@@ -1705,7 +1889,7 @@ code[data-theme*=" "] {
    thickens under the cursor instead of blinking to a second state. */
 .post-title {
   position: relative;
-  font-size: 16.5px;
+  font-size: var(--fs-body);
   line-height: 1.45;
   color: var(--ink-2);
   text-decoration: underline;
@@ -1736,6 +1920,11 @@ code[data-theme*=" "] {
     gap: 2px;
   }
   .post-date { width: auto; }
+  /* align-items: flex-start sizes the title to its own content, so a long one
+     ran off the right edge instead of wrapping - "What happens when you press
+     'submit' on ChatGPT" was the only title long enough to show it. Capping it
+     at the row width is what makes the text wrap. */
+  .post-title { max-width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1770,11 +1959,81 @@ code[data-theme*=" "] {
     pointer-events: none;
   }
   .page-figure svg { display: block; width: 100%; height: auto; }
-  /* The file captions itself, which is right inside a post and wrong here
-     where it reads as a diagram label beside a page heading. The <title> and
-     <desc> still carry it for assistive tech. */
-  .page-figure .gd-cap { display: none; }
 }
+
+/* The prose captions inside the drawings render between 7.5px and 8.6px on a
+   narrow layout - measured as viewBox font-size times rendered width over
+   viewBox width - which is under --fs-micro, the smallest rung on the scale.
+   They are also the only type on the site not on it.
+
+   Below 520px they go. The short symbol labels stay, because "x" and "h1" and
+   "act" survive at that size and are what the drawing is about; the sentences
+   do not, and every one of them repeats something the HTML beside the figure
+   already says. */
+@media (max-width: 520px) {
+  .bp-cap,
+  .al-lab,
+  .ml-cap,
+  .mt-cap,
+  .tn-cap { display: none; }
+}
+
+/* ---- the stepper on /blog ---------------------------------------------
+   The site's one interactive object. See components/backprop-stepper.tsx for
+   why it is here and not on the homepage door.
+
+   pointer-events comes back on, which is the whole point: .page-figure turns
+   them off because a drawing pinned in the corner should not eat clicks aimed
+   past it. This one is the click target. Later in the file than that rule, and
+   both are single classes, so source order decides.
+
+   240px was right for decoration. 300 is what a thing worth poking needs. */
+.bp-stepper {
+  pointer-events: auto;
+}
+@media (min-width: 900px) {
+  .bp-stepper { width: 300px; }
+}
+.bp-stage {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 4px;
+  border: 0;
+  background: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.bp-art,
+.bp-art svg { display: block; width: 100%; height: auto; }
+
+.bp-caption {
+  margin: 6px 4px 0;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  text-align: right;
+  /* The captions are different lengths and the figure is pinned to the right
+     edge, so without a fixed line box the drawing shifts as you step. */
+  min-height: 1.4em;
+}
+
+/* What the stepper reveals. The overlays live in public/blog-backprop.svg at
+   opacity 0 and carry their own colours; these rules only decide when.
+   Forward sits lower than backward on purpose: the gradients are the half of
+   the picture people come to the figure for. */
+.on-f0 .bp-f0,
+.on-f1 .bp-f1,
+.on-f2 .bp-f2 { opacity: 0.48; }
+.on-b0 .bp-b0,
+.on-b1 .bp-b1,
+.on-b2 .bp-b2 { opacity: 0.62; }
+
+/* The loss dot steps too, but only inside the stepper - on the homepage door
+   the same file is a static drawing and needs it lit. */
+.bp-stage .bp-loss { opacity: 0.22; }
+.bp-stage.on-loss .bp-loss { opacity: 0.95; }
 
 /* ============================================================
    About
@@ -1801,8 +2060,9 @@ code[data-theme*=" "] {
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
-  font-size: 17px;
-  line-height: 1.62;
+  font-size: var(--fs-body);
+  /* Up from 1.62 with the move to Charter - see .blog-prose p. */
+  line-height: 1.68;
   color: var(--ink-2);
   text-wrap: pretty;
 }
@@ -1854,26 +2114,25 @@ code[data-theme*=" "] {
   position: relative;
   aspect-ratio: 19 / 10;
   overflow: hidden;
-  /* The frame carries the accent at rest, at 45%. --crimson measures 4.62:1 on
-     the ground, which clears the 3:1 bar for a graphical object; mixed down to
-     45% it is a tint, not a border, and the full-strength edge on hover is
-     what does the work. This is what tells you a card is a link before your
-     cursor arrives - the old --rule-soft hairline told you nothing. */
+  /* The frame carries the accent at rest, at 45%. --brand measures 8.15:1 on
+     the ground, far past the 3:1 a graphical object needs; mixed down to 45%
+     it is a tint, not a border, and the full-strength edge on hover is what
+     does the work. This is what tells you a card is a link before your cursor
+     arrives - the old --rule-soft hairline told you nothing. */
   border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: var(--radius-card);
   /* No fill. A tinted panel behind a transparent recording reads as a second
      background colour sitting on the page; the frame is enough to say where
      the boundary is until a video fills it. */
   background: transparent;
-  transition: border-color 220ms var(--motion-ease),
-    transform 260ms var(--motion-spring),
-    box-shadow 260ms var(--motion-ease);
+  /* Border colour only. The lift this used to do - translateY(-6px) on the
+     overshoot curve, plus a coloured drop shadow - was the same bounce the
+     doors were making, six cards at a time. */
+  transition: border-color 220ms var(--motion-ease);
 }
 .project-face:hover .project-media,
 .project-face:focus-visible .project-media {
   border-color: var(--accent);
-  transform: translateY(-6px);
-  box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 /* The media scales inside its own frame. overflow: hidden is already on the
@@ -1881,9 +2140,6 @@ code[data-theme*=" "] {
    picture grows into the crop it already had. */
 .project-figure {
   transition: transform 420ms var(--motion-ease);
-}
-.project-face:hover .project-figure {
-  transform: scale(1.045);
 }
 
 .project-media-figure {
@@ -1915,7 +2171,7 @@ code[data-theme*=" "] {
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: -0.01em;
-  font-size: clamp(26px, 3.6vw, 38px);
+  font-size: clamp(var(--fs-title), 3.6vw, var(--fs-head));
   line-height: 1;
   color: var(--ink-4);
   text-align: center;
@@ -1933,7 +2189,7 @@ code[data-theme*=" "] {
 
 .project-name {
   font-family: var(--font-mono), monospace;
-  font-size: 15px;
+  font-size: var(--fs-small);
   font-weight: 500;
   color: var(--foreground);
   transition: color 180ms var(--motion-ease);
@@ -1941,7 +2197,7 @@ code[data-theme*=" "] {
 .project-face:hover .project-name { color: var(--accent-text); }
 
 .project-blurb {
-  font-size: 15px;
+  font-size: var(--fs-small);
   line-height: 1.55;
   color: var(--ink-2);
   text-wrap: pretty;
@@ -1955,7 +2211,7 @@ code[data-theme*=" "] {
      quietest thing on it at --ink-3. */
   opacity: 0.7;
   transform: translateY(3px);
-  transition: opacity 220ms var(--motion-ease), transform 260ms var(--motion-spring);
+  transition: opacity 220ms var(--motion-ease), transform 260ms var(--motion-ease);
 }
 .project:hover .project-links,
 .project:focus-within .project-links {
@@ -1963,11 +2219,11 @@ code[data-theme*=" "] {
   transform: none;
 }
 
-/* --accent-text, not --accent: these are 12px labels, and on /projects the
-   base crimson is 4.62:1. The text step measures 6.75:1 on the ground. */
+/* --accent-text, not --accent: these are 12px labels, so they get the step
+   measured for type rather than the ramp base. */
 .project-link {
   font-family: var(--font-mono), monospace;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   letter-spacing: 0.04em;
   color: var(--accent-text);
   text-decoration: underline;
@@ -1983,7 +2239,6 @@ code[data-theme*=" "] {
 
 @media (prefers-reduced-motion: reduce) {
   .project-face:hover .project-media,
-  .project-face:hover .project-figure { transform: none; }
   .project-links { opacity: 1; transform: none; }
 }
 
@@ -2020,36 +2275,20 @@ code[data-theme*=" "] {
    already the natural resting state - opacity 1, no transform - so nothing is
    lost by not retaining it, and hover transforms work again. Anything given
    .rise-in later gets that for free. */
+/* Kept for the wordmark alone, and deliberately not applied there any more:
+   the mark draws itself, so a simultaneous slide-up is a second entrance on
+   one element. Left in place because it costs nothing and is the honest home
+   for an entrance if one is ever wanted. */
 .rise-in {
   animation: rise 520ms var(--motion-ease) backwards;
 }
 
-/* Rows and cards. nth-child rather than a class per index, so the markup
-   carries no numbering. */
-.post-list > li,
-.project-grid > .project {
-  animation: rise 520ms var(--motion-ease) backwards;
-}
-.post-list > li:nth-child(1),  .project-grid > .project:nth-child(1)  { animation-delay:  40ms; }
-.post-list > li:nth-child(2),  .project-grid > .project:nth-child(2)  { animation-delay:  85ms; }
-.post-list > li:nth-child(3),  .project-grid > .project:nth-child(3)  { animation-delay: 130ms; }
-.post-list > li:nth-child(4),  .project-grid > .project:nth-child(4)  { animation-delay: 175ms; }
-.post-list > li:nth-child(5),  .project-grid > .project:nth-child(5)  { animation-delay: 220ms; }
-.post-list > li:nth-child(6),  .project-grid > .project:nth-child(6)  { animation-delay: 265ms; }
-.post-list > li:nth-child(7),  .project-grid > .project:nth-child(7)  { animation-delay: 310ms; }
-.post-list > li:nth-child(8),  .project-grid > .project:nth-child(8)  { animation-delay: 355ms; }
-.post-list > li:nth-child(9),  .project-grid > .project:nth-child(9)  { animation-delay: 400ms; }
-.post-list > li:nth-child(n+10),
-.project-grid > .project:nth-child(n+10) { animation-delay: 445ms; }
-
-@media (prefers-reduced-motion: reduce) {
-  /* The global kill switch collapses animation-duration but says nothing
-     about delay, so without this a row would sit invisible for its delay and
-     then pop. Zeroing both lands every element on its final frame at paint. */
-  .rise-in,
-  .post-list > li,
-  .project-grid > .project { animation-delay: 0ms !important; }
-}
+/* No entrance stagger. Every row on /blog and every card on /projects used to
+   fade and slide up on a 40 -> 445ms nth-child ladder, nine delays deep. That
+   is the single most generated-looking motion pattern there is: a list that
+   assembles itself in front of you is a loading screen wearing design, and it
+   delays the content a visitor came for. The one thing on this site that moves
+   is the wordmark, once, and the drawing on /blog moves when you click it. */
 
 /* ============================================================
    View transitions

@@ -13,10 +13,8 @@
 
      --brand is the accent. It was demoted to currentColor when the site's
      chrome went greyscale and a second grey could not be told apart from the
-     first. There are three accent ramps now - blue on /blog, orange on
-     /projects, teal on /about - and globals.css sets --brand to whichever one
-     the host page carries, so the drawing is painted in the colour of the page
-     it belongs to. currentColor stays as the fallback for the img case.
+     first. globals.css sets --brand to the site's one accent when the file is
+     inlined; currentColor stays as the fallback for the img case.
 
      The text uses currentColor, because text cannot be made ground-independent.
      Inlined, currentColor inherits the host page's colour and the labels are
@@ -38,34 +36,40 @@
      inherits the page's colour instead. The site is light-only, so there is no
      prefers-color-scheme override here any more. */
   svg:root { color:#141414; }
-  .bp-rest,.bp-fwd,.bp-bwd { fill:none; }
-  .bp-rest { stroke:var(--struct); stroke-width:1; opacity:.28; }
-  /* Activations in ink, gradients in indigo: the asymmetry between the two
+  /* One edge mesh. There used to be three stacked here - a grey substrate, an
+     ink forward layer and an indigo backward layer, each drawing every edge
+     over again - which worked while they lit in sequence and became a hairball
+     the moment they all held still. At the size this renders, a door thumbnail
+     around 460px wide, the drawing has to read as a silhouette rather than as
+     a diagram anyone inspects, and it was out-shouting the name above it.
+     Which way each pass travels is carried by the two captions along the
+     bottom, which is where it was legible anyway. */
+  .bp-rest { fill:none; stroke:var(--struct); stroke-width:1; opacity:.3; }
+
+  /* One overlay per edge layer, per direction, all invisible. Nothing here
+     turns them on: the stepper on /blog does, by putting class names on an
+     ancestor - see .bp-stage in globals.css. Inlined into the page, these are
+     ordinary elements in the document, so a rule out there reaches them.
+
+     They are what the old looping animation lit in sequence. Standing still
+     and all lit at once they were a hairball, which is why the default is off;
+     revealed one layer per click they are the figure doing its job, and the
+     click is the only thing on the site that asks for motion. */
+  .bp-lay { fill:none; opacity:0; transition: opacity 300ms var(--motion-ease); }
+  /* Activations in ink, gradients in the accent. The asymmetry between the two
      passes is the only thing this figure is trying to say. */
-  .bp-fwd  { stroke:currentColor;   stroke-width:.9;  opacity:0; animation:bp-wave-f 4400ms linear infinite; }
-  .bp-bwd  { stroke:var(--brand); stroke-width:1.3; opacity:0; animation:bp-wave-b 4400ms linear infinite; }
+  :is(.bp-f0,.bp-f1,.bp-f2) { stroke:currentColor; stroke-width:.9; }
+  :is(.bp-b0,.bp-b1,.bp-b2) { stroke:var(--brand); stroke-width:1.3; }
   .bp-ring { fill:none; stroke:var(--struct); stroke-width:1; opacity:.6; }
-  .bp-lit-f { fill:currentColor;   opacity:0; animation:bp-wave-b 4400ms linear infinite; }
-  .bp-lit-b { fill:var(--brand); opacity:0; animation:bp-wave-b 4400ms linear infinite; }
-  .bp-loss  { fill:none; stroke:var(--brand); stroke-width:1.4; opacity:0;
-            animation:bp-loss 4400ms linear infinite; }
+  /* Nodes in ink, the loss in the accent: the only two things on the drawing
+     that are not wiring. */
+  .bp-lit-f { fill:currentColor; opacity:.6; }
+  .bp-loss  { fill:none; stroke:var(--brand); stroke-width:1.4; opacity:.8; transition: opacity 300ms var(--motion-ease); }
   .bp-lab { font-size:8px;
           letter-spacing:.08em; fill:currentColor; opacity:.6; text-anchor:middle; }
   .bp-cap { font-size:8px;
           letter-spacing:.05em; fill:currentColor; opacity:.6; }
   .bp-cap-r { text-anchor:end; }
-  @keyframes bp-wave-f { 0%,1.5%{opacity:0} 5%{opacity:.72} 11%{opacity:0} 100%{opacity:0} }
-  @keyframes bp-wave-b { 0%,1.5%{opacity:0} 5%{opacity:.95} 11%{opacity:0} 100%{opacity:0} }
-  /* The loss lands in the gap between the passes: activations clear at ~1.7s,
-     gradients leave the output at ~2.3s. */
-  @keyframes bp-loss { 0%,38%{opacity:0} 42%{opacity:1} 51%{opacity:0} 100%{opacity:0} }
-  /* Motion off: hold the whole story as one static figure rather than freezing
-     on whichever half-drawn frame the cycle happened to reach. */
-  @media (prefers-reduced-motion:reduce) {
-    .bp-fwd,.bp-bwd,.bp-lit-f,.bp-lit-b,.bp-loss { animation:none; }
-    .bp-fwd { opacity:.42; } .bp-bwd { opacity:.5; }
-    .bp-lit-f { opacity:.55; } .bp-lit-b { opacity:0; } .bp-loss { opacity:.8; }
-  }
 ]]></style>
-<defs><g id="bp-e0"><line x1="34" y1="56" x2="110" y2="36"/><line x1="34" y1="56" x2="110" y2="68"/><line x1="34" y1="56" x2="110" y2="100"/><line x1="34" y1="56" x2="110" y2="132"/><line x1="34" y1="84" x2="110" y2="36"/><line x1="34" y1="84" x2="110" y2="68"/><line x1="34" y1="84" x2="110" y2="100"/><line x1="34" y1="84" x2="110" y2="132"/><line x1="34" y1="112" x2="110" y2="36"/><line x1="34" y1="112" x2="110" y2="68"/><line x1="34" y1="112" x2="110" y2="100"/><line x1="34" y1="112" x2="110" y2="132"/></g><g id="bp-e1"><line x1="122" y1="36" x2="200" y2="36"/><line x1="122" y1="36" x2="200" y2="68"/><line x1="122" y1="36" x2="200" y2="100"/><line x1="122" y1="36" x2="200" y2="132"/><line x1="122" y1="68" x2="200" y2="36"/><line x1="122" y1="68" x2="200" y2="68"/><line x1="122" y1="68" x2="200" y2="100"/><line x1="122" y1="68" x2="200" y2="132"/><line x1="122" y1="100" x2="200" y2="36"/><line x1="122" y1="100" x2="200" y2="68"/><line x1="122" y1="100" x2="200" y2="100"/><line x1="122" y1="100" x2="200" y2="132"/><line x1="122" y1="132" x2="200" y2="36"/><line x1="122" y1="132" x2="200" y2="68"/><line x1="122" y1="132" x2="200" y2="100"/><line x1="122" y1="132" x2="200" y2="132"/></g><g id="bp-e2"><line x1="212" y1="36" x2="284" y2="70"/><line x1="212" y1="36" x2="284" y2="98"/><line x1="212" y1="68" x2="284" y2="70"/><line x1="212" y1="68" x2="284" y2="98"/><line x1="212" y1="100" x2="284" y2="70"/><line x1="212" y1="100" x2="284" y2="98"/><line x1="212" y1="132" x2="284" y2="70"/><line x1="212" y1="132" x2="284" y2="98"/></g></defs><g class="bp-rest"><use href="#bp-e0"/><use href="#bp-e1"/><use href="#bp-e2"/></g><use href="#bp-e0" class="bp-fwd" style="animation-delay:0ms"/><use href="#bp-e1" class="bp-fwd" style="animation-delay:380ms"/><use href="#bp-e2" class="bp-fwd" style="animation-delay:760ms"/><use href="#bp-e2" class="bp-bwd" style="animation-delay:2300ms"/><use href="#bp-e1" class="bp-bwd" style="animation-delay:2680ms"/><use href="#bp-e0" class="bp-bwd" style="animation-delay:3060ms"/><g class="bp-ring"><circle cx="28" cy="56" r="5"/><circle cx="28" cy="84" r="5"/><circle cx="28" cy="112" r="5"/><circle cx="116" cy="36" r="5"/><circle cx="116" cy="68" r="5"/><circle cx="116" cy="100" r="5"/><circle cx="116" cy="132" r="5"/><circle cx="206" cy="36" r="5"/><circle cx="206" cy="68" r="5"/><circle cx="206" cy="100" r="5"/><circle cx="206" cy="132" r="5"/><circle cx="290" cy="70" r="5"/><circle cx="290" cy="98" r="5"/></g><circle class="bp-lit-f" cx="28" cy="56" r="2.6" style="animation-delay:0ms"/><circle class="bp-lit-f" cx="28" cy="84" r="2.6" style="animation-delay:0ms"/><circle class="bp-lit-f" cx="28" cy="112" r="2.6" style="animation-delay:0ms"/><circle class="bp-lit-f" cx="116" cy="36" r="2.6" style="animation-delay:380ms"/><circle class="bp-lit-f" cx="116" cy="68" r="2.6" style="animation-delay:380ms"/><circle class="bp-lit-f" cx="116" cy="100" r="2.6" style="animation-delay:380ms"/><circle class="bp-lit-f" cx="116" cy="132" r="2.6" style="animation-delay:380ms"/><circle class="bp-lit-f" cx="206" cy="36" r="2.6" style="animation-delay:760ms"/><circle class="bp-lit-f" cx="206" cy="68" r="2.6" style="animation-delay:760ms"/><circle class="bp-lit-f" cx="206" cy="100" r="2.6" style="animation-delay:760ms"/><circle class="bp-lit-f" cx="206" cy="132" r="2.6" style="animation-delay:760ms"/><circle class="bp-lit-f" cx="290" cy="70" r="2.6" style="animation-delay:1140ms"/><circle class="bp-lit-f" cx="290" cy="98" r="2.6" style="animation-delay:1140ms"/><circle class="bp-lit-b" cx="28" cy="56" r="2.6" style="animation-delay:3060ms"/><circle class="bp-lit-b" cx="28" cy="84" r="2.6" style="animation-delay:3060ms"/><circle class="bp-lit-b" cx="28" cy="112" r="2.6" style="animation-delay:3060ms"/><circle class="bp-lit-b" cx="116" cy="36" r="2.6" style="animation-delay:2680ms"/><circle class="bp-lit-b" cx="116" cy="68" r="2.6" style="animation-delay:2680ms"/><circle class="bp-lit-b" cx="116" cy="100" r="2.6" style="animation-delay:2680ms"/><circle class="bp-lit-b" cx="116" cy="132" r="2.6" style="animation-delay:2680ms"/><circle class="bp-lit-b" cx="206" cy="36" r="2.6" style="animation-delay:2300ms"/><circle class="bp-lit-b" cx="206" cy="68" r="2.6" style="animation-delay:2300ms"/><circle class="bp-lit-b" cx="206" cy="100" r="2.6" style="animation-delay:2300ms"/><circle class="bp-lit-b" cx="206" cy="132" r="2.6" style="animation-delay:2300ms"/><circle class="bp-lit-b" cx="290" cy="70" r="2.6" style="animation-delay:1920ms"/><circle class="bp-lit-b" cx="290" cy="98" r="2.6" style="animation-delay:1920ms"/><circle class="bp-loss" cx="311" cy="84" r="4"/><text class="bp-lab" x="28" y="13">x</text><text class="bp-lab" x="116" y="13">h₁</text><text class="bp-lab" x="206" y="13">h₂</text><text class="bp-lab" x="290" y="13">ŷ</text><text class="bp-cap" x="4" y="150">forward →</text><text class="bp-cap bp-cap-r" x="316" y="150">← ∂L/∂w</text>
+<defs><g id="bp-e0"><line x1="34" y1="56" x2="110" y2="36"/><line x1="34" y1="56" x2="110" y2="68"/><line x1="34" y1="56" x2="110" y2="100"/><line x1="34" y1="56" x2="110" y2="132"/><line x1="34" y1="84" x2="110" y2="36"/><line x1="34" y1="84" x2="110" y2="68"/><line x1="34" y1="84" x2="110" y2="100"/><line x1="34" y1="84" x2="110" y2="132"/><line x1="34" y1="112" x2="110" y2="36"/><line x1="34" y1="112" x2="110" y2="68"/><line x1="34" y1="112" x2="110" y2="100"/><line x1="34" y1="112" x2="110" y2="132"/></g><g id="bp-e1"><line x1="122" y1="36" x2="200" y2="36"/><line x1="122" y1="36" x2="200" y2="68"/><line x1="122" y1="36" x2="200" y2="100"/><line x1="122" y1="36" x2="200" y2="132"/><line x1="122" y1="68" x2="200" y2="36"/><line x1="122" y1="68" x2="200" y2="68"/><line x1="122" y1="68" x2="200" y2="100"/><line x1="122" y1="68" x2="200" y2="132"/><line x1="122" y1="100" x2="200" y2="36"/><line x1="122" y1="100" x2="200" y2="68"/><line x1="122" y1="100" x2="200" y2="100"/><line x1="122" y1="100" x2="200" y2="132"/><line x1="122" y1="132" x2="200" y2="36"/><line x1="122" y1="132" x2="200" y2="68"/><line x1="122" y1="132" x2="200" y2="100"/><line x1="122" y1="132" x2="200" y2="132"/></g><g id="bp-e2"><line x1="212" y1="36" x2="284" y2="70"/><line x1="212" y1="36" x2="284" y2="98"/><line x1="212" y1="68" x2="284" y2="70"/><line x1="212" y1="68" x2="284" y2="98"/><line x1="212" y1="100" x2="284" y2="70"/><line x1="212" y1="100" x2="284" y2="98"/><line x1="212" y1="132" x2="284" y2="70"/><line x1="212" y1="132" x2="284" y2="98"/></g></defs><g class="bp-rest"><use href="#bp-e0"/><use href="#bp-e1"/><use href="#bp-e2"/></g><use href="#bp-e0" class="bp-lay bp-f0"/><use href="#bp-e1" class="bp-lay bp-f1"/><use href="#bp-e2" class="bp-lay bp-f2"/><use href="#bp-e2" class="bp-lay bp-b2"/><use href="#bp-e1" class="bp-lay bp-b1"/><use href="#bp-e0" class="bp-lay bp-b0"/><g class="bp-ring"><circle cx="28" cy="56" r="5"/><circle cx="28" cy="84" r="5"/><circle cx="28" cy="112" r="5"/><circle cx="116" cy="36" r="5"/><circle cx="116" cy="68" r="5"/><circle cx="116" cy="100" r="5"/><circle cx="116" cy="132" r="5"/><circle cx="206" cy="36" r="5"/><circle cx="206" cy="68" r="5"/><circle cx="206" cy="100" r="5"/><circle cx="206" cy="132" r="5"/><circle cx="290" cy="70" r="5"/><circle cx="290" cy="98" r="5"/></g><circle class="bp-lit-f" cx="28" cy="56" r="2.6"/><circle class="bp-lit-f" cx="28" cy="84" r="2.6"/><circle class="bp-lit-f" cx="28" cy="112" r="2.6"/><circle class="bp-lit-f" cx="116" cy="36" r="2.6"/><circle class="bp-lit-f" cx="116" cy="68" r="2.6"/><circle class="bp-lit-f" cx="116" cy="100" r="2.6"/><circle class="bp-lit-f" cx="116" cy="132" r="2.6"/><circle class="bp-lit-f" cx="206" cy="36" r="2.6"/><circle class="bp-lit-f" cx="206" cy="68" r="2.6"/><circle class="bp-lit-f" cx="206" cy="100" r="2.6"/><circle class="bp-lit-f" cx="206" cy="132" r="2.6"/><circle class="bp-lit-f" cx="290" cy="70" r="2.6"/><circle class="bp-lit-f" cx="290" cy="98" r="2.6"/><circle class="bp-loss" cx="311" cy="84" r="4"/><text class="bp-lab" x="28" y="13">x</text><text class="bp-lab" x="116" y="13">h₁</text><text class="bp-lab" x="206" y="13">h₂</text><text class="bp-lab" x="290" y="13">ŷ</text><text class="bp-cap" x="4" y="150">forward →</text><text class="bp-cap bp-cap-r" x="316" y="150">← ∂L/∂w</text>
 </svg>
