@@ -1,0 +1,52 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import BackpropStepper from "../components/BackpropStepper.astro";
+import { getAllPosts, formatPostDate } from "../lib/blog";
+
+/**
+ * One flat reverse-chronological list: date, title, nothing else.
+ *
+ * The descriptions and reading times that used to sit under each row were
+ * doing the work of the post itself. An index is for finding something you
+ * half-remember, and a title plus a date is what you remember.
+ */
+const posts = getAllPosts();
+---
+
+<Base
+  title="Blog"
+  canonical="/blog"
+  description="Writing on transformers, inference, GPUs, and rebuilding ML from scratch."
+>
+  <div class="page">
+    <Nav />
+
+    <main id="main" class="shell relative py-14 md:py-20">
+      {/* The drawing behind the /blog door on the homepage, reappearing on the
+          page it opens onto. Absolutely positioned, so nothing in the column
+          below moves to accommodate it - and steppable here. */}
+      <BackpropStepper />
+
+      <h1 class="display mb-10 text-head text-ink md:text-display">Blog</h1>
+
+      <ul class="post-list">
+        {
+          posts.map((post) => (
+            <li>
+              <a href={`/blog/${post.slug}`} class="post-row">
+                <time class="post-date" datetime={post.date}>
+                  {formatPostDate(post.date)}
+                </time>
+                <span class="post-title">{post.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+
+    <Footer />
+  </div>
+</Base>

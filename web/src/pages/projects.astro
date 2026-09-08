@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import Figure from "../components/Figure.astro";
+import ProjectMedia from "../components/ProjectMedia.astro";
+import { PROJECTS } from "../config/projects";
+
+/**
+ * A grid of things, read the way a shop reads its products: the artefact
+ * first, the description second. Each card is one link to the repo; the live
+ * demo, where there is one, is a second link that does not fight the first.
+ */
+---
+
+<Base
+  title="Projects"
+  canonical="/projects"
+  description="Things built from scratch: a 40M-param GPT trained on math, PyTorch in 1500 lines, an agent loop, tennis match analysis."
+>
+  <div class="page">
+    <Nav />
+
+    <main id="main" class="shell relative py-14 md:py-20">
+      <Figure name="agent-loop" class="page-figure page-figure-projects" />
+
+      <h1 class="display mb-10 text-head text-ink md:text-display">Projects</h1>
+
+      <div class="project-grid">
+        {
+          PROJECTS.map((p) => (
+            <article class="project">
+              <a href={p.repoUrl} target="_blank" rel="noopener noreferrer" class="project-face">
+                <ProjectMedia project={p} />
+                <div class="project-head">
+                  <h2 class="project-name">{p.name}</h2>
+                  <span class="meta shrink-0">{p.stack}</span>
+                </div>
+                <p class="project-blurb">{p.blurb}</p>
+              </a>
+
+              <div class="project-links">
+                <a href={p.repoUrl} target="_blank" rel="noopener noreferrer" class="project-link">
+                  source ↗
+                </a>
+                {p.liveUrl && (
+                  <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" class="project-link">
+                    live ↗
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+</Base>

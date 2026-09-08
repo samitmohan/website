@@ -1,0 +1,32 @@
+---
+import Base from "../layouts/Base.astro";
+import FunThemeToggle from "../components/FunThemeToggle.astro";
+import { getHiddenPosts } from "../lib/blog";
+
+const posts = getHiddenPosts();
+const R = ["r2", "r3", "r4", "r5"];
+---
+
+<Base title="fun" canonical="/fun" noindex>
+  <div class="candy">
+    <FunThemeToggle />
+    <main id="main" class="mx-auto max-w-2xl px-6 py-20 md:py-28">
+      <header class="rise r1">
+        <h1 class="fun-word" style="font-size: clamp(2.4rem, 9.5vw, 4.5rem)">fun</h1>
+        <div class="fun-rule"></div>
+      </header>
+
+      <div class="fun-list">
+        {
+          posts.map((post, i) => (
+            <a href={`/blog/${post.slug}`} class={`fun-row rise ${R[i % R.length]}`}>
+              <span class="fun-idx">{String(i + 1).padStart(2, "0")}</span>
+              <span class="fun-name">{post.title}</span>
+              <span class="fun-year">{new Date(post.date).getFullYear()}</span>
+            </a>
+          ))
+        }
+      </div>
+    </main>
+  </div>
+</Base>

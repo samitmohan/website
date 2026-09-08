@@ -1,0 +1,61 @@
+---
+import type { Difficulty, Tag } from "../../lib/interviews-data";
+
+/**
+ * A question on the index, without its answer. Same shape and the same data-*
+ * facets as QACard so the filter bar treats both alike; the answer is one
+ * click away on the section page.
+ *
+ * Answers are 202 KB of the guide's 300 KB. Keeping them off the index is the
+ * entire reason this exists.
+ */
+const SPECIAL_TAGS: Partial<Record<Tag, string>> = {
+  frontier: "text-purple-600",
+  startup: "text-primary",
+};
+const DIFFICULTY_DOT: Record<Difficulty, string> = {
+  easy: "bg-[#16a34a]",
+  med: "bg-[#ca8a04]",
+  hard: "bg-destructive",
+};
+
+interface Props {
+  href: string;
+  q: string;
+  difficulty: Difficulty;
+  tags: Tag[];
+}
+const { href, q, difficulty, tags } = Astro.props;
+const isKey = tags.includes("key" as Tag);
+const specialTags = tags.filter((t) => t in SPECIAL_TAGS);
+---
+
+<div
+  data-qa
+  data-difficulty={difficulty}
+  data-tags={tags.join(" ")}
+  data-q={q.toLowerCase()}
+  class={`group mb-1 border-l-2 pl-3 ${isKey ? "border-l-[#ca8a04]" : "border-l-transparent"}`}
+>
+  <a href={href} class="flex items-center gap-3 py-1.5">
+    <span
+      class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${DIFFICULTY_DOT[difficulty]}`}
+      title={difficulty}
+    />
+    <span
+      class="flex-1 min-w-0 text-small text-foreground leading-snug group-hover:text-primary"
+    >
+      {q}
+      {
+        specialTags.length > 0 && (
+          <span class="ml-2">
+            {specialTags.map((t) => (
+              <span class={`text-micro font-medium mr-1.5 ${SPECIAL_TAGS[t as Tag]}`}>{t}</span>
+            ))}
+          </span>
+        )
+      }
+    </span>
+    <span class="text-muted-foreground/50 text-micro flex-shrink-0">→</span>
+  </a>
+</div>

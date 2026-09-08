@@ -1,0 +1,114 @@
+---
+import Base from "../layouts/Base.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+/**
+ * Samit's own copy, verbatim. Prose and a photograph, nothing else - the dated
+ * role list this replaced was a CV rendered in HTML.
+ *
+ * The photograph is a plain <img>. Under Next it carried a comment explaining
+ * why it was not next/image: that component was the only thing on this route
+ * pulling a client bundle, 8.4 KB gzip of image runtime, and it put /about
+ * within 3 KB of its ceiling. There is no image runtime to avoid now, and the
+ * reasoning still holds - a 21 KB 460x460 JPEG shown at a fixed 108-128px has
+ * no srcset worth generating.
+ */
+---
+
+<Base
+  title="About"
+  canonical="/about"
+  description="AI Scientist at beltech.ai, building models and optimising inference for security, surveillance and traffic management across 50+ cities."
+>
+    <div class="page">
+      <Nav />
+
+      <main id="main" class="shell relative py-14 md:py-20">
+        <h1 class="sr-only">About Samit Mohan</h1>
+
+        <div class="about-head">
+                    <img
+            src="/photo.jpeg"
+            alt="Samit Mohan"
+            width="460"
+            height="460"
+            class="about-photo"
+            decoding="async"
+            fetchPriority="high"
+          />
+        </div>
+
+        <div class="about-prose">
+          <p>
+            I am an AI Scientist at{" "}
+            <a
+              href="https://beltech.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+            >
+              beltech.ai
+            </a>
+            , working on building models and optimising inference for security,
+            surveillance, and traffic management across 50+ cities, processing
+            60k+ cameras, serving models with latency &lt;= 10ms on an edge box.
+            My work focuses on inference management, computer vision, and writing
+            business logic for detecting violations in India.
+          </p>
+
+          <p>
+            I graduated from New Horizon College of Engineering in 2024 with a
+            degree in Computer Science and a 9.4 CGPA. Creating multiple
+            programming competitions &amp; mentoring juniors in algorithms led me
+            to start a coding culture in my college &amp; create a club around
+            it. I interned at MakeMyTrip and Genpact where I worked on
+            reinforcement learning algorithms and classical ML.
+          </p>
+
+          <p>
+            Apart from this, I love to teach and write. I TA&rsquo;d a 16 week AI
+            Engineering cohort for 200+ senior engineers at{" "}
+            <a
+              href="https://aiengg.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+            >
+              aiengg.dev
+            </a>
+            , designing their curriculum, taking classes, and solving doubts.
+            Also wrote a few hundred deep learning implementation and system
+            design problems for{" "}
+            <a
+              href="https://www.tensortonic.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+            >
+              tensortonic.com
+            </a>
+            , which serves 50k+ users. Writing the backward pass is the only
+            way I have found to learn anything which is why the{" "}
+            <a href="/blog" class="about-link">
+              blog
+            </a>{" "}
+            exists.
+          </p>
+
+          <p>
+            <a
+              href="https://www.youtube.com/watch?v=JuYeHPFR3f0"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+            >
+              I want to be the very best, like no one ever was.
+            </a>
+          </p>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+</Base>

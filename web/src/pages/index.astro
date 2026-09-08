@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import Figure from "../components/Figure.astro";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+/**
+ * One screen, three doors: the name (about) and the two figures (blog,
+ * projects), under one line saying what the work is.
+ *
+ * The name is the only thing on the site that moves. It draws itself once, as
+ * one unbroken pen stroke, and then holds as solid type - see
+ * scripts/gen-wordmark.mjs. Nothing else here loops.
+ */
+---
+
+<Base canonical="/">
+  <div class="home">
+    <Nav />
+
+    <main id="main" class="home-stage">
+      {/* The drawn name is the heading, so it is inside the h1 rather than
+          beside an sr-only copy of it. The svg carries its own title, but a
+          heading a screen reader announces as "samit" and a page about Samit
+          Mohan are not the same string, so the full name is spelled out. */}
+      <h1 class="wordmark-head">
+        <a href="/about" class="wordmark" aria-label="About">
+          <Figure name="wordmark" class="wordmark-word" />
+          {/* The drawing the favicon is cut from, beside the name. It arrives
+              with the ink rather than with the pen: the stroke writes the
+              word, then the word and the machine land together. */}
+          <span class="wordmark-computer" aria-hidden="true"></span>
+          <span class="sr-only">Samit Mohan</span>
+        </a>
+      </h1>
+
+      <p class="home-line">I rebuild ML from scratch and write about it.</p>
+    </main>
+
+    <div class="home-doors">
+      <a href="/blog" class="door door-blog">
+        <Figure name="blog-backprop" class="door-figure" />
+        <span class="door-label">Blog</span>
+      </a>
+      <a href="/projects" class="door door-projects">
+        <Figure name="agent-loop" class="door-figure" />
+        <span class="door-label">Projects</span>
+      </a>
+    </div>
+
+    <Footer />
+  </div>
+</Base>

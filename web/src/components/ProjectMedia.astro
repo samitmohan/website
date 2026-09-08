@@ -1,0 +1,31 @@
+---
+import Figure from "./Figure.astro";
+import type { Project } from "../config/projects";
+
+/**
+ * The panel at the top of a project card: a hand-authored SVG, or - without
+ * one - the project's name set large. That fallback is meant to look finished
+ * rather than pending: no grey rectangle, no "screenshot coming soon".
+ */
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+---
+
+{
+  project.figure ? (
+    <div class="project-media project-media-figure">
+      {/* Inlined rather than served through <img>. An <img> SVG is its own
+          document: it cannot see the page's --font-mono, so its labels fell
+          back to the OS monospace while the project name directly beneath them
+          rendered in Geist Mono - two monos on one card. Inlined, the drawing
+          reads the page's type and its accent. */}
+      <Figure name={project.figure} class="project-figure" />
+    </div>
+  ) : (
+    <div class="project-media project-media-blank">
+      <span class="project-media-word">{project.name}</span>
+    </div>
+  )
+}

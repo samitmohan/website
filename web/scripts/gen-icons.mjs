@@ -19,9 +19,9 @@
  *                     anywhere with room for it: bookmarks, tiles, the tab on
  *                     a high-DPI display asking for a bigger source.
  *
- * Browsers pick by the `sizes` Next emits for each. app/layout.tsx must NOT set
- * metadata.icons - an explicit value there overrides the file convention and
- * these are ignored.
+ * Browsers pick by the `sizes` attribute on each <link> in the layout. These
+ * used to live in app/ because Next picked them up by filename; they are
+ * ordinary files in public/ now and the layout names them.
  *
  * The drawing is a mask: the PNG's colour channels are unused and its alpha
  * carries the ink. So the plate below is the alpha channel, joined onto a solid
@@ -35,7 +35,7 @@ import sharp from "sharp";
 
 const HERE = import.meta.dirname;
 const SRC = path.join(HERE, "..", "public", "marks", "computer.png");
-const OUT = path.join(HERE, "..", "app");
+const OUT = path.join(HERE, "..", "public");
 
 const INK = "#141414"; // --foreground
 const GROUND = "#FFFDF8"; // --background
@@ -102,7 +102,7 @@ async function icon({ file, crop, px, contrast }) {
   }
   const bytes = statSync(out).size;
   console.log(
-    `  app/${file.padEnd(10)} ${px}x${px}  ${String(bytes).padStart(6)} B  ink ${((dark / (px * px)) * 100).toFixed(1)}%`,
+    `  public/${file.padEnd(10)} ${px}x${px}  ${String(bytes).padStart(6)} B  ink ${((dark / (px * px)) * 100).toFixed(1)}%`,
   );
 }
 

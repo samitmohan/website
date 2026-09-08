@@ -1,0 +1,37 @@
+---
+/**
+ * The theme switch. Was 68 lines of React with useState and useEffect; the
+ * state was never in React anyway - it lives on documentElement.dataset and
+ * the visual state is CSS - so the component was a wrapper around one click
+ * handler.
+ *
+ * The knob says which theme is on without an icon: hollow and left for light,
+ * filled and right for dark. Labelled with the action rather than the state,
+ * so the markup makes no claim it cannot back up.
+ */
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  aria-label="Switch between light and dark theme"
+  data-theme-toggle
+>
+  <span class="theme-track"><span class="theme-knob"></span></span>
+</button>
+
+<script>
+  const root = document.documentElement;
+  document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+    const dark =
+      root.dataset.theme === "dark" ||
+      (!root.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+    const next = dark ? "light" : "dark";
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      // Private mode, or site data blocked. The choice just does not persist.
+    }
+  });
+</script>

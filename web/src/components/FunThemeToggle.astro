@@ -1,0 +1,54 @@
+---
+/**
+ * Two palettes for /fun: warm olive "charm" (default) and dusky plum "dusk".
+ * The choice is stored and applied as data-fun-theme on the .candy wrapper,
+ * which the scoped CSS reads.
+ *
+ * Was 51 lines of React that held no React state - it read the DOM on mount
+ * and wrote attributes - so it is markup plus a listener.
+ */
+const THEMES = ["charm", "dusk"] as const;
+---
+
+<div class="fun-swatches" role="group" aria-label="color palette" data-fun-swatches>
+  {
+    THEMES.map((t) => (
+      <button
+        type="button"
+        data-theme={t}
+        aria-pressed={t === "charm"}
+        aria-label={`${t} palette`}
+        title={`${t} palette`}
+        class={`fun-swatch fun-swatch-${t}${t === "charm" ? " is-on" : ""}`}
+      />
+    ))
+  }
+</div>
+
+<script>
+  const group = document.querySelector("[data-fun-swatches]");
+  const candy = group?.closest(".candy");
+  if (group && candy) {
+    const apply = (t) => {
+      candy.setAttribute("data-fun-theme", t);
+      group.querySelectorAll(".fun-swatch").forEach((b) => {
+        const on = b.dataset.theme === t;
+        b.classList.toggle("is-on", on);
+        b.setAttribute("aria-pressed", String(on));
+      });
+    };
+    try {
+      const saved = localStorage.getItem("fun-theme");
+      if (saved === "charm" || saved === "dusk") apply(saved);
+    } catch {}
+    group.addEventListener("click", (e) => {
+      const b = e.target instanceof Element ? e.target.closest(".fun-swatch") : null;
+      const t = b?.dataset.theme;
+      if (!t) return;
+      try {
+        localStorage.setItem("fun-theme", t);
+      } catch {}
+      apply(t);
+    });
+  }
+</script>

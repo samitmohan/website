@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# astro build output, and the image variants generated into it
+dist/
+.astro/

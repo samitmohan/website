@@ -1,0 +1,22 @@
+---
+import type { Paper } from "../../lib/interviews-data";
+interface Props { paper: Paper }
+const { paper } = Astro.props;
+---
+<div class="flex items-baseline gap-3 py-2.5 border-b border-border">
+  <span class="text-micro font-mono text-muted-foreground/60 flex-shrink-0 w-10 tabular-nums">
+    {paper.year}
+  </span>
+  <div class="flex-1 min-w-0">
+    <div class="text-small text-foreground">{paper.title}</div>
+    <div class="text-small text-muted-foreground mt-0.5">{paper.authors} · {paper.why}</div>
+  </div>
+  <a
+    href={paper.url}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="text-small text-primary hover:underline underline-offset-2 flex-shrink-0"
+  >
+    arXiv ↗
+  </a>
+</div>

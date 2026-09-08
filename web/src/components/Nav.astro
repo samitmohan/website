@@ -1,0 +1,10 @@
+---
+import { SECTION_LINKS } from "../config/links";
+---
+
+<header class="site-bar">
+  <nav class="site-nav" aria-label="Sections">
+    <a href="/" class="site-link">home</a>
+    {SECTION_LINKS.map((l) => <a href={l.href} class="site-link">{l.label}</a>)}
+  </nav>
+</header>

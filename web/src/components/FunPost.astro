@@ -1,0 +1,68 @@
+---
+import FunThemeToggle from "./FunThemeToggle.astro";
+import PostRuntime from "./PostRuntime.astro";
+import { formatPostDate } from "../lib/blog";
+import type { Post, PostMeta } from "../lib/blog";
+
+/**
+ * The warm reading layout for hidden "fun" posts, rendered instead of the
+ * blog chrome when a post has `hidden: true`.
+ */
+interface Props {
+  post: Post;
+  html: string;
+  prevPost: PostMeta | null;
+  nextPost: PostMeta | null;
+}
+const { post, html, prevPost, nextPost } = Astro.props;
+---
+
+<div class="candy">
+  <FunThemeToggle />
+  <PostRuntime />
+  <main id="main" class="mx-auto max-w-[42rem] px-6 py-14 md:py-20">
+    <div class="rise r1 mb-10">
+      <a href="/fun" class="fun-back">&larr; fun</a>
+    </div>
+
+    <header class="rise r2 mb-9">
+      <h1 class="fun-post-title" style="font-size: clamp(2.4rem, 7.5vw, 4rem); margin-bottom: .9rem">
+        {post.title}
+      </h1>
+      <div class="fun-meta">
+        {formatPostDate(post.date)} &middot; {post.readingTime} min
+      </div>
+    </header>
+
+    {
+      post.thumbnail && (
+        <div class="fun-hero rise r3 mb-12">
+          <img src={post.thumbnail} alt="" class="aspect-[3/2] w-full object-cover" />
+        </div>
+      )
+    }
+
+    <div class="fun-prose rise r3" set:html={html} />
+
+    {
+      (prevPost || nextPost) && (
+        <nav class="fun-navlinks">
+          {prevPost ? (
+            <a href={`/blog/${prevPost.slug}`} class="fun-back">
+              &larr; {prevPost.title}
+            </a>
+          ) : (
+            <span />
+          )}
+          {nextPost ? (
+            <a href={`/blog/${nextPost.slug}`} class="fun-back">
+              {nextPost.title} &rarr;
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )
+    }
+  </main>
+</div>

@@ -1,0 +1,97 @@
+---
+/**
+ * Everything on a post page that genuinely needs a browser. Three things.
+ *
+ * Under React this was BlogContent, 156 lines, and it did five. Two of the
+ * five are gone rather than ported:
+ *
+ *   - It re-created every <script> in the post HTML, because
+ *     dangerouslySetInnerHTML does not execute scripts. Astro renders set:html
+ *     into the document the browser parses, so the post's own inline widgets
+ *     run natively. That loop was a React tax.
+ *   - It slugified h2/h3/h4 on mount. rehypeSlug already does that in the
+ *     pipeline, so it was doing the work twice and only one of them mattered.
+ *
+ * The code-block header is markup now too - see rehypeCodeHeader in
+ * lib/markdown.ts - so what is left of it here is one delegated listener
+ * instead of a handler per button.
+ */
+---
+
+{/* Inline and blocking: the post's own widget scripts call window.lazyWidget
+    while the document parses, so it has to exist before they do. A bundled
+    module would be deferred and every widget would throw. */}
+<script is:inline>
+  window.lazyWidget =
+    window.lazyWidget ||
+    function (id, fn) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (!("IntersectionObserver" in window)) return fn();
+      var io = new IntersectionObserver(
+        function (entries, obs) {
+          for (var i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting) {
+              obs.disconnect();
+              try {
+                fn();
+              } catch (err) {
+                console.error("[lazyWidget]", id, err);
+              }
+              break;
+            }
+          }
+        },
+        { rootMargin: "200px" },
+      );
+      io.observe(el);
+    };
+</script>
+
+<script>
+  // Videos play when they are on screen and pause when they are not, so a post
+  // with a dozen clips is not decoding a dozen streams. Reduced motion gets
+  // controls and no autoplay instead.
+  const videos = Array.from(document.querySelectorAll(".blog-prose video"));
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for (const v of videos) {
+    v.pause();
+    v.removeAttribute("autoplay");
+    try {
+      v.currentTime = 0;
+    } catch {}
+    if (still) v.setAttribute("controls", "");
+  }
+  if (!still && videos.length && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          const v = e.target;
+          if (e.isIntersecting) v.play()?.catch(() => {});
+          else v.pause();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    for (const v of videos) io.observe(v);
+  }
+
+  // One listener for every copy button on the page. The markup, both icons
+  // included, comes from the build; this only moves the class and the word.
+  document.addEventListener("click", (e) => {
+    const btn = e.target instanceof Element ? e.target.closest("[data-code-copy]") : null;
+    if (!btn) return;
+    e.preventDefault();
+    const code = btn.closest("figure")?.querySelector("pre code");
+    if (!code) return;
+    navigator.clipboard.writeText(code.textContent ?? "").then(() => {
+      const label = btn.querySelector("span");
+      btn.classList.add("copied");
+      if (label) label.textContent = "Copied";
+      setTimeout(() => {
+        btn.classList.remove("copied");
+        if (label) label.textContent = "Copy";
+      }, 1400);
+    });
+  });
+</script>

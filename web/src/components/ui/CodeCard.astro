@@ -1,0 +1,52 @@
+---
+import { highlightCode } from "../../lib/markdown";
+
+/**
+ * Self-contained code card: a header bar with a language chip and a copy
+ * button over a numbered, syntax-highlighted body. Highlighting runs at build
+ * time through the shared Shiki instance.
+ *
+ * The copy button is the same static markup the blog's code figures get from
+ * rehypeCodeHeader, so the one delegated listener in PostRuntime picks it up.
+ */
+interface Props {
+  code: string;
+  lang?: string;
+  label?: string;
+}
+const { code, lang = "python", label } = Astro.props;
+const html = await highlightCode(code, lang);
+---
+
+<figure class="code-card">
+  <div class="code-header">
+    <span class="code-lang">{label ?? lang}</span>
+    <button type="button" class="code-copy" aria-label="Copy code" data-code-copy>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span>Copy</span>
+    </button>
+  </div>
+  <div set:html={html} />
+</figure>

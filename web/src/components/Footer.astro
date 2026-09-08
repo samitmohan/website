@@ -1,0 +1,22 @@
+---
+import { SOCIAL_LINKS } from "../config/links";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<footer class="site-foot">
+  <nav class="site-socials" aria-label="Elsewhere">
+    {
+      SOCIAL_LINKS.map((l) =>
+        l.external ? (
+          <a href={l.href} class="site-link" target="_blank" rel="noopener noreferrer">
+            {l.label}
+          </a>
+        ) : (
+          <a href={l.href} class="site-link">{l.label}</a>
+        ),
+      )
+    }
+  </nav>
+
+  <ThemeToggle />
+</footer>

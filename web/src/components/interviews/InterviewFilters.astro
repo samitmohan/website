@@ -1,0 +1,170 @@
+---
+import type { Facets } from "../../lib/interviews";
+import type { Difficulty } from "../../lib/interviews-data";
+
+/**
+ * Facet chips over the question list.
+ *
+ * The guide is server-rendered HTML and this bar filters by toggling [hidden]
+ * on the already-painted nodes, so none of the 234 answers goes through it.
+ * That was true under React too; what has changed is that the bar itself no
+ * longer needs a framework to hold three strings.
+ */
+const DIFFICULTY_ORDER: Difficulty[] = ["easy", "med", "hard"];
+const DIFFICULTY_LABEL: Record<Difficulty, string> = { easy: "Easy", med: "Medium", hard: "Hard" };
+const DIFFICULTY_DOT: Record<Difficulty, string> = {
+  easy: "#16a34a",
+  med: "#ca8a04",
+  hard: "var(--destructive)",
+};
+
+interface Props { facets: Facets }
+const { facets } = Astro.props;
+const tags = Object.entries(facets.tags).filter(([, n]) => n > 0);
+---
+
+<div class="mb-10" data-iv-filters>
+  <div class="mb-3 flex h-9 items-center gap-2 rounded-lg border border-border bg-muted/40 px-3">
+    <svg
+      width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" aria-hidden="true"
+      class="shrink-0 text-muted-foreground/60"
+    >
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m20 20-3.5-3.5"></path>
+    </svg>
+    <input
+      type="text"
+      placeholder="Filter questions"
+      aria-label="Filter questions"
+      autocomplete="off"
+      spellcheck="false"
+      class="min-w-0 flex-1 bg-transparent text-small text-foreground outline-none placeholder:text-muted-foreground/60"
+      data-iv-query
+    />
+    <kbd
+      class="hidden shrink-0 rounded border border-border px-1.5 py-0.5 text-micro text-muted-foreground/60 sm:block"
+      >/</kbd
+    >
+  </div>
+
+  <div class="-mx-1 flex flex-wrap items-center gap-1 px-1">
+    {
+      DIFFICULTY_ORDER.map((d) => (
+        <button type="button" class="iv-chip" aria-pressed="false" data-iv-difficulty={d}>
+          <span aria-hidden="true" class="iv-chip-dot" style={`background:${DIFFICULTY_DOT[d]}`} />
+          {DIFFICULTY_LABEL[d]}
+          <span class="iv-chip-count">{facets.difficulty[d] ?? 0}</span>
+        </button>
+      ))
+    }
+
+    <span aria-hidden="true" class="mx-1 h-4 w-px bg-border"></span>
+
+    {
+      tags.map(([t, n]) => (
+        <button type="button" class="iv-chip" aria-pressed="false" data-iv-tag={t}>
+          {t}
+          <span class="iv-chip-count">{n}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="mt-3 flex items-center gap-3">
+    <span class="font-mono text-small text-muted-foreground/60" data-iv-count>
+      {facets.total} questions
+    </span>
+    <button
+      type="button"
+      class="text-small text-primary underline-offset-2 hover:underline"
+      data-iv-clear
+      hidden
+    >
+      Clear
+    </button>
+  </div>
+</div>
+
+<script>
+  const bar = document.querySelector("[data-iv-filters]");
+  if (bar) {
+    const input = bar.querySelector("[data-iv-query]");
+    const count = bar.querySelector("[data-iv-count]");
+    const clear = bar.querySelector("[data-iv-clear]");
+    const chips = Array.from(bar.querySelectorAll(".iv-chip"));
+    const toc = document.querySelector("[data-iv-toc]");
+
+    let difficulty = null;
+    let tag = null;
+
+    function apply() {
+      const q = (input?.value ?? "").trim().toLowerCase();
+      const active = Boolean(difficulty || tag || q);
+      let shown = 0;
+
+      for (const card of document.querySelectorAll("[data-qa]")) {
+        const ok =
+          (!difficulty || card.dataset.difficulty === difficulty) &&
+          (!tag || (card.dataset.tags ?? "").split(" ").includes(tag)) &&
+          (!q || (card.dataset.q ?? "").includes(q));
+        card.hidden = !ok;
+        if (ok) shown++;
+      }
+      // A sub-heading with nothing left under it, and a section with nothing
+      // left in it, both go too.
+      for (const sub of document.querySelectorAll("[data-sub]")) {
+        sub.hidden = !sub.querySelector("[data-qa]:not([hidden])");
+      }
+      for (const section of document.querySelectorAll("[data-section]")) {
+        // Company Guide, Reading List and NeetCode hold no tagged questions,
+        // so they drop out entirely once a facet is on rather than sit empty.
+        section.hidden =
+          section.dataset.section === "static"
+            ? active
+            : !section.querySelector("[data-qa]:not([hidden])");
+      }
+      if (toc) toc.hidden = active;
+
+      if (count) count.textContent = `${shown} question${shown === 1 ? "" : "s"}`;
+      if (clear) clear.hidden = !active;
+      for (const c of chips) {
+        const on =
+          (c.dataset.ivDifficulty && c.dataset.ivDifficulty === difficulty) ||
+          (c.dataset.ivTag && c.dataset.ivTag === tag);
+        c.classList.toggle("is-on", Boolean(on));
+        c.setAttribute("aria-pressed", String(Boolean(on)));
+      }
+    }
+
+    for (const c of chips) {
+      c.addEventListener("click", () => {
+        if (c.dataset.ivDifficulty) {
+          difficulty = difficulty === c.dataset.ivDifficulty ? null : c.dataset.ivDifficulty;
+        } else if (c.dataset.ivTag) {
+          tag = tag === c.dataset.ivTag ? null : c.dataset.ivTag;
+        }
+        apply();
+      });
+    }
+    input?.addEventListener("input", apply);
+    clear?.addEventListener("click", () => {
+      difficulty = null;
+      tag = null;
+      if (input) input.value = "";
+      apply();
+    });
+
+    // "/" focuses the field, Escape leaves it.
+    document.addEventListener("keydown", (e) => {
+      const typing =
+        document.activeElement instanceof HTMLInputElement ||
+        document.activeElement instanceof HTMLTextAreaElement;
+      if (e.key === "/" && !typing) {
+        e.preventDefault();
+        input?.focus();
+      }
+      if (e.key === "Escape" && typing) input?.blur();
+    });
+  }
+</script>
