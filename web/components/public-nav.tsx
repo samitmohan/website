@@ -17,7 +17,10 @@ import { ThemeToggle } from "@/components/theme-toggle";
  * way to /projects except back through the homepage, which a comment in
  * globals.css claimed was already fixed and was not.
  *
- * Navigation up, everything else down. The outbound links moved to the footer:
+ * There is no copyright line. A notice nobody reads on a personal site is one
+ * more thing in a row of four names and a switch.
+ *
+ * Navigation up, everything else down. The outbound links live in the footer:
  * eight words in the header need 467px, which on a phone wrapped to a second
  * row and spent the top of every screen on "github linkedin spotify email"
  * before the visitor reached the name. Rendering them in both places and
@@ -49,30 +52,21 @@ export function PublicNav() {
 export function PublicFooter() {
   return (
     <footer className="site-foot">
-      {/* One group, so space-between has exactly two children and the toggle
-          stays on the right at every width. With three children the toggle
-          wrapped onto its own line left-aligned on a phone, which is the one
-          place it must not be. */}
-      <div className="site-meta">
-        <span>© 2026 samit</span>
+      <nav className="site-socials" aria-label="Elsewhere">
+        {SOCIAL_LINKS.map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            className="site-link"
+            {...(l.external
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
+          >
+            {l.label}
+          </a>
+        ))}
+      </nav>
 
-        <nav className="site-socials" aria-label="Elsewhere">
-          {SOCIAL_LINKS.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className="site-link"
-              {...(l.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              {l.label}
-            </a>
-          ))}
-        </nav>
-      </div>
-
-      {/* Bottom right, opposite the copyright. */}
       <ThemeToggle />
     </footer>
   );

@@ -1523,16 +1523,12 @@ code[data-theme*=" "] {
    and claimed a hierarchy the row does not have. It says "home" now and looks
    like what it is. */
 .site-nav,
-.site-socials,
-.site-meta {
+.site-socials {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px 16px;
 }
-/* The copyright and the outbound links read as one group; the toggle is the
-   only control down here and sits opposite them. */
-.site-meta { row-gap: 6px; }
 @media (min-width: 768px) {
   .site-nav,
   .site-socials { gap: 20px; }
