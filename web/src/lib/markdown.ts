@@ -310,9 +310,51 @@ export async function highlightCode(code: string, lang = "python"): Promise<stri
   });
 }
 
+/**
+ * A rule at the very top of a post body draws a second line directly under the
+ * byline, which already closes with one - two rules bounding an empty 33px
+ * band. Only one post opens that way today; this is here so the next one
+ * cannot. Skips <style> and <script>, which render nothing, so a post that
+ * opens with an inline stylesheet is still caught.
+ */
+function rehypeDropLeadingRule() {
+  return (tree: Root) => {
+    for (const node of tree.children) {
+      if (node.type === "text" && !node.value.trim()) continue;
+      if (node.type !== "element") break;
+      if (node.tagName === "style" || node.tagName === "script") continue;
+      if (node.tagName === "hr") tree.children.splice(tree.children.indexOf(node), 1);
+      break;
+    }
+  };
+}
+
+export type Heading = { id: string; text: string };
+
+/** Section headings, in order, for the contents list on a long post. */
+function rehypeCollectHeadings(into: Heading[]) {
+  return () => (tree: Root) => {
+    visit(tree, "element", (node: Element) => {
+      if (node.tagName !== "h2") return;
+      const id = String(node.properties?.id ?? "");
+      const text = textOf(node).trim();
+      if (id && text) into.push({ id, text });
+    });
+  };
+}
+
+function textOf(node: Element): string {
+  let out = "";
+  visit(node, "text", (t: Text) => {
+    out += t.value;
+  });
+  return out;
+}
+
 export async function markdownToHtml(
   content: string,
-  hasMath = false
+  hasMath = false,
+  headings?: Heading[]
 ): Promise<string> {
   const processor = unified()
     .use(remarkParse)
@@ -323,6 +365,8 @@ export async function markdownToHtml(
     // Before rehypeSlug, so the demoted heading keeps the id its text produces.
     .use(rehypeDemoteH1)
     .use(rehypeSlug)
+    .use(rehypeDropLeadingRule)
+    .use(headings ? rehypeCollectHeadings(headings) : () => {})
     .use(rehypeCallouts)
     .use(rehypeMediaPerf)
     .use(rehypePrettyCode, {

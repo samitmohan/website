@@ -24,16 +24,24 @@ import { PROJECTS } from "../config/projects";
     <main id="main" class="shell relative py-14 md:py-20">
       <Figure name="agent-loop" class="page-figure page-figure-projects" />
 
-      <h1 class="display mb-10 text-head text-ink md:text-display">Projects</h1>
+      <h1 class="display trim mb-10 text-head text-ink md:text-display">Projects</h1>
 
       <div class="project-grid">
         {
-          PROJECTS.map((p) => (
+          PROJECTS.map((p, i) => (
             <article class="project">
               <a href={p.repoUrl} target="_blank" rel="noopener noreferrer" class="project-face">
+                {/* The index, in the frame's top corner. duforn.com numbers its
+                    cards 001/002/003 and it is the cheapest thing on the page:
+                    it says the set is finite and ordered, which a grid of
+                    equal cards does not. aria-hidden because the order is
+                    already in the document. */}
+                <span class="project-index trim trim-mono" aria-hidden="true">
+                  {String(i + 1).padStart(3, "0")}
+                </span>
                 <ProjectMedia project={p} />
                 <div class="project-head">
-                  <h2 class="project-name">{p.name}</h2>
+                  <h2 class="project-name trim trim-mono">{p.name}</h2>
                   <span class="meta shrink-0">{p.stack}</span>
                 </div>
                 <p class="project-blurb">{p.blurb}</p>

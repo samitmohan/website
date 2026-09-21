@@ -173,28 +173,127 @@
 
 
   /* ---- type scale ---------------------------------------------------
-     One ratio, 1.25, anchored on the prose size, written as a calc chain so
-     the ratio is in the code and no rung can drift off it.
-
-     There was no scale at all before this: 48 hand-written px values in here
-     and ~54 arbitrary text-[NNpx] utilities in the components, with .display
-     carrying no size so five call sites each invented their own responsive
-     pair (28/34, 30/36, 30/40, 34/44). Sizes chosen one at a time never
-     compose into a voice - macwright.com ships two for a whole site.
+     Seven rungs off one ratio, anchored on the prose size. There was no scale
+     at all before this: 48 hand-written px values in here and ~54 arbitrary
+     text-[NNpx] utilities in the components, with .display carrying no size so
+     five call sites each invented their own responsive pair (28/34, 30/36,
+     30/40, 34/44). Sizes chosen one at a time never compose into a voice -
+     macwright.com ships two for a whole site.
 
      Seven rungs, not five: the content spans 11px mono meta to a 44px index
      heading, which is a factor of four, and log(4)/log(1.25) is 6.2 steps.
      Anything fewer would have to stretch the ratio.
 
-     Rounded values: 11.2 / 14 / 17.5 / 21.875 / 27.34 / 34.18 / 42.72.
+     The ratio is not one number any more, and neither is the anchor. Both
+     interpolate with the viewport, 380px to 1280px:
+
+       ratio  1.17 -> 1.25
+       body   16.5 -> 17.5px
+
+     which is duforn.com's idea, arrived at from the other end. They declare a
+     min and a max px pair per style and interpolate each one independently;
+     doing that here would put seven free numbers in the file and lose the one
+     property this block was written to have, which is that no rung can drift
+     off the ratio. Interpolating the ratio itself keeps that and gets the same
+     result: big type has more room to be big on a wide screen, and the ladder
+     compresses on a phone where 42px of heading over 17px of prose is a shout.
+
+     The rungs below are the arithmetic, precomputed, because CSS cannot raise
+     a fluid ratio to a power. scripts/check-budgets.sh recomputes all seven
+     from the four numbers above and fails if one has drifted - the ratio is
+     enforced by something that runs rather than by this comment.
+
+                     @380px    @1280px
+       micro          12.05      11.20
+       small          14.10      14.00
+       body           16.50      17.50
+       sub            19.30      21.88
+       title          22.59      27.34
+       head           26.43      34.18
+       display        30.92      42.72
+
+     micro and small run backwards on purpose. 11.2px of mono meta is quiet
+     next to 17.5px of Charter on a desktop; at arm's length on a phone it is
+     just small, so it gains most of a pixel as the viewport shrinks.
      ------------------------------------------------------------------- */
-  --fs-body: 17.5px;
-  --fs-small: calc(var(--fs-body) / 1.25);
-  --fs-micro: calc(var(--fs-small) / 1.25);
-  --fs-sub: calc(var(--fs-body) * 1.25);
-  --fs-title: calc(var(--fs-sub) * 1.25);
-  --fs-head: calc(var(--fs-title) * 1.25);
-  --fs-display: calc(var(--fs-head) * 1.25);
+  --fs-micro: clamp(11.20px, 12.414px - 0.0948vw, 12.05px);
+  --fs-small: clamp(14.00px, 14.146px - 0.0114vw, 14.10px);
+  --fs-body: clamp(16.50px, 16.078px + 0.1111vw, 17.50px);
+  --fs-sub: clamp(19.30px, 18.220px + 0.2856vw, 21.88px);
+  --fs-title: clamp(22.59px, 20.578px + 0.5285vw, 27.34px);
+  --fs-head: clamp(26.43px, 23.153px + 0.8615vw, 34.18px);
+  --fs-display: clamp(30.92px, 25.935px + 1.3117vw, 42.72px);
+
+  /* ---- cap trim ------------------------------------------------------
+     A line box is taller than the letters in it. Above the caps sits the
+     half-leading plus the slice of the ascender the face does not use; below
+     the baseline sits the descender. Both are invisible, and both mean every
+     margin and padding in the file is off by an amount nobody chose.
+
+     duforn.com trims it, which is why their headings sit flush in their boxes
+     and their gaps read as decisions. Their numbers are .33em/.38em for their
+     own face; these are Charter's and Geist Mono's, and they are derived
+     rather than eyeballed:
+
+       trim-top    = capHeight - (ascent - descent) / 2
+       trim-bottom = (ascent - descent) / 2
+
+     which falls out of asking where the cap top and the baseline sit relative
+     to the middle of the line box - the term the .trim rules subtract. It has
+     no line-height in it, so one pair of numbers is right at every leading.
+
+     Measured two ways, agreeing to three decimals: fontkit over the woff2
+     files in public/fonts, and canvas measureText() in the browser that
+     actually renders them - fontBoundingBoxAscent/Descent for the box, the ink
+     top of "H" for the cap. Charter reads A=0.980 D=0.236 cap=0.671; Geist
+     Mono reads A=1.005 D=0.295 cap=0.710. Measure the browser side at 1000px,
+     not 100px: measureText rounds to integer pixels and 0.236 comes back 0.24.
+
+     Re-measure with scripts/font-metrics.mjs if either file is replaced.
+     -------------------------------------------------------------------- */
+  --trim-top: 0.299em;
+  --trim-bottom: 0.372em;
+
+  /* ---- the grid ------------------------------------------------------
+     duforn.com's, whose whole layout is four numbers: a column count that
+     steps with the viewport, a gutter, a page margin, and a max width. Every
+     width on their site is "n columns", never a percentage and never a
+     hand-picked px value, which is why nothing on it is a few pixels off
+     anything else.
+
+     Before this the site had 1040px and two padding values and every other
+     width was invented at the call site: 460px here, 46rem there, 40rem twice,
+     6.5rem for the date column. Those are all still there and most of them
+     should stay - a measure is a typographic decision, not a grid one - but
+     anything that needs to line up with something else now has a token to do
+     it with.
+
+     Margin and gutter interpolate over the same 380 -> 1280 as the type. The
+     column count steps instead, because a fractional column is not a thing.
+     -------------------------------------------------------------------- */
+  --site-margin: clamp(16px, 2.489px + 3.5556vw, 48px);
+  --site-gutter: clamp(16px, 9.244px + 1.7778vw, 32px);
+  --site-cols: 4;
+  --site-max: 1040px;
+  --grid-width: min(var(--site-max), calc(100vw - var(--site-margin) * 2));
+  --col: calc(
+    (var(--grid-width) - var(--site-gutter) * (var(--site-cols) - 1)) /
+      var(--site-cols)
+  );
+  /* For anything that has to be n columns wide without living in a grid. */
+  --span-1: var(--col);
+  --span-2: calc(var(--col) * 2 + var(--site-gutter));
+  --span-3: calc(var(--col) * 3 + var(--site-gutter) * 2);
+  --span-4: calc(var(--col) * 4 + var(--site-gutter) * 3);
+  --span-6: calc(var(--col) * 6 + var(--site-gutter) * 5);
+  --span-8: calc(var(--col) * 8 + var(--site-gutter) * 7);
+
+  /* The nav pill. Its own entry rather than --brand-soft, which on the dark
+     ground is #1D1C34 against #0D0C09 and disappears at 1x - it only read in a
+     3x crop. The pill is decoration; what actually carries "you are here" is
+     .site-link[aria-current] taking --foreground, so this is tuned to be seen
+     rather than to a contrast ratio. */
+  --nav-pill: #E7E7FD;
 
   --radius-card: 24px;
   /* Sarvam's easing curve verbatim: fast out of the gate, long settle. */
@@ -349,6 +448,7 @@
      a hairline of light along the top edge instead of shade under the bottom. */
   --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.45);
   --lip: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --nav-pill: #33325E;
   }
 }
 
@@ -389,6 +489,7 @@
      a hairline of light along the top edge instead of shade under the bottom. */
   --shadow-card: 0 6px 24px rgba(0, 0, 0, 0.45);
   --lip: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --nav-pill: #33325E;
 }
 
 /* ============================================================
@@ -428,15 +529,38 @@ body {
    pill buttons, hairline rows, rounded card surfaces.
    ============================================================ */
 
+/* 4 columns on a phone, 12 on a desktop. The steps are duforn's; the
+   breakpoints are this site's, which has always broken at 520 and 768. */
+@media (min-width: 560px) { :root { --site-cols: 6; } }
+@media (min-width: 768px) { :root { --site-cols: 8; } }
+@media (min-width: 1024px) { :root { --site-cols: 12; } }
+
+/* The page's one container. Was max-width 1040 with padding 24 stepping to 40
+   at 768; the padding is the fluid page margin now, so it is 16 on a narrow
+   phone (where 24 was eating the measure) and 48 at 1280 (where 40 left the
+   text sitting slightly left of centre in the window). 1040 survives as
+   --site-max because it is the measure the prose was set to. */
 .shell {
   width: 100%;
-  max-width: 1040px;
+  max-width: var(--site-max);
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: var(--site-margin);
 }
-@media (min-width: 768px) {
-  .shell { padding-inline: 40px; }
+
+/* A 4/6/8/12 grid, and the spans that go in it. Nothing is forced through
+   this - most of the site is one column of prose and should stay that way -
+   but anything that has to line up with something else can say so. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--site-cols), minmax(0, 1fr));
+  gap: var(--site-gutter);
 }
+.span-2 { grid-column: span 2; }
+.span-3 { grid-column: span 3; }
+.span-4 { grid-column: span 4; }
+.span-6 { grid-column: span 6; }
+.span-8 { grid-column: span 8; }
+.span-full { grid-column: 1 / -1; }
 
 /* Every heading on the site. Instrument Serif at 400, which is the only
    weight it has.
@@ -455,6 +579,48 @@ body {
   font-weight: 400;
   letter-spacing: -0.002em;
   line-height: 1.12;
+}
+
+/* ---- cap trim ----------------------------------------------------------
+
+   Two zero-height table boxes, one at each end, each pulling the parent's edge
+   in by the dead space the font leaves there. -0.5lh is the distance from the
+   edge to the middle of the line box; the token is the distance from that
+   middle back out to the cap top (or the baseline), so what is left is the
+   letters and nothing else. At 42.72px/1.12 that is 11.15px off the top and
+   8.03px off the bottom, and those are the numbers it measures.
+
+   display: table rather than block, because a block pseudo's margin collapses
+   with the parent's and the trim would leak out instead of biting.
+
+   Opt-in, and only on an element whose own display is block-ish: on a flex or
+   grid box the two pseudos become items and take up a column each. --trim-*
+   is inherited, so .trim-mono only has to restate the pair.
+
+   The first line of a trimmed element sits where you would draw it with a
+   ruler, which means every margin next to one had to be re-measured rather
+   than kept. Where a number below changed, the comment says by how much. */
+.trim::before,
+.trim::after {
+  content: "";
+  display: table;
+}
+.trim::before { margin-bottom: calc(-0.5lh + var(--trim-top)); }
+/* margin-top, not margin-bottom. duforn.com's rule uses margin-bottom on both
+   pseudos and the bottom half of their trim does not fire at all: a negative
+   bottom margin on the last in-flow child does not pull an auto-height
+   parent's bottom edge up. Measured on this page at 42.72px/1.12 - the ::after
+   took 0.00px off with margin-bottom and 8.01px off with margin-top, against
+   8.03px predicted. The symmetry in the formula is real; the property is
+   not. */
+.trim::after { margin-top: calc(-0.5lh + var(--trim-bottom)); }
+
+/* Geist Mono is a taller face in the same em: its caps reach 0.710 against
+   Charter's 0.671, and its ascender and descender are symmetric about the
+   middle of the line box, so one number does both ends. */
+.trim-mono {
+  --trim-top: 0.355em;
+  --trim-bottom: 0.355em;
 }
 
 /* The size floor, in a layer on purpose. .display used to carry no size at
@@ -1330,11 +1496,33 @@ code[data-theme*=" "] {
   color: var(--c-ink);
   font-family: var(--font-body), Georgia, "Times New Roman", serif;
   font-weight: 400;
+  /* Flat base only. The gradients are on ::after - see below. */
+  background: var(--c-paper);
+  overflow-x: clip;
+}
+
+/* The warm ground, painted against the viewport rather than against this
+   element.
+   It used to be the element's own background, and with
+   prefers-reduced-motion on, the page ended in a hard seam 87px above the
+   bottom of the screen: warm above, the site's own --background below. The
+   element measures a full 100dvh when probed, so what makes it paint short is
+   still unexplained - this sidesteps it rather than fixing it. A fixed layer
+   covers the viewport whatever height .candy resolves to, and there is no
+   height left to get wrong.
+   position: fixed resolves against the viewport here because .candy sets only
+   isolation, which creates a stacking context but not a containing block; a
+   transform or filter on it would break this. */
+.candy::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
     radial-gradient(135% 85% at 50% -12%, #f2ecd2 0%, transparent 56%),
     radial-gradient(130% 80% at 50% 118%, #cabb82 0%, transparent 55%),
     linear-gradient(180deg, var(--c-paper) 0%, var(--c-paper2) 100%);
-  overflow-x: clip;
 }
 
 /* film-grain haze (clairo lo-fi) */
@@ -1587,43 +1775,122 @@ code[data-theme*=" "] {
    that made the *document* 465px wide - so every page clipped its content at
    the same right edge, not just the header. Two rows on a narrow screen, one
    row as soon as there is room, and no media query needed to decide which. */
-.site-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  /* Centred, not space-between. With the outbound links moved to the footer
-     the header holds a single group, and space-between pinned it to the left
-     with the rest of the row empty - which read as a layout that had lost
-     something. Centred it balances the footer, where the meta and the toggle
-     hold both ends. */
-  justify-content: center;
-  gap: 10px 16px;
-  padding: 22px 24px 0;
-}
-/* The footer rule takes the page accent. It is the one hairline that appears
-   on every route at a fixed position, so it is the cheapest place to make the
-   section colour visible without touching the content. --accent-border rather
-   than --accent: a full-bleed rule at the base value reads as a UI chrome
-   line, and this should register as a tint you notice on the second visit. */
+/* A rail at both ends of the page: something holds the left, something holds
+   the right, nothing is centred. It ran centred before, and that was the right
+   fix for a header holding one group with an empty row beside it. The group
+   has the name opposite it now, so there are two ends to hold and the
+   workaround can go. duforn.com's header is this shape.
+
+   Both bars sit in .shell's box, so the name lines up with the page heading
+   under it instead of floating out at the window edge. */
+.site-bar,
 .site-foot {
+  width: 100%;
+  max-width: var(--site-max);
+  margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  /* Centred, to match the header. It ran space-between with the meta pinned
-     left and the toggle right, which looked like a different layout system
-     from the row of centred names at the top of the page. */
-  justify-content: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.site-bar { padding: 22px var(--site-margin) 0; }
+.site-foot {
   gap: 8px 16px;
-  padding: 10px 24px 12px;
-  border-top: 1px solid var(--accent-border);
+  padding: 10px var(--site-margin) 12px;
+  /* Was --accent-border, as the one place the section colour showed up on
+     every route. Cut on the same pass that took the accent off the contents
+     rail: a hairline is structure, and the accent means "you can act on this"
+     everywhere else here. Spending it on a rule that does nothing is what
+     makes it stop reading as a signal. */
+  border-top: 1px solid var(--rule);
   font-size: var(--fs-micro);
   color: var(--ink-3);
 }
 
-@media (min-width: 768px) {
-  .site-bar { padding: 28px 40px 0; }
-  .site-foot { padding: 8px 40px 12px; }
+/* Under 520 the two ends would be 5 characters and 4 words fighting over
+   390px, which is the width problem in the note above with a name added to
+   it. Stack them and let both hold the left edge. */
+@media (max-width: 519px) {
+  .site-bar,
+  .site-foot {
+    justify-content: flex-start;
+    gap: 2px 16px;
+  }
+  .site-bar .site-nav,
+  .site-foot .site-socials { flex-basis: 100%; }
 }
+
+@media (min-width: 768px) {
+  .site-bar { padding-top: 28px; }
+  .site-foot { padding-top: 8px; }
+}
+
+/* The name, in mono. The drawing is the identity and the homepage spends a
+   whole screen on it; up here it is a label, so it takes the face the rest of
+   the chrome is set in. Tracked wider than the links and held at full ink,
+   which is the only difference between it and them. */
+.site-mark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block: -11px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  color: var(--foreground);
+}
+
+/* ---- rolling text ------------------------------------------------------
+
+   Every word in the chrome is a row of two-glyph columns clipped to one line;
+   hovering slides each column up by exactly one line, 16ms apart, so the word
+   is retyped left to right rather than crossfading. duforn.com's, where it
+   runs off JavaScript that splits the text at runtime. The split is identical
+   on every render, so components/Roll.astro does it at build time and the
+   movement is a transition. Nothing ships.
+
+   The clip window is 1lh with the line-height set here rather than inherited.
+   Geist Mono's box is 1.30em tall and "projects" has a descender in it, so a
+   1em window would cut the j; 1.4 clears the box with room over.
+
+   Widths are unchanged, which is what lets the goo pills below still line up
+   without measuring anything: the face is monospaced, and letter-spacing
+   applies per character either way. */
+.roll {
+  position: relative;
+  display: inline-flex;
+  line-height: 1.4;
+}
+/* The word itself, out of sight and out of flow but still in the document, so
+   a screen reader reads "projects" and a selection copies "projects". The
+   columns beside it are decoration and are marked as such at both layers. */
+.roll-real {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.roll-c {
+  display: inline-block;
+  height: 1lh;
+  overflow: hidden;
+  user-select: none;
+}
+.roll-s {
+  display: flex;
+  flex-direction: column;
+  transition: translate 420ms var(--motion-ease);
+  transition-delay: calc(var(--i) * 16ms);
+}
+.roll-s > span {
+  display: block;
+  height: 1lh;
+}
+:is(a, button):hover .roll-s,
+:is(a, button):focus-visible .roll-s { translate: 0 -1lh; }
 
 /* Words, in the site's mono, at the smallest rung. The chrome reads as chrome
    because it is the only mono on the page; Charter is for content. Lowercase,
@@ -1646,7 +1913,63 @@ code[data-theme*=" "] {
   .site-socials { gap: 20px; }
 }
 
+.site-nav { position: relative; }
+
+/* ---- gooey pills -------------------------------------------------------
+
+   The second row under the words. It carries the same strings in the same
+   face at the same size, so the pills land under the links without anything
+   measuring them; the text in it is transparent and it is aria-hidden, so it
+   is a layout trick and nothing else. Only this layer runs through the filter
+   in components/Nav.astro, which is why the words stay sharp.
+
+   The pill for the current page is always up; hovering a neighbour brings its
+   pill up too, and the two fuse across the 20px gap. See Nav.astro for the
+   generated hover rules. */
+.nav-goo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: inherit;
+  gap: 10px 16px;
+  pointer-events: none;
+  /* The pills carry the same strings as the links, transparent, so selecting
+     the header used to copy every word twice. aria-hidden already hid them
+     from a screen reader; this hides them from the clipboard. */
+  user-select: none;
+  filter: url(#nav-goo);
+}
+.nav-goo > span {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  /* Padding out and margin back in, so the pill is wider than the word while
+     the box stays exactly the width of the word - which is the only reason
+     the two rows stay in register. */
+  padding-inline: 11px;
+  margin-inline: -11px;
+  border-radius: 999px;
+  background: var(--nav-pill);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  color: transparent;
+  transform: scale(0);
+  transition: transform 300ms var(--motion-ease);
+}
+.nav-goo > .is-on { transform: scale(1); }
+.nav-goo-def { position: absolute; width: 0; height: 0; }
+@media (min-width: 768px) {
+  .nav-goo { gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-goo > span { transition: none; }
+}
+
 .site-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   /* 44px of touch target without the box pushing the row apart. */
@@ -1657,6 +1980,7 @@ code[data-theme*=" "] {
   letter-spacing: 0.04em;
   transition: color 200ms var(--motion-ease);
 }
+.site-link[aria-current="page"] { color: var(--foreground); }
 .site-link {
   color: var(--ink-3);
 }
@@ -1749,6 +2073,11 @@ code[data-theme*=" "] {
   position: relative;
   min-height: 100dvh;
   display: grid;
+  /* Explicit, and minmax(0,...) rather than auto. An implicit auto track sizes
+     to max-content and will happily overflow the viewport if anything inside
+     it reports a wide intrinsic size - which a canvas with an inline pixel
+     width does. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto auto;
 }
 
@@ -1759,12 +2088,153 @@ code[data-theme*=" "] {
    <title>/<desc> carry it for assistive tech, as they always did. */
 
 .home-stage {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding: clamp(150px, 23vh, 240px) 24px clamp(20px, 4vh, 48px);
 }
+
+/* ---- blur-in ------------------------------------------------------------
+
+   Borrowed from shwn.design, which starts every section at blur(20px) and
+   scale(1.1) and resolves them on a stagger. 20px over Charter at 44px is a
+   smear, so this runs 16px and 1.04, which still reads as the page coming into
+   focus without the type going to mush on the way.
+
+   The stagger is set per element with --delay, so the order is visible in the
+   markup rather than buried in here. */
+.blur-in {
+  animation: blur-in 760ms var(--motion-ease) var(--delay, 0ms) backwards;
+}
+/* Blur and opacity only. shwn.design opens at scale(1.1) as well and it is the
+   one part not worth copying: every element starts larger than it ends, so a
+   refresh reads as the whole page settling by a few pixels rather than coming
+   into focus. The focus pull is the effect; the geometry change was just along
+   for the ride. */
+@keyframes blur-in {
+  from {
+    opacity: 0;
+    filter: blur(16px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* ---- post contents -----------------------------------------------------
+
+   A left rule rather than a card. The post header above it already closes with
+   a full-width rule, and a bordered box under that reads as a second header.
+   Unnumbered on purpose: several posts number their own sections ("1. what
+   inference actually is"), and a counter would print the number twice. */
+.post-toc {
+  margin-top: 1.75rem;
+  /* Was --accent-border. The accent means "you can act on this" everywhere
+     else on the site - a link, a hover, the current page - and a 2px rail down
+     the side of a list is none of those. duforn.com spends its one colour on
+     three cards and one button arrow and nothing else, which is why you see it
+     when it does appear. Same reason the footer hairline went neutral. */
+  border-left: 2px solid var(--rule-strong);
+  padding: 2px 0 2px 16px;
+}
+.post-toc ol {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  list-style: none;
+  padding: 0;
+}
+.post-toc a {
+  display: inline-block;
+  padding: 3px 0;
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: color 180ms var(--motion-ease),
+    text-decoration-color 180ms var(--motion-ease);
+}
+.post-toc a:hover,
+.post-toc a:focus-visible {
+  color: var(--accent-text);
+  text-decoration-color: var(--accent);
+}
+
+/* ---- the drawn mark -----------------------------------------------------
+
+   One squiggle under the claim in the home line, in the accent, and it is the
+   link to the blog. A real inline svg rather than a background image so the
+   stroke follows the type's colour and can take a hover.
+
+   It does not animate. It was drawing itself on the wordmark's expo curve at
+   1700ms, which put three entrance gestures on one load - the blur-in wave,
+   the pen writing the name, then this - and hid a link's only affordance for
+   the first 1.7 seconds. preserveAspectRatio="none" stretches the squiggle to
+   whatever the phrase measures; vector-effect keeps the stroke from stretching
+   with it. */
+.mark-under {
+  position: relative;
+  white-space: nowrap;
+  color: inherit;
+  text-decoration: none;
+}
+.mark-under svg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.34em;
+  width: 104%;
+  height: 0.42em;
+  overflow: visible;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 200ms var(--motion-ease);
+}
+.mark-under:hover,
+.mark-under:focus-visible {
+  color: var(--accent-text);
+}
+.mark-under:hover svg,
+.mark-under:focus-visible svg {
+  stroke: var(--accent-strong);
+  stroke-width: 2.2;
+}
+
+/* ---- paper grain --------------------------------------------------------
+
+   shwn.design serves a paper-texture JPEG over the whole ground. This is
+   feTurbulence inline in a data URI instead: no request, no decode, and it
+   tiles at any size. Desaturated in the filter, because raw turbulence is
+   colour noise.
+
+   Behind the type, not over it. A negative z-index child paints after the
+   body's own background and before its in-flow content, which is exactly the
+   layer wanted. Opacity is measured against each ground rather than shared -
+   the value that reads as tooth on #FFFDF8 turns #0D0C09 to mud. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.042;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::before { opacity: 0.024; }
+}
+:root[data-theme="dark"] body::before { opacity: 0.024; }
+
 /* The top padding was sized for a screen where the two doors sit side by side
    below the fold. On a phone they stack, so the page is already tall and 23vh
    of dead space above the name only pushes the first door further out of
@@ -1777,13 +2247,17 @@ code[data-theme*=" "] {
 
 /* The name is a drawing, not text: public/wordmark.svg, generated by
    scripts/gen-wordmark.mjs from the same Charter woff2 the rest of the page is
-   set in. It draws itself as one unbroken pen stroke and then inks in solid,
-   once, and its resting state is what the word would look like if it were live
-   type. Everything that makes it move lives inside the file.
+   set in.
 
-   It used to be live text in Instrument Serif with a rough underline that drew
-   on hover, next to a PNG of a computer. Two gestures and a sticker on one
-   name. */
+   It used to write itself: one unbroken pen stroke over 1400ms, then 250ms of
+   ink. It is off now - the page opens on one blur-in stagger, and a name that
+   spends another 1650ms performing in the middle of it is a second entrance on
+   the same load. The generator still holds the whole plotter path behind
+   `PEN`; flipping it back is one constant and `npm run figure`.
+
+   Dropping the pen took the file from 10.1 KB to 4.3 KB, and it is inlined
+   into the homepage HTML, so that is 5.8 KB off the heaviest route on the
+   site. */
 .wordmark-head {
   margin: 0;
   font-weight: 400;
@@ -1818,39 +2292,8 @@ code[data-theme*=" "] {
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
-  /* Arrives on the same 250ms at 1400ms that the letterforms ink in on, so the
-     pen finishes and then the whole lockup resolves at once. Named apart from
-     the svg's own wm-ink: an inlined svg's <style> is document-global, so two
-     @keyframes of one name would collide. */
-  opacity: 0;
-  animation: wordmark-arrive 250ms linear 1400ms forwards;
-}
-@keyframes wordmark-arrive {
-  to { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .wordmark-computer { animation: none; opacity: 1; }
 }
 
-/* Sized off a font size it no longer has one of. The mark is 1.891em wide at
-   whatever size the word is set at - 189.1 viewBox units, 10 font units to the
-   unit, against Instrument Serif's 1000/em - so a font-size clamp still
-   governs how big the name is and the width follows from it.
-
-   `npm run figure` prints this multiplier and the live advance width, and this
-   number has to match it. It has changed with every face: 2.351 for Charter,
-   2.344 for Latin Modern, 1.891 here. Instrument Serif is the narrowest of the
-   three, so the same clamp gives a more compact name.
-
-   The cap is 120px, up from the 96px the live text used. The name used to have
-   a drawing hanging over it from the top edge of the page and two more below
-   it; with the hanging one gone it has to hold the top of the page by itself,
-   and at 96px against the two door figures it did not - the diagrams were the
-   loudest thing on the screen and the name read as a caption on them. The
-   figures came down and the name went up.
-
-   Width rather than height because the word has to fit the column; the aspect
-   ratio carries the height. */
 .wordmark-word {
   display: block;
   width: calc(clamp(58px, 13vw, 120px) * 1.891);
@@ -2017,16 +2460,24 @@ code[data-theme*=" "] {
    timestamp printed beside one. --accent-text, not --accent: on /blog those
    are the same blue, but this rule has to stay correct if the page's ramp
    changes to one whose base fails AA at 12.5px. */
+/* The date is the quiet column. It exists to align the titles into one edge,
+   which is the whole reason it comes first - so it cannot also be the most
+   saturated thing on the page. It was --accent-text at 0.75 opacity, which put
+   sixteen blue dates in front of sixteen near-black titles and inverted the
+   hierarchy: the eye landed on the metadata.
+
+   --ink-3 solid, not tinted down. #6B6862 measures 5.46:1 on the ground, and
+   the same colour at 0.75 opacity lands near 3.6:1 - under AA for 11px text,
+   which this is. */
 .post-date {
   position: relative;
   flex: none;
   width: 6.5rem;
   font-family: var(--font-mono), monospace;
   font-size: var(--fs-micro);
-  color: var(--accent-text);
-  opacity: 0.75;
+  color: var(--ink-3);
   font-variant-numeric: tabular-nums;
-  transition: opacity 180ms var(--motion-ease);
+  transition: color 180ms var(--motion-ease);
 }
 
 /* The underline is visible at rest.
@@ -2062,7 +2513,7 @@ code[data-theme*=" "] {
   text-decoration-thickness: 2px;
 }
 .post-row:hover .post-date,
-.post-row:focus-visible .post-date { opacity: 1; }
+.post-row:focus-visible .post-date { color: var(--ink-2); }
 
 @media (max-width: 520px) {
   .post-row {
@@ -2129,70 +2580,20 @@ code[data-theme*=" "] {
   .tn-cap { display: none; }
 }
 
-/* ---- the stepper on /blog ---------------------------------------------
-   The site's one interactive object. See components/backprop-stepper.tsx for
-   why it is here and not on the homepage door.
-
-   pointer-events comes back on, which is the whole point: .page-figure turns
-   them off because a drawing pinned in the corner should not eat clicks aimed
-   past it. This one is the click target. Later in the file than that rule, and
-   both are single classes, so source order decides.
-
-   240px was right for decoration. 300 is what a thing worth poking needs. */
-.bp-stepper {
-  pointer-events: auto;
-}
-@media (min-width: 900px) {
-  .bp-stepper { width: 300px; }
-}
-.bp-stage {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 4px;
-  border: 0;
-  background: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.bp-art,
-.bp-art svg { display: block; width: 100%; height: auto; }
-
-.bp-caption {
-  margin: 6px 4px 0;
-  font-family: var(--font-mono), monospace;
-  font-size: var(--fs-micro);
-  letter-spacing: 0.04em;
-  color: var(--ink-3);
-  text-align: right;
-  /* The captions are different lengths and the figure is pinned to the right
-     edge, so without a fixed line box the drawing shifts as you step. */
-  min-height: 1.4em;
-}
-
-/* What the stepper reveals. The overlays live in public/blog-backprop.svg at
-   opacity 0 and carry their own colours; these rules only decide when.
-   Forward sits lower than backward on purpose: the gradients are the half of
-   the picture people come to the figure for. */
-.on-f0 .bp-f0,
-.on-f1 .bp-f1,
-.on-f2 .bp-f2 { opacity: 0.48; }
-.on-b0 .bp-b0,
-.on-b1 .bp-b1,
-.on-b2 .bp-b2 { opacity: 0.62; }
-
-/* The loss dot steps too, but only inside the stepper - on the homepage door
-   the same file is a static drawing and needs it lit. */
-.bp-stage .bp-loss { opacity: 0.22; }
-.bp-stage.on-loss .bp-loss { opacity: 0.95; }
-
 /* ============================================================
    About
    ============================================================ */
+/* Centred, not hard left. Every other page puts something in the right margin
+   - /blog and /projects pin a drawing there with .page-figure - but /about has
+   nothing to put there, so left-aligning a 40rem column inside a 1040px shell
+   left 350px of the page doing nothing and the axis moved when you clicked
+   through from the homepage. */
 .about-head {
   display: flex;
   align-items: center;
   margin-bottom: 30px;
+  max-width: 40rem;
+  margin-inline: auto;
 }
 
 .about-photo {
@@ -2208,6 +2609,7 @@ code[data-theme*=" "] {
 
 .about-prose {
   max-width: 40rem;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: 1.15rem;
@@ -2234,29 +2636,62 @@ code[data-theme*=" "] {
 /* ============================================================
    Projects
    ============================================================ */
+/* 28px of gap was a number nobody chose. The grid gutter is 16 on a phone and
+   32 at 1280, and the cards now sit on the same rhythm as everything else. */
 .project-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 28px;
+  align-items: stretch;
+  gap: calc(var(--site-gutter) * 1.5) var(--site-gutter);
 }
 @media (min-width: 720px) {
   .project-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 40px 32px;
+    row-gap: calc(var(--site-gutter) * 1.25);
   }
 }
 
+/* Cards in a row end at different heights because the blurbs are different
+   lengths, so the source links used to sit on a ragged line. Stretching the
+   card and pushing the blurb down with margin-top: auto puts every card's last
+   line on the same one - duforn.com's cards do the same thing, with the body
+   copy pinned to the bottom of a fixed-ratio panel. */
 .project {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  height: 100%;
 }
 
 .project-face {
+  position: relative;
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 12px;
 }
+
+.project-face .project-blurb { margin-top: auto; }
+
+/* The index, over the frame's top-right corner rather than in the head row,
+   which already holds the name and the stack and does not need a third thing.
+   duforn.com numbers its cards 001/002/003, and it is the cheapest mark on
+   that page: it says the set is finite and ordered, which a grid of equal
+   cards does not say on its own. */
+.project-index {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 1;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-micro);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-4);
+  transition: color 180ms var(--motion-ease);
+}
+.project-face:hover .project-index,
+.project-face:focus-visible .project-index { color: var(--ink-2); }
 
 /* 19:10 is the shape of the artwork: the three banners run 1.83 to 1.94, so
    they fill the frame with almost nothing cropped, and the 16:9 clip loses a
@@ -2485,4 +2920,17 @@ code[data-theme*=" "] {
 
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
+}
+
+/* ---- reduced motion for the borrowed gestures --------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .blur-in {
+    animation: none;
+  }
+  /* No slide, and no instant jump either - the second copy never comes up, so
+     a rolling word is a plain word. The colour change on .site-link is what
+     answers the hover, which is what it did before this existed. */
+  .roll-s { transition: none; }
+  :is(a, button):hover .roll-s,
+  :is(a, button):focus-visible .roll-s { translate: none; }
 }

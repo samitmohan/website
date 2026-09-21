@@ -11,7 +11,7 @@ import {
   getAllSlugs,
   formatPostDate,
 } from "../../lib/blog";
-import { markdownToHtml } from "../../lib/markdown";
+import { markdownToHtml, type Heading } from "../../lib/markdown";
 
 export function getStaticPaths() {
   return getAllSlugs().map((slug) => ({ params: { slug } }));
@@ -21,7 +21,20 @@ const { slug } = Astro.params;
 const post = getPost(slug!);
 if (!post) throw new Error(`no post for slug ${slug}`);
 
-const html = await markdownToHtml(post.content, post.math);
+const headings: Heading[] = [];
+const html = await markdownToHtml(post.content, post.math, headings);
+
+/**
+ * Contents, for a post long enough to need one. A 19-minute post with numbered
+ * sections is the case for it; a 4-minute one is not, and a list of two links
+ * is noise.
+ *
+ * No scroll-spy, no sticky rail, no JavaScript: rehype-slug already puts the
+ * ids on the headings, so this is anchors. Posts that hand-roll their own
+ * index (the nn post opens with one) are skipped rather than given a second.
+ */
+const ownIndex = /^(index|contents|table of contents)$/i.test(headings[0]?.text ?? "");
+const toc = post.readingTime >= 10 && headings.length >= 4 && !ownIndex ? headings : [];
 
 // Neighbours and related stay inside the same visibility set, so hidden posts
 // never link out to the public blog and vice versa.
@@ -76,7 +89,7 @@ const articleSchema = {
       </div>
 
       <header class="mb-8">
-        <h1 class="display text-balance text-title text-ink md:text-head">{post.title}</h1>
+        <h1 class="display trim text-balance text-title text-ink md:text-head">{post.title}</h1>
         <div class="mt-7 flex items-center gap-3 border-y border-rule py-4">
           <img
             src="/photo.jpeg"
@@ -93,6 +106,21 @@ const articleSchema = {
           </span>
         </div>
       </header>
+
+      {
+        toc.length > 0 && (
+          <nav class="post-toc" aria-label="Contents">
+            <p class="label">Contents</p>
+            <ol>
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.id}`}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
 
       {
         post.thumbnail && (

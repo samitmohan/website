@@ -56,6 +56,16 @@ const S = 0.1;
    margin. The measured edge clearance at the real render size is printed
    below; if it reads 0 the mark is clipping and this is the number to raise. */
 const PAD = 2;
+/* The pen. Off since 2026-09-20: the homepage opens on one blur-in stagger, and
+   a name that spends 1.65s writing itself in the middle of it is a second
+   entrance on the same load. The mark now arrives with the rest of the page on
+   the blur-in in globals.css.
+
+   Everything that draws it is still below - flip this to true and re-run
+   `npm run figure` to put it back. Off, the file is the inked outline alone:
+   10.1 KB -> 4.9 KB, and that file is inlined into the homepage HTML. */
+const PEN = false;
+
 const DRAW_MS = 1400;
 const INK_MS = 250;
 
@@ -288,8 +298,14 @@ const H = Math.max(...ys) + PAD - minY;
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${f(minX)} ${f(minY)} ${f(W)} ${f(H)}" role="img">
 <title>samit</title>
-<desc>The word samit drawn as a single unbroken pen stroke: the seven contours of the five letters, joined by six straight travel segments, in the order a pen plotter would take them.</desc>
-<style><![CDATA[
+<desc>${
+  PEN
+    ? "The word samit drawn as a single unbroken pen stroke: the seven contours of the five letters, joined by six straight travel segments, in the order a pen plotter would take them."
+    : "The word samit, set in Charter and cut as a single filled outline."
+}</desc>
+${
+  PEN
+    ? `<style><![CDATA[
   /* 0.6 viewBox units, and in viewBox units on purpose - the pen has to stay
      thinner than the thinnest part of the letterform or both sides of a
      hairline merge and the outline fills in solid. Charter's thin strokes are
@@ -313,8 +329,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${f(minX)} ${f(min
       wm-lift ${INK_MS}ms linear ${DRAW_MS}ms forwards;
   }
   /* Arrives as the pen lifts, so the mark settles into plain solid Charter and
-     the drawing leaves nothing behind - no outline halo, no leftover rule.
-     Once. The rest of this page never moves. */
+     the drawing leaves nothing behind - no outline halo, no leftover rule. */
   .wm-ink {
     fill: currentColor;
     fill-opacity: 0;
@@ -328,9 +343,10 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${f(minX)} ${f(min
     .wm-pen { animation: none; stroke-dashoffset: 0; opacity: 0; }
     .wm-ink { animation: none; fill-opacity: 1; }
   }
-]]></style>
-<path class="wm-ink" d="${fill}"/>
-<path class="wm-pen" pathLength="100" d="${stroke}"/>
+]]></style>`
+    : `<style><![CDATA[ .wm-ink { fill: currentColor; } ]]></style>`
+}
+<path class="wm-ink" d="${fill}"/>${PEN ? `\n<path class="wm-pen" pathLength="100" d="${stroke}"/>` : ""}
 </svg>
 `;
 

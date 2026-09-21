@@ -78,6 +78,30 @@ const person = {
     <meta name="theme-color" content="#FFFDF8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0D0C09" media="(prefers-color-scheme: dark)" />
 
+    {/* The two faces every route paints above the fold. Without these the
+        browser only discovers them when it parses the stylesheet and then
+        matches text against it, so the first paint is the fallback and the real
+        face swaps in a beat later - which reflows every line it touches.
+
+        Not visible on a machine with Berkeley Mono installed: it sits ahead of
+        Geist Mono in --font-mono, wins locally, and no webfont is ever fetched.
+        Everyone else got the swap. Only the regular weights are preloaded;
+        Charter italic and Geist Mono 500 are not on a first screen. */}
+    <link
+      rel="preload"
+      href="/fonts/charter_regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/geist-mono-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
     <link rel="icon" href="/icon0.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="/icon1.png" sizes="192x192" type="image/png" />
     <link rel="alternate" type="application/rss+xml" title="Samit Mohan" href="/blog/rss.xml" />

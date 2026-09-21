@@ -53,6 +53,43 @@ pcount=$(echo "$dark_blocks" | tail -1)
 if [ "$verdict" = "MATCH" ]; then note "palette copies" "$pcount" "$pcount" "ok"
 else note "palette copies" "$verdict" "MATCH" "OVER"; fail=1; fi
 
+# ----------------------------------------------------------------- type scale
+# The seven --fs-* rungs are precomputed clamps, because CSS cannot raise a
+# fluid ratio to a power. This recomputes all seven from the four numbers the
+# scale is defined by and fails if a rung has drifted off the ratio - which is
+# the property the hand-written calc chain used to have for free.
+echo
+echo "type scale:"
+type_check=$(python3 - <<'PY_EOF'
+import re
+VMIN, VMAX = 380, 1280
+R_MIN, R_MAX = 1.17, 1.25
+B_MIN, B_MAX = 16.5, 17.5
+STEPS = {"micro": -2, "small": -1, "body": 0, "sub": 1, "title": 2, "head": 3, "display": 4}
+
+s = open("src/styles/globals.css").read()
+bad = []
+for name, step in STEPS.items():
+    m = re.search(r"--fs-%s:\s*clamp\(([\d.]+)px,\s*([\d.]+)px\s*([+-])\s*([\d.]+)vw,\s*([\d.]+)px\)" % name, s)
+    if not m:
+        bad.append(f"{name}: no clamp"); continue
+    lo_b, inter, sign, vw, hi_b = float(m[1]), float(m[2]), m[3], float(m[4]), float(m[5])
+    slope = (vw / 100) * (1 if sign == "+" else -1)
+    want_lo = B_MIN * (R_MIN ** step)
+    want_hi = B_MAX * (R_MAX ** step)
+    for v, want in ((VMIN, want_lo), (VMAX, want_hi)):
+        got = min(max(lo_b, inter + slope * v), hi_b)
+        if abs(got - want) > 0.02:
+            bad.append(f"{name}@{v}: {got:.2f} want {want:.2f}")
+print("DRIFT " + "; ".join(bad) if bad else "OK")
+print(len(STEPS))
+PY_EOF
+)
+verdict=$(echo "$type_check" | head -1)
+rungs=$(echo "$type_check" | tail -1)
+if [ "$verdict" = "OK" ]; then note "rungs on the ratio" "$rungs" "$rungs" "ok"
+else note "rungs on the ratio" "DRIFT" "OK" "OVER"; echo "    $verdict"; fail=1; fi
+
 # ---------------------------------------------------------------- line count
 LOC_CEILING=3200
 loc=$(find src \( -name '*.ts' -o -name '*.astro' \) | xargs cat | wc -l | tr -d ' ')

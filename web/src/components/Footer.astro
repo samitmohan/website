@@ -1,6 +1,10 @@
 ---
 import { SOCIAL_LINKS } from "../config/links";
+import Roll from "./Roll.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+
+/* The other end of the header's rail: the outbound links hold the left, the
+   switch holds the right. Nothing is centred at either end of the page now. */
 ---
 
 <footer class="site-foot">
@@ -9,10 +13,10 @@ import ThemeToggle from "./ThemeToggle.astro";
       SOCIAL_LINKS.map((l) =>
         l.external ? (
           <a href={l.href} class="site-link" target="_blank" rel="noopener noreferrer">
-            {l.label}
+            <Roll text={l.label} />
           </a>
         ) : (
-          <a href={l.href} class="site-link">{l.label}</a>
+          <a href={l.href} class="site-link"><Roll text={l.label} /></a>
         ),
       )
     }
