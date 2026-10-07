@@ -13,35 +13,64 @@
    into public/fonts/ and add the two @font-face blocks back (weights 400/700,
    font-display: swap). */
 
-/* Charter, Matthew Carter 1987, drawn to hold up on 300dpi laser printers and
-   fax machines - so it is rugged at small sizes and reads as an engineer's
-   book rather than a fashion serif. It replaced Instrument Serif, which is a
-   high-contrast display face, and a high-contrast serif on a cream ground is
-   the one type-and-colour pairing every generated page in 2026 arrives with.
+/* Libron, Nico Verbruggen's reworking of Readerly for long-form reading on
+   e-readers: calmer serifs and even spacing, drawn to be read for an hour
+   rather than looked at. It replaced Charter (2026-10-07).
 
-   Bitstream released these to the X Consortium for any purpose without
-   restriction, on the condition that the notice travels with the files:
-   public/fonts/LICENSE.fonts.txt is that notice and has to stay there.
+   OFL 1.1, with "Libron" a Reserved Font Name. These files are a subset of
+   the v0.30 web release, and the OFL FAQ (2.6) counts subsetting as
+   modification, which loses the right to the reserved name - so the subset
+   ships as "Samit Serif" with Libron's copyright notice left intact in its
+   name table. public/fonts/LICENSE-Libron.txt travels with them.
 
-   One family carries both display and body here, so there is no second face
-   to keep in tune. Mono is for data only.
+   Subset to the 228 codepoints the Charter files carried plus 11 the posts
+   use (≈ ≤ ≥ ≠ ′ ŷ € ₹ and friends), with kern,
+   liga, tnum and pnum kept and small caps and hinting dropped: 82 KB per face
+   upstream, 24 KB regular and 26 KB italic here.
 
-   No 700 face: nothing is set in bold Charter, and letting the browser
-   synthesise one would smear the contrast. Italic is real, because prose
-   needs it. */
+   No 700 face: nothing is set in bold, and letting the browser synthesise one
+   would smear the contrast. Italic is real, because prose needs it. */
 @font-face {
-  font-family: "Charter";
-  src: url("/fonts/charter_regular.woff2") format("woff2");
+  font-family: "Samit Serif";
+  src: url("/fonts/samit-serif_regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Charter";
-  src: url("/fonts/charter_italic.woff2") format("woff2");
+  font-family: "Samit Serif";
+  src: url("/fonts/samit-serif_italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
+}
+
+/* Georgia, resized to take up the room Libron will. The first paint is in the
+   fallback and the webfont swaps in afterwards; without these overrides Libron
+   sets about 10% wider than Georgia, every line re-wraps on the swap, and
+   /about measured a layout shift of 0.047 with the fonts delayed 1.5s.
+
+   size-adjust is the ratio of the two faces' average advance width, weighted by
+   English letter frequency; the ascent and descent are Libron's, divided by
+   it. Derived from the woff2s here and Georgia.ttf, not eyeballed. Android has
+   no Georgia, so local() misses and the stack falls through as before. */
+@font-face {
+  font-family: "Samit Serif Fallback";
+  src: local("Georgia");
+  font-style: normal;
+  size-adjust: 110.17%;
+  ascent-override: 94.4%;
+  descent-override: 23.6%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Samit Serif Fallback";
+  src: local("Georgia Italic"), local("Georgia-Italic");
+  font-style: italic;
+  size-adjust: 104.91%;
+  ascent-override: 99.13%;
+  descent-override: 24.78%;
+  line-gap-override: 0%;
 }
 
 /* Geist Mono, self-hosted. It used to arrive through next/font as
@@ -232,7 +261,7 @@
 
      duforn.com trims it, which is why their headings sit flush in their boxes
      and their gaps read as decisions. Their numbers are .33em/.38em for their
-     own face; these are Charter's and Geist Mono's, and they are derived
+     own face; these are Libron's and Geist Mono's, and they are derived
      rather than eyeballed:
 
        trim-top    = capHeight - (ascent - descent) / 2
@@ -245,14 +274,14 @@
      Measured two ways, agreeing to three decimals: fontkit over the woff2
      files in public/fonts, and canvas measureText() in the browser that
      actually renders them - fontBoundingBoxAscent/Descent for the box, the ink
-     top of "H" for the cap. Charter reads A=0.980 D=0.236 cap=0.671; Geist
+     top of "H" for the cap. Libron reads A=1.040 D=0.260 cap=0.709; Geist
      Mono reads A=1.005 D=0.295 cap=0.710. Measure the browser side at 1000px,
      not 100px: measureText rounds to integer pixels and 0.236 comes back 0.24.
 
      Re-measure with scripts/font-metrics.mjs if either file is replaced.
      -------------------------------------------------------------------- */
-  --trim-top: 0.299em;
-  --trim-bottom: 0.372em;
+  --trim-top: 0.319em;
+  --trim-bottom: 0.390em;
 
   /* ---- the grid ------------------------------------------------------
      duforn.com's, whose whole layout is four numbers: a column count that
@@ -349,13 +378,13 @@
   --color-accent-text: var(--accent-text);
   /* One family for prose and for headings. The site used to run a system sans
      for body and a display serif for headings, which is two voices for no
-     reason - Charter was drawn as a text face and holds at 96px, so it does
+     reason - Libron was drawn as a text face and holds at large sizes, so it does
      both jobs and there is only one thing to keep in tune.
 
-     29 KB for the two faces. The fallbacks are the serifs that are already on
+     50 KB for the two faces. The fallbacks are the serifs that are already on
      the machine, not the sans stack, so a swap changes the weight of the page
      and not its voice. */
-  --font-sans: "Charter", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans: "Samit Serif", "Samit Serif Fallback", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-display: var(--font-sans);
   --font-mono: "Berkeley Mono", "JetBrains Mono", "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --text-micro: var(--fs-micro);
@@ -615,8 +644,7 @@ body {
    not. */
 .trim::after { margin-top: calc(-0.5lh + var(--trim-bottom)); }
 
-/* Geist Mono is a taller face in the same em: its caps reach 0.710 against
-   Charter's 0.671, and its ascender and descender are symmetric about the
+/* Geist Mono's caps reach 0.710, level with Libron's 0.709, and its ascender and descender are symmetric about the
    middle of the line box, so one number does both ends. */
 .trim-mono {
   --trim-top: 0.355em;
@@ -1960,6 +1988,14 @@ code[data-theme*=" "] {
   transition: transform 300ms var(--motion-ease);
 }
 .nav-goo > .is-on { transform: scale(1); }
+/* While any link is hovered, only that link's pill shows. The generated
+   per-link hover rules in Nav.astro carry one more class of specificity than
+   this, so the hovered pill wins even when it is the current page's. Both
+   sit behind (hover: hover): a tap on a phone leaves :hover stuck on the
+   tapped link, which lit a pill under it until the next tap elsewhere. */
+@media (hover: hover) {
+  .site-nav:has(.site-link:hover) .nav-goo > .is-on { transform: scale(0); }
+}
 .nav-goo-def { position: absolute; width: 0; height: 0; }
 @media (min-width: 768px) {
   .nav-goo { gap: 20px; }

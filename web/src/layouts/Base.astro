@@ -86,10 +86,10 @@ const person = {
         Not visible on a machine with Berkeley Mono installed: it sits ahead of
         Geist Mono in --font-mono, wins locally, and no webfont is ever fetched.
         Everyone else got the swap. Only the regular weights are preloaded;
-        Charter italic and Geist Mono 500 are not on a first screen. */}
+        Libron italic and Geist Mono 500 are not on a first screen. */}
     <link
       rel="preload"
-      href="/fonts/charter_regular.woff2"
+      href="/fonts/samit-serif_regular.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -127,6 +127,22 @@ const person = {
     </script>
 
     {math && <link rel="stylesheet" href="/katex/katex.min.css" />}
+
+    {/* Speculation Rules: Chromium prerenders a same-site page once the
+        pointer rests on its link (~200ms, "moderate"), so the click shows a
+        page that has already loaded. JSON, not JavaScript - nothing runs in
+        browsers that do not support it. The RSS feed and anything opening in
+        a new tab are left out, since prerendering those is wasted work. */}
+    <script is:inline type="speculationrules" set:html={JSON.stringify({
+      prerender: [{
+        where: { and: [
+          { href_matches: "/*" },
+          { not: { href_matches: "/blog/rss.xml" } },
+          { not: { selector_matches: "[target=_blank]" } },
+        ] },
+        eagerness: "moderate",
+      }],
+    })} />
 
     <script is:inline type="application/ld+json" set:html={JSON.stringify(person)} />
   </head>

@@ -1,23 +1,23 @@
 # Fonts
 
-## Charter — committed
+## Samit Serif (Libron subset) - committed
 
-`charter_regular.woff2`, `charter_italic.woff2`. The site's one typeface: both
-the headings and the prose, through `--font-sans` / `--font-display` in
-`app/globals.css`. Matthew Carter, 1987, drawn to survive 300dpi laser printers
-and fax machines.
+`samit-serif_regular.woff2`, `samit-serif_italic.woff2`. The site's one
+typeface: headings and prose, through `--font-sans` / `--font-display` in
+`src/styles/globals.css`. A subset of
+[Libron](https://github.com/nicoverbruggen/libron) v0.30 by Nico Verbruggen,
+built by `scripts/subset-libron.py` (the command is in its docstring).
 
-Taken from [`charter-webfont@4.1.0`](https://www.npmjs.com/package/charter-webfont),
-which repackages the Type 1 originals Bitstream contributed to the X Consortium.
-Butterick's copy and the story are at https://practicaltypography.com/charter.html
+Libron is OFL 1.1 with "Libron" as a Reserved Font Name. The OFL FAQ (2.6)
+counts subsetting as modification, so the subset carries a different name.
+`LICENSE-Libron.txt` is the OFL text and has to travel with the files.
 
-`LICENSE.fonts.txt` is Bitstream's notice. The grant is for any purpose without
-restriction *on the condition that the notice stays intact with the files*, so
-that file is a requirement and not a courtesy — do not remove it, and copy it
-along with the woff2s anywhere they go.
+No bold face: nothing on the site is set in bold, and a synthesised one would
+smear the contrast.
 
-No bold face: nothing on the site is set in bold Charter, and letting the
-browser synthesise one would smear the contrast.
+`LICENSE.fonts.txt` is Bitstream's Charter notice. Charter no longer ships in
+public/, but the homepage wordmark is drawn from Charter outlines by
+`scripts/gen-wordmark.mjs`.
 
 ## Berkeley Mono — licensed, not committed
 

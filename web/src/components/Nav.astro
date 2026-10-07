@@ -31,12 +31,14 @@ const current = (href: string) => here === href || (href !== "/" && here.startsW
 /* One rule per link rather than four written out by hand, so adding a section
    to SECTION_LINKS cannot leave a pill that never lights up. */
 const hoverRules =
+  "@media (hover:hover){" +
   items
     .map(
       (_, i) =>
         `.site-nav:has(.site-link:nth-of-type(${i + 1}):hover) .nav-goo>:nth-child(${i + 1})`,
     )
-    .join(",") + "{transform:scale(1)}";
+    .join(",") +
+  "{transform:scale(1)}}";
 ---
 
 <header class="site-bar">

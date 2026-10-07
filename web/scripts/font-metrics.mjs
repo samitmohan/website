@@ -24,7 +24,7 @@ import { openSync } from "fontkit";
    here disagree about it: Charter stores its descender positive, Geist Mono
    negative. Taking the magnitude is the only reading that is right for both. */
 const FACES = [
-  ["Charter", "public/fonts/charter_regular.woff2"],
+  ["Libron", "public/fonts/samit-serif_regular.woff2"],
   ["Geist Mono", "public/fonts/geist-mono-400.woff2"],
 ];
 
