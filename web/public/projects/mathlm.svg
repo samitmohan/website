@@ -30,11 +30,25 @@
      on the card that means anything. */
   .ml-loss { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; }
 
-  /* This drawing holds still. It ran on a 6s loop, and with every figure on
-     the site looping at once nothing on any page was ever at rest, which is
-     what made these read as cartoons rather than as diagrams. What is drawn is
-     the state the loop used to settle into - the state the reduced-motion
-     branch already specified, and now the only one there is. */
+  /* At rest this drawing holds still: it ran on a 6s loop, and with every
+     figure on the site looping at once nothing on any page was ever at rest,
+     which made these read as cartoons rather than as diagrams. What is drawn
+     is the finished state.
+
+     Pointing at the card plays the process once and lands on that same state,
+     so the motion only runs when someone has asked for it, and leaving the card
+     early snaps to the finished drawing rather than to a half-built one. The
+     selector reaches the card that inlines this file; reduced motion keeps it
+     still. */
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.project-face:hover, .project-face:focus-visible) :is(.ml-on, .ml-on-lab) {
+      animation: ml-lit 260ms var(--motion-ease, ease-out) calc(var(--i) * 300ms) backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .ml-loss {
+      animation: ml-draw 1300ms cubic-bezier(.3,0,.2,1) 120ms backwards; }
+  }
+  @keyframes ml-lit  { from { opacity:0; } to { opacity:1; } }
+  @keyframes ml-draw { from { stroke-dasharray:1 1; stroke-dashoffset:1; }
+                        to   { stroke-dasharray:1 1; stroke-dashoffset:0; } }
 
 ]]></style>
 
@@ -43,30 +57,30 @@
 <!-- four stages -->
 <g>
   <rect class="ml-stage" x="12"  y="40" width="80" height="30" rx="7"/>
-  <rect class="ml-on"    x="12"  y="40" width="80" height="30" rx="7"/>
+  <rect class="ml-on"    style="--i:0" x="12"  y="40" width="80" height="30" rx="7"/>
   <text class="ml-lab"   x="52"  y="59">tokenizer</text>
-  <text class="ml-lab ml-on-lab" x="52" y="59">tokenizer</text>
+  <text class="ml-lab ml-on-lab" style="--i:0" x="52" y="59">tokenizer</text>
 
   <rect class="ml-stage" x="108" y="40" width="80" height="30" rx="7"/>
-  <rect class="ml-on"    x="108" y="40" width="80" height="30" rx="7"/>
+  <rect class="ml-on"    style="--i:1" x="108" y="40" width="80" height="30" rx="7"/>
   <text class="ml-lab"   x="148" y="59">pretrain</text>
-  <text class="ml-lab ml-on-lab" x="148" y="59">pretrain</text>
+  <text class="ml-lab ml-on-lab" style="--i:1" x="148" y="59">pretrain</text>
 
   <rect class="ml-stage" x="204" y="40" width="80" height="30" rx="7"/>
-  <rect class="ml-on"    x="204" y="40" width="80" height="30" rx="7"/>
+  <rect class="ml-on"    style="--i:2" x="204" y="40" width="80" height="30" rx="7"/>
   <text class="ml-lab"   x="244" y="59">SFT</text>
-  <text class="ml-lab ml-on-lab" x="244" y="59">SFT</text>
+  <text class="ml-lab ml-on-lab" style="--i:2" x="244" y="59">SFT</text>
 
   <rect class="ml-stage" x="300" y="40" width="68" height="30" rx="7"/>
-  <rect class="ml-on"    x="300" y="40" width="68" height="30" rx="7"/>
+  <rect class="ml-on"    style="--i:3" x="300" y="40" width="68" height="30" rx="7"/>
   <text class="ml-lab"   x="334" y="59">GRPO</text>
-  <text class="ml-lab ml-on-lab" x="334" y="59">GRPO</text>
+  <text class="ml-lab ml-on-lab" style="--i:3" x="334" y="59">GRPO</text>
 </g>
 
 <!-- loss axis and curve -->
 <line class="ml-tick" x1="12" y1="176" x2="368" y2="176"/>
 <line class="ml-tick" x1="12" y1="98" x2="12" y2="176"/>
-<path class="ml-loss" d="M12 102 C60 128 84 140 120 148 C160 157 196 162 232 166 C276 170 320 172 368 173"/>
+<path class="ml-loss" pathLength="1" d="M12 102 C60 128 84 140 120 148 C160 157 196 162 232 166 C276 170 320 172 368 173"/>
 <text class="ml-cap" x="330" y="112">loss</text>
 <text class="ml-cap" x="300" y="192">steps &#8594;</text>
 </svg>

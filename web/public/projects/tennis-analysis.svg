@@ -41,7 +41,7 @@
   /* Keypoints, all found. They used to pop on one at a time over the first
      fifth of a 6s cycle; the regression finding all ten is the state worth
      drawing, and it is the state this holds. */
-  .tn-kp { fill:var(--ink); opacity:1 transform:none; }
+  .tn-kp { fill:var(--ink); opacity:1; transform:none; }
 
   /* The boxes used to drift, on the argument that a detector which never moves
      reads as a rectangle drawn on a picture. Two boxes wandering on a loop read
@@ -73,11 +73,58 @@
   /* Fires as the ball reaches the far end and again on the return. */
   .tn-chip { opacity:1; }
 
-  /* This drawing holds still. It ran on a 6s loop, and with every figure on
-     the site looping at once nothing on any page was ever at rest, which is
-     what made these read as cartoons rather than as diagrams. What is drawn is
-     the state the loop used to settle into - the state the reduced-motion
-     branch already specified, and now the only one there is. */
+  /* At rest this drawing holds still: it ran on a 6s loop, and with every
+     figure on the site looping at once nothing on any page was ever at rest,
+     which made these read as cartoons rather than as diagrams. What is drawn
+     is the finished state.
+
+     Pointing at the card plays the process once and lands on that same state,
+     so the motion only runs when someone has asked for it, and leaving the card
+     early snaps to the finished drawing rather than to a half-built one. The
+     selector reaches the card that inlines this file; reduced motion keeps it
+     still. */
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.project-face:hover, .project-face:focus-visible) .tn-kp {
+      animation: tn-lock 240ms var(--motion-ease, ease-out) calc(var(--i) * 50ms) backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .tn-ball {
+      animation: tn-rally 1500ms linear 520ms backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .tn-chip {
+      animation: tn-read 1500ms linear 520ms backwards; }
+  }
+  /* transform-box so each dot scales about itself, not the svg origin. */
+  .tn-kp { transform-box:fill-box; transform-origin:center; }
+  @keyframes tn-lock { from { opacity:0; transform:scale(2.2); } to { opacity:1; transform:none; } }
+  /* Sampled off the two quadratics in the dashed path, starting and ending at
+     the resting point on the lob, so the ball walks the arc that is drawn. */
+  @keyframes tn-rally {
+    0.00% { transform:translate(176.0px,92.0px); }
+    4.17% { transform:translate(174.1px,85.8px); }
+    8.33% { transform:translate(173.1px,79.6px); }
+    12.50% { transform:translate(173.0px,73.6px); }
+    16.67% { transform:translate(173.8px,68.1px); }
+    20.83% { transform:translate(175.4px,62.8px); }
+    25.00% { transform:translate(178.0px,58.0px); }
+    29.17% { transform:translate(185.5px,65.0px); }
+    33.33% { transform:translate(192.1px,71.9px); }
+    37.50% { transform:translate(197.8px,78.9px); }
+    41.67% { transform:translate(202.4px,85.8px); }
+    45.83% { transform:translate(206.2px,92.7px); }
+    50.00% { transform:translate(209.0px,99.5px); }
+    54.17% { transform:translate(210.9px,106.3px); }
+    58.33% { transform:translate(211.8px,113.1px); }
+    62.50% { transform:translate(211.8px,119.9px); }
+    66.67% { transform:translate(210.8px,126.6px); }
+    70.83% { transform:translate(208.9px,133.3px); }
+    75.00% { transform:translate(206.0px,140.0px); }
+    79.17% { transform:translate(198.8px,131.2px); }
+    83.33% { transform:translate(192.4px,122.7px); }
+    87.50% { transform:translate(187.0px,114.6px); }
+    91.67% { transform:translate(182.4px,106.9px); }
+    95.83% { transform:translate(178.8px,99.5px); }
+    100.00% { transform:translate(176.0px,92.0px); }
+  }
+  /* The speed reads out as the ball reaches the far end. */
+  @keyframes tn-read { 0%, 22% { opacity:0; } 30%, 100% { opacity:1; } }
 
 ]]></style>
 
@@ -104,16 +151,16 @@
 <!-- keypoints. transform-box/origin so the scale in tn-lock pops about the
      dot itself rather than about the svg origin. -->
 <g style="transform-box:fill-box;transform-origin:center">
-  <circle class="tn-kp" cx="132" cy="52"  r="2.4"/>
-  <circle class="tn-kp" cx="248" cy="52"  r="2.4"/>
-  <circle class="tn-kp" cx="115" cy="80"  r="2.4"/>
-  <circle class="tn-kp" cx="265" cy="80"  r="2.4"/>
-  <circle class="tn-kp" cx="190" cy="80"  r="2.4"/>
-  <circle class="tn-kp" cx="190" cy="140" r="2.4"/>
-  <circle class="tn-kp" cx="77"  cy="140" r="2.4"/>
-  <circle class="tn-kp" cx="303" cy="140" r="2.4"/>
-  <circle class="tn-kp" cx="60"  cy="168" r="2.4"/>
-  <circle class="tn-kp" cx="320" cy="168" r="2.4"/>
+  <circle class="tn-kp" style="--i:0" cx="132" cy="52"  r="2.4"/>
+  <circle class="tn-kp" style="--i:1" cx="248" cy="52"  r="2.4"/>
+  <circle class="tn-kp" style="--i:2" cx="115" cy="80"  r="2.4"/>
+  <circle class="tn-kp" style="--i:3" cx="265" cy="80"  r="2.4"/>
+  <circle class="tn-kp" style="--i:4" cx="190" cy="80"  r="2.4"/>
+  <circle class="tn-kp" style="--i:5" cx="190" cy="140" r="2.4"/>
+  <circle class="tn-kp" style="--i:6" cx="77"  cy="140" r="2.4"/>
+  <circle class="tn-kp" style="--i:7" cx="303" cy="140" r="2.4"/>
+  <circle class="tn-kp" style="--i:8" cx="60"  cy="168" r="2.4"/>
+  <circle class="tn-kp" style="--i:9" cx="320" cy="168" r="2.4"/>
 </g>
 
 <!-- players -->

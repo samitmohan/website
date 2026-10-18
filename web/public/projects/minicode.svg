@@ -30,11 +30,24 @@
      ticking. */
   .mc-caret { fill:var(--ink); }
 
-  /* This drawing holds still. It ran on a 7s loop, and with every figure on
-     the site looping at once nothing on any page was ever at rest, which is
-     what made these read as cartoons rather than as diagrams. What is drawn is
-     the state the loop used to settle into - the state the reduced-motion
-     branch already specified, and now the only one there is. */
+  /* At rest this drawing holds still: it ran on a 7s loop, and with every
+     figure on the site looping at once nothing on any page was ever at rest,
+     which made these read as cartoons rather than as diagrams. What is drawn
+     is the finished state.
+
+     Pointing at the card plays the process once and lands on that same state,
+     so the motion only runs when someone has asked for it, and leaving the card
+     early snaps to the finished drawing rather than to a half-built one. The
+     selector reaches the card that inlines this file; reduced motion keeps it
+     still. */
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.project-face:hover, .project-face:focus-visible) .mc-line {
+      animation: mc-in 220ms var(--motion-ease, ease-out) calc(var(--i) * 260ms) backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .mc-caret {
+      animation: mc-blink 1060ms steps(1) 1560ms 2; }
+  }
+  @keyframes mc-in    { from { opacity:0; transform:translateY(3px); } to { opacity:1; transform:none; } }
+  @keyframes mc-blink { 50% { opacity:0; } }
 
 ]]></style>
 
@@ -45,28 +58,28 @@
 <circle class="mc-dot" cx="50" cy="26" r="3"/>
 <text class="mc-d" x="66" y="29">minicode &#183; ~350 lines</text>
 
-<g class="mc-line">
+<g class="mc-line" style="--i:0">
   <text class="mc-t" x="24" y="62">&#8250; add binary search</text>
 </g>
-<g class="mc-line">
+<g class="mc-line" style="--i:1">
   <rect class="mc-chip" x="24" y="74" width="46" height="15" rx="4"/>
   <text class="mc-d" x="31" y="85">Read</text>
   <text class="mc-d" x="78" y="85">binary_search.py</text>
 </g>
-<g class="mc-line">
+<g class="mc-line" style="--i:2">
   <rect class="mc-chip" x="24" y="96" width="46" height="15" rx="4"/>
   <text class="mc-d" x="33" y="107">Edit</text>
   <text class="mc-d" x="78" y="107">+ bisect_left()</text>
 </g>
-<g class="mc-line">
+<g class="mc-line" style="--i:3">
   <rect class="mc-chip" x="24" y="118" width="46" height="15" rx="4"/>
   <text class="mc-d" x="31" y="129">Bash</text>
   <text class="mc-d" x="78" y="129">pytest &#8212; 4 passed</text>
 </g>
-<g class="mc-line">
+<g class="mc-line" style="--i:4">
   <text class="mc-t" x="24" y="152">done. leftmost insertion point.</text>
 </g>
-<g class="mc-line">
+<g class="mc-line" style="--i:5">
   <rect class="mc-caret" x="24" y="163" width="6" height="11"/>
 </g>
 </svg>
