@@ -29,7 +29,7 @@
  * transparent, because a black-on-transparent icon disappears into dark browser
  * chrome and the site has one ground anyway.
  */
-import { statSync } from "fs";
+import { statSync, writeFileSync } from "fs";
 import path from "path";
 import sharp from "sharp";
 
@@ -39,6 +39,7 @@ const OUT = path.join(HERE, "..", "public");
 
 const INK = "#141414"; // --foreground
 const GROUND = "#FFFDF8"; // --background
+const INK_DARK = "#E1E1E1"; // --foreground, dark theme
 
 /* Crops in source pixels. The drawing's alpha has brush spatter reaching every
    edge of the 240x197 canvas, so a bounding box over it returns the whole
@@ -106,5 +107,53 @@ async function icon({ file, crop, px, contrast }) {
   );
 }
 
+/**
+ * icon.svg: the monitor crop again, but the ink follows the BROWSER's theme
+ * through a media query inside the SVG. The PNGs above sit on a cream plate
+ * because black ink on a transparent tile vanishes into dark tab chrome; an
+ * SVG can switch its own ink instead, so it needs no plate and draws straight
+ * onto the tab strip. The tab strip has its own theme, separate from the
+ * site's, which is why this reads prefers-color-scheme and not data-theme.
+ *
+ * Still a raster underneath - the drawing is dry brush and has nothing to
+ * trace - embedded as a luminance mask (white ink on black) over a filled
+ * rect. 64px covers a 32-device-px tab at 2x.
+ *
+ * Safari ignores SVG favicons and falls back to icon0.png.
+ */
+async function svgIcon({ file, crop, px, contrast }) {
+  let plate = sharp(SRC).ensureAlpha().extractChannel(3);
+  if (contrast) plate = plate.linear(contrast[0], contrast[1]);
+  const ink = await sharp(await plate.png().toBuffer()).extract(crop).png().toBuffer();
+
+  const side = Math.round(Math.max(crop.width, crop.height) * MARGIN);
+  const square = await sharp({
+    create: { width: side, height: side, channels: 3, background: "#000000" },
+  })
+    .composite([{ input: ink, gravity: "center" }])
+    .png()
+    .toBuffer();
+  const mask = await sharp(square)
+    .resize({ width: px, height: px, kernel: "lanczos3" })
+    .greyscale()
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${px} ${px}">` +
+    `<style>.i{fill:${INK}}@media (prefers-color-scheme:dark){.i{fill:${INK_DARK}}}</style>` +
+    `<mask id="m"><image width="${px}" height="${px}" href="data:image/png;base64,${mask.toString("base64")}"/></mask>` +
+    `<rect class="i" width="${px}" height="${px}" mask="url(#m)"/></svg>\n`;
+
+  const out = path.join(OUT, file);
+  writeFileSync(out, svg);
+  console.log(`  public/${file.padEnd(10)} ${px}x${px}  ${String(statSync(out).size).padStart(6)} B`);
+}
+
 await icon({ file: "icon0.png", crop: MONITOR, px: 32, contrast: CONTRAST });
 await icon({ file: "icon1.png", crop: FULL, px: 192 });
+/* iOS composites the home-screen icon straight onto the wallpaper and paints
+   no ground of its own, so this one must stay opaque - the cream plate does
+   that. 180 is the size iOS asks for. */
+await icon({ file: "apple-touch-icon.png", crop: FULL, px: 180 });
+await svgIcon({ file: "icon.svg", crop: MONITOR, px: 64, contrast: CONTRAST });
