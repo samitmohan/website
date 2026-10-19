@@ -20,7 +20,14 @@ export function Top4({ data }: { data: Data }) {
       <h2 className="text-center font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">#top4</h2>
       <div className="mt-6 flex flex-wrap justify-center gap-2" role="tablist" aria-label="Category">
         {TABS.map(([key, label]) => (
-          <button key={key} type="button" role="tab" aria-selected={tab === key} aria-pressed={tab === key} className="pill" onClick={() => setTab(key)}>
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={tab === key}
+            className="pill aria-selected:!bg-ink aria-selected:!text-bg"
+            onClick={() => setTab(key)}
+          >
             {label}
           </button>
         ))}
