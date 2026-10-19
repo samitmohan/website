@@ -196,11 +196,11 @@ await check("left rail: a colour changes the accent and it survives a reload", a
   const before = await accent();
   await page.getByRole("button", { name: "colour and light switches" }).click();
   await page.waitForTimeout(600);
-  await page.getByRole("radio", { name: "site colour: green" }).click();
+  await page.getByRole("radio", { name: "site colour: light green" }).click();
   const after = await accent();
   expect(after !== before, `accent stayed ${before}`);
   await page.reload();
-  expect((await page.getAttribute("html", "data-accent")) === "green", "accent not restored on reload");
+  expect((await page.getAttribute("html", "data-accent")) === "light-green", "accent not restored on reload");
   return `${before} -> ${after}`;
 });
 

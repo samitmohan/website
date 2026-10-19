@@ -1,8 +1,14 @@
-/** Footer swatches. The colour is only the swatch's own fill; the CSS owns the palette. */
+/**
+ * The left rail's colour themes. `swatch` is the colour itself, as named; the
+ * CSS holds the readable accent shade for each. The first entry is the default
+ * and sets no data-accent attribute.
+ */
 export const THEMES = [
-  { id: "red", label: "red", swatch: "#d9261c" },
-  { id: "green", label: "green", swatch: "#2f7d4f" },
-  { id: "purple", label: "purple", swatch: "#6b4fbb" },
-  { id: "cyan", label: "cyan", swatch: "#0b829a" },
-  { id: "butter", label: "butter yellow", swatch: "#e9c46a" },
+  { id: "crimson", label: "crimson red", swatch: "#dc143c" },
+  { id: "light-green", label: "light green", swatch: "#9fdc8a" },
+  { id: "ubuntu", label: "ubuntu purple", swatch: "#77216f" },
+  { id: "vader", label: "darth vader black", swatch: "#0b0b0c" },
+  { id: "blonde", label: "frank ocean's head", swatch: "#8bd450" },
 ] as const;
+
+export const THEME_IDS: readonly string[] = THEMES.map((t) => t.id);

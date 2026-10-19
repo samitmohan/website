@@ -13,8 +13,8 @@
   --surface: #f2f1ed;
   --surface-2: #eae8e2;
   --hairline: rgba(0, 0, 0, 0.1);
-  --accent: #d9261c;
-  --accent-soft: rgba(217, 38, 28, 0.1);
+  --accent: #c8102e; /* crimson, the default theme */
+  --accent-soft: rgba(200, 16, 46, 0.1);
   --paper: #ffffff;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.08), 0 10px 28px -10px rgba(0, 0, 0, 0.3);
   --grid-line: rgba(0, 0, 0, 0.055);
@@ -51,8 +51,8 @@
     --surface: #141414;
     --surface-2: #1c1c1c;
     --hairline: rgba(255, 255, 255, 0.12);
-    --accent: #ff4a3d;
-    --accent-soft: rgba(255, 74, 61, 0.14);
+    --accent: #ff4d6d;
+    --accent-soft: rgba(255, 77, 109, 0.14);
     --paper: #161616;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(0, 0, 0, 0.8);
   --grid-line: rgba(255, 255, 255, 0.06);
@@ -67,8 +67,8 @@
   --surface: #141414;
   --surface-2: #1c1c1c;
   --hairline: rgba(255, 255, 255, 0.12);
-  --accent: #ff4a3d;
-  --accent-soft: rgba(255, 74, 61, 0.14);
+  --accent: #ff4d6d;
+  --accent-soft: rgba(255, 77, 109, 0.14);
   --paper: #161616;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(0, 0, 0, 0.8);
   --grid-line: rgba(255, 255, 255, 0.06);
@@ -401,23 +401,24 @@ html[data-write-up-open] nav[aria-label="Main"] {
 nav[aria-label="Main"] { transition: opacity 0.3s; }
 
 /* ------------------------------------------------------------------
-   Colour themes from the footer swatches. Red on warm paper is the
-   default; each theme tints the paper and swaps the accent, in both
-   light and dark. Generated from one table, so keep them in step.
+   Colour themes from the left rail. Crimson is the default (no attribute);
+   each theme tints the paper and swaps the accent, in light and dark. The
+   accent shades are the readable versions of the named colours (>= 4.5:1 on
+   paper and cards); the rail's swatches show the colours themselves.
+   Generated from one table, so keep them in step.
    ------------------------------------------------------------------ */
-
-:root[data-accent="green"] { --bg: #f5f8f3; --accent: #2f7d4f; --accent-soft: rgba(47, 125, 79, 0.12); }
-@media (prefers-color-scheme: dark) { :root[data-accent="green"]:not([data-theme="light"]) { --bg: #090c0a; --accent: #52c285; --accent-soft: rgba(82, 194, 133, 0.16); } }
-:root[data-accent="green"][data-theme="dark"] { --bg: #090c0a; --accent: #52c285; --accent-soft: rgba(82, 194, 133, 0.16); }
-:root[data-accent="purple"] { --bg: #f8f6fb; --accent: #6b4fbb; --accent-soft: rgba(107, 79, 187, 0.12); }
-@media (prefers-color-scheme: dark) { :root[data-accent="purple"]:not([data-theme="light"]) { --bg: #0b0a0e; --accent: #a68cf2; --accent-soft: rgba(166, 140, 242, 0.16); } }
-:root[data-accent="purple"][data-theme="dark"] { --bg: #0b0a0e; --accent: #a68cf2; --accent-soft: rgba(166, 140, 242, 0.16); }
-:root[data-accent="cyan"] { --bg: #f3f9fa; --accent: #0b829a; --accent-soft: rgba(11, 130, 154, 0.12); }
-@media (prefers-color-scheme: dark) { :root[data-accent="cyan"]:not([data-theme="light"]) { --bg: #080c0d; --accent: #3fc8dd; --accent-soft: rgba(63, 200, 221, 0.16); } }
-:root[data-accent="cyan"][data-theme="dark"] { --bg: #080c0d; --accent: #3fc8dd; --accent-soft: rgba(63, 200, 221, 0.16); }
-:root[data-accent="butter"] { --bg: #fbf6e4; --accent: #9a7000; --accent-soft: rgba(154, 112, 0, 0.12); }
-@media (prefers-color-scheme: dark) { :root[data-accent="butter"]:not([data-theme="light"]) { --bg: #0d0c07; --accent: #ecc95e; --accent-soft: rgba(236, 201, 94, 0.16); } }
-:root[data-accent="butter"][data-theme="dark"] { --bg: #0d0c07; --accent: #ecc95e; --accent-soft: rgba(236, 201, 94, 0.16); }
+:root[data-accent="light-green"] { --bg: #f3f8f1; --accent: #276d45; --accent-soft: rgba(39, 109, 69, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="light-green"]:not([data-theme="light"]) { --bg: #090c0a; --accent: #8fe0a6; --accent-soft: rgba(143, 224, 166, 0.16); } }
+:root[data-accent="light-green"][data-theme="dark"] { --bg: #090c0a; --accent: #8fe0a6; --accent-soft: rgba(143, 224, 166, 0.16); }
+:root[data-accent="ubuntu"] { --bg: #f8f3f7; --accent: #77216f; --accent-soft: rgba(119, 33, 111, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="ubuntu"]:not([data-theme="light"]) { --bg: #0c090c; --accent: #e08fd3; --accent-soft: rgba(224, 143, 211, 0.16); } }
+:root[data-accent="ubuntu"][data-theme="dark"] { --bg: #0c090c; --accent: #e08fd3; --accent-soft: rgba(224, 143, 211, 0.16); }
+:root[data-accent="vader"] { --bg: #f2f3f5; --accent: #111214; --accent-soft: rgba(17, 18, 20, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="vader"]:not([data-theme="light"]) { --bg: #0a0a0b; --accent: #d9dce1; --accent-soft: rgba(217, 220, 225, 0.16); } }
+:root[data-accent="vader"][data-theme="dark"] { --bg: #0a0a0b; --accent: #d9dce1; --accent-soft: rgba(217, 220, 225, 0.16); }
+:root[data-accent="blonde"] { --bg: #f7f9ec; --accent: #4b6d00; --accent-soft: rgba(75, 109, 0, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="blonde"]:not([data-theme="light"]) { --bg: #0b0c07; --accent: #b9e85c; --accent-soft: rgba(185, 232, 92, 0.16); } }
+:root[data-accent="blonde"][data-theme="dark"] { --bg: #0b0c07; --accent: #b9e85c; --accent-soft: rgba(185, 232, 92, 0.16); }
 
 /* Page entrance: every block sharpens from a blur, in slot order. */
 /* backwards, not both: a filling transform animation makes the element the

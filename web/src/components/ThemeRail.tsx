@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { THEMES } from "@/content/themes";
+import { THEME_IDS, THEMES } from "@/content/themes";
 import { toggleTheme } from "./ThemeController";
 
 function setAccent(id: string) {
   const root = document.documentElement;
-  if (id === "red") delete root.dataset.accent;
+  if (id === THEMES[0].id) delete root.dataset.accent;
   else root.dataset.accent = id;
   try {
     localStorage.setItem("accent", id);
@@ -20,12 +20,14 @@ function setAccent(id: string) {
  * the rail out.
  */
 export function ThemeRail() {
-  const [accent, setState] = useState("red");
+  const [accent, setState] = useState<string>(THEMES[0].id);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setState(document.documentElement.dataset.accent ?? "red");
+    // A theme saved under an older palette falls back to the default.
+    const saved = document.documentElement.dataset.accent;
+    setState(saved && THEME_IDS.includes(saved) ? saved : THEMES[0].id);
     const away = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
     addEventListener("pointerdown", away);
     return () => removeEventListener("pointerdown", away);
@@ -59,18 +61,25 @@ export function ThemeRail() {
               role="radio"
               aria-checked={accent === t.id}
               aria-label={`site colour: ${t.label}`}
-              title={t.label}
               tabIndex={open || accent === t.id ? 0 : -1}
               onClick={() => {
                 setAccent(t.id);
                 setState(t.id);
               }}
-              className="grid size-7 place-items-center rounded-full"
+              className="group relative grid size-7 place-items-center rounded-full"
             >
               <span
-                className="size-4 rounded-full transition-transform hover:scale-125"
-                style={{ background: t.swatch, boxShadow: accent === t.id ? "0 0 0 2px var(--surface), 0 0 0 3.5px var(--ink)" : undefined }}
+                className="size-4 rounded-full transition-transform group-hover:scale-125"
+                style={{
+                  background: t.swatch,
+                  // A hairline keeps the black swatch visible on a dark rail.
+                  boxShadow: accent === t.id ? "0 0 0 2px var(--surface), 0 0 0 3.5px var(--ink)" : "inset 0 0 0 1px var(--hairline)",
+                }}
               />
+              {/* The colour's name slides out beside it on hover or keyboard focus. */}
+              <span className="pointer-events-none absolute top-1/2 left-full ml-3 -translate-x-1 -translate-y-1/2 rounded-full bg-ink px-2.5 py-1 font-mono text-[11px] whitespace-nowrap text-bg opacity-0 transition-[opacity,translate] duration-200 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
+                {t.label}
+              </span>
             </button>
           ))}
           <span className="my-1 h-px w-5 bg-hairline" />
