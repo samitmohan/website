@@ -3,6 +3,7 @@ import { Geist_Mono, Instrument_Serif, Inter_Tight } from "next/font/google";
 import { Nav } from "@/components/Nav";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { ThemeController } from "@/components/ThemeController";
+import { ThemeRail } from "@/components/ThemeRail";
 import "./globals.css";
 
 const sans = Inter_Tight({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-inter-tight" });
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeController />
         <SmoothScroll />
         <Nav />
+        <ThemeRail />
         {children}
       </body>
     </html>

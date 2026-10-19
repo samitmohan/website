@@ -1,26 +1,20 @@
 import type { Metadata } from "next";
 import { MemoryCard } from "@/components/MemoryCard";
-import { LabCards } from "@/components/LabCards";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { Deck } from "@/components/Deck";
-import { LAB, THING_PHOTOS, THING_SNAPS } from "@/content/site";
-import { deferScripts } from "@/lib/defer-scripts";
+import { THING_PHOTOS, THING_SNAPS } from "@/content/site";
 import { getTop4 } from "@/lib/top4";
 import { records, thingsILike } from "@/lib/things";
 
 export const metadata: Metadata = {
   title: "Things",
-  description: "Interactive ML widgets, things Samit likes, a gallery, and his top four of everything.",
+  description: "Things Samit likes, a gallery of trips, and his top four of everything.",
   alternates: { canonical: "/things" },
   openGraph: { images: ["/og/things.png"] },
 };
 
 export default function Things() {
-  const widgets = LAB.map((w) => ({
-    ...w,
-    html: deferScripts(`<link rel="stylesheet" href="/widgets/${w.id}.css"><div id="${w.id}"></div><script src="/widgets/${w.id}.js"></script>`),
-  }));
   const list = thingsILike();
   const top4 = getTop4();
   return (
@@ -29,15 +23,7 @@ export default function Things() {
         <h1 className="text-[22px]">Things</h1>
       </Reveal>
 
-      <Reveal slot={1} as="section" className="mt-14" >
-        <h2 id="widgets" className="text-[15px]">Widgets</h2>
-        <p className="mt-1 text-[14px]">Interactive widgets from my blogs.</p>
-        <div className="mt-5">
-          <LabCards widgets={widgets} />
-        </div>
-      </Reveal>
-
-      <Reveal slot={2} as="section" className="mt-24">
+      <Reveal slot={1} as="section" className="mt-14">
         <Deck things={list} photos={THING_PHOTOS} snaps={THING_SNAPS} />
         {list.length > 0 && (
           <details className="group mt-6">

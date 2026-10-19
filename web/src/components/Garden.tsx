@@ -30,7 +30,6 @@ type Flower = {
   front: boolean;
   leaves: number[];
 };
-type Fly = { id: number; x: number; y: number; tx: number; ty: number; born: number; target: number; leaving: boolean; size: number };
 
 const GROW = 700;
 const MAX = 200;
@@ -45,25 +44,20 @@ const noise = (id: number, f: number, salt: number) => {
 };
 
 /**
- * A name on a sticker. Moving over it grows flowering stems from its edges;
- * clicking calls in a butterfly that settles on a flower. Lines boil like a
- * hand-drawn loop and blossoms sway. Canvas 2D, and it only animates while on
+ * A name on a sticker. Moving over it grows flowering stems from its edges.
+ * Lines boil like a hand-drawn loop and blossoms sway. Canvas 2D, and it only animates while on
  * screen.
  */
-export function Garden({ text, palette, clearKey, onGrow }: { text: string; palette: number; clearKey: number; onGrow?: () => void }) {
+export function Garden({ text, palette, clearKey }: { text: string; palette: number; clearKey: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const flowers = useRef<Flower[]>([]);
-  const flies = useRef<Fly[]>([]);
   const pal = useRef(palette);
   pal.current = palette;
-  const grew = useRef(onGrow);
-  grew.current = onGrow;
   const repaint = useRef<() => void>(() => {});
 
   // A clear or a palette change repaints at once, even when nothing is animating.
   useEffect(() => {
     flowers.current = [];
-    flies.current = [];
     repaint.current();
   }, [clearKey]);
   useEffect(() => repaint.current(), [palette]);
@@ -114,16 +108,6 @@ export function Garden({ text, palette, clearKey, onGrow }: { text: string; pale
         leaves: [0.28 + Math.random() * 0.15, 0.55 + Math.random() * 0.2],
       });
       while (flowers.current.length > MAX) flowers.current.shift();
-      grew.current?.();
-    };
-
-    const callButterfly = () => {
-      const open = flowers.current.filter((f) => performance.now() - f.born > GROW && !flies.current.some((b) => b.target === f.id && !b.leaving));
-      if (!open.length) return;
-      const f = open[Math.floor(Math.random() * open.length)];
-      if (flies.current.filter((b) => !b.leaving).length >= 5) flies.current.find((b) => !b.leaving)!.leaving = true;
-      const left = Math.random() < 0.5;
-      flies.current.push({ id: uid++, x: left ? -30 : W + 30, y: H * (0.2 + Math.random() * 0.6), tx: f.t[0], ty: f.t[1] - 4, born: performance.now(), target: f.id, leaving: false, size: 16 + Math.random() * 6 });
     };
 
     const bez = (f: Flower, u: number): [number, number] => {
@@ -225,53 +209,17 @@ export function Garden({ text, palette, clearKey, onGrow }: { text: string; pale
         g.fillText(text, box.x + box.w / 2 + j(5), box.y + box.h / 2 + size * 0.05 + j(6));
       };
 
-      const butterflies = () => {
-        flies.current = flies.current.filter((b) => {
-          const t = (now - b.born) / 1000;
-          if (b.leaving) {
-            b.x += (b.x < W / 2 ? -1 : 1) * 4;
-            b.y -= 1.5;
-          } else {
-            b.x += (b.tx - b.x) * 0.05 + Math.sin(t * 6 + b.id) * 0.8;
-            b.y += (b.ty - b.y) * 0.05 + Math.cos(t * 5 + b.id) * 0.8;
-          }
-          const settled = !b.leaving && Math.hypot(b.tx - b.x, b.ty - b.y) < 3;
-          const flap = still ? 0.6 : settled ? 0.55 + Math.sin(now / 420 + b.id) * 0.25 : 0.5 + Math.sin(now / 70 + b.id) * 0.5;
-          g.save();
-          g.translate(b.x, b.y);
-          g.fillStyle = ink;
-          for (const side of [-1, 1]) {
-            g.save();
-            g.scale(side * (0.25 + flap * 0.75), 1);
-            g.beginPath();
-            g.ellipse(b.size * 0.55, -b.size * 0.25, b.size * 0.6, b.size * 0.42, -0.5, 0, Math.PI * 2);
-            g.ellipse(b.size * 0.45, b.size * 0.32, b.size * 0.38, b.size * 0.3, 0.5, 0, Math.PI * 2);
-            g.fill();
-            g.fillStyle = petal;
-            g.beginPath();
-            g.arc(b.size * 0.7, -b.size * 0.32, b.size * 0.13, 0, Math.PI * 2);
-            g.fill();
-            g.fillStyle = ink;
-            g.restore();
-          }
-          g.fillRect(-1, -b.size * 0.4, 2, b.size * 0.8);
-          g.restore();
-          return b.x > -60 && b.x < W + 60 && b.y > -60;
-        });
-      };
-
       for (const f of flowers.current) if (!f.front) flower(f);
       sticker();
       for (const f of flowers.current) if (f.front) flower(f);
-      butterflies();
     };
 
     const loop = (now: number) => {
       raf = 0;
       if (!on) return;
       const frame = Math.floor(now / FRAME);
-      const busy = flowers.current.some((f) => now - f.born < GROW * 2.2) || flies.current.length > 0;
-      // Growth and butterflies need every frame; the resting boil only needs a new frame every 120ms.
+      const busy = flowers.current.some((f) => now - f.born < GROW * 2.2);
+      // Growth needs every frame; the resting boil only needs a new frame every 120ms.
       if (busy || frame !== lastFrame) {
         paint(now);
         lastFrame = frame;
@@ -290,11 +238,6 @@ export function Garden({ text, palette, clearKey, onGrow }: { text: string; pale
       grow(x, y);
       if (still) paint(performance.now());
     };
-    const onClick = () => {
-      callButterfly();
-      if (still) paint(performance.now());
-    };
-
     repaint.current = () => paint(performance.now());
     font = getComputedStyle(document.documentElement).getPropertyValue("--font-instrument").trim() || "Georgia";
     resize();
@@ -312,13 +255,11 @@ export function Garden({ text, palette, clearKey, onGrow }: { text: string; pale
     io.observe(c);
     c.addEventListener("pointermove", onMove);
     c.addEventListener("pointerleave", () => (last = null));
-    c.addEventListener("click", onClick);
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
       c.removeEventListener("pointermove", onMove);
-      c.removeEventListener("click", onClick);
     };
   }, [text]);
 
@@ -326,7 +267,7 @@ export function Garden({ text, palette, clearKey, onGrow }: { text: string; pale
     <canvas
       ref={ref}
       className="block h-[260px] w-full cursor-crosshair touch-pan-y sm:h-[340px]"
-      aria-label={`"${text}" on a sticker. Move over it and flowers grow out of the edges; click for a butterfly.`}
+      aria-label={`"${text}" on a sticker. Move over it and flowers grow out of the edges.`}
     />
   );
 }

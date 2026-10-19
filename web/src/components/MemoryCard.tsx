@@ -13,6 +13,8 @@ const CARD_KB = 8192; // an 8 MB memory card
  * circle for next, triangle for back a photo, cross to leave.
  */
 export function MemoryCard({ trips }: { trips: Trip[] }) {
+  const [booted, setBooted] = useState(false);
+  const [flash, setFlash] = useState(false);
   const [sel, setSel] = useState(0);
   const [open, setOpen] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,9 +44,19 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
 
   const trip = open === null ? null : trips[open];
 
+  const start = () => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return setBooted(true);
+    setFlash(true);
+    setTimeout(() => setBooted(true), 260);
+    setTimeout(() => setFlash(false), 700);
+  };
+
+  if (!booted) return <Boot onStart={start} flash={flash} />;
+
   return (
     <>
-      <div className="ps2 relative overflow-hidden rounded-[22px] px-5 pt-5 pb-6 sm:px-8 sm:pt-7" role="group" aria-label="Memory card">
+      <div className="ps2 relative animate-[ps2-on_.7s_ease-out_both] overflow-hidden rounded-[22px] px-5 pt-5 pb-6 sm:px-8 sm:pt-7" role="group" aria-label="Memory card">
+        {flash && <div className="pointer-events-none absolute inset-0 z-10 animate-[ps2-flash_.45s_ease-out_both] bg-white" />}
         <Haze />
         <div className="relative flex items-start justify-between gap-4">
           <div>
@@ -177,5 +189,41 @@ function Haze() {
       <div className="ps2-fog ps2-fog--a" />
       <div className="ps2-fog ps2-fog--b" />
     </div>
+  );
+}
+
+/**
+ * The boot screen: lit towers rise out of a dark floor while small cubes drift
+ * up, until a click or Enter starts the console.
+ */
+function Boot({ onStart, flash }: { onStart: () => void; flash: boolean }) {
+  // Heights and timings fixed per tower so every visit boots the same way.
+  const towers = [0.42, 0.7, 0.55, 0.9, 0.62, 1, 0.5, 0.78, 0.46, 0.66, 0.38];
+  const cubes = [12, 27, 41, 58, 73, 88];
+  return (
+    <button
+      type="button"
+      onClick={onStart}
+      aria-label="Start the memory card"
+      className="ps2-boot group relative block aspect-[16/10] w-full overflow-hidden rounded-[22px] text-left sm:aspect-[16/8]"
+    >
+      <div className="absolute inset-x-0 bottom-[18%] flex h-[62%] items-end justify-center gap-[2.2%] [perspective:600px]">
+        {towers.map((h, i) => (
+          <span
+            key={i}
+            className="ps2-tower"
+            style={{ height: `${h * 100}%`, animationDelay: `${0.15 + i * 0.09}s, ${1.4 + i * 0.23}s` }}
+          />
+        ))}
+      </div>
+      <div className="ps2-floor absolute inset-x-0 bottom-0 h-[18%]" />
+      {cubes.map((x, i) => (
+        <span key={x} className="ps2-cube" style={{ left: `${x}%`, animationDelay: `${i * 0.9}s`, animationDuration: `${5 + (i % 3)}s` }} />
+      ))}
+      <span className="ps2-text absolute inset-x-0 bottom-[7%] animate-[ps2-blink_1.6s_ease-in-out_1.8s_infinite_both] text-center text-[12px] tracking-[.3em] uppercase">
+        press <span className="text-[#ff6b6b]">◯</span> to start
+      </span>
+      {flash && <span className="pointer-events-none absolute inset-0 animate-[ps2-flash_.45s_ease-out_both] bg-white" />}
+    </button>
   );
 }

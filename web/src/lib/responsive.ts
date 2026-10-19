@@ -37,6 +37,11 @@ export const SIZES_ATTR = "(min-width: 768px) 704px, 100vw";
  * basename keeps a 404 readable.
  */
 export function variantUrl(src: string, width: number): string {
+  // The variants are written by gen-images after `next build`, so `next dev`
+  // has none: serve the original there instead of a 404. Only "development"
+  // counts: gen-images imports this under plain node, where NODE_ENV is unset,
+  // and must get the hashed URL.
+  if (process.env.NODE_ENV === "development") return src;
   const hash = createHash("sha256").update(src).digest("hex").slice(0, 8);
   const base = src.slice(src.lastIndexOf("/") + 1).replace(/\.[^.]+$/, "");
   const safe = base.replace(/[^a-zA-Z0-9-]+/g, "-").replace(/^-+|-+$/g, "") || "img";

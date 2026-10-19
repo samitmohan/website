@@ -4,7 +4,8 @@ import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { TypedBio } from "@/components/TypedBio";
 import { LabCards } from "@/components/LabCards";
-import { BIO, EMAIL, FEATURED, HANDLE } from "@/content/site";
+import { BIO, EMAIL, FEATURED, HANDLE, LAB } from "@/content/site";
+import { deferScripts } from "@/lib/defer-scripts";
 import { formatPostDate, getPost } from "@/lib/blog";
 
 /** Direction A: calm grey column (shwn), warm paper and red ink (stympaul). */
@@ -49,9 +50,15 @@ export function HomeBlend() {
       </Reveal>
 
       <Reveal slot={7} as="section" className="mt-20">
-        <SectionHead title="Things" href="/things" more="all things" />
+        <SectionHead title="Widgets" href="/things" more="things I like" />
+        <p className="mt-1 text-[14px]">Interactive widgets from my blogs.</p>
         <div className="mt-4">
-          <LabCards widgets={[]} />
+          <LabCards
+            widgets={LAB.map((w) => ({
+              ...w,
+              html: deferScripts(`<link rel="stylesheet" href="/widgets/${w.id}.css"><div id="${w.id}"></div><script src="/widgets/${w.id}.js"></script>`),
+            }))}
+          />
         </div>
       </Reveal>
     </Page>

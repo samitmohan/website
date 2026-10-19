@@ -65,21 +65,27 @@ await check("project card opens its write-up", async (page) => {
   await dialog.waitFor({ state: "detached", timeout: 3000 });
 });
 
-await check("lab toy responds: softmax temperature flattens the bars", async (page) => {
-  await page.goto(base + "/things");
+await check("home widget responds: softmax temperature flattens the bars", async (page) => {
+  await page.goto(base + "/");
+  await page.getByRole("heading", { name: "Widgets" }).scrollIntoViewIfNeeded();
   await page.waitForTimeout(1200);
-  const top = () => page.locator("figure").first().locator("span.font-mono").first().innerText();
+  const toy = page.locator("figure:has(input[type=range])").first();
+  const top = () => toy.locator("span.font-mono").first().innerText();
   const before = await top();
-  await page.locator('figure input[type="range"]').first().fill("4");
+  await toy.locator('input[type="range"]').fill("4");
   await page.waitForTimeout(300);
   const after = await top();
   expect(parseInt(after) < parseInt(before), `top prob ${before} -> ${after}`);
   return `${before} -> ${after}`;
 });
 
-await check("post widget opens in a sheet and mounts", async (page) => {
-  await page.goto(base + "/things");
-  await page.waitForTimeout(1200);
+await check("home: post widget opens in a sheet and mounts", async (page) => {
+  await page.goto(base + "/");
+  await page.getByRole("heading", { name: "Widgets" }).scrollIntoViewIfNeeded();
+  await page.waitForTimeout(800);
+  const row = page.locator("figure").first().locator("xpath=..");
+  await row.evaluate((r) => (r.scrollLeft = r.scrollWidth));
+  await page.waitForTimeout(500);
   await page.getByRole("button", { name: /open it/ }).first().click();
   const dialog = page.getByRole("dialog");
   await dialog.waitFor({ timeout: 3000 });
@@ -121,6 +127,8 @@ await check("pick a card shows one with its caption", async (page) => {
 
 await check("gallery: a memory-card save opens and pages through photos", async (page) => {
   await page.goto(base + "/things");
+  await page.getByRole("button", { name: "Start the memory card" }).click();
+  await page.waitForTimeout(500);
   await page.getByRole("button", { name: /^Goa, .* Open\.$/ }).click();
   const dialog = page.getByRole("dialog", { name: "Goa" });
   await dialog.waitFor({ timeout: 3000 });
@@ -165,11 +173,13 @@ await check("footer garden grows under the pointer and clears", async (page) => 
   return `${sticker} -> ${grown} -> ${cleared}`;
 });
 
-await check("footer swatch changes the accent and it survives a reload", async (page) => {
+await check("left rail: a colour changes the accent and it survives a reload", async (page) => {
   await page.goto(base + "/about");
   const accent = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
   const before = await accent();
-  await page.getByRole("radio", { name: "green" }).click();
+  await page.getByRole("button", { name: "colour and light switches" }).click();
+  await page.waitForTimeout(600);
+  await page.getByRole("radio", { name: "site colour: green" }).click();
   const after = await accent();
   expect(after !== before, `accent stayed ${before}`);
   await page.reload();

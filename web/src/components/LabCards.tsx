@@ -19,7 +19,7 @@ const TOYS = [
 
 export type PostWidget = { id: string; name: string; blurb: string; post: string; html: string };
 
-const card = "relative grid aspect-[420/460] w-[min(340px,78vw)] shrink-0 snap-start place-items-center overflow-hidden rounded-[28px] bg-surface";
+const card = "relative grid aspect-[420/460] w-[min(280px,76vw)] shrink-0 place-items-center overflow-hidden rounded-[24px] bg-surface";
 
 /**
  * A row of cards with a live toy in each; it starts on the text column and
@@ -29,7 +29,8 @@ const card = "relative grid aspect-[420/460] w-[min(340px,78vw)] shrink-0 snap-s
 export function LabCards({ widgets }: { widgets: PostWidget[] }) {
   const [open, setOpen] = useState<PostWidget | null>(null);
   const row = useRef<HTMLDivElement>(null);
-  const page = (dir: number) => row.current?.scrollBy({ left: dir * 356, behavior: "smooth" });
+  const [atEnd, setAtEnd] = useState(false);
+  const page = (dir: number) => row.current?.scrollBy({ left: dir * 292, behavior: "smooth" });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
     addEventListener("keydown", onKey);
@@ -40,18 +41,23 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
     <>
       <div
         ref={row}
-        className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2"
-        style={{ marginRight: "calc(50% - 50vw)", paddingRight: "max(16px, calc(50vw - 50%))" }}
+        className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2"
+        onScroll={(e) => {
+          const el = e.currentTarget;
+          setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 4);
+        }}
+        // The fade at the right edge says there is more; it lifts at the end of the row.
+        style={atEnd ? undefined : { maskImage: "linear-gradient(to right, #000 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, #000 85%, transparent)" }}
         data-lenis-prevent
       >
         {TOYS.map((t) => (
-          <figure key={t.name} className="shrink-0">
+          <figure key={t.name} className="shrink-0 snap-start">
             <WhenNear className={card}>{t.el}</WhenNear>
             <figcaption className="mt-2 px-1 text-[13px] text-ink">{t.name}</figcaption>
           </figure>
         ))}
         {widgets.map((w, i) => (
-          <figure key={w.id} className="shrink-0">
+          <figure key={w.id} className="shrink-0 snap-start">
             <button type="button" onClick={() => setOpen(w)} className={`${card} group text-left`}>
               <LabGlyph i={i} />
               <span className="absolute inset-x-6 bottom-6">
