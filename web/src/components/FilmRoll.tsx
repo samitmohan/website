@@ -3,22 +3,22 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
-export type Roll = { title: string; stock: string; camera?: string; year?: string; frames: string[] };
+export type Roll = { title: string; stock: string; camera?: string; year?: string; frames: { src: string; thumb: string }[] };
 
 const PER = 5; // frames per strip
 const MW = 300; // scratch-mask resolution; one mask per frame, shared by every view of it
 const MH = 200;
 
-type Frame = { src: string; mask: HTMLCanvasElement; img: HTMLImageElement; dev: boolean; listeners: Set<() => void> };
+type Frame = { src: string; thumb: string; mask: HTMLCanvasElement; img: HTMLImageElement; dev: boolean; listeners: Set<() => void> };
 
-function makeFrame(src: string): Frame {
+function makeFrame({ src, thumb }: { src: string; thumb: string }): Frame {
   const mask = document.createElement("canvas");
   mask.width = MW;
   mask.height = MH;
   const img = new Image();
   img.decoding = "async";
-  img.src = src;
-  return { src, mask, img, dev: false, listeners: new Set() };
+  img.src = thumb;
+  return { src, thumb, mask, img, dev: false, listeners: new Set() };
 }
 
 /** A soft round brush stamped into the mask; the negative is erased wherever the mask is opaque. */
@@ -48,16 +48,20 @@ function uncovered(f: Frame) {
  * scroll in. Pressing and dragging across a frame develops it, and past 60%
  * the rest clears. A click opens the frame large, with a develop button.
  */
-export function FilmRoll({ rolls }: { rolls: Roll[] }) {
+export function FilmRoll({ rolls: input }: { rolls: Roll[] }) {
   const frames = useRef<Map<string, Frame>>(new Map());
   const [, force] = useState(0);
   const [viewer, setViewer] = useState<{ roll: number; i: number } | null>(null);
   // Frames own canvases and Image objects, so nothing renders until the browser has mounted.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
+  const byKey = useRef<Map<string, { src: string; thumb: string }>>(new Map());
+  input.forEach((r) => r.frames.forEach((f) => byKey.current.set(f.src, f)));
+  // Below here a frame is known by its full-size src; byKey finds its thumbnail.
+  const rolls = input.map((r) => ({ ...r, frames: r.frames.map((f) => f.src) }));
   const frame = (src: string) => {
     let f = frames.current.get(src);
-    if (!f) frames.current.set(src, (f = makeFrame(src)));
+    if (!f) frames.current.set(src, (f = makeFrame(byKey.current.get(src) ?? { src, thumb: src })));
     return f;
   };
   const develop = (src: string) => {
@@ -313,7 +317,7 @@ function Negative({ f, label, big = false, onDevelop, onOpen }: { f: Frame; labe
         onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), onOpen?.())}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={f.src} alt="" loading="lazy" draggable={false} className="pointer-events-none absolute inset-0 size-full object-cover" />
+        <img src={big ? f.src : f.thumb} alt="" loading="lazy" draggable={false} className="pointer-events-none absolute inset-0 size-full object-cover" />
         <canvas
           ref={canvas}
           className="pointer-events-none absolute inset-0 size-full transition-opacity duration-[900ms]"

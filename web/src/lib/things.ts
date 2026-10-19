@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { getPost } from "@/lib/blog";
 import type { Roll } from "@/components/FilmRoll";
+import { variantUrl } from "@/lib/responsive";
 
 /** Every bullet of the "things i like" post, so the page and the post never drift. */
 export function thingsILike(): string[] {
@@ -27,6 +28,10 @@ export function rolls(): Roll[] {
       .readdirSync(path.join(IMAGES, dir))
       .filter((f) => f.endsWith(".webp") && !f.includes("-poster"))
       .sort()
-      .map((f) => `/assets/images/${dir}/${f}`),
+      .map((f) => {
+        const src = `/assets/images/${dir}/${f}`;
+        // Strip frames are ~230px wide; the 420w variant covers them at 2x. The viewer loads `src`.
+        return { src, thumb: variantUrl(src, 420) };
+      }),
   }));
 }
