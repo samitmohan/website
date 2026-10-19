@@ -7,6 +7,8 @@ import { SOCIAL_LINKS } from "@/config/links";
 export const metadata: Metadata = {
   title: "About",
   description: "AI scientist at beltech.ai. Builds models, optimises inference, teaches, and writes.",
+  alternates: { canonical: "/about" },
+  openGraph: { images: ["/og/about.png"] },
 };
 
 const WORK = [
@@ -38,7 +40,7 @@ export default function About() {
       <Reveal slot={3} className="mt-10 space-y-5 text-[16px] leading-[1.75]">
         <p>
           I am an AI Scientist at <a className="link" href="https://beltech.ai">beltech.ai</a>, working on building models and
-          optimising inference for security, surveillance, and traffic management across 50+ cities, processing 300 cameras 24/7,
+          optimising inference for security, surveillance, and traffic management across 27 cities, processing 300 cameras 24/7,
           serving models with latency &lt;= 10ms on an edge box. My work focuses on inference management, computer vision, and
           writing business logic for detecting violations in India.
         </p>

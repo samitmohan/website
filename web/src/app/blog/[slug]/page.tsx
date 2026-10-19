@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { RunScripts } from "@/components/RunScripts";
+import { TocRail } from "@/components/TocRail";
 import { formatPostDate, getAllPosts, getAllSlugs, getPersonalPosts, getPost } from "@/lib/blog";
 import { deferScripts } from "@/lib/defer-scripts";
 import { markdownToHtml, type Heading } from "@/lib/markdown";
@@ -60,6 +61,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <Page>
       {post.math && <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      {post.readingTime >= 10 && <div className="read-progress" aria-hidden />}
+      {toc.length > 0 && <TocRail toc={toc} />}
       <Reveal slot={0} as="header">
         <Link href={post.hidden ? "/blog/personal" : "/blog"} className="meta hover:text-accent">
           ← {post.hidden ? "personal" : "writing"}
@@ -72,7 +75,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </Reveal>
 
       {toc.length > 0 && (
-        <Reveal slot={1} as="section" className="mt-8 rounded-2xl bg-surface p-5">
+        <Reveal slot={1} as="section" className="mt-8 rounded-2xl bg-surface p-5 xl:hidden">
           <h2 className="meta">contents</h2>
           <ol className="mt-2 space-y-1 text-[14px]">
             {toc.map((h, n) => (

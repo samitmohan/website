@@ -5,6 +5,8 @@ import { getPersonalPosts } from "@/lib/blog";
 export const metadata: Metadata = {
   title: "Personal",
   description: "Trips, lists, and things that are not about machine learning.",
+  alternates: { canonical: "/blog/personal" },
+  openGraph: { images: ["/og/blog.png"] },
 };
 
 export default function Personal() {

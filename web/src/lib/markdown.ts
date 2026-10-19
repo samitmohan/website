@@ -17,7 +17,7 @@ import type { Element, Root, Text } from "hast";
 import { IMAGE_WIDTHS, SIZES_ATTR, variantUrl } from "./responsive";
 
 const highlighterPromise = createHighlighter({
-  themes: ["github-dark", "github-light"],
+  themes: ["github-dark-high-contrast", "github-light-high-contrast"],
   langs: ["python", "bash", "json", "c", "cpp", "yaml", "markdown", "text"],
 });
 
@@ -305,7 +305,7 @@ export async function highlightCode(code: string, lang = "python"): Promise<stri
   const highlighter = await highlighterPromise;
   return highlighter.codeToHtml(code, {
     lang,
-    themes: { light: "github-light", dark: "github-dark" },
+    themes: { light: "github-light-high-contrast", dark: "github-dark-high-contrast" },
     defaultColor: false,
   });
 }
@@ -371,8 +371,8 @@ export async function markdownToHtml(
     .use(rehypeMediaPerf)
     .use(rehypePrettyCode, {
       theme: {
-        dark: "github-dark",
-        light: "github-light",
+        dark: "github-dark-high-contrast",
+        light: "github-light-high-contrast",
       },
       keepBackground: false,
       getHighlighter: () => highlighterPromise,

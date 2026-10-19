@@ -210,8 +210,10 @@ export function DropoutToy() {
         )}
       </svg>
       <div className="flex w-full items-center gap-2 font-mono text-[10px] text-muted">
-        p
-        <input type="range" min={0} max={0.9} step={0.05} value={p} onChange={(e) => setP(+e.target.value)} className="flex-1 accent-[var(--accent)]" />
+        <label className="flex flex-1 items-center gap-2">
+          p
+          <input type="range" min={0} max={0.9} step={0.05} value={p} onChange={(e) => setP(+e.target.value)} className="flex-1 accent-[var(--accent)]" aria-label="dropout rate" />
+        </label>
         <span className="w-8 text-ink">{p.toFixed(2)}</span>
         <button type="button" className={btn} onClick={() => setSeed((s) => s + 1)}>
           resample

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ITEMS = [
   { href: "/", label: "home" },
@@ -25,8 +25,28 @@ function active(pathname: string, href: string) {
 export function Nav() {
   const pathname = usePathname();
   const [hover, setHover] = useState<string | null>(null);
+  const [tucked, setTucked] = useState(false);
+
+  // Out of the way while reading down the page, back the moment you scroll up.
+  useEffect(() => {
+    let last = scrollY;
+    const onScroll = () => {
+      const y = scrollY;
+      if (Math.abs(y - last) < 6) return;
+      setTucked(y > last && y > 80);
+      last = y;
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => removeEventListener("scroll", onScroll);
+  }, []);
   return (
-    <nav aria-label="Main" className="fixed inset-x-0 top-5 z-50 flex justify-center px-4" data-no-theme>
+    <nav
+      aria-label="Main"
+      className="fixed inset-x-0 top-5 z-50 flex justify-center px-4 transition-transform duration-300 ease-[cubic-bezier(0,0,.2,1)]"
+      style={{ transform: tucked && !hover ? "translateY(-160%)" : undefined }}
+      onFocusCapture={() => setTucked(false)}
+      data-no-theme
+    >
       <svg width="0" height="0" className="absolute" aria-hidden>
         <filter id="goo">
           <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b" />

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LabGlyph } from "./LabGlyph";
 import { RunScripts } from "./RunScripts";
 import { AttentionToy, ConvToy, DropoutToy, KvCacheToy, PositionalToy, SoftmaxToy, TokenizerToy } from "./toys/Toys";
@@ -27,6 +27,8 @@ const card = "relative grid aspect-[420/460] w-[min(340px,78vw)] shrink-0 snap-s
  */
 export function LabCards({ widgets }: { widgets: PostWidget[] }) {
   const [open, setOpen] = useState<PostWidget | null>(null);
+  const row = useRef<HTMLDivElement>(null);
+  const page = (dir: number) => row.current?.scrollBy({ left: dir * 356, behavior: "smooth" });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
     addEventListener("keydown", onKey);
@@ -36,6 +38,7 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
   return (
     <>
       <div
+        ref={row}
         className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2"
         style={{ marginRight: "calc(50% - 50vw)", paddingRight: "max(16px, calc(50vw - 50%))" }}
         data-lenis-prevent
@@ -58,6 +61,15 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
             <figcaption className="mt-2 px-1 text-[13px] text-ink">{w.name}</figcaption>
           </figure>
         ))}
+      </div>
+
+      <div className="mt-3 flex justify-end gap-1.5">
+        <button type="button" className="pill size-9 !p-0" onClick={() => page(-1)} aria-label="Previous widget">
+          ←
+        </button>
+        <button type="button" className="pill size-9 !p-0" onClick={() => page(1)} aria-label="Next widget">
+          →
+        </button>
       </div>
 
       {open && (

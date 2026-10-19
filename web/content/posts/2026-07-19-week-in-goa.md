@@ -6,6 +6,7 @@ categories: personal
 published: true
 hidden: true
 tags: [personal]
+description: "office off site"
 thumbnail: /assets/images/goa/goa-13.webp
 ---
 team has been working way too hard for the past,,, i dont even know how long. it was finally time for office off-site. with no plan in my head or places to visit i packed 3 pairs of shorts and made my way to our bus (a flight would've been better.. we need funding)

@@ -8,7 +8,9 @@ import { inlineSvg } from "@/lib/inline-svg";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Things built from scratch to understand them: a small GPT, an autograd engine, a coding agent, a tennis tracker.",
+  description: "Things built from scratch to understand them: a small GPT, an autograd engine, a ResNet reproduction, YOLO, a coding agent, and more.",
+  alternates: { canonical: "/projects" },
+  openGraph: { images: ["/og/projects.png"] },
 };
 
 export default function Projects() {
@@ -20,6 +22,9 @@ export default function Projects() {
     repoUrl: p.repoUrl,
     liveUrl: p.liveUrl,
     figure: p.figure ? inlineSvg(p.figure) : "",
+    what: p.what,
+    how: p.how,
+    numbers: p.numbers ?? [],
     posts: (p.posts ?? []).flatMap((slug) => {
       const post = getPost(slug);
       return post ? [{ slug, title: post.title }] : [];

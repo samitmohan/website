@@ -8,8 +8,8 @@
 :root {
   --bg: #fbfaf7;
   --ink: #111111;
-  --body: #6b6a66;
-  --muted: #8d8b85;
+  --body: #5c5b57; /* >= 5.5:1 on every light background, cards and theme tints included */
+  --muted: #696762; /* >= 4.6:1, the AA floor for 12px meta text */
   --surface: #f2f1ed;
   --surface-2: #eae8e2;
   --hairline: rgba(0, 0, 0, 0.1);
@@ -33,6 +33,10 @@
   --grey: var(--muted);
   --soft: var(--body);
   --struct: var(--body);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--muted);
+  --color-background-secondary: var(--surface);
+  --color-border: var(--hairline);
 
   color-scheme: light;
 }
@@ -42,7 +46,7 @@
     --bg: #0a0a0a;
     --ink: #ededed;
     --body: #a1a1a1;
-    --muted: #707070;
+    --muted: #858585;
     --surface: #141414;
     --surface-2: #1c1c1c;
     --hairline: rgba(255, 255, 255, 0.12);
@@ -57,7 +61,7 @@
   --bg: #0a0a0a;
   --ink: #ededed;
   --body: #a1a1a1;
-  --muted: #707070;
+  --muted: #858585;
   --surface: #141414;
   --surface-2: #1c1c1c;
   --hairline: rgba(255, 255, 255, 0.12);
@@ -275,7 +279,7 @@ code[data-theme*=" "] { background-color: transparent !important; }
 .prose [data-rehype-pretty-code-figure] {
   border: 1px solid var(--hairline);
   border-radius: 14px;
-  background: var(--surface);
+  background: var(--paper);
   overflow: hidden;
   margin-block: 1.6em;
 }
@@ -412,3 +416,18 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 }
 @keyframes fade-in { from { opacity: 0; } }
 @keyframes sheet-in { from { opacity: 0; transform: translateY(40px); filter: blur(10px); } }
+
+/* Reading progress on long posts: a hairline that fills with the page's scroll. */
+.read-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: 60;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+@supports (animation-timeline: scroll()) {
+  .read-progress { animation: read-grow linear both; animation-timeline: scroll(root); }
+}
+@keyframes read-grow { to { transform: scaleX(1); } }

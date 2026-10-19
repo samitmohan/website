@@ -97,6 +97,17 @@ await write(
   }),
 );
 
+// One card per top-level page, so a shared /projects link does not look like the home page.
+const PAGES = [
+  ["blog", "Writing", "Rebuilding ML from scratch, written down."],
+  ["projects", "Projects", "A small GPT, an autograd engine, a coding agent, and more."],
+  ["things", "Things", "Widgets, things I like, a gallery, and my top four."],
+  ["about", "About", "AI scientist at beltech.ai."],
+];
+for (const [name, title, sub] of PAGES) {
+  await write(name, card({ title, sub, footer: "samit mohan", titleSize: 112 }));
+}
+
 for (const post of getAllPosts()) {
   /* Long titles get a smaller size rather than a clipped card. The thresholds
      are where 1040px of usable width runs out at each step, measured by

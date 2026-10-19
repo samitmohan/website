@@ -12,6 +12,8 @@ import { rolls, thingsILike } from "@/lib/things";
 export const metadata: Metadata = {
   title: "Things",
   description: "Interactive ML widgets, things Samit likes, a gallery, and his top four of everything.",
+  alternates: { canonical: "/things" },
+  openGraph: { images: ["/og/things.png"] },
 };
 
 export default function Things() {
@@ -28,7 +30,7 @@ export default function Things() {
       </Reveal>
 
       <Reveal slot={1} as="section" className="mt-14" >
-        <h2 id="lab" className="text-[15px]">Lab</h2>
+        <h2 id="widgets" className="text-[15px]">Widgets</h2>
         <p className="mt-1 text-[14px]">Interactive widgets from my blogs.</p>
         <div className="mt-5">
           <LabCards widgets={widgets} />

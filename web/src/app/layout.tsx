@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),
   title: { default: "Samit Mohan", template: "%s - Samit Mohan" },
   description: "Samit Mohan rebuilds ML from scratch and writes about it.",
-  alternates: { types: { "application/rss+xml": "/blog/rss.xml" } },
+  alternates: { canonical: "/", types: { "application/rss+xml": "/blog/rss.xml" } },
   openGraph: { type: "website", siteName: "Samit Mohan", images: ["/og/index.png"] },
   twitter: { card: "summary_large_image" },
   icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },

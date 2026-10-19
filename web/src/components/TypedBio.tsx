@@ -44,10 +44,19 @@ export function TypedBio({ runs, className = "", delay = 500 }: { runs: Run[]; c
 
   let left = n;
   return (
-    <p className={className}>
+    <p className={`relative ${className}`}>
       {/* The finished sentence for screen readers and crawlers; the animation is decoration. */}
       <span className="sr-only">{runs.filter((r) => !r.struck).map((r) => r.text).join("")}</span>
-      <span aria-hidden>
+      {/* An invisible copy of the finished text holds the paragraph at its final
+          height, so typing never pushes the page down (it measured 0.126 CLS). */}
+      <span aria-hidden className="invisible">
+        {runs.map((r, i) => (
+          <span key={i} className={r.em ? "font-serif italic" : ""}>
+            {r.text}
+          </span>
+        ))}
+      </span>
+      <span aria-hidden className="absolute inset-0">
         {runs.map((r, i) => {
           const shown = r.text.slice(0, Math.max(0, left));
           left -= r.text.length;

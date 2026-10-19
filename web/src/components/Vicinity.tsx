@@ -196,7 +196,7 @@ export function Vicinity({ things, photos = {} }: { things: string[]; photos?: R
           <button type="button" className="pill mt-5 bg-bg" onClick={() => setRound((r) => r + 1)}>
             shuffle
           </button>
-          <p className="mx-auto mt-3 min-h-[2.6em] max-w-[24ch] font-serif text-[15px] leading-tight text-muted italic">
+          <p aria-live="polite" className="mx-auto mt-3 min-h-[2.6em] max-w-[24ch] font-serif text-[15px] leading-tight text-muted italic">
             {hover === null ? "hover over the things" : shown[hover].text}
           </p>
         </div>
@@ -211,6 +211,11 @@ export function Vicinity({ things, photos = {} }: { things: string[]; photos?: R
             style={{ left: `${s.x}%`, top: `${s.y}%`, animation: `vic-in .7s cubic-bezier(.16,1,.3,1) ${i * 0.06}s both, vic-bob 7s ease-in-out ${-i * 1.3}s infinite` }}
             onPointerEnter={() => setHover(i)}
             onPointerLeave={() => setHover(null)}
+            onFocus={() => setHover(i)}
+            onBlur={() => setHover(null)}
+            tabIndex={0}
+            role="img"
+            aria-label={t.text}
           >
             <div
               className="transition-transform duration-300 hover:scale-110 hover:!rotate-0 [&>svg]:w-full [&>svg]:drop-shadow-[0_10px_12px_rgba(0,0,0,.25)]"

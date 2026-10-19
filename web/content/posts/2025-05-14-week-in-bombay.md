@@ -6,6 +6,7 @@ categories: personal
 published: true
 hidden: true
 tags: [personal]
+description: "post exam break"
 thumbnail: /assets/images/bombay/bombay-01.webp
 ---
 was in a big rut — middle of nowhere in my life.
