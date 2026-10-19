@@ -175,17 +175,22 @@ That's standard residuals. After 64 layers, each layer contributes ~1.5% of the 
 The deeper your network, the less any individual layer matters. A 128-layer model gives each layer half the influence of a 64-layer model.
 
 <style>
-.dilution-widget{background:var(--bg-code,#f1f3f6);border-radius:8px;padding:16px 20px;margin:1rem 0;font-family:var(--font-mono,'JetBrains Mono',monospace)}
+:root{--ar-red-ink:#c62828}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --ar-red-ink: #ff6b6b; }
+}
+:root[data-theme="dark"]{--ar-red-ink:#ff6b6b}
+.dilution-widget{background:var(--bg-code,var(--surface));color:var(--ink);border-radius:8px;padding:16px 20px;margin:1rem 0;font-family:var(--font-mono,'JetBrains Mono',monospace)}
 .dark-mode .dilution-widget{background:#1e1e2e}
 .dark .dilution-widget{background:#1c1c20;border:1px solid #313136;color:#E7E7E9}
 .dilution-widget label{font-size:14px;display:block;margin-bottom:6px}
 .dilution-widget input[type=range]{width:100%;margin:8px 0}
 .dilution-widget .result{font-size:18px;font-weight:600;margin-top:8px}
-.dilution-widget .result span{color:#ff6b6b}
+.dilution-widget .result span{color:var(--ar-red-ink)}
 </style>
 <div class="dilution-widget">
   <label>Number of layers: <strong id="layer-count">64</strong></label>
-  <input type="range" min="4" max="256" value="64" id="layer-slider" oninput="updateDilution()">
+  <input type="range" min="4" max="256" value="64" id="layer-slider" aria-label="Number of layers" oninput="updateDilution()">
   <div class="result">Each layer contributes: <span id="layer-pct">1.5%</span></div>
 </div>
 <script>
@@ -475,5 +480,5 @@ The residual weight was 1.0 for a decade. Softmax temperature is always 1/sqrt(d
 - [My CIFAR-10 ResNet implementation](https://github.com/samitmohan/deep-residual-learning-pytorch)
 - [Vanishing gradients explained](/blog/math) - from my math post
 - [Backpropagation from scratch](/blog/nn) - from my neural networks post
-- [Transformers](/blog/ai) - attention, residuals in the transformer block
+- Transformers - attention, residuals in the transformer block
 - [AttnRes notebook](https://colab.research.google.com/drive/1FGVHFRY2ShFeQWPXTW30e_K-caW1_l-S) - standalone implementation with weight heatmap visualizations, by [Arjun](https://www.k-a.in/AttnRes.html)

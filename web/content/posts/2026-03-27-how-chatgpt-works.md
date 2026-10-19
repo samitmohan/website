@@ -13,45 +13,81 @@ tags: [llm]
   --cg-bg: #f4f4f5;
   --cg-bg-alt: #ffffff;
   --cg-border: #e5e7eb;
-  --cg-muted: #6b7280;
-  --cg-muted2: #9ca3af;
-  --cg-muted3: #b0b7c0;
+  --cg-muted: #5f6571;
+  --cg-muted2: #666c78;
+  --cg-muted3: #686e7c;
   --cg-muted4: #c7ccd4;
-  --cg-blue: #1d4ed8;
+  --cg-blue: #1b48c8;
   --cg-blue-bg: #e8eefc;
   --cg-blue-border: #bcd0f5;
-  --cg-green: #16a34a;
+  --cg-green: #0d622c;
   --cg-green-bg: #e6f7ee;
   --cg-green-border: #b6e3c8;
-  --cg-yellow: #a16207;
+  --cg-yellow: #7a4a05;
   --cg-yellow-bg: #f9f3d6;
   --cg-yellow-border: #e6dca3;
-  --cg-purple: #7c3aed;
+  --cg-purple: #6315e9;
   --cg-purple-bg: #efe8fc;
   --cg-purple-border: #d7c4f6;
-  --cg-pink: #db2777;
+  --cg-pink: #a21b57;
   --cg-pink-bg: #fce8f1;
   --cg-pink-border: #f6c4da;
-  --cg-teal: #0d9488;
+  --cg-teal: #086059;
   --cg-teal-bg: #e0f6f4;
   --cg-teal-border: #b3e5e0;
-  --cg-orange: #ea580c;
+  --cg-orange: #953808;
   --cg-orange-bg: #fdece1;
   --cg-orange-border: #f6cfb5;
   --cg-red-bg: #fce8e8;
-  --cg-red: #dc2626;
+  --cg-red: #a71b1b;
   --cg-red-border: #f2c2c2;
 }
 
-.dark {
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --cg-bg: #141416;
+    --cg-bg-alt: #1c1c20;
+    --cg-border: #313136;
+    --cg-muted: #a3a7af;
+    --cg-muted2: #8f939b;
+    --cg-muted3: #868a92;
+    --cg-muted4: #5b5e65;
+    --cg-blue: #a2b3f3;
+    --cg-blue-bg: #1a2340;
+    --cg-blue-border: #303f6b;
+    --cg-green: #4ade80;
+    --cg-green-bg: #14301f;
+    --cg-green-border: #204d34;
+    --cg-yellow: #d6b24a;
+    --cg-yellow-bg: #2c2712;
+    --cg-yellow-border: #4a4020;
+    --cg-purple: #c4a7f8;
+    --cg-purple-bg: #241a3d;
+    --cg-purple-border: #3d2c66;
+    --cg-pink: #f798ca;
+    --cg-pink-bg: #331526;
+    --cg-pink-border: #5a2942;
+    --cg-teal: #2dd4bf;
+    --cg-teal-bg: #10302c;
+    --cg-teal-border: #1c4d47;
+    --cg-orange: #fb9f52;
+    --cg-orange-bg: #311d0e;
+    --cg-orange-border: #563318;
+    --cg-red-bg: #331616;
+    --cg-red: #fa9a9a;
+    --cg-red-border: #5a2929;
+  }
+}
+
+:root[data-theme="dark"] {
   --cg-bg: #141416;
   --cg-bg-alt: #1c1c20;
   --cg-border: #313136;
-  --cg-muted: #9ca0a9;
-  --cg-muted2: #82858d;
-  --cg-muted3: #6d7078;
+  --cg-muted: #a3a7af;
+  --cg-muted2: #8f939b;
+  --cg-muted3: #868a92;
   --cg-muted4: #5b5e65;
-  --cg-blue: #8ea2f0;
+  --cg-blue: #a2b3f3;
   --cg-blue-bg: #1a2340;
   --cg-blue-border: #303f6b;
   --cg-green: #4ade80;
@@ -60,20 +96,20 @@ tags: [llm]
   --cg-yellow: #d6b24a;
   --cg-yellow-bg: #2c2712;
   --cg-yellow-border: #4a4020;
-  --cg-purple: #b794f6;
+  --cg-purple: #c4a7f8;
   --cg-purple-bg: #241a3d;
   --cg-purple-border: #3d2c66;
-  --cg-pink: #f472b6;
+  --cg-pink: #f798ca;
   --cg-pink-bg: #331526;
   --cg-pink-border: #5a2942;
   --cg-teal: #2dd4bf;
   --cg-teal-bg: #10302c;
   --cg-teal-border: #1c4d47;
-  --cg-orange: #fb923c;
+  --cg-orange: #fb9f52;
   --cg-orange-bg: #311d0e;
   --cg-orange-border: #563318;
   --cg-red-bg: #331616;
-  --cg-red: #f87171;
+  --cg-red: #fa9a9a;
   --cg-red-border: #5a2929;
 }
 </style>
@@ -405,7 +441,7 @@ window._anims = window._anims || {};
       {label:"turn 3",  flex:18, color:"var(--cg-purple-bg)",border:"var(--cg-purple-border)",text:"var(--cg-purple)", tok:60160},
       {label:"turn 4",  flex:20, color:"var(--cg-pink-bg)",border:"var(--cg-pink-border)",text:"var(--cg-pink)", tok:85760},
       {label:"new msg", flex:8,  color:"var(--cg-teal-bg)",border:"var(--cg-teal-border)",text:"var(--cg-teal)", tok:96000},
-      {label:"overflow \u2192",flex:25,color:"var(--cg-red-bg)",border:"var(--cg-red-bg)",text:"var(--cg-red-border)",tok:128000},
+      {label:"overflow \u2192",flex:25,color:"var(--cg-red-bg)",border:"var(--cg-red-bg)",text:"var(--cg-red)",tok:128000},
     ];
     segs.forEach(function(seg,i){
       timers.push(setTimeout(function(){
@@ -584,7 +620,7 @@ window._anims = window._anims || {};
 .moe-router-lbl {
   font-family: monospace;
   font-size: 11px;
-  color: var(--cg-green-border);
+  color: var(--cg-green);
   margin: 5px 0 2px;
 }
 .moe-expert-row {
@@ -604,8 +640,8 @@ window._anims = window._anims || {};
   font-size: 12px;
   font-weight: 700;
   background: var(--cg-bg-alt);
-  border: 1px solid var(--cg-bg);
-  color: var(--cg-bg);
+  border: 1px solid var(--cg-border);
+  color: var(--cg-muted);
   transition: background 0.35s, border-color 0.35s, color 0.35s, box-shadow 0.35s;
 }
 .moe-active {
@@ -1111,7 +1147,7 @@ One request, start to finish.
 .ps-sub {
   font-size: 10px;
   font-weight: 400;
-  opacity: 0.7;
+  opacity: 1;
 }
 .ps-arrow {
   color: var(--cg-muted4);
@@ -1494,9 +1530,9 @@ Without continuous batching: GPU utilization 20-30%. With it: 80-90%.
   display: flex; align-items: center; justify-content: center;
   border-radius: 4px; font-family: monospace; font-size: 10px; font-weight: 400;
   flex: 1;
-  background: var(--cg-bg-alt); border: 1px dashed var(--cg-border); color: var(--cg-border);
+  background: var(--cg-bg-alt); border: 1px dashed var(--cg-border); color: var(--cg-muted);
 }
-.cbt-waste { color: var(--cg-red-border); border-color: var(--cg-red-bg); background: var(--cg-red-bg); }
+.cbt-waste { color: var(--cg-red); border-color: var(--cg-red-bg); background: var(--cg-red-bg); }
 .cbt-a { background: var(--cg-blue-bg); border: 1px solid var(--cg-blue-border); color: var(--cg-blue); }
 .cbt-b { background: var(--cg-green-bg); border: 1px solid var(--cg-green-border); color: var(--cg-green); }
 .cbt-c { background: var(--cg-orange-bg); border: 1px solid var(--cg-orange-border); color: var(--cg-orange); }
@@ -1936,13 +1972,13 @@ Next-token prediction on 13 trillion tokens is a simple objective. The weights t
   right: 10px;
   background: var(--cg-bg-alt);
   border: 1px solid var(--cg-blue-border);
-  color: var(--cg-blue);
+  color: var(--cg-muted);
   font-family: monospace;
   font-size: 12px;
   cursor: pointer;
   padding: 3px 10px;
   border-radius: 4px;
-  opacity: 0.6;
+  opacity: 1;
   transition: opacity 0.2s, color 0.2s;
   line-height: 1.5;
   z-index: 10;

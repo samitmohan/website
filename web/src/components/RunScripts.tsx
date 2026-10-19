@@ -77,6 +77,10 @@ export function RunScripts({ html, className }: { html: string; className?: stri
     };
     root.addEventListener("click", onClick);
 
+    // Regions that scroll sideways need focus so keyboard users can scroll them.
+    for (const el of Array.from(root.querySelectorAll<HTMLElement>("pre, .katex-display, table")))
+      if (el.scrollWidth > el.clientWidth && !el.hasAttribute("tabindex")) el.tabIndex = 0;
+
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const videos = Array.from(root.querySelectorAll("video"));
     for (const v of videos) {

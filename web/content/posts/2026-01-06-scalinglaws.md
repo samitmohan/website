@@ -38,7 +38,7 @@ Two things followed from this. GPT-3 turned out to be undertrained, and Chinchil
 <style>
 .chinchilla-widget{background:var(--bg-card,#1f2335);border:1px solid var(--border,#e1e4e8);border-radius:10px;padding:20px 24px;margin:24px 0;font-family:inherit}
 .chinchilla-widget h4{margin:0 0 12px;color:var(--text-heading,#c0caf5);font-size:16px}
-.chinchilla-widget p.desc{font-size:13px;color:var(--text-secondary,#787c99);margin:0 0 16px}
+.chinchilla-widget p.desc{font-size:13px;color:var(--text-secondary,#888ca5);margin:0 0 16px}
 .chinchilla-widget .presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .chinchilla-widget .presets button{background:var(--bg-code,#16161e);color:var(--text,#a9b1d6);border:1px solid var(--border,#e1e4e8);border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px;font-family:var(--font-mono,'JetBrains Mono',monospace);transition:background .15s,border-color .15s}
 .chinchilla-widget .presets button:hover,.chinchilla-widget .presets button.active{background:var(--accent,#0366d6);color:#fff;border-color:var(--accent,#0366d6)}
@@ -46,9 +46,9 @@ Two things followed from this. GPT-3 turned out to be undertrained, and Chinchil
 .chinchilla-widget .results{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .chinchilla-widget .result-card{background:var(--bg-code,#16161e);border-radius:8px;padding:14px 16px;border-left:3px solid var(--accent,#0366d6)}
 .chinchilla-widget .result-card.old{border-left-color:#ff6b6b}
-.chinchilla-widget .result-card .label{font-size:12px;color:var(--text-muted,#565f89);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.chinchilla-widget .result-card .label{font-size:12px;color:var(--text-muted,#828bb1);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
 .chinchilla-widget .result-card .val{font-size:15px;font-weight:600;color:var(--text-heading,#c0caf5);font-family:var(--font-mono,'JetBrains Mono',monospace)}
-.chinchilla-widget .result-card .val span{font-weight:400;font-size:12px;color:var(--text-muted,#565f89)}
+.chinchilla-widget .result-card .val span{font-weight:400;font-size:12px;color:var(--text-muted,#828bb1)}
 .chinchilla-widget .summary{margin-top:14px;padding:12px 16px;background:var(--bg-code,#16161e);border-radius:8px;font-size:13px;color:var(--text,#a9b1d6);line-height:1.6;font-family:var(--font-mono,'JetBrains Mono',monospace)}
 .dark .chinchilla-widget{background:#141416;border-color:#313136}
 .dark .chinchilla-widget h4{color:#E7E7E9}

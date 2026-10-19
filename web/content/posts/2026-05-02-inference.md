@@ -23,7 +23,18 @@ tags: [llm]
   --inf-yellow: #ca8a04;
   --inf-teal: #0d9488;
 }
-.dark {
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --inf-blue: #8ea2f0;
+    --inf-green: #4ade80;
+    --inf-red: #f87171;
+    --inf-orange: #fb923c;
+    --inf-purple: #b794f6;
+    --inf-yellow: #d6b24a;
+    --inf-teal: #2dd4bf;
+  }
+}
+:root[data-theme="dark"] {
   --inf-blue: #8ea2f0;
   --inf-green: #4ade80;
   --inf-red: #f87171;

@@ -567,4 +567,4 @@ for _ in range(10):
 
 These five are what I ask. For the other side of the table, I keep a full prep guide of every question I am drilling for my own 2026 interviews: math, deep learning, LLMs, CV, systems, GPU/hardware, and from-scratch builds.
 
-[Full interview prep guide](/interviews)
+Full interview prep guide
