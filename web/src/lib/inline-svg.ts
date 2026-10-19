@@ -35,7 +35,7 @@ import path from "path";
  * worth a staleness check on the mtime.
  */
 const cache = new Map<string, string>();
-const CACHEABLE = import.meta.env.PROD;
+const CACHEABLE = process.env.NODE_ENV === "production";
 
 const PUBLIC_DIR = path.join(process.cwd(), "public");
 

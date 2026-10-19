@@ -94,15 +94,20 @@ function readAllPosts() {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
-// Public posts: everything except hidden ones. Feeds the blog index, RSS,
-// sitemap, homepage, and related/prev-next links.
+// Technical posts: everything without `hidden: true`. The /blog tab.
 export function getAllPosts(): PostMeta[] {
   return readAllPosts().filter((p) => !p.hidden);
 }
 
-// Hidden ("fun") posts: unlisted, noindex, reachable only via /fun or direct URL.
-export function getHiddenPosts(): PostMeta[] {
+// Personal posts: `hidden: true` in frontmatter, a holdover from when they were
+// the unlisted /fun section. The /blog/personal tab.
+export function getPersonalPosts(): PostMeta[] {
   return readAllPosts().filter((p) => p.hidden);
+}
+
+// Both tabs, newest first. Feeds RSS, the sitemap and llms.txt.
+export function getEveryPost(): PostMeta[] {
+  return readAllPosts();
 }
 
 // Strip Liquid tags. Rewrite internal Jekyll post links to /blog/[slug].

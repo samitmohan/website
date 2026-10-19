@@ -1,0 +1,400 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Tokens. Light is warm paper with red ink; dark is a neutral near-black.
+   `data-theme` on <html> wins over the OS once someone switches.
+   ------------------------------------------------------------------ */
+
+:root {
+  --bg: #fbfaf7;
+  --ink: #111111;
+  --body: #6b6a66;
+  --muted: #8d8b85;
+  --surface: #f2f1ed;
+  --surface-2: #eae8e2;
+  --hairline: rgba(0, 0, 0, 0.1);
+  --accent: #d9261c;
+  --accent-soft: rgba(217, 38, 28, 0.1);
+  --paper: #ffffff;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.08), 0 10px 28px -10px rgba(0, 0, 0, 0.3);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+
+  /* Names the post widgets and figures in public/ were written against. */
+  --foreground: var(--ink);
+  --muted-foreground: var(--body);
+  --border: var(--hairline);
+  --card: var(--surface);
+  --primary: var(--accent);
+  --brand: var(--accent);
+  --brand-strong: var(--accent);
+  --motion-ease: var(--ease-out);
+  --grey: var(--muted);
+  --soft: var(--body);
+  --struct: var(--body);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a0a0a;
+    --ink: #ededed;
+    --body: #a1a1a1;
+    --muted: #707070;
+    --surface: #141414;
+    --surface-2: #1c1c1c;
+    --hairline: rgba(255, 255, 255, 0.12);
+    --accent: #ff4a3d;
+    --accent-soft: rgba(255, 74, 61, 0.14);
+    --paper: #161616;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(0, 0, 0, 0.8);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --ink: #ededed;
+  --body: #a1a1a1;
+  --muted: #707070;
+  --surface: #141414;
+  --surface-2: #1c1c1c;
+  --hairline: rgba(255, 255, 255, 0.12);
+  --accent: #ff4a3d;
+  --accent-soft: rgba(255, 74, 61, 0.14);
+  --paper: #161616;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(0, 0, 0, 0.8);
+  color-scheme: dark;
+}
+
+/* The personal side: warmer paper, serif headings, a little grain. */
+[data-scope="personal"] {
+  --bg: #f6f1e7;
+  --surface: #ede6d6;
+  --paper: #fffdf8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-scope="personal"] {
+    --bg: #12100d;
+    --surface: #1c1915;
+    --paper: #1a1713;
+  }
+}
+:root[data-theme="dark"] [data-scope="personal"] {
+  --bg: #12100d;
+  --surface: #1c1915;
+  --paper: #1a1713;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-paper: var(--paper);
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--body);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, h4 {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+p { text-wrap: pretty; }
+::selection { background: var(--accent); color: #fff; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+[data-scope="personal"] {
+  background: var(--bg);
+}
+[data-scope="personal"] :is(h1, h2, h3) {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* Theme switch: the new snapshot grows as a circle from the click point. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  animation: theme-reveal 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes theme-reveal {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  to { clip-path: circle(var(--vt-r, 150vmax) at var(--vt-x, 50%) var(--vt-y, 50%)); }
+}
+
+/* ------------------------------------------------------------------
+   Shared pieces
+   ------------------------------------------------------------------ */
+
+/* Oval outline button: tilts and goes red on hover. */
+.oval {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.45em 1.15em;
+  border: 1.5px solid var(--ink);
+  border-radius: 50% / 60%;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: transform 0.25s var(--ease-out), color 0.2s, border-color 0.2s;
+}
+.oval:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: rotate(-2deg);
+}
+.oval[aria-pressed="true"], .oval[aria-current="page"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.05em 0.45em;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+/* An underline drawn left to right, slightly off level, like a pen stroke. */
+.mark {
+  position: relative;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.mark::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 0.02em;
+  height: 0.32em;
+  background: var(--accent-soft);
+  transform: rotate(-0.6deg) scaleX(var(--mark-x, 1));
+  transform-origin: left;
+  transition: transform 0.9s var(--ease-out);
+  z-index: -1;
+}
+
+.link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--hairline);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.2s, color 0.2s;
+}
+.link:hover {
+  text-decoration-color: var(--accent);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ------------------------------------------------------------------
+   Post prose
+   ------------------------------------------------------------------ */
+
+.prose {
+  color: var(--body);
+  font-size: 16px;
+  line-height: 1.75;
+}
+.prose > * + * { margin-top: 1.15em; }
+.prose h2 { font-size: 22px; margin-top: 2.2em; line-height: 1.25; scroll-margin-top: 96px; }
+.prose h3 { font-size: 18px; margin-top: 1.8em; line-height: 1.3; scroll-margin-top: 96px; }
+.prose h4 { font-size: 16px; margin-top: 1.5em; scroll-margin-top: 96px; }
+.prose strong { color: var(--ink); font-weight: 600; }
+.prose a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.prose a:hover { color: var(--accent); }
+.prose ul { list-style: disc; padding-left: 1.3em; }
+.prose ol { list-style: decimal; padding-left: 1.3em; }
+.prose li + li { margin-top: 0.35em; }
+.prose li::marker { color: var(--muted); }
+.prose hr { border: 0; border-top: 1px solid var(--hairline); margin: 2.5em 0; }
+.prose img, .prose video { border-radius: 12px; max-width: 100%; height: auto; margin-inline: auto; }
+.prose figure figcaption, .prose .caption { font-size: 13px; color: var(--muted); text-align: center; margin-top: 0.6em; }
+.prose blockquote { border-left: 2px solid var(--accent); padding-left: 1em; color: var(--body); font-style: italic; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 14px; display: block; overflow-x: auto; }
+.prose th, .prose td { border-bottom: 1px solid var(--hairline); padding: 0.5em 0.75em; text-align: left; }
+.prose th { color: var(--ink); font-weight: 600; }
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--surface);
+  padding: 0.12em 0.38em;
+  border-radius: 6px;
+  color: var(--ink);
+}
+.prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25em 0; }
+
+/* Code blocks: rehype-pretty-code with both shiki themes on every token. */
+code[data-theme*=" "] span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) code[data-theme*=" "] span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg, transparent);
+  }
+}
+:root[data-theme="dark"] code[data-theme*=" "] span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg, transparent);
+}
+code[data-theme*=" "] { background-color: transparent !important; }
+
+.prose [data-rehype-pretty-code-figure] {
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+  margin-block: 1.6em;
+}
+.prose [data-rehype-pretty-code-figure] pre {
+  overflow-x: auto;
+  padding: 14px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.prose [data-rehype-pretty-code-figure] code { display: grid; counter-reset: line; }
+.prose [data-rehype-pretty-code-figure] [data-line] {
+  padding: 0 16px;
+  border-left: 2px solid transparent;
+}
+.prose [data-rehype-pretty-code-figure] [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.4rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--muted);
+  opacity: 0.6;
+  user-select: none;
+}
+.prose [data-highlighted-line] { background: var(--accent-soft); border-left-color: var(--accent); }
+.prose .code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px 6px 14px;
+  border-bottom: 1px solid var(--hairline);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.prose .code-lang { text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.prose .code-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--body);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.prose .code-copy:hover { color: var(--ink); background: var(--surface-2); }
+.prose .code-copy svg { width: 13px; height: 13px; }
+.prose .code-copy svg:nth-of-type(2) { display: none; }
+.prose .code-copy.copied { color: var(--accent); }
+.prose .code-copy.copied svg:nth-of-type(1) { display: none; }
+.prose .code-copy.copied svg:nth-of-type(2) { display: inline; }
+
+.prose blockquote.callout {
+  font-style: normal;
+  background: var(--surface);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 0.9em 1.1em;
+}
+.prose .callout-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.3em;
+}
+
+[data-scope="personal"] .prose { font-family: var(--font-serif); font-size: 19px; font-weight: 400; line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Direction B: strict monochrome, one weight. */
+.mono { --bg: #ffffff; --ink: #000000; --body: #666666; --muted: #a0a0a0; --surface: #fafafa; --surface-2: #f2f2ef; --ghost: #cbcbcb; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mono { --bg: #0a0a0a; --ink: #ededed; --body: #a1a1a1; --muted: #707070; --surface: #111111; --surface-2: #1a1a1a; --ghost: #565656; }
+}
+:root[data-theme="dark"] .mono { --bg: #0a0a0a; --ink: #ededed; --body: #a1a1a1; --muted: #707070; --surface: #111111; --surface-2: #1a1a1a; --ghost: #565656; }
+.mono { background: var(--bg); font-weight: 600; letter-spacing: -0.01em; }

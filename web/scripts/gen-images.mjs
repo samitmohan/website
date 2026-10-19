@@ -2,7 +2,7 @@
 /**
  * Writes the responsive image variants the built HTML asks for.
  *
- * Runs after `astro build`, reads dist/**\/*.html for the /_img/ URLs the
+ * Runs after `next build`, reads out/**\/*.html for the /_img/ URLs the
  * markdown pipeline emitted, and writes exactly those files. The HTML is the
  * contract: the pipeline decides which widths a source can fill and this
  * produces them, so the two cannot disagree about what exists.
@@ -29,7 +29,7 @@ import sharp from "sharp";
 import { IMAGE_WIDTHS, variantUrl } from "../src/lib/responsive.ts";
 
 const HERE = import.meta.dirname;
-const DIST = path.join(HERE, "..", "dist");
+const DIST = path.join(HERE, "..", "out");
 const PUBLIC = path.join(HERE, "..", "public");
 const IMAGE_EXT = /\.(webp|png|jpe?g|avif|gif|tiff?)$/i;
 
@@ -95,7 +95,7 @@ await Promise.all(
   }),
 );
 
-console.log(`  ${made} variants, ${(bytes / 1024 / 1024).toFixed(1)} MB in dist/_img`);
+console.log(`  ${made} variants, ${(bytes / 1024 / 1024).toFixed(1)} MB in out/_img`);
 if (skipped) console.log(`  ${skipped} unreadable, left to their original src`);
 if (orphans.length) {
   console.error(`  ${orphans.length} URLs with no source - pipeline/script hash mismatch:`);
