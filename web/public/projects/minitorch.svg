@@ -22,7 +22,7 @@
      families after it would not rescue the declaration - and font-size is kept
      out of the shorthand for the same reason, so a renderer that cannot
      resolve the variable loses the typeface and not the text size. */
-  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --ink:#141414; --grey:#877F70; --soft:#D5CFC0; }
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
   .mt-box { fill:none; stroke:var(--grey); stroke-width:1.1; }
   .mt-lab { font-size:10px;
             fill:var(--ink); text-anchor:middle; }

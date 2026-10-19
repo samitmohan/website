@@ -160,7 +160,7 @@ await check(
     await page.goto(base + "/");
     await page.waitForTimeout(300);
     const typed = await page.locator("p span[aria-hidden].absolute").first().innerText();
-    expect(typed.includes("watching 24/7"), `bio not finished: "${typed}"`);
+    expect(typed.includes("300 cameras 24/7."), `bio not finished: "${typed}"`);
   },
   { reducedMotion: "reduce" },
 );

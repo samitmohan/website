@@ -95,10 +95,7 @@ export function FilmRoll({ rolls }: { rolls: Roll[] }) {
         return (
           <section key={roll.title} className="mt-10 first:mt-0">
             <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <div className="flex items-baseline gap-3">
-                <h3 className="font-serif text-[30px] leading-none font-normal">{roll.title}</h3>
-                <span className="text-[12px]">{[roll.stock, roll.camera, roll.year].filter(Boolean).join("  ·  ")}</span>
-              </div>
+              <h3 className="font-serif text-[30px] leading-none font-normal">{roll.title}</h3>
               {!allDev && (
                 <button
                   type="button"

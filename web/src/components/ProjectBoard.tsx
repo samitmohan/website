@@ -140,7 +140,7 @@ function Board({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: str
               type="button"
               layoutId={`card-${p.slug}`}
               onClick={() => !dragged.current && onOpen(p.slug)}
-              className="group absolute bg-paper p-3 text-left shadow-[var(--shadow-card)]"
+              className="project-face group absolute bg-paper p-3 text-left shadow-[var(--shadow-card)]"
               style={{ left: s.x, top: s.y, width: CARD, rotate: s.r }}
               whileHover={{ rotate: 0, scale: 1.03 }}
               transition={{ type: "spring", stiffness: 300, damping: 24 }}
@@ -194,7 +194,7 @@ function List({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: stri
           type="button"
           layoutId={`card-m-${p.slug}`}
           onClick={() => onOpen(p.slug)}
-          className="relative bg-paper p-3 text-left shadow-[var(--shadow-card)]"
+          className="project-face relative bg-paper p-3 text-left shadow-[var(--shadow-card)]"
           style={{ rotate: `${spot(i).r / 2}deg` }}
         >
           <Pin />

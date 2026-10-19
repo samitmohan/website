@@ -1,10 +1,6 @@
 import type { Run } from "@/components/TypedBio";
 
-export const BIO: Run[] = [
-  { text: "I rebuild models from scratch, and run inference at scale on " },
-  { text: "300 cameras", em: true },
-  { text: " watching 24/7." },
-];
+export const BIO: Run[] = [{ text: "I rebuild models from scratch, and run inference at scale on 300 cameras 24/7." }];
 
 /** The posts the home page leads with, in this order. */
 export const FEATURED = ["math", "paper", "microgpt", "attention-residuals"];

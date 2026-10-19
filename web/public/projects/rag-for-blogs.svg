@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 200" width="380" height="200" role="img">
+<title>Retrieval over the blog</title>
+<desc>Posts are chunked without splitting code blocks, embedded, and indexed in FAISS; a question pulls the closest chunks, and the answer cites them.</desc>
+<style><![CDATA[
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
+  .rg-page { fill:var(--paper,#fff); stroke:var(--grey); stroke-width:1; }
+  .rg-line { stroke:var(--soft); stroke-width:3; stroke-linecap:round; }
+  .rg-chunk { fill:var(--soft); }
+  .rg-hit { fill:var(--accent,#d9261c); }
+  .rg-dot { fill:var(--ink); }
+  .rg-box { fill:none; stroke:var(--ink); stroke-width:1.2; }
+  .rg-lab { font-size:9.5px; fill:var(--ink); text-anchor:middle; }
+  .rg-cap { font-size:9px; fill:var(--grey); text-anchor:middle; }
+  .rg-edge { fill:none; stroke:var(--grey); stroke-width:1; }
+  .rg-q { fill:none; stroke:var(--ink); stroke-width:1.1; }
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.project-face:hover, .project-face:focus-visible) .rg-hit { animation: rg-blink 500ms ease-out 3 backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .rg-ans { animation: rg-fade 600ms ease-out 1100ms backwards; }
+  }
+  @keyframes rg-blink { 50% { opacity:.3; } }
+  @keyframes rg-fade { from { opacity:0; transform: translateY(4px); } }
+]]></style>
+
+<!-- posts -->
+<rect class="rg-page" x="18" y="62" width="44" height="58" rx="3"/>
+<rect class="rg-page" x="24" y="56" width="44" height="58" rx="3"/>
+<line class="rg-line" x1="31" y1="68" x2="61" y2="68"/><line class="rg-line" x1="31" y1="77" x2="56" y2="77"/><line class="rg-line" x1="31" y1="86" x2="60" y2="86"/><line class="rg-line" x1="31" y1="95" x2="50" y2="95"/>
+<text class="rg-cap" x="44" y="136">posts</text>
+<path class="rg-edge" d="M74 86 H92 M87 82 L92 86 L87 90"/>
+
+<!-- chunks -->
+<rect class="rg-chunk" x="98" y="58" width="40" height="12" rx="2"/>
+<rect class="rg-chunk" x="98" y="74" width="40" height="12" rx="2"/>
+<rect class="rg-hit" x="98" y="90" width="40" height="12" rx="2"/>
+<rect class="rg-chunk" x="98" y="106" width="40" height="12" rx="2"/>
+<text class="rg-cap" x="118" y="136">chunks</text>
+<path class="rg-edge" d="M144 86 H162 M157 82 L162 86 L157 90"/>
+
+<!-- index -->
+<rect class="rg-box" x="168" y="54" width="70" height="66" rx="6"/>
+<circle class="rg-dot" cx="185" cy="72" r="2"/><circle class="rg-dot" cx="200" cy="96" r="2"/><circle class="rg-dot" cx="222" cy="68" r="2"/>
+<circle class="rg-dot" cx="214" cy="106" r="2"/><circle class="rg-dot" cx="190" cy="104" r="2"/><circle class="rg-hit" cx="205" cy="82" r="3"/>
+<text class="rg-cap" x="203" y="136">FAISS</text>
+
+<!-- question -->
+<rect class="rg-q" x="168" y="14" width="70" height="22" rx="11"/>
+<text class="rg-lab" x="203" y="29">question?</text>
+<path class="rg-edge" d="M203 36 V52"/>
+
+<path class="rg-edge" d="M244 86 H262 M257 82 L262 86 L257 90"/>
+<!-- answer -->
+<g class="rg-ans">
+  <rect class="rg-page" x="268" y="56" width="96" height="60" rx="5"/>
+  <line class="rg-line" x1="278" y1="70" x2="352" y2="70"/><line class="rg-line" x1="278" y1="80" x2="340" y2="80"/><line class="rg-line" x1="278" y1="90" x2="346" y2="90"/>
+  <text class="rg-lab" x="300" y="107" style="text-anchor:start">[1] [2]</text>
+</g>
+<text class="rg-cap" x="316" y="136">cited answer</text>
+<text class="rg-cap" x="190" y="176">public: retrieval only · local: Qwen 2.5 7B via Ollama</text>
+</svg>

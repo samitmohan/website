@@ -23,21 +23,15 @@ const WORK = [
 export default function About() {
   return (
     <Page>
-      <div className="grid gap-10 sm:grid-cols-[1fr_auto]">
-        <Reveal slot={0} as="header">
-          <h1 className="text-[clamp(26px,4vw,34px)] leading-[1.15] font-medium">
-            I rebuild <span className="mark">ML from scratch</span> and <span className="mark">write</span> about it.
-          </h1>
-        </Reveal>
-        <Reveal slot={2} className="justify-self-center sm:justify-self-end">
-          <figure className="w-36 rotate-3 bg-paper p-2 pb-6 shadow-[var(--shadow-card)] transition-transform duration-500 hover:rotate-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/photo.jpeg" alt="Samit Mohan" width={460} height={460} className="aspect-square w-full object-cover" />
-          </figure>
-        </Reveal>
-      </div>
+      <h1 className="sr-only">About</h1>
+      <Reveal slot={0} className="float-right mb-4 ml-6">
+        <figure className="w-32 rotate-3 bg-paper p-2 pb-6 shadow-[var(--shadow-card)] transition-transform duration-500 hover:rotate-0 sm:w-36">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/photo.jpeg" alt="Samit Mohan" width={460} height={460} className="aspect-square w-full object-cover" />
+        </figure>
+      </Reveal>
 
-      <Reveal slot={3} className="mt-10 space-y-5 text-[16px] leading-[1.75]">
+      <Reveal slot={1} className="space-y-5 text-[16px] leading-[1.75]">
         <p>
           I am an AI Scientist at <a className="link" href="https://beltech.ai">beltech.ai</a>, working on building models and
           optimising inference for security, surveillance, and traffic management across 27 cities, processing 300 cameras 24/7,
@@ -63,14 +57,14 @@ export default function About() {
         </p>
       </Reveal>
 
-      <Reveal slot={4} as="section" className="mt-16">
+      <Reveal slot={2} as="section" className="clear-both mt-16">
         <h2 className="meta">where</h2>
         <div className="mt-2">
           <DimRows rows={WORK} />
         </div>
       </Reveal>
 
-      <Reveal slot={5} as="section" className="mt-16">
+      <Reveal slot={3} as="section" className="mt-16">
         <h2 className="meta">elsewhere</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {SOCIAL_LINKS.map((l) => (

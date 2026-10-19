@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 200" width="380" height="200" role="img">
+<title>YOLOv1 grid</title>
+<desc>A 448 by 448 image split into a 7 by 7 grid. The cell holding an object's centre predicts two boxes; the whole image becomes one 7 by 7 by 30 output tensor.</desc>
+<style><![CDATA[
+  svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
+  .yo-frame { fill:none; stroke:var(--ink); stroke-width:1.2; }
+  .yo-grid { stroke:var(--grey); stroke-width:.6; opacity:.7; }
+  .yo-cell { fill:var(--accent,#d9261c); opacity:.22; }
+  .yo-b1 { fill:none; stroke:var(--accent,#d9261c); stroke-width:1.6; }
+  .yo-b2 { fill:none; stroke:var(--ink); stroke-width:1.2; stroke-dasharray:3 2; }
+  .yo-c { fill:var(--accent,#d9261c); }
+  .yo-lab { font-size:9.5px; fill:var(--ink); }
+  .yo-cap { font-size:9px; fill:var(--grey); }
+  .yo-cube { fill:var(--soft); stroke:var(--ink); stroke-width:1; }
+  .yo-arrow { fill:none; stroke:var(--grey); stroke-width:1; }
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.project-face:hover, .project-face:focus-visible) .yo-cell { animation: yo-pulse 700ms ease-out 2 backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .yo-b1 { animation: yo-draw 800ms cubic-bezier(.3,0,.2,1) 300ms backwards; }
+    :is(.project-face:hover, .project-face:focus-visible) .yo-b2 { animation: yo-fade 500ms ease-out 900ms backwards; }
+  }
+  @keyframes yo-pulse { 50% { opacity:.55; } }
+  @keyframes yo-draw { from { stroke-dasharray:1 1; stroke-dashoffset:1; } }
+  @keyframes yo-fade { from { opacity:0; } }
+]]></style>
+
+<text class="yo-cap" x="20" y="18">448 x 448 input</text>
+<rect class="yo-frame" x="20" y="26" width="154" height="154" rx="3"/>
+<g class="yo-grid">
+  <line x1="42" y1="26" x2="42" y2="180"/><line x1="64" y1="26" x2="64" y2="180"/><line x1="86" y1="26" x2="86" y2="180"/>
+  <line x1="108" y1="26" x2="108" y2="180"/><line x1="130" y1="26" x2="130" y2="180"/><line x1="152" y1="26" x2="152" y2="180"/>
+  <line x1="20" y1="48" x2="174" y2="48"/><line x1="20" y1="70" x2="174" y2="70"/><line x1="20" y1="92" x2="174" y2="92"/>
+  <line x1="20" y1="114" x2="174" y2="114"/><line x1="20" y1="136" x2="174" y2="136"/><line x1="20" y1="158" x2="174" y2="158"/>
+</g>
+<rect class="yo-cell" x="86" y="92" width="22" height="22"/>
+<rect class="yo-b1" pathLength="1" x="56" y="58" width="86" height="96" rx="2"/>
+<rect class="yo-b2" x="66" y="70" width="70" height="78" rx="2"/>
+<circle class="yo-c" cx="97" cy="104" r="2.6"/>
+<text class="yo-cap" x="112" y="104">centre</text>
+
+<path class="yo-arrow" d="M184 103 H214 M208 98 L214 103 L208 108"/>
+
+<!-- output tensor -->
+<path class="yo-cube" d="M228 70 L298 70 L298 140 L228 140 Z"/>
+<path class="yo-cube" d="M228 70 L248 52 L318 52 L298 70 Z"/>
+<path class="yo-cube" d="M298 70 L318 52 L318 122 L298 140 Z"/>
+<text class="yo-lab" x="241" y="110">7x7x30</text>
+<text class="yo-cap" x="228" y="160">S=7  B=2  C=20</text>
+<text class="yo-cap" x="228" y="174">one pass, every box</text>
+</svg>
