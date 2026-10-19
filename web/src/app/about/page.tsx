@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { DimRows } from "@/components/DimRows";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { SOCIAL_LINKS } from "@/config/links";
@@ -10,15 +9,6 @@ export const metadata: Metadata = {
   alternates: { canonical: "/about" },
   openGraph: { images: ["/og/about.png"] },
 };
-
-const WORK = [
-  { a: "beltech.ai", b: "AI Scientist", c: "now", href: "https://beltech.ai" },
-  { a: "aiengg.dev", b: "Teaching assistant", c: "16-week cohort", href: "https://aiengg.dev/" },
-  { a: "tensortonic.com", b: "Problem writer", c: "50k+ users", href: "https://www.tensortonic.com/" },
-  { a: "MakeMyTrip", b: "Intern", c: "reinforcement learning" },
-  { a: "Genpact", b: "Intern", c: "classical ML" },
-  { a: "New Horizon College", b: "B.E. Computer Science", c: "2024 · 9.4" },
-];
 
 export default function About() {
   return (
@@ -57,14 +47,8 @@ export default function About() {
         </p>
       </Reveal>
 
-      <Reveal slot={2} as="section" className="clear-both mt-16">
-        <h2 className="meta">where</h2>
-        <div className="mt-2">
-          <DimRows rows={WORK} />
-        </div>
-      </Reveal>
 
-      <Reveal slot={3} as="section" className="mt-16">
+      <Reveal slot={2} as="section" className="clear-both mt-16">
         <h2 className="meta">elsewhere</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {SOCIAL_LINKS.map((l) => (
