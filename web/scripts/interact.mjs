@@ -86,39 +86,69 @@ await check("post widget opens in a sheet and mounts", async (page) => {
   await page.waitForFunction(() => (document.querySelector('[role="dialog"] [id]')?.children.length ?? 0) > 0, null, { timeout: 5000 });
 });
 
-await check("shuffle swaps the things in the vicinity", async (page) => {
+await check("deck: a card turns over, shuffle deals a new hand", async (page) => {
   await page.goto(base + "/things");
+  const deck = page.getByRole("heading", { name: "Things I like" });
+  await deck.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1200);
-  const titles = () => page.locator("[data-thing] [title]").evaluateAll((els) => els.map((e) => e.getAttribute("title")).join("|"));
-  const before = await titles();
+  await page.getByRole("button", { name: /card 1, face down/ }).click();
+  await page.waitForTimeout(700);
+  const first = await page.locator(".deck-card[aria-label]").first().getAttribute("aria-label");
+  expect(first && !first.includes("face down"), `card did not turn over: ${first}`);
   await page.getByRole("button", { name: "shuffle" }).click();
-  await page.waitForTimeout(400);
-  expect((await titles()) !== before, "same six things after shuffle");
+  await page.waitForTimeout(2400);
+  const down = await page.getByRole("button", { name: /face down/ }).count();
+  expect(down === 7, `expected a fresh face-down hand of 7, saw ${down}`);
+  return `"${first}"`;
 });
 
-await check("rubbing a negative develops it", async (page) => {
+await check("pick a card shows one with its caption", async (page) => {
   await page.goto(base + "/things");
-  const frame = page.getByRole("button", { name: /Open frame/ }).first();
-  await frame.scrollIntoViewIfNeeded();
-  await page.waitForTimeout(1500);
-  const box = await frame.boundingBox();
-  // Hovering alone must not develop anything.
-  await page.mouse.move(box.x + 2, box.y + 10);
-  await page.mouse.move(box.x + box.width - 2, box.y + box.height - 10, { steps: 30 });
-  await page.waitForTimeout(300);
-  const untouched = await frame.locator("canvas").evaluate((c) => getComputedStyle(c).opacity);
-  expect(untouched === "1", `hover developed the frame (opacity ${untouched})`);
-  // Pressing and dragging does.
-  await page.mouse.move(box.x + 2, box.y + 6);
-  await page.mouse.down();
-  for (let y = box.y + 6; y < box.y + box.height; y += 12) {
-    await page.mouse.move(box.x + 2, y, { steps: 3 });
-    await page.mouse.move(box.x + box.width - 2, y, { steps: 14 });
-  }
-  await page.mouse.up();
+  await page.getByRole("heading", { name: "Things I like" }).scrollIntoViewIfNeeded();
   await page.waitForTimeout(1200);
-  const opacity = await frame.locator("canvas").evaluate((c) => getComputedStyle(c).opacity);
-  expect(opacity === "0", `negative opacity still ${opacity}`);
+  await page.getByRole("button", { name: "pick a card" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.waitFor({ timeout: 3000 });
+  return `"${await dialog.getAttribute("aria-label")}"`;
+});
+
+await check("gallery: a record opens, tracks change the photo", async (page) => {
+  await page.goto(base + "/things");
+  await page.getByRole("button", { name: /^Open Goa/ }).click();
+  const dialog = page.getByRole("dialog", { name: "Goa" });
+  await dialog.waitFor({ timeout: 3000 });
+  const big = () => dialog.locator("figure img").getAttribute("src");
+  const before = await big();
+  await dialog.locator("ol button").nth(2).click();
+  await page.waitForTimeout(300);
+  const after = await big();
+  expect(before !== after, "photo did not change with the track");
+  await page.keyboard.press("Escape");
+  await dialog.waitFor({ state: "detached", timeout: 3000 });
+});
+
+await check("footer garden grows under the pointer and clears", async (page) => {
+  await page.goto(base + "/about");
+  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(800);
+  const canvas = page.locator("footer canvas");
+  const box = await canvas.boundingBox();
+  const ink = () => canvas.evaluate((c) => {
+    const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+    let n = 0;
+    for (let i = 3; i < d.length; i += 16) if (d[i] > 0) n++;
+    return n;
+  });
+  const sticker = await ink();
+  for (let k = 0; k < 24; k++) await page.mouse.move(box.x + 60 + k * 30, box.y + 40 + (k % 5) * 30, { steps: 3 });
+  await page.waitForTimeout(1200);
+  const grown = await ink();
+  expect(grown > sticker * 1.1, `no growth: ${sticker} -> ${grown}`);
+  await page.getByRole("button", { name: "clear" }).click();
+  await page.waitForTimeout(200);
+  const cleared = await ink();
+  expect(cleared === sticker, `clear left ${cleared - sticker} extra pixels`);
+  return `${sticker} -> ${grown} -> ${cleared}`;
 });
 
 await check("footer swatch changes the accent and it survives a reload", async (page) => {
@@ -133,25 +163,26 @@ await check("footer swatch changes the accent and it survives a reload", async (
   return `${before} -> ${after}`;
 });
 
-await check("things I like captions are the post's own bullets", async (page) => {
-  await page.goto(base + "/things");
-  await page.waitForTimeout(1200);
+await check("things I like cards are the post's own bullets", async (page) => {
   const reader = await page.context().newPage();
   await reader.goto(base + "/blog/things-i-like");
   const post = await reader.locator(".prose").innerText();
   const bullets = await reader.locator(".prose li").count();
   await reader.close();
+  await page.goto(base + "/things");
+  await page.getByRole("heading", { name: "Things I like" }).scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1200);
   const seen = new Set();
-  for (let r = 0; r < 8; r++) {
-    for (const t of await page.locator("[data-thing] [title]").evaluateAll((els) => els.map((e) => e.getAttribute("title")))) {
-      expect(post.includes(t), `caption not in the post: "${t}"`);
+  for (let r = 0; r < Math.ceil(bullets / 7); r++) {
+    for (const t of await page.locator(".deck-card p").allInnerTexts()) {
+      expect(post.includes(t), `card text not in the post: "${t}"`);
       seen.add(t);
     }
     await page.getByRole("button", { name: "shuffle" }).click();
-    await page.waitForTimeout(150);
+    await page.waitForTimeout(2400);
   }
-  expect(seen.size === bullets, `saw ${seen.size} of ${bullets} bullets across 8 shuffles`);
-  return `${seen.size}/${bullets} bullets seen, all verbatim`;
+  expect(seen.size === bullets, `saw ${seen.size} of ${bullets} bullets across the deck`);
+  return `${seen.size}/${bullets} cards, all verbatim`;
 });
 
 await check(

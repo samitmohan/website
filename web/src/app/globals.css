@@ -431,3 +431,35 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
   .read-progress { animation: read-grow linear both; animation-timeline: scroll(root); }
 }
 @keyframes read-grow { to { transform: scaleX(1); } }
+
+/* Things I like: a deck of cards. */
+.deck-card { width: 112px; height: 160px; }
+.deck-card p { font-size: 11px; }
+.deck-card--big { width: 220px; height: 312px; }
+.deck-card--big p { font-size: 17px; }
+@media (min-width: 640px) { .deck-card { width: 150px; height: 214px; } .deck-card p { font-size: 12.5px; } }
+@keyframes deal-in {
+  from { transform: translate(-50%, -40px) rotate(-8deg) scale(.9); opacity: 0; }
+}
+@keyframes riffle-l {
+  0% { transform: translate(-50%, 0); }
+  35% { transform: translate(calc(-50% - 90px), 6px) rotate(-10deg); }
+  70% { transform: translate(calc(-50% - 30px), -18px) rotate(-3deg); }
+  100% { transform: translate(-50%, 0); }
+}
+@keyframes riffle-r {
+  0% { transform: translate(-50%, 0); }
+  35% { transform: translate(calc(-50% + 90px), 6px) rotate(10deg); }
+  70% { transform: translate(calc(-50% + 30px), -18px) rotate(3deg); }
+  100% { transform: translate(-50%, 0); }
+}
+@keyframes card-reveal {
+  0% { transform: translateY(80px) rotateY(180deg) scale(.6); opacity: 0; }
+  60% { transform: translateY(-10px) rotateY(-12deg) scale(1.04); opacity: 1; }
+  100% { transform: none; }
+}
+
+/* Gallery: the record slides out of its sleeve. */
+@keyframes record-out {
+  from { transform: translateX(-62%) rotate(-30deg); }
+}

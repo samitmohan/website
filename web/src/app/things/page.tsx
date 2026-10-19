@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { FilmRoll } from "@/components/FilmRoll";
+import { Crate } from "@/components/Crate";
 import { LabCards } from "@/components/LabCards";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
-import { Vicinity } from "@/components/Vicinity";
+import { Deck } from "@/components/Deck";
 import { LAB, THING_PHOTOS } from "@/content/site";
 import { deferScripts } from "@/lib/defer-scripts";
 import { getTop4 } from "@/lib/top4";
-import { rolls, thingsILike } from "@/lib/things";
+import { records, thingsILike } from "@/lib/things";
 
 export const metadata: Metadata = {
   title: "Things",
@@ -38,7 +38,7 @@ export default function Things() {
       </Reveal>
 
       <Reveal slot={2} as="section" className="mt-24">
-        <Vicinity things={list} photos={THING_PHOTOS} />
+        <Deck things={list} photos={THING_PHOTOS} />
         {list.length > 0 && (
           <details className="group mt-6">
             <summary className="meta cursor-pointer list-none text-center hover:text-accent">
@@ -59,7 +59,7 @@ export default function Things() {
       <section id="gallery" className="mt-28">
         <h2 className="text-center font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">Gallery</h2>
         <div className="mt-10">
-          <FilmRoll rolls={rolls()} />
+          <Crate records={records()} />
         </div>
       </section>
 

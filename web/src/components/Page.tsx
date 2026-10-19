@@ -4,10 +4,8 @@ import { Footer } from "./Footer";
 export function Page({ children, wide = false }: { children: React.ReactNode; wide?: boolean }) {
   return (
     <div className="min-h-dvh">
-      <main className={`mx-auto px-4 pt-28 pb-12 sm:pt-32 ${wide ? "max-w-[1100px]" : "max-w-[620px]"}`}>
-        {children}
-        <Footer />
-      </main>
+      <main className={`mx-auto px-4 pt-28 pb-12 sm:pt-32 ${wide ? "max-w-[1100px]" : "max-w-[620px]"}`}>{children}</main>
+      <Footer />
     </div>
   );
 }
