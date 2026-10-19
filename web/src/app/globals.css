@@ -17,6 +17,7 @@
   --accent-soft: rgba(217, 38, 28, 0.1);
   --paper: #ffffff;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.08), 0 10px 28px -10px rgba(0, 0, 0, 0.3);
+  --grid-line: rgba(0, 0, 0, 0.055);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
@@ -54,6 +55,7 @@
     --accent-soft: rgba(255, 74, 61, 0.14);
     --paper: #161616;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(0, 0, 0, 0.8);
+  --grid-line: rgba(255, 255, 255, 0.06);
     color-scheme: dark;
   }
 }
@@ -69,6 +71,7 @@
   --accent-soft: rgba(255, 74, 61, 0.14);
   --paper: #161616;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -10px rgba(0, 0, 0, 0.8);
+  --grid-line: rgba(255, 255, 255, 0.06);
   color-scheme: dark;
 }
 
@@ -97,7 +100,8 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 body {
-  background: var(--bg);
+  /* Transparent so the guide lines (GridLines, fixed behind content) show; html carries the colour. */
+  background: transparent;
   color: var(--body);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -306,6 +310,19 @@ code[data-theme*=" "] { background-color: transparent !important; }
   opacity: 0.6;
   user-select: none;
 }
+/* A <pre> written as raw HTML in a post never reaches the highlighter, so it
+   gets the same box by hand: small mono text, paper, its own scroll. */
+.prose pre:not([data-rehype-pretty-code-figure] pre) {
+  overflow-x: auto;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+}
 .prose [data-highlighted-line] { background: var(--accent-soft); border-left-color: var(--accent); }
 .prose .code-header {
   display: flex;
@@ -510,3 +527,4 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 @keyframes ps2-blink { 50% { opacity: 0.25; } }
 @keyframes ps2-flash { from { opacity: 0.9; } to { opacity: 0; } }
 @keyframes ps2-on { from { opacity: 0; transform: scale(1.03); filter: brightness(1.6) blur(8px); } }
+@keyframes top4-in { from { opacity: 0; transform: translateY(26px) rotate(-6deg) scale(.94); } }

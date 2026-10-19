@@ -318,15 +318,13 @@ export function Ps2Boot({ onDone }: { onDone: () => void }) {
       >
         Sony Computer Entertainment
       </p>
-      <p
-        className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-white"
-        style={{ opacity: logo, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
-        aria-hidden
-      >
-        <span className="text-[clamp(18px,3.2vw,32px)] tracking-[-.01em]">PlayStation</span>
-        <span className="text-[clamp(10px,1.6vw,16px)]">.</span>
-        <span className="text-[clamp(24px,4.4vw,44px)] font-light">2</span>
-      </p>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/ps2/ps2-logo.svg"
+        alt="PlayStation 2"
+        className="pointer-events-none absolute top-1/2 left-1/2 w-[min(58%,420px)] -translate-x-1/2 -translate-y-1/2"
+        style={{ opacity: logo }}
+      />
     </div>
   );
 }

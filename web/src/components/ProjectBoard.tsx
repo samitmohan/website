@@ -80,16 +80,65 @@ function Board({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: str
   };
   useEffect(fit, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const zoomBy = (k: number) => {
-    const f = frame.current!;
-    const next = Math.min(1.6, Math.max(0.35, zoom * k));
-    // Zoom about the frame centre.
-    const cx = f.clientWidth / 2, cy = f.clientHeight / 2;
-    animate(x, cx - ((cx - x.get()) * next) / zoom, { duration: 0.35 });
-    animate(y, cy - ((cy - y.get()) * next) / zoom, { duration: 0.35 });
-    animate(scale, next, { duration: 0.35 });
+  // Zoom about a point in the frame (the centre for the buttons, the pointer for pinch and ctrl+wheel).
+  const zoomAt = (next: number, cx: number, cy: number, smooth = true) => {
+    const cur = scale.get();
+    next = Math.min(1.6, Math.max(0.3, next));
+    const nx = cx - ((cx - x.get()) * next) / cur, ny = cy - ((cy - y.get()) * next) / cur;
+    if (smooth) {
+      animate(x, nx, { duration: 0.35 });
+      animate(y, ny, { duration: 0.35 });
+      animate(scale, next, { duration: 0.35 });
+    } else {
+      x.set(nx);
+      y.set(ny);
+      scale.set(next);
+    }
     setZoom(next);
   };
+  const zoomBy = (k: number) => {
+    const f = frame.current!;
+    zoomAt(zoom * k, f.clientWidth / 2, f.clientHeight / 2);
+  };
+
+  // Pan by pointer, one to one with the hand. (Motion's drag multiplied the
+  // movement because the board itself is scaled.) A press only becomes a drag
+  // after 4px, so clicks on cards and notes still land.
+  const press = useRef<{ px: number; py: number; x0: number; y0: number; id: number } | null>(null);
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    press.current = { px: e.clientX, py: e.clientY, x0: x.get(), y0: y.get(), id: e.pointerId };
+    dragged.current = false;
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const p = press.current;
+    if (!p) return;
+    const dx = e.clientX - p.px, dy = e.clientY - p.py;
+    if (!dragged.current && Math.hypot(dx, dy) < 4) return;
+    if (!dragged.current) {
+      dragged.current = true;
+      frame.current?.setPointerCapture(p.id);
+    }
+    x.set(p.x0 + dx);
+    y.set(p.y0 + dy);
+  };
+  const onPointerUp = () => {
+    press.current = null;
+    // Let the click that follows a drag see `dragged`, then reset.
+    setTimeout(() => (dragged.current = false), 0);
+  };
+  useEffect(() => {
+    const f = frame.current;
+    if (!f) return;
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return; // plain scrolling keeps scrolling the page
+      e.preventDefault();
+      const r = f.getBoundingClientRect();
+      zoomAt(scale.get() * Math.exp(-e.deltaY * 0.01), e.clientX - r.left, e.clientY - r.top, false);
+    };
+    f.addEventListener("wheel", onWheel, { passive: false });
+    return () => f.removeEventListener("wheel", onWheel);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const H = 70 + Math.ceil(projects.length / COLS) * ROW_H + 60;
   const threads: { from: [number, number]; to: [number, number] }[] = [];
@@ -103,18 +152,15 @@ function Board({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: str
   return (
     <div
       ref={frame}
-      className="relative hidden h-[min(72vh,680px)] touch-none overflow-hidden rounded-[28px] bg-surface md:block"
+      className="relative hidden h-[min(72vh,680px)] cursor-grab touch-none overflow-hidden rounded-[28px] bg-surface select-none active:cursor-grabbing md:block"
       style={{ backgroundImage: "radial-gradient(var(--hairline) 1px, transparent 1px)", backgroundSize: "22px 22px" }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
       data-lenis-prevent
     >
-      <motion.div
-        className="absolute top-0 left-0 origin-top-left cursor-grab active:cursor-grabbing"
-        style={{ width: W, height: H, x, y, scale }}
-        drag
-        dragMomentum
-        onDragStart={() => (dragged.current = true)}
-        onDragEnd={() => setTimeout(() => (dragged.current = false), 0)}
-      >
+      <motion.div className="absolute top-0 left-0 origin-top-left" style={{ width: W, height: H, x, y, scale }}>
         <svg className="pointer-events-none absolute inset-0" width={W} height={H} aria-hidden>
           {threads.map((t, k) => {
             const [x1, y1] = t.from, [x2, y2] = t.to;

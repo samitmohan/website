@@ -3,6 +3,7 @@ import { MemoryCard } from "@/components/MemoryCard";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { Deck } from "@/components/Deck";
+import { Top4 } from "@/components/Top4";
 import { THING_PHOTOS, THING_SNAPS } from "@/content/site";
 import { getTop4 } from "@/lib/top4";
 import { records, thingsILike } from "@/lib/things";
@@ -49,41 +50,8 @@ export default function Things() {
         </div>
       </section>
 
-      <section id="top4" className="mt-24">
-        <h2 className="text-[15px]">#top4</h2>
-        <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10">
-          {(
-            [
-              ["books", "books"],
-              ["videos", "youtube"],
-              ["movies", "movies"],
-              ["artists", "artists"],
-            ] as const
-          ).map(([key, label]) => (
-            <div key={key}>
-              <h3 className="meta">{label}</h3>
-              <ol className="mt-2">
-                {top4[key].map((p, i) => {
-                  const body = (
-                    <>
-                      <span className="meta w-4">{i + 1}</span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-ink">{p.title}</span>
-                        {p.by && <span className="block truncate text-[12px]">{p.by}</span>}
-                      </span>
-                    </>
-                  );
-                  const cls = "flex gap-3 border-b border-hairline py-2.5 text-[14px] transition-colors";
-                  return (
-                    <li key={i}>
-                      {p.url ? <a href={p.url} className={`${cls} hover:text-accent`}>{body}</a> : <div className={cls}>{body}</div>}
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-          ))}
-        </div>
+      <section id="top4" className="mt-28">
+        <Top4 data={top4} />
       </section>
     </Page>
   );

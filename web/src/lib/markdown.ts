@@ -375,6 +375,12 @@ export async function markdownToHtml(
         light: "github-light-high-contrast",
       },
       keepBackground: false,
+      // A fence with no language (``` alone) is skipped by rehype-pretty-code
+      // unless a default is set, and lands as a bare <pre> outside every code
+      // block rule: body-size text, no box, no horizontal scroll, no copy
+      // button. Several posts write their terminal output that way.
+      // Block only, so inline `code` keeps its own rule.
+      defaultLang: { block: "text" },
       getHighlighter: () => highlighterPromise,
     })
     .use(rehypeCodeHeader)

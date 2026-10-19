@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export type Trip = { title: string; kb: number; frames: { src: string; thumb: string }[] };
 
@@ -89,7 +90,7 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
         )}
         {phase === "dash" && (
       <div
-        className="ps2 absolute inset-0 animate-[ps2-on_1s_cubic-bezier(.16,1,.3,1)_both] overflow-y-auto px-5 pt-5 pb-6 sm:px-8 sm:pt-7"
+        className="ps2 absolute inset-0 animate-[ps2-on_1s_cubic-bezier(.16,1,.3,1)_backwards] overflow-y-auto px-5 pt-5 pb-6 sm:px-8 sm:pt-7"
         role="group"
         aria-label="Memory card"
         data-lenis-prevent
@@ -152,18 +153,19 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
         </div>
 
         <div className="ps2-dim relative mt-8 flex justify-end gap-5 text-[11px] tracking-[.15em] uppercase">
-          <span>
+          <button type="button" className="hover:text-white" onClick={() => enter(sel)}>
             <Glyph k="circle" /> enter
-          </span>
-          <span>
+          </button>
+          <button type="button" className="hover:text-white" onClick={() => setPhase("off")}>
             <Glyph k="cross" /> back
-          </span>
+          </button>
         </div>
       </div>
         )}
       </div>
 
-      {trip && (
+      {/* A portal, so no transformed ancestor can trap the fixed viewer inside the panel. */}
+      {trip && createPortal(
         <div className="ps2 fixed inset-0 z-[70] flex animate-[fade-in_.3s_both] flex-col" role="dialog" aria-modal="true" aria-label={trip.title} data-lenis-prevent>
           <Haze />
           <div className="relative flex items-center justify-between px-5 pt-5 sm:px-8">
@@ -203,7 +205,8 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
               <Glyph k="cross" /> back
             </button>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

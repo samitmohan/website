@@ -141,8 +141,23 @@ await check("gallery: a memory-card save opens and pages through photos", async 
   await page.waitForTimeout(300);
   const after = await shown();
   expect(before && after && before !== after, `photo did not change: ${before} -> ${after}`);
-  await page.keyboard.press("Escape");
+  // The on-screen controller buttons work too, and the viewer covers the whole viewport.
+  const cover = await dialog.evaluate((d) => [Math.round(d.getBoundingClientRect().width), innerWidth]);
+  expect(cover[0] === cover[1], `viewer ${cover[0]}px wide in a ${cover[1]}px viewport`);
+  await dialog.getByRole("button", { name: /next/ }).click();
+  await page.waitForTimeout(300);
+  expect((await shown()) !== after, "the next button did nothing");
+  await dialog.getByRole("button", { name: /back a photo/ }).click();
+  await page.waitForTimeout(300);
+  expect((await shown()) === after, "the back-a-photo button did nothing");
+  await dialog.getByRole("button", { name: /^back$/ }).click();
   await dialog.waitFor({ state: "detached", timeout: 3000 });
+  // Dashboard hints: enter opens the selected save, back powers off.
+  await page.getByRole("group", { name: "Memory card" }).getByRole("button", { name: /enter/ }).click();
+  await page.getByRole("dialog").waitFor({ timeout: 3000 });
+  await page.keyboard.press("Escape");
+  await page.getByRole("group", { name: "Memory card" }).getByRole("button", { name: /^back$/ }).click();
+  await page.getByRole("button", { name: "Start the memory card" }).waitFor({ timeout: 3000 });
 });
 
 await check("footer garden grows under the pointer and clears", async (page) => {
