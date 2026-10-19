@@ -1,0 +1,8 @@
+[
+  { "title": "Fantastic Mr. Fox", "year": 2009, "director": "Wes Anderson", "color": "#c8742c", "placeholder": true },
+  { "title": "The Social Network", "year": 2010, "director": "David Fincher", "color": "#22303c", "placeholder": true },
+  { "title": "Whiplash", "year": 2014, "director": "Damien Chazelle", "color": "#a3622f", "placeholder": true },
+  { "title": "Interstellar", "year": 2014, "director": "Christopher Nolan", "color": "#3b4652", "placeholder": true },
+  { "title": "Good Will Hunting", "year": 1997, "director": "Gus Van Sant", "color": "#6b5a3a", "placeholder": true },
+  { "title": "Spirited Away", "year": 2001, "director": "Hayao Miyazaki", "color": "#7a3b3b", "placeholder": true }
+]

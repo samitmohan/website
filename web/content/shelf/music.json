@@ -1,0 +1,8 @@
+[
+  { "title": "Paranoid", "artist": "Black Sabbath", "year": 1970, "color": "#2a2a2a", "ink": "#e8d9b0", "placeholder": true },
+  { "title": "Are You Experienced", "artist": "Jimi Hendrix", "year": 1967, "color": "#d9a03a", "ink": "#3a1a4a", "placeholder": true },
+  { "title": "Abbey Road", "artist": "The Beatles", "year": 1969, "color": "#4f7a8c", "ink": "#ffffff", "placeholder": true },
+  { "title": "Rumours", "artist": "Fleetwood Mac", "year": 1977, "color": "#d8cbb0", "ink": "#2a2a2a", "placeholder": true },
+  { "title": "Kind of Blue", "artist": "Miles Davis", "year": 1959, "color": "#1d3a5c", "ink": "#ffffff", "placeholder": true },
+  { "title": "Random Access Memories", "artist": "Daft Punk", "year": 2013, "color": "#121212", "ink": "#c9b26b", "placeholder": true }
+]

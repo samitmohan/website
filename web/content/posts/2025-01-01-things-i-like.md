@@ -7,6 +7,7 @@ tokens: "~150"
 published: true
 description: "a list of small things, in no particular order."
 tags: [fun]
+hidden: true
 ---
 in no particular order,
 

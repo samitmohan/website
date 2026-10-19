@@ -20,6 +20,8 @@ export type Project = {
    *  directory or the extension. Inlined by <Figure>, so it reads the page's
    *  --font-mono and --accent. */
   figure?: `projects/${string}`;
+  /** Post slugs pinned next to the project on /projects, joined by a thread. */
+  posts?: string[];
 };
 
 export const PROJECTS: Project[] = [
@@ -31,6 +33,7 @@ export const PROJECTS: Project[] = [
       "A small GPT trained on maths from scratch, tokenizer through reasoning RL.",
     repoUrl: "https://github.com/samitmohan/mathLM",
     figure: "projects/mathlm",
+    posts: ["microgpt", "scalinglaws"],
   },
   {
     slug: "minitorch",
@@ -41,6 +44,7 @@ export const PROJECTS: Project[] = [
     repoUrl: "https://github.com/samitmohan/minitorch",
     liveUrl: "https://samitmohan.github.io/minitorch/",
     figure: "projects/minitorch",
+    posts: ["minitorch", "torch"],
   },
   {
     slug: "mini-code",
@@ -49,6 +53,7 @@ export const PROJECTS: Project[] = [
     blurb: "A coding agent in ~350 lines, to find out what is inside the loop.",
     repoUrl: "https://github.com/samitmohan/minicode",
     figure: "projects/minicode",
+    posts: ["claude", "mcp"],
   },
   {
     slug: "tennis-analysis",
@@ -58,5 +63,6 @@ export const PROJECTS: Project[] = [
       "Tracking players, the ball and court keypoints through match footage.",
     repoUrl: "https://github.com/samitmohan/tennis-analysis",
     figure: "projects/tennis-analysis",
+    posts: ["yolo"],
   },
 ];

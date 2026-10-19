@@ -224,10 +224,14 @@ html.lenis, html.lenis body { height: auto; }
   bottom: 0.02em;
   height: 0.32em;
   background: var(--accent-soft);
-  transform: rotate(-0.6deg) scaleX(var(--mark-x, 1));
+  transform: rotate(-0.6deg);
   transform-origin: left;
-  transition: transform 0.9s var(--ease-out);
+  animation: mark-draw 0.9s var(--ease-out) 0.9s both;
   z-index: -1;
+}
+@keyframes mark-draw {
+  from { transform: rotate(-0.6deg) scaleX(0); }
+  to { transform: rotate(-0.6deg) scaleX(1); }
 }
 
 .link {
@@ -391,3 +395,10 @@ code[data-theme*=" "] { background-color: transparent !important; }
   }
 }
 
+
+/* A project write-up is open: the chrome steps back. */
+html[data-write-up-open] nav[aria-label="Main"] {
+  opacity: 0;
+  pointer-events: none;
+}
+nav[aria-label="Main"] { transition: opacity 0.3s; }

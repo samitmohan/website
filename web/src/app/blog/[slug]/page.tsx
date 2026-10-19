@@ -1,0 +1,121 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Page } from "@/components/Page";
+import { Reveal } from "@/components/Reveal";
+import { RunScripts } from "@/components/RunScripts";
+import { formatPostDate, getAllPosts, getAllSlugs, getPersonalPosts, getPost } from "@/lib/blog";
+import { deferScripts } from "@/lib/defer-scripts";
+import { markdownToHtml, type Heading } from "@/lib/markdown";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getAllSlugs().map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const post = getPost((await params).slug);
+  if (!post) return {};
+  const og = post.hidden ? "/og/index.png" : `/og/${post.slug}.png`;
+  return {
+    title: post.title,
+    description: post.description,
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: { type: "article", title: post.title, description: post.description, publishedTime: post.date, images: [og] },
+  };
+}
+
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getPost(slug);
+  if (!post) notFound();
+
+  const headings: Heading[] = [];
+  const html = deferScripts(await markdownToHtml(post.content, post.math, headings));
+
+  // A contents list only earns its space on a long post with real sections.
+  const ownIndex = /^(index|contents|table of contents)$/i.test(headings[0]?.text ?? "");
+  const toc = post.readingTime >= 10 && headings.length >= 4 && !ownIndex ? headings : [];
+
+  const siblings = post.hidden ? getPersonalPosts() : getAllPosts();
+  const i = siblings.findIndex((p) => p.slug === slug);
+  const prev = i < siblings.length - 1 ? siblings[i + 1] : null;
+  const next = i > 0 ? siblings[i - 1] : null;
+  const related = post.hidden
+    ? []
+    : siblings.filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t))).slice(0, 3);
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.description,
+    author: { "@type": "Person", name: "Samit Mohan", url: "https://samitmohan.in" },
+    datePublished: post.date,
+    mainEntityOfPage: `https://samitmohan.in/blog/${post.slug}`,
+  };
+
+  return (
+    <Page personal={post.hidden}>
+      {post.math && <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <Reveal slot={0} as="header">
+        <Link href={post.hidden ? "/blog/personal" : "/blog"} className="meta hover:text-accent">
+          ← {post.hidden ? "personal" : "writing"}
+        </Link>
+        <h1 className={`mt-4 leading-tight ${post.hidden ? "text-[44px] italic" : "text-[28px]"}`}>{post.title}</h1>
+        <p className="meta mt-3">
+          {formatPostDate(post.date)} · {post.readingTime} min read
+          {post.tags.length > 0 && !post.hidden && <> · {post.tags.join(", ")}</>}
+        </p>
+      </Reveal>
+
+      {toc.length > 0 && (
+        <Reveal slot={1} as="section" className="mt-8 rounded-2xl bg-surface p-5">
+          <h2 className="meta">contents</h2>
+          <ol className="mt-2 space-y-1 text-[14px]">
+            {toc.map((h, n) => (
+              <li key={h.id} className="flex gap-3">
+                <span className="meta w-5">{n + 1}</span>
+                <a href={`#${h.id}`} className="text-ink hover:text-accent">{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </Reveal>
+      )}
+
+      <Reveal slot={2}>
+        <RunScripts html={html} className="prose mt-10" />
+      </Reveal>
+
+      {related.length > 0 && (
+        <section className="mt-16">
+          <h2 className="meta">related</h2>
+          <ul className="mt-2">
+            {related.map((p) => (
+              <li key={p.slug}>
+                <Link href={`/blog/${p.slug}`} className="block border-b border-hairline py-3 text-ink hover:text-accent">{p.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <nav aria-label="More posts" className="mt-16 grid grid-cols-2 gap-4">
+        {prev ? (
+          <Link href={`/blog/${prev.slug}`} className="group rounded-2xl bg-surface p-4">
+            <span className="meta">← older</span>
+            <span className="mt-1 block text-ink group-hover:text-accent">{prev.title}</span>
+          </Link>
+        ) : <span />}
+        {next ? (
+          <Link href={`/blog/${next.slug}`} className="group rounded-2xl bg-surface p-4 text-right">
+            <span className="meta">newer →</span>
+            <span className="mt-1 block text-ink group-hover:text-accent">{next.title}</span>
+          </Link>
+        ) : <span />}
+      </nav>
+    </Page>
+  );
+}

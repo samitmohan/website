@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "astro",
+  "framework": null,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "outputDirectory": "out",
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
@@ -25,6 +25,21 @@
       "source": "/feed",
       "destination": "/blog/rss.xml",
       "permanent": true
+    },
+    {
+      "source": "/fun",
+      "destination": "/blog/personal",
+      "permanent": true
+    },
+    {
+      "source": "/interviews",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/interviews/:path*",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -36,7 +51,7 @@
           "value": "fun.samitmohan.in"
         }
       ],
-      "destination": "/fun"
+      "destination": "/blog/personal"
     }
   ],
   "headers": [
@@ -71,7 +86,16 @@
       ]
     },
     {
-      "source": "/fonts/(.*)",
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_img/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

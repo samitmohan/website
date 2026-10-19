@@ -1,0 +1,74 @@
+[
+  {
+    "title": "Fantastic Mr. Fox",
+    "author": "Roald Dahl",
+    "kind": "novel",
+    "color": "#b4532a",
+    "notes": ["From the things-i-like list: reading Fantastic Mr. Fox.", "Replace this page with what you actually think of it."],
+    "placeholder": true
+  },
+  {
+    "title": "Understanding LSTM Networks",
+    "author": "Christopher Olah",
+    "kind": "essay",
+    "color": "#2d4a3e",
+    "url": "https://colah.github.io/posts/2015-08-Understanding-LSTMs/",
+    "notes": ["Gates, cell state, vanishing gradients.", "Read before attention so you know what attention replaced."]
+  },
+  {
+    "title": "Attention Is All You Need",
+    "author": "Vaswani et al.",
+    "kind": "paper",
+    "color": "#7a2e2a",
+    "url": "https://arxiv.org/abs/1706.03762",
+    "notes": ["QKV, multi-head, positional encoding, the full block.", "Know every component cold and be able to write the attention math from memory."]
+  },
+  {
+    "title": "FlashAttention",
+    "author": "Dao et al.",
+    "kind": "paper",
+    "color": "#2c3e64",
+    "url": "https://arxiv.org/abs/2205.14135",
+    "notes": ["Tiling, IO-awareness.", "Why HBM bandwidth and not FLOPs is the bottleneck."]
+  },
+  {
+    "title": "Scaling Laws for Neural Language Models",
+    "author": "Kaplan et al.",
+    "kind": "paper",
+    "color": "#8a6d2b",
+    "url": "https://arxiv.org/abs/2001.08361",
+    "notes": ["Loss as a power law in params, data, compute."]
+  },
+  {
+    "title": "Chinchilla",
+    "author": "Hoffmann et al.",
+    "kind": "paper",
+    "color": "#4b3a5e",
+    "url": "https://arxiv.org/abs/2203.15556",
+    "notes": ["The correction: roughly 20 tokens per parameter.", "Expect a back-of-envelope compute budget question."]
+  },
+  {
+    "title": "LoRA",
+    "author": "Hu et al.",
+    "kind": "paper",
+    "color": "#1f1f1f",
+    "url": "https://arxiv.org/abs/2106.09685",
+    "notes": ["Rank decomposition on frozen weights.", "The default PEFT method in production."]
+  },
+  {
+    "title": "InstructGPT",
+    "author": "Ouyang et al.",
+    "kind": "paper",
+    "color": "#5e4632",
+    "url": "https://arxiv.org/abs/2203.02155",
+    "notes": ["SFT, reward model, PPO.", "The canonical RLHF pipeline."]
+  },
+  {
+    "title": "Direct Preference Optimization",
+    "author": "Rafailov et al.",
+    "kind": "paper",
+    "color": "#3d5a6c",
+    "url": "https://arxiv.org/abs/2305.18290",
+    "notes": ["Drops the reward model and PPO loop.", "Know why the closed-form reward substitution works."]
+  }
+]
