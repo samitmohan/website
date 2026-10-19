@@ -92,7 +92,7 @@ await check("home: post widget opens in a sheet and mounts", async (page) => {
   await page.waitForFunction(() => (document.querySelector('[role="dialog"] [id]')?.children.length ?? 0) > 0, null, { timeout: 5000 });
 });
 
-await check("deck: clicking a card turns it over and opens it; shuffle deals a new hand", async (page) => {
+await check("deck: clicking a card turns it over and opens its photo; shuffle deals a new hand", async (page) => {
   await page.goto(base + "/things");
   await page.getByRole("heading", { name: "Things I like" }).scrollIntoViewIfNeeded();
   await page.waitForTimeout(1200);
@@ -100,6 +100,11 @@ await check("deck: clicking a card turns it over and opens it; shuffle deals a n
   const dialog = page.getByRole("dialog");
   await dialog.waitFor({ timeout: 3000 });
   const name = await dialog.getAttribute("aria-label");
+  // The opened card's face is the thing's photo, and it must actually load.
+  const img = dialog.locator(".deck-card--big img");
+  await img.evaluate((el) => (el.complete ? null : new Promise((r) => (el.onload = el.onerror = r))));
+  const w = await img.evaluate((el) => el.naturalWidth);
+  expect(w > 0, `opened card photo did not load (${await img.getAttribute("src")})`);
   await page.keyboard.press("Escape");
   await dialog.waitFor({ state: "detached", timeout: 3000 });
   await page.getByRole("button", { name: "shuffle" }).click();

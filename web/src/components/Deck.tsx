@@ -3,32 +3,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ART, DRAWN } from "./things-art";
 
-type Card = { text: string; art?: keyof typeof ART; img?: string; suit: string; red: boolean; rank: string };
+type Card = { text: string; art?: keyof typeof ART; img?: string };
 
-const SUITS = [
-  ["♠", false],
-  ["♥", true],
-  ["♣", false],
-  ["♦", true],
-] as const;
-const RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 const HAND = 7;
 
 type Phase = "idle" | "gather" | "riffle" | "deal";
 
 /**
  * The things-I-like list as a deck of cards. A hand of seven is dealt face
- * down in a fan; click a card to turn it over. Shuffle gathers the hand,
+ * down in a fan; click a card to turn it over. Each face is Samit's photo of
+ * the thing (a drawing stands in for a thing with no photo yet). Shuffle gathers the hand,
  * riffles, and deals the next seven, so the whole deck comes round before
  * anything repeats. "Pick a card" pulls one at random and shows it off.
  */
-export function Deck({ things, photos = {}, snaps = {} }: { things: string[]; photos?: Record<string, string>; snaps?: Record<string, string[]> }) {
+export function Deck({ things, photos = {} }: { things: string[]; photos?: Record<string, string> }) {
   const deck = useMemo<Card[]>(
-    () =>
-      things.map((text, i) => {
-        const [suit, red] = SUITS[i % 4];
-        return { text, art: DRAWN.find(([re]) => re.test(text))?.[1], img: photos[text], suit, red, rank: RANKS[Math.floor(i / 4) % 13] };
-      }),
+    () => things.map((text) => ({ text, art: DRAWN.find(([re]) => re.test(text))?.[1], img: photos[text] })),
     [things, photos],
   );
   const order = useMemo(() => {
@@ -183,11 +173,8 @@ export function Deck({ things, photos = {}, snaps = {} }: { things: string[]; ph
       {picked && (
         <div className="fixed inset-0 z-[70] grid animate-[fade-in_.2s_both] place-items-center overflow-y-auto bg-black/35 p-4 backdrop-blur-[2px]" onClick={() => setPicked(null)}>
           <div className="flex flex-col items-center gap-5" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={picked.text}>
-            <div className="relative">
-              <div className="deck-card deck-card--big animate-[card-reveal_.9s_cubic-bezier(.16,1,.3,1)_both]">
-                <Face c={picked} />
-              </div>
-              <Snaps list={snaps[picked.text] ?? []} />
+            <div className="deck-card deck-card--big animate-[card-reveal_.9s_cubic-bezier(.16,1,.3,1)_both]">
+              <Face c={picked} big />
             </div>
             <div className="flex gap-2">
               <button type="button" className="pill" onClick={pick} autoFocus>
@@ -215,54 +202,21 @@ function Back() {
   );
 }
 
-function Face({ c }: { c: Card }) {
-  const ink = c.red ? "text-[#c8202a]" : "text-[#141414]";
+/** A photo card: the photo fills the face, the line from the post sits under it. */
+function Face({ c, big = false }: { c: Card; big?: boolean }) {
+  // The hand's cards are 150px wide at most; they load the 360px copy.
+  const src = c.img && (big ? c.img : c.img.replace("/things/", "/things/sm/"));
   return (
-    <div className="relative flex size-full flex-col rounded-[10px] bg-[#fbf8f2] p-2 text-left shadow-[0_8px_18px_-8px_rgba(0,0,0,.45)]">
-      <span className={`card-rank font-serif text-[15px] leading-none ${ink}`}>
-        {c.rank}
-        <br />
-        {c.suit}
-      </span>
-      <div className="card-art mx-auto -mt-2 w-[64%] [&>svg]:w-full">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {c.img ? <img src={c.img} alt="" className="w-full" /> : c.art ? ART[c.art] : null}
+    <div className="flex size-full flex-col gap-1.5 rounded-[10px] bg-[#fbf8f2] p-1.5 text-left shadow-[0_8px_18px_-8px_rgba(0,0,0,.45)]">
+      <div className="card-photo relative min-h-0 flex-1 overflow-hidden rounded-[6px] bg-[#ece6da]">
+        {src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={src} alt="" loading="lazy" className="size-full object-cover" />
+        ) : (
+          c.art && <div className="grid size-full place-items-center p-3 [&>svg]:w-[80%]">{ART[c.art]}</div>
+        )}
       </div>
-      <p className="card-text mt-auto line-clamp-4 font-serif text-[12.5px] leading-tight text-[#141414] italic">{c.text}</p>
-      <span className={`absolute right-2 bottom-2 rotate-180 font-serif text-[15px] leading-none ${ink} opacity-0`}>{c.suit}</span>
+      <p className="card-text line-clamp-3 px-0.5 pb-0.5 font-serif text-[12.5px] leading-tight text-[#141414] italic">{c.text}</p>
     </div>
-  );
-}
-
-/**
- * Little taped photos around an open card. Until a thing has photos in
- * THING_SNAPS, two empty frames show where they will go.
- */
-function Snaps({ list }: { list: string[] }) {
-  const spots = [
-    // Phones tape them over the card's edges, clear of the corner index; wider screens beside it.
-    "-right-3 -top-6 rotate-[6deg] sm:right-auto sm:-left-40 sm:top-8 sm:-rotate-[8deg]",
-    "-left-3 top-[30%] -rotate-[7deg] sm:left-auto sm:-right-40 sm:top-28 sm:rotate-[6deg]",
-    "-right-3 top-[52%] rotate-[5deg] sm:right-auto sm:-left-36 sm:top-auto sm:bottom-6",
-  ];
-  const items = list.length ? list.slice(0, 3) : [null, null];
-  return (
-    <>
-      {items.map((src, i) => (
-        <figure
-          key={i}
-          className={`absolute w-20 animate-[snap-in_.7s_cubic-bezier(.16,1,.3,1)_both] bg-[#fbf8f2] p-1.5 pb-4 shadow-[0_8px_18px_-8px_rgba(0,0,0,.5)] sm:w-36 ${spots[i]}`}
-          style={{ animationDelay: `${0.35 + i * 0.12}s` }}
-        >
-          <span className="absolute -top-2 left-1/2 h-4 w-10 -translate-x-1/2 rotate-[-3deg] bg-[#f2e3c6]/80" />
-          {src ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={src} alt="" className="aspect-square w-full object-cover" />
-          ) : (
-            <div className="grid aspect-square w-full place-items-center border border-dashed border-[#c9bfae] font-mono text-[10px] text-[#8d8b85]">photo</div>
-          )}
-        </figure>
-      ))}
-    </>
   );
 }

@@ -1,10 +1,12 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import { MemoryCard } from "@/components/MemoryCard";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { Deck } from "@/components/Deck";
 import { Top4 } from "@/components/Top4";
-import { THING_PHOTOS, THING_SNAPS } from "@/content/site";
+import { THING_PHOTOS } from "@/content/site";
 import { getTop4 } from "@/lib/top4";
 import { records, thingsILike } from "@/lib/things";
 
@@ -17,6 +19,11 @@ export const metadata: Metadata = {
 
 export default function Things() {
   const list = thingsILike();
+  for (const [thing, src] of Object.entries(THING_PHOTOS)) {
+    if (!list.includes(thing)) throw new Error(`THING_PHOTOS: "${thing}" matches no bullet in the things-i-like post`);
+    for (const f of [src, src.replace("/things/", "/things/sm/")])
+      if (!fs.existsSync(path.join(process.cwd(), "public", f))) throw new Error(`THING_PHOTOS: ${f} does not exist`);
+  }
   const top4 = getTop4();
   return (
     <Page>
@@ -25,7 +32,7 @@ export default function Things() {
       </Reveal>
 
       <Reveal slot={1} as="section" className="mt-14">
-        <Deck things={list} photos={THING_PHOTOS} snaps={THING_SNAPS} />
+        <Deck things={list} photos={THING_PHOTOS} />
         {list.length > 0 && (
           <details className="group mt-6">
             <summary className="meta cursor-pointer list-none text-center hover:text-accent">

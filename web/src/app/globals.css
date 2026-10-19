@@ -458,10 +458,9 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 .deck-card p { font-size: 11px; }
 /* The open card fills most of the screen: whichever runs out first of width or height. */
 .deck-card.deck-card--big { width: min(86vw, 46svh, 440px); height: auto; aspect-ratio: 150 / 214; container-type: inline-size; }
-.deck-card--big > div { border-radius: 4cqw; padding: 5cqw; }
-.deck-card--big .card-rank { font-size: 9cqw; }
-.deck-card--big .card-art { width: 80%; margin-top: 0; }
-.deck-card--big .card-text { font-size: 7.4cqw; line-height: 1.15; -webkit-line-clamp: unset; }
+.deck-card--big > div { border-radius: 4cqw; padding: 3.2cqw; gap: 3cqw; }
+.deck-card--big .card-photo { border-radius: 2.4cqw; }
+.deck-card--big .card-text { font-size: 6.4cqw; line-height: 1.15; padding: 0 1.5cqw 1.5cqw; -webkit-line-clamp: unset; }
 @media (min-width: 640px) { .deck-card { width: 150px; height: 214px; } .deck-card p { font-size: 12.5px; } }
 @keyframes deal-in {
   from { transform: translate(-50%, -40px) rotate(-8deg) scale(.9); opacity: 0; }
@@ -484,7 +483,6 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
   100% { transform: none; }
 }
 
-@keyframes snap-in { from { opacity: 0; transform: translateY(24px) scale(.8) rotate(0deg); } }
 
 /* Gallery: the PS2 memory card browser. Fixed colours: it is a screen, not the page. */
 .ps2 {
