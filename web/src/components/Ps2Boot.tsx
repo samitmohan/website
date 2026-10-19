@@ -15,12 +15,12 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
  * wordmark comes and goes. Each frame is blended 62.5% into the next, which is
  * where the console's trailing glow comes from.
  *
- * Timeline, seconds from power-on (measured from frame captures):
- *   0.0-1.0 black · 1.0-2.0 scene in · 2.6-5.6 SCE text · 6.2-7.3 fly-up and
- *   fade · 8.3-10.6 wordmark · 11.3 done.
+ * Timeline, seconds from power-on, set to public/ps2/boot.mp3: the scene
+ *   rises with the swell (0.3), SCE text 2.2-6.4, fly-up and fade 7.2-9.4 as
+ *   the swell dies away, the wordmark arrives on the chime at 10.5, done 12.7.
  */
 
-const T = { sceneIn: 1.0, textIn: 2.6, textOut: 5.6, fly: 6.2, black: 7.3, logoIn: 8.3, logoOut: 10.6, done: 11.3 };
+const T = { sceneIn: 0.3, textIn: 2.2, textOut: 6.4, fly: 7.2, black: 9.4, logoIn: 10.3, logoOut: 12.0, done: 12.7 };
 
 const COLS = 14;
 const ROWS = 9;
@@ -123,11 +123,13 @@ const smooth = (a: number, b: number, x: number) => {
   return t * t * (3 - 2 * t);
 };
 
-export function Ps2Boot({ onDone }: { onDone: () => void }) {
+export function Ps2Boot({ onDone, onStart }: { onDone: () => void; onStart?: () => void }) {
   const host = useRef<HTMLDivElement>(null);
   const [t, setT] = useState(0);
   const done = useRef(onDone);
   done.current = onDone;
+  const started = useRef(onStart);
+  started.current = onStart;
 
   useEffect(() => {
     const el = host.current!;
@@ -246,6 +248,7 @@ export function Ps2Boot({ onDone }: { onDone: () => void }) {
     ro.observe(el);
 
     const start = performance.now();
+    started.current?.();
     let raf = 0, finished = false;
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick);

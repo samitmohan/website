@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { playBootSound } from "@/lib/ps2-sound";
+import { playBootSound, preloadBootSound } from "@/lib/ps2-sound";
 
 export type Trip = { title: string; kb: number; frames: { src: string; thumb: string }[] };
 
@@ -30,6 +30,10 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
   // Sound is opt-in; the choice is remembered.
   const [sound, setSound] = useState(false);
   const stopSound = useRef<(() => void) | null>(null);
+  const bootStart = useRef<number | null>(null);
+  useEffect(() => {
+    if (sound) preloadBootSound().catch(() => {});
+  }, [sound]);
   useEffect(() => {
     try {
       setSound(localStorage.getItem("ps2-sound") === "on");
@@ -77,7 +81,8 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
     setBootLayer(true);
     setPhase("boot");
     // The click that powers on is the gesture browsers require before audio.
-    if (sound) stopSound.current = playBootSound();
+    bootStart.current = null;
+    if (sound) stopSound.current = playBootSound(() => (bootStart.current === null ? null : (performance.now() - bootStart.current) / 1000));
   };
   const toDash = () => {
     stopSound.current?.();
@@ -123,7 +128,7 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
         )}
         {bootLayer && (
           <div className="absolute inset-0 transition-opacity duration-1000 ease-out" style={{ opacity: phase === "dash" ? 0 : 1 }}>
-            <Ps2Boot onDone={toDash} />
+            <Ps2Boot onDone={toDash} onStart={() => (bootStart.current = performance.now())} />
             {phase === "boot" && (
               <button type="button" onClick={toDash} className="absolute inset-0" aria-label="Skip to the memory card" />
             )}
