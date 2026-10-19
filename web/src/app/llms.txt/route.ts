@@ -22,8 +22,7 @@ export function GET() {
 - About: ${BASE}/about
 - Projects: ${BASE}/projects
 - Blog: ${BASE}/blog (technical), ${BASE}/blog/personal (personal)
-- Shelf: ${BASE}/shelf
-- Lab: ${BASE}/lab
+- Things (lab toys, photos, what is on repeat): ${BASE}/things
 - Feed: ${BASE}/blog/rss.xml
 
 ## Posts

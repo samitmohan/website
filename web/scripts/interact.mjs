@@ -65,30 +65,50 @@ await check("project card opens its write-up", async (page) => {
   await dialog.waitFor({ state: "detached", timeout: 3000 });
 });
 
-await check("book opens a flipbook and pages turn", async (page) => {
-  await page.goto(base + "/shelf");
+await check("lab toy responds: softmax temperature flattens the bars", async (page) => {
+  await page.goto(base + "/things");
   await page.waitForTimeout(1200);
-  await page.locator('button[title^="Attention Is All You Need"]').click();
-  const dialog = page.getByRole("dialog", { name: "Attention Is All You Need" });
+  const top = () => page.locator("figure").first().locator("span.font-mono").first().innerText();
+  const before = await top();
+  await page.locator('figure input[type="range"]').first().fill("4");
+  await page.waitForTimeout(300);
+  const after = await top();
+  expect(parseInt(after) < parseInt(before), `top prob ${before} -> ${after}`);
+  return `${before} -> ${after}`;
+});
+
+await check("post widget opens in a sheet and mounts", async (page) => {
+  await page.goto(base + "/things");
+  await page.waitForTimeout(1200);
+  await page.getByRole("button", { name: /open it/ }).first().click();
+  const dialog = page.getByRole("dialog");
   await dialog.waitFor({ timeout: 3000 });
-  await page.keyboard.press("ArrowRight");
-  await page.waitForTimeout(1400);
-  const text = await dialog.innerText();
-  expect(text.includes("1 / 2"), `page counter missing: ${text.slice(0, 60)}`);
+  await page.waitForFunction(() => (document.querySelector('[role="dialog"] [id]')?.children.length ?? 0) > 0, null, { timeout: 5000 });
+});
+
+await check("shuffle swaps the things in the vicinity", async (page) => {
+  await page.goto(base + "/things");
+  await page.waitForTimeout(1200);
+  const titles = () => page.locator("[data-thing] [title]").evaluateAll((els) => els.map((e) => e.getAttribute("title")).join("|"));
+  const before = await titles();
+  await page.getByRole("button", { name: "shuffle" }).click();
+  await page.waitForTimeout(400);
+  expect((await titles()) !== before, "same six things after shuffle");
 });
 
 await check("rubbing a negative develops it", async (page) => {
-  await page.goto(base + "/photos");
+  await page.goto(base + "/things");
+  const frame = page.getByRole("button", { name: /Open frame/ }).first();
+  await frame.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1500);
-  const frame = page.locator("figure button").first();
   const box = await frame.boundingBox();
-  for (let y = box.y + 8; y < box.y + box.height; y += 18) {
-    await page.mouse.move(box.x + 4, y);
-    await page.mouse.move(box.x + box.width - 4, y, { steps: 12 });
+  for (let y = box.y + 6; y < box.y + box.height; y += 12) {
+    await page.mouse.move(box.x + 2, y);
+    await page.mouse.move(box.x + box.width - 2, y, { steps: 14 });
   }
-  await page.waitForTimeout(300);
-  const label = await page.locator("figure figcaption").first().innerText();
-  expect(label.includes("developed"), `still "${label}"`);
+  await page.waitForTimeout(1200);
+  const opacity = await frame.locator("canvas").evaluate((c) => getComputedStyle(c).opacity);
+  expect(opacity === "0", `negative opacity still ${opacity}`);
 });
 
 await check(

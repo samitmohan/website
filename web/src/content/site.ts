@@ -1,5 +1,5 @@
 import type { Run } from "@/components/TypedBio";
-import type { Thing } from "@/components/ThingsILike";
+import type { Thing } from "@/components/Vicinity";
 
 export const BIO: Run[] = [
   { text: "I " },
@@ -14,20 +14,19 @@ export const BIO: Run[] = [
 export const HANDLE = "samitmohan";
 export const EMAIL = "samitmohan@gmail.com";
 
-/** From the "things i like" post. Glyphs are plain characters, not emoji. */
+/**
+ * The objects in "Things in my vicinity". Notes paraphrase the "things i like"
+ * post. `img` takes a transparent cut-out photo; until then each draws itself.
+ */
 export const THINGS: Thing[] = [
-  { label: "Fantastic Mr. Fox", kind: "book", glyph: "¶" },
-  { label: "Black Sabbath", kind: "music", glyph: "♪" },
-  { label: "vinyl records", kind: "music", glyph: "◉" },
-  { label: "card tricks", kind: "hobby", glyph: "♠" },
-  { label: "mechanical pencils", kind: "object", glyph: "✎" },
-  { label: "Cubbon Park walks", kind: "place", glyph: "✶" },
-  { label: "Hendrix", kind: "music", glyph: "♫" },
-  { label: "a PS2 booting first try", kind: "games", glyph: "▶" },
-  { label: "maa's mutton biryani", kind: "food", glyph: "◐" },
-  { label: "Chuck Taylors", kind: "object", glyph: "△" },
-  { label: "whiteboards", kind: "object", glyph: "□" },
-  { label: "Davidoff Espresso 57", kind: "morning", glyph: "●" },
+  { label: "Fantastic Mr. Fox", note: "reading Fantastic Mr. Fox, again", art: "book" },
+  { label: "vinyl", note: "vinyl records, and Black Sabbath on them", art: "vinyl" },
+  { label: "mechanical pencil", note: "mechanical pencils, the clicky kind", art: "pencil" },
+  { label: "ace of spades", note: "performing card tricks", art: "card" },
+  { label: "uno", note: "winning at uno", art: "uno" },
+  { label: "ps2 controller", note: "a ps2 booting past the loading screen first try", art: "controller" },
+  { label: "espresso", note: "davidoff espresso 57 in the morning", art: "coffee" },
+  { label: "chuck taylors", note: "converse chuck taylors", art: "sneaker" },
 ];
 
 /** The live widgets in public/widgets, and the posts they were built for. */

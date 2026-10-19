@@ -19,12 +19,12 @@ film strip). Patterns only: none of their copy, assets or code.
 
 | Path | What lives there |
 |---|---|
-| `web/src/app/` | Routes: `/`, `/about`, `/blog`, `/blog/personal`, `/blog/[slug]`, `/projects`, `/shelf`, `/lab`, `/photos`, RSS, sitemap, robots, `llms.txt` |
+| `web/src/app/` | Routes: `/`, `/about`, `/blog`, `/blog/personal`, `/blog/[slug]`, `/projects`, `/things`, RSS, sitemap, robots, `llms.txt` |
 | `web/src/app/globals.css` | Tokens (light, dark, personal scope) and the prose styles for posts |
 | `web/src/components/` | The shell (`Nav`, `Page`, `Footer`, `Reveal`, `ThemeController`, `SmoothScroll`) and the set pieces |
-| `web/src/content/site.ts` | Home-page bio, things-I-like, and the lab list |
+| `web/src/content/site.ts` | Home-page bio, the objects in "Things in my vicinity", and the post widgets in the lab |
 | `web/content/posts/` | Posts as markdown with frontmatter. Filename carries the date |
-| `web/content/shelf/` | `books.json`, `films.json`, `music.json` for `/shelf` |
+| `web/content/shelf/` | `books.json`, `films.json`, `music.json` for "On repeat" on `/things` |
 | `web/src/config/` | `projects.ts` (the board, with the posts each project threads to) and `links.ts` |
 | `web/scripts/` | `smoke.mjs`, `interact.mjs`, `gen-og.mjs`, `gen-images.mjs`, `gen-icons.mjs` |
 
@@ -41,13 +41,16 @@ redirects to `/blog/personal`.
 `dangerouslySetInnerHTML`, so `lib/defer-scripts.ts` marks them
 `type="text/x-deferred"` at build time and `components/RunScripts.tsx` re-creates
 them in order after mount. That is what makes widgets work on client-side
-navigation as well as a fresh load. `/lab` mounts the same widgets the same way.
+navigation as well as a fresh load. The lab on `/things` mounts the same widgets the same way, in a sheet.
 
 **Mock content is flagged.** Anything in `content/shelf/*.json` with
 `"placeholder": true` is a stand-in until the real list replaces it.
 
-**Photos are folders.** `/photos` shows every `.webp` (minus `-poster` frames)
-in the folders listed in `ROLLS` in `src/app/photos/page.tsx`.
+**Photos are folders.** The film roll on `/things` shows every `.webp` (minus
+`-poster` frames) in the folders listed in `ROLLS` in `src/lib/things.ts`, one
+roll per folder. The objects in "Things in my vicinity" are drawn stand-ins:
+give a `THINGS` entry an `img` (a transparent cut-out) and the photo replaces
+the drawing. The list under them is read from the "things i like" post.
 
 **three.js loads after first paint.** `LossSurfaceLazy` keeps the 135 KB
 gzipped chunk out of the home page's critical path.
@@ -60,7 +63,7 @@ URLs 404 under `next dev`. Run the checks against the export:
 npx serve out -l 3211 &
 node scripts/smoke.mjs http://localhost:3211 shots   # every sitemap route, 1440 + 390 px
 node scripts/smoke.mjs http://localhost:3211 shots --dark
-node scripts/interact.mjs                           # theme, widgets, write-up, flipbook, film
+node scripts/interact.mjs                           # theme, widgets, write-up, lab, vicinity, film
 ```
 
 **The CV has one home:** `web/public/samit-resume.pdf`. Do not keep a second

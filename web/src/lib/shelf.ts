@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Album, Book, Film } from "@/components/Shelf";
+export type Book = { title: string; author: string; kind: string; color: string; url?: string; notes: string[]; placeholder?: boolean };
+export type Film = { title: string; year: number; director: string; color: string; placeholder?: boolean };
+export type Album = { title: string; artist: string; year: number; color: string; ink: string; placeholder?: boolean };
 
 const DIR = path.join(process.cwd(), "content/shelf");
 const read = <T,>(name: string): T[] => JSON.parse(fs.readFileSync(path.join(DIR, `${name}.json`), "utf8"));

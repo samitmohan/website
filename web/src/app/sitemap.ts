@@ -4,7 +4,7 @@ import { getEveryPost } from "@/lib/blog";
 export const dynamic = "force-static";
 
 const BASE = "https://samitmohan.in";
-const PAGES = ["", "/about", "/blog", "/blog/personal", "/projects", "/shelf", "/lab", "/photos"];
+const PAGES = ["", "/about", "/blog", "/blog/personal", "/projects", "/things"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

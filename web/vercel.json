@@ -40,6 +40,21 @@
       "source": "/interviews/:path*",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/lab",
+      "destination": "/things",
+      "permanent": true
+    },
+    {
+      "source": "/shelf",
+      "destination": "/things",
+      "permanent": true
+    },
+    {
+      "source": "/photos",
+      "destination": "/things",
+      "permanent": true
     }
   ],
   "rewrites": [
