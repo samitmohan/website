@@ -1,14 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-export type Thing = {
-  label: string;
-  note: string;
-  art: keyof typeof ART;
-  /** A cut-out photo (transparent PNG/WebP) replaces the drawing when set. */
-  img?: string;
-};
+import { useEffect, useMemo, useRef, useState } from "react";
 
 /*
  * Stand-in drawings until real cut-out photos exist. Flat shapes in fixed
@@ -97,6 +89,28 @@ const ART = {
   ),
 } as const;
 
+/** Which bullets get a drawing. Matched against the post's own wording. */
+const DRAWN: [RegExp, keyof typeof ART][] = [
+  [/fantastic mr\. fox/i, "book"],
+  [/vinyl/i, "vinyl"],
+  [/mechanical pencil/i, "pencil"],
+  [/card trick/i, "card"],
+  [/\buno\b/i, "uno"],
+  [/ps2/i, "controller"],
+  [/espresso/i, "coffee"],
+  [/chuck taylor/i, "sneaker"],
+];
+
+/** The rest are paper scraps with the bullet written on them. */
+const PAPERS = [
+  "bg-[#fff3a8] text-[#1b1b1b]", // sticky note
+  "bg-[#fbf8f2] text-[#1b1b1b] border border-[#ddd5c6]", // index card
+  "bg-[#f2e3c6] text-[#3a2a14] [clip-path:polygon(0_0,100%_0,100%_100%,8%_100%,0_88%)]", // ticket stub
+  "bg-[#dfe9f2] text-[#1b2a3a]", // blue note
+];
+
+type Item = { text: string; art?: keyof typeof ART; img?: string };
+
 /** Slots around the title, as % of the scene box: three left, three right. */
 const SLOTS = [
   { x: 8, y: 10, r: -8 },
@@ -111,11 +125,35 @@ const SLOTS = [
  * Objects around a centred title. They bob, lean away from the cursor, show
  * a caption on hover, and "shuffle" swaps in a different six.
  */
-export function Vicinity({ things }: { things: Thing[] }) {
+export function Vicinity({ things, photos = {} }: { things: string[]; photos?: Record<string, string> }) {
   const [round, setRound] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
   const box = useRef<HTMLDivElement>(null);
-  const shown = SLOTS.map((_, i) => things[(i + round * SLOTS.length) % things.length]);
+
+  // One fixed deck: the drawn things open the first hand, then the rest in a
+  // shuffled but stable order. Shuffle deals the next six, so every bullet is
+  // seen once before anything comes round again.
+  const deck = useMemo(() => {
+    const items: Item[] = things.map((text) => ({
+      text,
+      art: DRAWN.find(([re]) => re.test(text))?.[1],
+      img: photos[text],
+    }));
+    const drawn = items.filter((t) => t.art || t.img);
+    const rest = items.filter((t) => !t.art && !t.img);
+    let s = 7;
+    for (let i = rest.length - 1; i > 0; i--) {
+      s = (s * 9301 + 49297) % 233280;
+      const j = Math.floor((s / 233280) * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+    // Leftover drawings go one every fifth slot, so later hands are not all paper.
+    const mixed = [...rest];
+    drawn.slice(SLOTS.length).forEach((t, k) => mixed.splice(Math.min(mixed.length, k * 5 + 2), 0, t));
+    return [...drawn.slice(0, SLOTS.length), ...mixed];
+  }, [things, photos]);
+  const hands = Math.ceil(deck.length / SLOTS.length);
+  const shown = SLOTS.map((_, i) => deck[((round % hands) * SLOTS.length + i) % deck.length]);
 
   useEffect(() => {
     const el = box.current;
@@ -152,21 +190,22 @@ export function Vicinity({ things }: { things: Thing[] }) {
       <div className="absolute inset-0 grid place-items-center">
         <div className="text-center">
           <h2 className="font-serif text-[clamp(40px,7vw,64px)] leading-[0.95] font-normal">
-            Things in
-            <br />
-            my vicinity
+            Things
+            <br />I like
           </h2>
-          <button type="button" className="oval mt-5 bg-bg" onClick={() => setRound((r) => r + 1)}>
+          <button type="button" className="pill mt-5 bg-bg" onClick={() => setRound((r) => r + 1)}>
             shuffle
           </button>
-          <p className="mt-3 font-serif text-[15px] text-muted italic">{hover === null ? "hover over the things" : shown[hover].note}</p>
+          <p className="mx-auto mt-3 min-h-[2.6em] max-w-[24ch] font-serif text-[15px] leading-tight text-muted italic">
+            {hover === null ? "hover over the things" : shown[hover].text}
+          </p>
         </div>
       </div>
       {shown.map((t, i) => {
         const s = SLOTS[i];
         return (
           <div
-            key={`${round}-${i}`}
+            key={`${round}-${i}-${t.text}`}
             data-thing
             className="absolute w-[clamp(72px,14vw,118px)]"
             style={{ left: `${s.x}%`, top: `${s.y}%`, animation: `vic-in .7s cubic-bezier(.16,1,.3,1) ${i * 0.06}s both, vic-bob 7s ease-in-out ${-i * 1.3}s infinite` }}
@@ -176,10 +215,16 @@ export function Vicinity({ things }: { things: Thing[] }) {
             <div
               className="transition-transform duration-300 hover:scale-110 hover:!rotate-0 [&>svg]:w-full [&>svg]:drop-shadow-[0_10px_12px_rgba(0,0,0,.25)]"
               style={{ rotate: `${s.r}deg` }}
-              title={t.label}
+              title={t.text}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              {t.img ? <img src={t.img} alt={t.label} className="w-full drop-shadow-[0_10px_12px_rgba(0,0,0,.25)]" /> : ART[t.art]}
+              {t.img ? <img src={t.img} alt={t.text} className="w-full drop-shadow-[0_10px_12px_rgba(0,0,0,.25)]" /> : t.art ? ART[t.art] : (
+                <span
+                  className={`flex aspect-square w-full items-center p-2.5 font-serif text-[clamp(10px,1.4vw,13px)] leading-tight italic shadow-[0_10px_14px_-6px_rgba(0,0,0,.3)] ${PAPERS[t.text.length % PAPERS.length]}`}
+                >
+                  <span className="line-clamp-5">{t.text}</span>
+                </span>
+              )}
             </div>
           </div>
         );

@@ -68,25 +68,6 @@
   color-scheme: dark;
 }
 
-/* The personal side: warmer paper, serif headings, a little grain. */
-[data-scope="personal"] {
-  --bg: #f6f1e7;
-  --surface: #ede6d6;
-  --paper: #fffdf8;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) [data-scope="personal"] {
-    --bg: #12100d;
-    --surface: #1c1915;
-    --paper: #1a1713;
-  }
-}
-:root[data-theme="dark"] [data-scope="personal"] {
-  --bg: #12100d;
-  --surface: #1c1915;
-  --paper: #1a1713;
-}
-
 @theme inline {
   --color-bg: var(--bg);
   --color-ink: var(--ink);
@@ -135,24 +116,6 @@ p { text-wrap: pretty; }
   border-radius: 4px;
 }
 
-[data-scope="personal"] {
-  background: var(--bg);
-}
-[data-scope="personal"] :is(h1, h2, h3) {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  letter-spacing: 0;
-}
-.grain::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 60;
-  opacity: 0.07;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 /* Lenis */
 html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
@@ -176,30 +139,28 @@ html.lenis, html.lenis body { height: auto; }
    Shared pieces
    ------------------------------------------------------------------ */
 
-/* Oval outline button: tilts and goes red on hover. */
-.oval {
+/* Soft filled chip for buttons and link-chips; ink-filled when selected. */
+.pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4em;
-  padding: 0.45em 1.15em;
-  border: 1.5px solid var(--ink);
-  border-radius: 50% / 60%;
+  padding: 0.5em 1em;
+  border-radius: 999px;
+  background: var(--surface);
   color: var(--ink);
   font-size: 13px;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
-  transition: transform 0.25s var(--ease-out), color 0.2s, border-color 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.15s var(--ease-out);
 }
-.oval:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  transform: rotate(-2deg);
-}
-.oval[aria-pressed="true"], .oval[aria-current="page"] {
-  color: var(--accent);
-  border-color: var(--accent);
+.pill:hover { background: var(--surface-2); }
+.pill:active { transform: scale(0.96); }
+.pill:disabled { opacity: 0.4; pointer-events: none; }
+.pill[aria-current="page"], .pill[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--bg);
 }
 
 .chip {
@@ -385,7 +346,22 @@ code[data-theme*=" "] { background-color: transparent !important; }
   margin-bottom: 0.3em;
 }
 
-[data-scope="personal"] .prose { font-family: var(--font-serif); font-size: 19px; font-weight: 400; line-height: 1.6; }
+/* Personal posts are mostly photos: each one sharpens into place as it scrolls in.
+   Browsers without scroll-driven animations show them plainly. */
+@supports (animation-timeline: view()) {
+  .prose-reveal :is(img, video) {
+    animation: photo-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 28%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose-reveal :is(img, video) { animation: none !important; }
+}
+@keyframes photo-in {
+  from { opacity: 0.15; filter: blur(14px) saturate(0.6); transform: translateY(28px) scale(0.97); }
+  to { opacity: 1; filter: none; transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -402,3 +378,37 @@ html[data-write-up-open] nav[aria-label="Main"] {
   pointer-events: none;
 }
 nav[aria-label="Main"] { transition: opacity 0.3s; }
+
+/* ------------------------------------------------------------------
+   Colour themes from the footer swatches. Red on warm paper is the
+   default; each theme tints the paper and swaps the accent, in both
+   light and dark. Generated from one table, so keep them in step.
+   ------------------------------------------------------------------ */
+
+:root[data-accent="green"] { --bg: #f5f8f3; --accent: #2f7d4f; --accent-soft: rgba(47, 125, 79, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="green"]:not([data-theme="light"]) { --bg: #090c0a; --accent: #52c285; --accent-soft: rgba(82, 194, 133, 0.16); } }
+:root[data-accent="green"][data-theme="dark"] { --bg: #090c0a; --accent: #52c285; --accent-soft: rgba(82, 194, 133, 0.16); }
+:root[data-accent="purple"] { --bg: #f8f6fb; --accent: #6b4fbb; --accent-soft: rgba(107, 79, 187, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="purple"]:not([data-theme="light"]) { --bg: #0b0a0e; --accent: #a68cf2; --accent-soft: rgba(166, 140, 242, 0.16); } }
+:root[data-accent="purple"][data-theme="dark"] { --bg: #0b0a0e; --accent: #a68cf2; --accent-soft: rgba(166, 140, 242, 0.16); }
+:root[data-accent="cyan"] { --bg: #f3f9fa; --accent: #0b829a; --accent-soft: rgba(11, 130, 154, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="cyan"]:not([data-theme="light"]) { --bg: #080c0d; --accent: #3fc8dd; --accent-soft: rgba(63, 200, 221, 0.16); } }
+:root[data-accent="cyan"][data-theme="dark"] { --bg: #080c0d; --accent: #3fc8dd; --accent-soft: rgba(63, 200, 221, 0.16); }
+:root[data-accent="butter"] { --bg: #fbf6e4; --accent: #9a7000; --accent-soft: rgba(154, 112, 0, 0.12); }
+@media (prefers-color-scheme: dark) { :root[data-accent="butter"]:not([data-theme="light"]) { --bg: #0d0c07; --accent: #ecc95e; --accent-soft: rgba(236, 201, 94, 0.16); } }
+:root[data-accent="butter"][data-theme="dark"] { --bg: #0d0c07; --accent: #ecc95e; --accent-soft: rgba(236, 201, 94, 0.16); }
+
+/* Page entrance: every block sharpens from a blur, in slot order. */
+.reveal {
+  animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--slot, 0) * 0.1s);
+}
+@keyframes reveal {
+  from { opacity: 0; filter: blur(20px); transform: scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: reveal-fade 0.3s both; }
+  @keyframes reveal-fade { from { opacity: 0; } }
+}
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(40px); filter: blur(10px); } }

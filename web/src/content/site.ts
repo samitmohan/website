@@ -1,33 +1,22 @@
 import type { Run } from "@/components/TypedBio";
-import type { Thing } from "@/components/Vicinity";
 
 export const BIO: Run[] = [
-  { text: "I " },
-  { text: "use", struck: true },
-  { text: " " },
-  { text: "fine-tune", struck: true },
-  { text: " build models from scratch, then make them fast enough to run on " },
-  { text: "60k cameras", em: true },
-  { text: " at the edge." },
+  { text: "I rebuild models from scratch, and run inference at scale on " },
+  { text: "300 cameras", em: true },
+  { text: " watching 24/7." },
 ];
+
+/** The posts the home page leads with, in this order. */
+export const FEATURED = ["math", "paper", "microgpt", "attention-residuals"];
 
 export const HANDLE = "samitmohan";
 export const EMAIL = "samitmohan@gmail.com";
 
 /**
- * The objects in "Things in my vicinity". Notes paraphrase the "things i like"
- * post. `img` takes a transparent cut-out photo; until then each draws itself.
+ * Cut-out photos for "Things I like", keyed by the exact bullet text from the
+ * things-i-like post. A photo replaces the drawing or paper scrap for that line.
  */
-export const THINGS: Thing[] = [
-  { label: "Fantastic Mr. Fox", note: "reading Fantastic Mr. Fox, again", art: "book" },
-  { label: "vinyl", note: "vinyl records, and Black Sabbath on them", art: "vinyl" },
-  { label: "mechanical pencil", note: "mechanical pencils, the clicky kind", art: "pencil" },
-  { label: "ace of spades", note: "performing card tricks", art: "card" },
-  { label: "uno", note: "winning at uno", art: "uno" },
-  { label: "ps2 controller", note: "a ps2 booting past the loading screen first try", art: "controller" },
-  { label: "espresso", note: "davidoff espresso 57 in the morning", art: "coffee" },
-  { label: "chuck taylors", note: "converse chuck taylors", art: "sneaker" },
-];
+export const THING_PHOTOS: Record<string, string> = {};
 
 /** The live widgets in public/widgets, and the posts they were built for. */
 export const LAB = [

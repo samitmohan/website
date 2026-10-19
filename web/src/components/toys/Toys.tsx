@@ -272,3 +272,93 @@ export function TokenizerToy() {
     </div>
   );
 }
+
+/* ------------------------------------------------------------ kv cache */
+
+const MODELS = {
+  "llama-3 8b": { layers: 32, kvHeads: 8, headDim: 128 },
+  "llama-3 70b": { layers: 80, kvHeads: 8, headDim: 128 },
+  "mistral 7b": { layers: 32, kvHeads: 8, headDim: 128 },
+};
+
+/**
+ * KV cache bytes = 2 (K and V) x layers x kv_heads x head_dim x tokens x bytes per value.
+ * Grouped-query attention is why kv_heads is 8 and not the full head count.
+ */
+export function KvCacheToy() {
+  const [model, setModel] = useState<keyof typeof MODELS>("llama-3 8b");
+  const [ctx, setCtx] = useState(8192);
+  const [batch, setBatch] = useState(8);
+  const [fp8, setFp8] = useState(false);
+  const m = MODELS[model];
+  const bytes = 2 * m.layers * m.kvHeads * m.headDim * ctx * batch * (fp8 ? 1 : 2);
+  const gib = bytes / 2 ** 30;
+  const pct = Math.min(100, (gib / 80) * 100); // against one 80 GB H100
+  return (
+    <div className="w-[250px] font-mono text-[10px] text-muted">
+      <div className="flex flex-wrap gap-1.5">
+        {(Object.keys(MODELS) as (keyof typeof MODELS)[]).map((k) => (
+          <button key={k} type="button" className={`${btn} ${k === model ? "!bg-ink !text-bg" : ""}`} onClick={() => setModel(k)}>
+            {k}
+          </button>
+        ))}
+      </div>
+      <label className="mt-3 flex items-center gap-2">
+        ctx
+        <input type="range" min={10} max={17} step={1} value={Math.log2(ctx)} onChange={(e) => setCtx(2 ** +e.target.value)} className="flex-1 accent-[var(--accent)]" />
+        <span className="w-12 text-right text-ink">{ctx >= 1024 ? `${ctx / 1024}k` : ctx}</span>
+      </label>
+      <label className="mt-1 flex items-center gap-2">
+        batch
+        <input type="range" min={1} max={64} step={1} value={batch} onChange={(e) => setBatch(+e.target.value)} className="flex-1 accent-[var(--accent)]" />
+        <span className="w-12 text-right text-ink">{batch}</span>
+      </label>
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-paper">
+        <div className="h-full rounded-full transition-[width] duration-300" style={{ width: `${pct}%`, background: gib > 80 ? "var(--accent)" : "var(--ink)" }} />
+      </div>
+      <div className="mt-2 flex items-baseline justify-between">
+        <span className="text-[20px] text-ink">{gib < 10 ? gib.toFixed(2) : gib.toFixed(0)} GiB</span>
+        <button type="button" className={btn} onClick={() => setFp8((v) => !v)}>
+          {fp8 ? "fp8" : "fp16"}
+        </button>
+      </div>
+      <p className="mt-1">{gib > 80 ? "does not fit on one 80 GB H100" : `${pct.toFixed(0)}% of one 80 GB H100`}</p>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------ positional encoding */
+
+/** PE(pos, 2i) = sin(pos / 10000^(2i/d)), PE(pos, 2i+1) = cos(...). Hover a row to read its vector. */
+export function PositionalToy() {
+  const D = 32, P = 24;
+  const [pos, setPos] = useState(5);
+  const pe = (p: number, i: number) => {
+    const w = 1 / 10000 ** ((2 * Math.floor(i / 2)) / D);
+    return i % 2 ? Math.cos(p * w) : Math.sin(p * w);
+  };
+  return (
+    <div className="w-[250px]">
+      <div className="grid gap-px" style={{ gridTemplateColumns: `repeat(${D}, 1fr)` }} onPointerLeave={() => setPos(5)}>
+        {Array.from({ length: P * D }, (_, k) => {
+          const p = Math.floor(k / D), i = k % D, v = pe(p, i);
+          return (
+            <span
+              key={k}
+              onPointerEnter={() => setPos(p)}
+              className="aspect-square"
+              style={{
+                background: v < 0 ? "var(--accent)" : "var(--ink)",
+                opacity: Math.abs(v) * (p === pos ? 1 : 0.55),
+                outline: p === pos && i === 0 ? "1px solid var(--ink)" : undefined,
+              }}
+            />
+          );
+        })}
+      </div>
+      <p className="mt-3 font-mono text-[10px] text-muted">
+        position <span className="text-ink">{pos}</span> · low dims spin fast, high dims barely move
+      </p>
+    </div>
+  );
+}

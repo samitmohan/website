@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Blog() {
-  return <PostList tab="technical" intro="Building things to understand them, then writing down what broke." posts={getAllPosts()} />;
+  return <PostList tab="technical" posts={getAllPosts()} />;
 }

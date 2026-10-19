@@ -5,13 +5,12 @@ import { Reveal } from "@/components/Reveal";
 import type { PostMeta } from "@/lib/blog";
 
 /** One layout for both blog tabs: posts grouped by year, title, minutes, and a line of description. */
-export function PostList({ tab, intro, posts }: { tab: "technical" | "personal"; intro: string; posts: PostMeta[] }) {
+export function PostList({ tab, posts }: { tab: "technical" | "personal"; posts: PostMeta[] }) {
   const years = Map.groupBy(posts, (p) => p.date.slice(0, 4));
   return (
     <Page>
       <Reveal slot={0} as="header">
         <h1 className="text-[22px]">Writing</h1>
-        <p className="mt-1">{intro}</p>
       </Reveal>
       <Reveal slot={1} className="mt-6">
         <BlogTabs active={tab} />

@@ -1,0 +1,26 @@
+{
+  "books": [
+    { "title": "Fantastic Mr. Fox", "by": "Roald Dahl" },
+    { "title": "Book two", "by": "author", "placeholder": true },
+    { "title": "Book three", "by": "author", "placeholder": true },
+    { "title": "Book four", "by": "author", "placeholder": true }
+  ],
+  "videos": [
+    { "title": "Pokémon theme", "url": "https://www.youtube.com/watch?v=JuYeHPFR3f0", "placeholder": true },
+    { "title": "Video two", "by": "channel", "placeholder": true },
+    { "title": "Video three", "by": "channel", "placeholder": true },
+    { "title": "Video four", "by": "channel", "placeholder": true }
+  ],
+  "movies": [
+    { "title": "Movie one", "by": "director", "placeholder": true },
+    { "title": "Movie two", "by": "director", "placeholder": true },
+    { "title": "Movie three", "by": "director", "placeholder": true },
+    { "title": "Movie four", "by": "director", "placeholder": true }
+  ],
+  "artists": [
+    { "title": "Black Sabbath" },
+    { "title": "Jimi Hendrix" },
+    { "title": "Artist three", "by": "genre", "placeholder": true },
+    { "title": "Artist four", "by": "genre", "placeholder": true }
+  ]
+}

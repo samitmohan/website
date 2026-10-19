@@ -174,9 +174,9 @@ function Board({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: str
       </motion.div>
 
       <div className="absolute right-4 bottom-4 flex gap-1.5">
-        <button type="button" className="oval bg-bg" onClick={() => zoomBy(1 / 1.25)} aria-label="Zoom out">−</button>
-        <button type="button" className="oval bg-bg" onClick={fit}>fit</button>
-        <button type="button" className="oval bg-bg" onClick={() => zoomBy(1.25)} aria-label="Zoom in">+</button>
+        <button type="button" className="pill bg-bg" onClick={() => zoomBy(1 / 1.25)} aria-label="Zoom out">−</button>
+        <button type="button" className="pill bg-bg" onClick={fit}>fit</button>
+        <button type="button" className="pill bg-bg" onClick={() => zoomBy(1.25)} aria-label="Zoom in">+</button>
       </div>
       <p className="meta pointer-events-none absolute bottom-5 left-5">drag to look around</p>
     </div>
@@ -233,15 +233,15 @@ function WriteUp({ p, onClose }: { p: BoardProject; onClose: () => void }) {
             <p className="meta">{p.stack}</p>
             <h2 className="mt-1 font-serif text-[40px] leading-none font-normal italic">{p.name}</h2>
           </div>
-          <button type="button" className="oval" onClick={onClose} autoFocus>
+          <button type="button" className="pill" onClick={onClose} autoFocus>
             close
           </button>
         </div>
         <div className="mt-6 aspect-[16/10] overflow-hidden rounded-2xl bg-surface p-4 text-ink [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: p.figure }} />
         <p className="mt-6 text-[16px] leading-relaxed">{p.blurb}</p>
         <div className="mt-6 flex flex-wrap gap-2">
-          <a className="oval" href={p.repoUrl}>source</a>
-          {p.liveUrl && <a className="oval" href={p.liveUrl}>live</a>}
+          <a className="pill" href={p.repoUrl}>source</a>
+          {p.liveUrl && <a className="pill" href={p.liveUrl}>live</a>}
         </div>
         {p.posts.length > 0 && (
           <>

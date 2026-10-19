@@ -1,11 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LabGlyph } from "./LabGlyph";
 import { RunScripts } from "./RunScripts";
-import { AttentionToy, ConvToy, DropoutToy, SoftmaxToy, TokenizerToy } from "./toys/Toys";
+import { AttentionToy, ConvToy, DropoutToy, KvCacheToy, PositionalToy, SoftmaxToy, TokenizerToy } from "./toys/Toys";
 
 const TOYS = [
   { name: "softmax temperature", el: <SoftmaxToy /> },
@@ -13,6 +12,8 @@ const TOYS = [
   { name: "convolution", el: <ConvToy /> },
   { name: "dropout", el: <DropoutToy /> },
   { name: "tokenizer", el: <TokenizerToy /> },
+  { name: "kv cache memory", el: <KvCacheToy /> },
+  { name: "positional encoding", el: <PositionalToy /> },
 ];
 
 export type PostWidget = { id: string; name: string; blurb: string; post: string; html: string };
@@ -59,43 +60,34 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
         ))}
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[70] flex items-end justify-center bg-black/30 backdrop-blur-[2px] sm:items-center sm:p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(null)}
-            data-lenis-prevent
+      {open && (
+        <div
+          className="fixed inset-0 z-[70] flex animate-[fade-in_.25s_both] items-end justify-center bg-black/30 backdrop-blur-[2px] sm:items-center sm:p-6"
+          onClick={() => setOpen(null)}
+          data-lenis-prevent
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={open.name}
+            className="max-h-[92dvh] w-full max-w-[720px] animate-[sheet-in_.5s_cubic-bezier(.16,1,.3,1)_both] overflow-y-auto rounded-t-[28px] bg-bg p-6 shadow-2xl sm:rounded-[28px]"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-label={open.name}
-              className="max-h-[92dvh] w-full max-w-[720px] overflow-y-auto rounded-t-[28px] bg-bg p-6 shadow-2xl sm:rounded-[28px]"
-              initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
-              animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-              exit={{ y: 30, opacity: 0, filter: "blur(10px)" }}
-              transition={{ type: "spring", bounce: 0, duration: 0.5 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-[17px]">{open.name}</h3>
-                  <Link href={`/blog/${open.post}`} className="meta hover:text-accent">
-                    from the post →
-                  </Link>
-                </div>
-                <button type="button" className="oval" onClick={() => setOpen(null)} autoFocus>
-                  close
-                </button>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-[17px]">{open.name}</h3>
+                <Link href={`/blog/${open.post}`} className="meta hover:text-accent">
+                  from the post →
+                </Link>
               </div>
-              <RunScripts html={open.html} className="prose mt-5" />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <button type="button" className="pill" onClick={() => setOpen(null)} autoFocus>
+                close
+              </button>
+            </div>
+            <RunScripts html={open.html} className="prose mt-5" />
+          </div>
+        </div>
+      )}
     </>
   );
 }

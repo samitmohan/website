@@ -57,14 +57,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   };
 
   return (
-    <Page personal={post.hidden}>
+    <Page>
       {post.math && <link rel="stylesheet" href="/katex/katex.min.css" precedence="default" />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Reveal slot={0} as="header">
         <Link href={post.hidden ? "/blog/personal" : "/blog"} className="meta hover:text-accent">
           ← {post.hidden ? "personal" : "writing"}
         </Link>
-        <h1 className={`mt-4 leading-tight ${post.hidden ? "text-[44px] italic" : "text-[28px]"}`}>{post.title}</h1>
+        <h1 className="mt-4 text-[28px] leading-tight">{post.title}</h1>
         <p className="meta mt-3">
           {formatPostDate(post.date)} · {post.readingTime} min read
           {post.tags.length > 0 && !post.hidden && <> · {post.tags.join(", ")}</>}
@@ -86,7 +86,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       )}
 
       <Reveal slot={2}>
-        <RunScripts html={html} className="prose mt-10" />
+        <RunScripts html={html} className={`prose mt-10 ${post.hidden ? "prose-reveal" : ""}`} />
       </Reveal>
 
       {related.length > 0 && (

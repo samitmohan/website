@@ -45,8 +45,8 @@ function uncovered(f: Frame) {
 
 /**
  * Photos as rolls of colour negative. Strips unspool from the left as they
- * scroll in; rubbing a frame develops it, and past 60% the rest clears.
- * A tap without rubbing opens the frame large, where it can still be rubbed.
+ * scroll in. Pressing and dragging across a frame develops it, and past 60%
+ * the rest clears. A click opens the frame large, with a develop button.
  */
 export function FilmRoll({ rolls }: { rolls: Roll[] }) {
   const frames = useRef<Map<string, Frame>>(new Map());
@@ -102,7 +102,7 @@ export function FilmRoll({ rolls }: { rolls: Roll[] }) {
               {!allDev && (
                 <button
                   type="button"
-                  className="oval"
+                  className="pill"
                   onClick={() => roll.frames.forEach((f, i) => setTimeout(() => develop(f), i * 110))}
                 >
                   develop all
@@ -166,7 +166,7 @@ export function FilmRoll({ rolls }: { rolls: Roll[] }) {
                 ["close", () => setViewer(null)],
                 ["→", () => setViewer({ ...viewer, i: Math.min(rolls[viewer.roll].frames.length - 1, viewer.i + 1) })],
               ].map(([l, fn]) => (
-                <button key={l as string} type="button" className="oval !border-[#f3eadb] !text-[#f3eadb] hover:!border-[#ff4a3d] hover:!text-[#ff4a3d]" onClick={fn as () => void}>
+                <button key={l as string} type="button" className="pill !bg-white/10 !text-[#f3eadb] hover:!bg-white/20" onClick={fn as () => void}>
                   {l as string}
                 </button>
               ))}
@@ -276,8 +276,8 @@ function Negative({ f, label, big = false, onDevelop, onOpen }: { f: Frame; labe
   const rub = (e: React.PointerEvent) => {
     if (f.dev) return;
     const p = pt(e);
-    // Mouse rubs on hover; touch and pen rub while pressed.
-    if (e.pointerType !== "mouse" && !down.current) return;
+    // Only a press rubs; moving over a frame does nothing.
+    if (!down.current) return;
     if (!last.current) {
       last.current = [p[0], p[1]];
       return;
@@ -302,12 +302,13 @@ function Negative({ f, label, big = false, onDevelop, onOpen }: { f: Frame; labe
         className={`relative aspect-[3/2] cursor-crosshair overflow-hidden bg-[#3a1d0c] outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${big ? "w-full" : "w-[var(--fw)]"}`}
         style={{ touchAction: "pan-y" }}
         onPointerDown={(e) => {
+          if (e.button !== 0) return;
+          e.currentTarget.setPointerCapture(e.pointerId);
           down.current = pt(e);
           moved.current = false;
           last.current = [down.current[0], down.current[1]];
         }}
         onPointerMove={rub}
-        onPointerLeave={() => (last.current = null)}
         onPointerUp={() => {
           if (down.current && !moved.current) onOpen?.();
           down.current = null;

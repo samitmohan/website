@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -39,22 +38,15 @@ export function Nav() {
         <ul aria-hidden className="absolute -inset-2 flex p-2" style={{ filter: "url(#goo)" }}>
           {ITEMS.map((it) => (
             <li key={it.href} className="relative flex-1">
-              {active(pathname, it.href) && (
-                <motion.span
-                  layoutId="nav-blob"
-                  className="absolute -inset-y-0.5 inset-x-0 rounded-full bg-ink"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-              {hover === it.href && (
-                <motion.span
-                  layoutId="nav-hover"
-                  className="absolute inset-y-1 inset-x-1 rounded-full bg-ink"
-                  initial={{ scale: 0.6, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                />
-              )}
+              {/* Each item owns a blob that grows in when it is current or hovered.
+                  Two growing and shrinking side by side is what reads as liquid. */}
+              <span
+                className="absolute inset-y-0.5 inset-x-0.5 rounded-full bg-ink transition-[scale,opacity] duration-300 ease-[cubic-bezier(.16,1,.3,1)]"
+                style={{
+                  scale: active(pathname, it.href) ? "1 1.12" : hover === it.href ? "1" : "0.55",
+                  opacity: active(pathname, it.href) || hover === it.href ? 1 : 0,
+                }}
+              />
             </li>
           ))}
         </ul>

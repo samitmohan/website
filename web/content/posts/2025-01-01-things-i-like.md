@@ -45,4 +45,4 @@ in no particular order,
 - eerie feeling when i play black sabbath or hendrix
 - first sip of beer; goes straight to heart
 - davidoff espresso 57 in the morning; yum
-- sitting in other people'ss living rooms
+- sitting in other people's living rooms

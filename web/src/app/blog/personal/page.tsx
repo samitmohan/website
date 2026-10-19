@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Personal() {
-  return <PostList tab="personal" intro="Trips, lists, and things that are not about machine learning." posts={getPersonalPosts()} />;
+  return <PostList tab="personal" posts={getPersonalPosts()} />;
 }

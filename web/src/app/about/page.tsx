@@ -24,14 +24,13 @@ export default function About() {
       <div className="grid gap-10 sm:grid-cols-[1fr_auto]">
         <Reveal slot={0} as="header">
           <h1 className="text-[clamp(26px,4vw,34px)] leading-[1.15] font-medium">
-            I build <span className="mark">models</span>, make them <span className="mark">fast</span>, and write down how.
+            I rebuild <span className="mark">ML from scratch</span> and <span className="mark">write</span> about it.
           </h1>
         </Reveal>
         <Reveal slot={2} className="justify-self-center sm:justify-self-end">
-          <figure className="w-36 rotate-3 bg-paper p-2 pb-7 shadow-[var(--shadow-card)] transition-transform duration-500 hover:rotate-0">
+          <figure className="w-36 rotate-3 bg-paper p-2 pb-6 shadow-[var(--shadow-card)] transition-transform duration-500 hover:rotate-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/photo.jpeg" alt="Samit Mohan" width={460} height={460} className="aspect-square w-full object-cover" />
-            <figcaption className="mt-1.5 text-center font-serif text-[14px] text-ink italic">samit, bangalore</figcaption>
           </figure>
         </Reveal>
       </div>
@@ -39,7 +38,7 @@ export default function About() {
       <Reveal slot={3} className="mt-10 space-y-5 text-[16px] leading-[1.75]">
         <p>
           I am an AI Scientist at <a className="link" href="https://beltech.ai">beltech.ai</a>, working on building models and
-          optimising inference for security, surveillance, and traffic management across 50+ cities, processing 60k+ cameras,
+          optimising inference for security, surveillance, and traffic management across 50+ cities, processing 300 cameras 24/7,
           serving models with latency &lt;= 10ms on an edge box. My work focuses on inference management, computer vision, and
           writing business logic for detecting violations in India.
         </p>
@@ -73,7 +72,7 @@ export default function About() {
         <h2 className="meta">elsewhere</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {SOCIAL_LINKS.map((l) => (
-            <a key={l.href} className="oval" href={l.href}>
+            <a key={l.href} className="pill" href={l.href}>
               {l.label}
             </a>
           ))}

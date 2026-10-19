@@ -102,13 +102,56 @@ await check("rubbing a negative develops it", async (page) => {
   await frame.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1500);
   const box = await frame.boundingBox();
+  // Hovering alone must not develop anything.
+  await page.mouse.move(box.x + 2, box.y + 10);
+  await page.mouse.move(box.x + box.width - 2, box.y + box.height - 10, { steps: 30 });
+  await page.waitForTimeout(300);
+  const untouched = await frame.locator("canvas").evaluate((c) => getComputedStyle(c).opacity);
+  expect(untouched === "1", `hover developed the frame (opacity ${untouched})`);
+  // Pressing and dragging does.
+  await page.mouse.move(box.x + 2, box.y + 6);
+  await page.mouse.down();
   for (let y = box.y + 6; y < box.y + box.height; y += 12) {
-    await page.mouse.move(box.x + 2, y);
+    await page.mouse.move(box.x + 2, y, { steps: 3 });
     await page.mouse.move(box.x + box.width - 2, y, { steps: 14 });
   }
+  await page.mouse.up();
   await page.waitForTimeout(1200);
   const opacity = await frame.locator("canvas").evaluate((c) => getComputedStyle(c).opacity);
   expect(opacity === "0", `negative opacity still ${opacity}`);
+});
+
+await check("footer swatch changes the accent and it survives a reload", async (page) => {
+  await page.goto(base + "/about");
+  const accent = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
+  const before = await accent();
+  await page.getByRole("radio", { name: "green" }).click();
+  const after = await accent();
+  expect(after !== before, `accent stayed ${before}`);
+  await page.reload();
+  expect((await page.getAttribute("html", "data-accent")) === "green", "accent not restored on reload");
+  return `${before} -> ${after}`;
+});
+
+await check("things I like captions are the post's own bullets", async (page) => {
+  await page.goto(base + "/things");
+  await page.waitForTimeout(1200);
+  const reader = await page.context().newPage();
+  await reader.goto(base + "/blog/things-i-like");
+  const post = await reader.locator(".prose").innerText();
+  const bullets = await reader.locator(".prose li").count();
+  await reader.close();
+  const seen = new Set();
+  for (let r = 0; r < 8; r++) {
+    for (const t of await page.locator("[data-thing] [title]").evaluateAll((els) => els.map((e) => e.getAttribute("title")))) {
+      expect(post.includes(t), `caption not in the post: "${t}"`);
+      seen.add(t);
+    }
+    await page.getByRole("button", { name: "shuffle" }).click();
+    await page.waitForTimeout(150);
+  }
+  expect(seen.size === bullets, `saw ${seen.size} of ${bullets} bullets across 8 shuffles`);
+  return `${seen.size}/${bullets} bullets seen, all verbatim`;
 });
 
 await check(
@@ -116,8 +159,8 @@ await check(
   async (page) => {
     await page.goto(base + "/");
     await page.waitForTimeout(300);
-    const struck = await page.locator("p span[aria-hidden] span.text-muted").count();
-    expect(struck === 2, `expected 2 struck words, saw ${struck}`);
+    const typed = await page.locator("p span[aria-hidden]").first().innerText();
+    expect(typed.includes("watching 24/7"), `bio not finished: "${typed}"`);
   },
   { reducedMotion: "reduce" },
 );

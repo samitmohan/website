@@ -18,6 +18,29 @@
     Blog has two tabs: technical (/blog) and personal (/blog/personal,
     frontmatter `hidden: true`). /fun is retired and redirects there.
   </constraint>
+  <constraint added="2026-10-19">
+    Never invent personal content (likes, captions, lists, facts about Samit).
+    Text shown as his must come from his own sources: posts, the about copy,
+    or what he says in conversation. Stand-ins are allowed only when marked
+    `placeholder: true` in the data. The things-I-like captions are read
+    straight from the bullets of content/posts/2025-01-01-things-i-like.md.
+  </constraint>
+  <constraint added="2026-10-19">
+    Facts: beltech.ai runs inference on 300 cameras for 24/7 surveillance and
+    monitoring. Not 60k.
+  </constraint>
+  <constraint added="2026-10-19">
+    No explanatory intro lines under page titles; headings speak for
+    themselves. No sign-off text in the footer.
+  </constraint>
+  <constraint added="2026-10-19">
+    Buttons and link-chips are soft grey filled chips (ink-filled when
+    selected). No outlined oval buttons.
+  </constraint>
+  <constraint added="2026-10-19">
+    Personal posts look exactly like technical posts: same background, fonts
+    and colours. Only the tab differs.
+  </constraint>
 </user-constraints>
 
 Before calling a change done, build and run the checks against the export:

@@ -91,7 +91,7 @@ await write(
   "index",
   card({
     title: "samit mohan",
-    sub: "Builds models from scratch, then makes them fast enough to run on 60k cameras.",
+    sub: "I rebuild ML from scratch and write about it.",
     footer: "AI scientist at beltech.ai",
     titleSize: 112,
   }),

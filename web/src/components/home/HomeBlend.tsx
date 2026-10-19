@@ -4,13 +4,15 @@ import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { TypedBio } from "@/components/TypedBio";
 import { LabCards } from "@/components/LabCards";
-import { BIO, EMAIL, HANDLE } from "@/content/site";
-import { formatPostDate, getAllPosts, getPersonalPosts } from "@/lib/blog";
+import { BIO, EMAIL, FEATURED, HANDLE } from "@/content/site";
+import { formatPostDate, getPost } from "@/lib/blog";
 
 /** Direction A: calm grey column (shwn), warm paper and red ink (stympaul). */
 export function HomeBlend() {
-  const tech = getAllPosts().slice(0, 4);
-  const personal = getPersonalPosts().slice(0, 2);
+  const featured = FEATURED.flatMap((slug) => {
+    const p = getPost(slug);
+    return p ? [p] : [];
+  });
   return (
     <Page>
       <Reveal slot={0}>
@@ -35,7 +37,7 @@ export function HomeBlend() {
       <Reveal slot={6} as="section" className="mt-20">
         <SectionHead title="Writing" href="/blog" more="all posts" />
         <ul className="mt-4">
-          {tech.map((p) => (
+          {featured.map((p) => (
             <li key={p.slug}>
               <Link href={`/blog/${p.slug}`} className="group flex items-baseline justify-between gap-4 border-b border-hairline py-3">
                 <span className="text-ink transition-colors group-hover:text-accent">{p.title}</span>
@@ -43,30 +45,14 @@ export function HomeBlend() {
               </Link>
             </li>
           ))}
-          {personal.map((p) => (
-            <li key={p.slug}>
-              <Link href={`/blog/${p.slug}`} className="group flex items-baseline justify-between gap-4 border-b border-hairline py-3">
-                <span className="font-serif text-[18px] italic text-ink transition-colors group-hover:text-accent">{p.title}</span>
-                <span className="meta shrink-0">personal</span>
-              </Link>
-            </li>
-          ))}
         </ul>
       </Reveal>
 
       <Reveal slot={7} as="section" className="mt-20">
-        <SectionHead title="Lab" href="/things#lab" more="more things" />
+        <SectionHead title="Things" href="/things" more="all things" />
         <div className="mt-4">
           <LabCards widgets={[]} />
         </div>
-      </Reveal>
-
-      <Reveal slot={8} as="section" className="mt-16">
-        <SectionHead title="Things I like" href="/things" more="the vicinity" />
-        <p className="mt-3">
-          Card tricks, vinyl, mechanical pencils, maa&apos;s mutton biryani, and a PS2 that boots first try. The rest, and the
-          photos, live on <Link className="link" href="/things">things</Link>.
-        </p>
       </Reveal>
     </Page>
   );

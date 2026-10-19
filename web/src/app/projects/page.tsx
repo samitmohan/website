@@ -29,7 +29,6 @@ export default function Projects() {
     <Page wide>
       <Reveal slot={0} as="header" className="mx-auto max-w-[620px]">
         <h1 className="text-[22px]">Projects</h1>
-        <p className="mt-1">Built from scratch to find out what is inside. Click a card for the write-up; the notes are the posts about it.</p>
       </Reveal>
       <Reveal slot={2} className="mt-10">
         <ProjectBoard projects={projects} />
