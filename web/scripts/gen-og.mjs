@@ -11,12 +11,8 @@
  * framework taken out: satori returns SVG, sharp writes the PNG, and both were
  * already dependencies of this repo.
  *
- * Charter comes from scripts/fonts/*.ttf rather than public/fonts/*.woff2
- * because satori parses ttf/otf and not woff2. Same typeface, same design,
- * different container.
- *
- * The old card's accent square was #E6651B, an orange left over from a
- * colourway the site has not had for two redesigns. It is the current accent.
+ * Instrument Serif comes from scripts/fonts/*.ttf because satori parses
+ * ttf/otf and not the woff2 that next/font serves.
  */
 import { mkdirSync, readFileSync } from "fs";
 import path from "path";
@@ -32,15 +28,14 @@ const W = 1200;
 const H = 630;
 
 /* Straight off the palette in globals.css. */
-const GROUND = "#FFFDF8";
-const INK = "#141414";
-const INK_2 = "#5C5A55";
-const INK_4 = "#767369";
-const ACCENT = "#1C1CA8";
+const GROUND = "#FBFAF7";
+const INK = "#111111";
+const INK_2 = "#6B6A66";
+const INK_4 = "#8D8B85";
+const ACCENT = "#D9261C";
 
 const fonts = [
-  { name: "Charter", data: readFileSync(path.join(FONTS, "Charter-Regular.ttf")), weight: 400, style: "normal" },
-  { name: "Charter", data: readFileSync(path.join(FONTS, "Charter-Bold.ttf")), weight: 700, style: "normal" },
+  { name: "Instrument Serif", data: readFileSync(path.join(FONTS, "InstrumentSerif-Regular.ttf")), weight: 400, style: "normal" },
 ];
 
 const el = (type, style, children) => ({ type, props: { style, children } });
@@ -62,22 +57,22 @@ function card({ title, sub, footer, titleSize }) {
       padding: "72px 80px",
       background: GROUND,
       color: INK,
-      fontFamily: "Charter",
+      fontFamily: "Instrument Serif",
     },
     [
       el("div", { display: "flex", alignItems: "center", gap: "14px", fontSize: 18, letterSpacing: 2, color: INK_4 }, [
-        el("div", { width: 14, height: 14, borderRadius: 3, background: ACCENT, display: "flex" }, []),
-        el("div", { display: "flex" }, "SAMITMOHAN.IN"),
+        el("div", { width: 14, height: 14, borderRadius: 7, background: ACCENT, display: "flex" }, []),
+        el("div", { display: "flex", fontSize: 26, letterSpacing: 0 }, "samitmohan.in"),
       ]),
       /* marginTop rather than gap: satori accepts `gap` and then ignores it
          on a column, so the description sat against the title's descenders. */
       el("div", { display: "flex", flexDirection: "column" }, [
-        el("div", { display: "flex", fontSize: titleSize, lineHeight: 1.05, letterSpacing: -3, color: INK }, title),
+        el("div", { display: "flex", fontSize: titleSize, lineHeight: 1.05, letterSpacing: -1, color: INK }, title),
         sub
-          ? el("div", { display: "flex", marginTop: 26, fontSize: 26, lineHeight: 1.4, color: INK_2 }, sub)
+          ? el("div", { display: "flex", marginTop: 26, fontSize: 30, lineHeight: 1.4, color: INK_2 }, sub)
           : null,
       ].filter(Boolean)),
-      el("div", { display: "flex", fontSize: 20, color: ACCENT }, footer),
+      el("div", { display: "flex", fontSize: 26, color: ACCENT }, footer),
     ],
   );
 }
@@ -96,8 +91,8 @@ await write(
   "index",
   card({
     title: "samit mohan",
-    sub: "I rebuild ML from scratch and write about it.",
-    footer: "AI Scientist, Beltech AI",
+    sub: "Builds models from scratch, then makes them fast enough to run on 60k cameras.",
+    footer: "AI scientist at beltech.ai",
     titleSize: 112,
   }),
 );
