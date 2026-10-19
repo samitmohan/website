@@ -2,197 +2,331 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { AfterimagePass } from "three/addons/postprocessing/AfterimagePass.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 
 /*
- * The PS2 boot screen, rebuilt. On the real console the towers in the blue
- * mist are the saves on the memory card: one tower per game, taller the more
- * data it holds. Here each tower is a trip and each block one of its photos.
- * Coloured dots circle the scene, the camera drifts round and then pushes into
- * the mist, and blue dust gathers into words. No console logos or names.
+ * The PS2 boot sequence. Looking straight down on a field of tall grey towers
+ * round a blue fog, glass cubes tumble and comet lights streak while the
+ * camera drifts; "Sony Computer Entertainment" holds in the middle, the
+ * camera flies up into the smear, the screen goes black, and the PlayStation 2
+ * wordmark comes and goes. Each frame is blended 62.5% into the next, which is
+ * where the console's trailing glow comes from.
+ *
+ * Timeline, seconds from power-on (measured from frame captures):
+ *   0.0-1.0 black · 1.0-2.0 scene in · 2.6-5.6 SCE text · 6.2-7.3 fly-up and
+ *   fade · 8.3-10.6 wordmark · 11.3 done.
  */
 
-const DOT_COLORS = [0xff7ab6, 0x5fe3b0, 0xff5a5a, 0x6fa8ff];
-const ORBIT = 5200; // ms of slow drift before the push into the mist
-const PUSH = 1500; // ms of the push
-const WORD = "MEMORY CARD";
+const T = { sceneIn: 1.0, textIn: 2.6, textOut: 5.6, fly: 6.2, black: 7.3, logoIn: 8.3, logoOut: 10.6, done: 11.3 };
 
-export function Ps2Boot({ towers, onStart }: { towers: number[]; onStart: () => void }) {
+const COLS = 14;
+const ROWS = 9;
+const PITCH = 5.2;
+const HALF = 2.2;
+
+/**
+ * Tower heights, after the console's height field (as documented by the
+ * osdbits reverse engineering): a strong radial bump left of centre, a half
+ * weight one to the lower right, scaled by 0.85, an integer dither of +-50, and
+ * a clamp to [32, 220]. The spread is what gives the scene its depth: tall
+ * towers rise close to the camera while short ones sink into the dark.
+ */
+function heights(): number[][] {
+  const R = Math.sqrt(5202);
+  const ramp = (d: number) => Math.min(255, Math.max(32, (255 * (R - d)) / R));
+  const out: number[][] = [];
+  for (let i = 0; i < COLS; i++) {
+    out[i] = [];
+    for (let j = 0; j < ROWS; j++) {
+      const x = (i - COLS / 2 + 0.5) * PITCH, z = (j - ROWS / 2 + 0.5) * PITCH;
+      let v = ramp(2 * Math.hypot(x + 5.1, z)) + 0.5 * ramp(4 * Math.hypot(x - 10.2, z - 5.1));
+      v = v * 0.85 - 10 * ((Math.trunc(((i + j) * i) / (j + 1)) % 11) - 5);
+      out[i][j] = Math.min(220, Math.max(32, v));
+    }
+  }
+  return out;
+}
+
+function noiseCanvas(size: number, seed: number, color: [number, number, number], alpha: number) {
+  const c = document.createElement("canvas");
+  c.width = c.height = size;
+  const g = c.getContext("2d")!;
+  const img = g.createImageData(size, size);
+  let s = seed;
+  const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  // Value noise over a few octaves, then a soft round falloff so a layer has no edges.
+  const grid = (n: number) => Array.from({ length: (n + 1) * (n + 1) }, rnd);
+  const octs = [4, 8, 16].map((n) => ({ n, g: grid(n) }));
+  for (let y = 0; y < size; y++)
+    for (let x = 0; x < size; x++) {
+      let v = 0, w = 0;
+      for (const [k, o] of octs.entries()) {
+        const fx = (x / size) * o.n, fy = (y / size) * o.n, x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0;
+        const at = (a: number, b: number) => o.g[b * (o.n + 1) + a];
+        const top = at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx, bot = at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx;
+        const amp = 1 / (k + 1);
+        v += (top * (1 - ty) + bot * ty) * amp;
+        w += amp;
+      }
+      v /= w;
+      const d = Math.hypot(x / size - 0.5, y / size - 0.5) * 2;
+      const fall = Math.max(0, 1 - d) ** 1.6;
+      const i = (y * size + x) * 4;
+      img.data[i] = color[0];
+      img.data[i + 1] = color[1];
+      img.data[i + 2] = color[2];
+      img.data[i + 3] = 255 * Math.min(1, Math.max(0, (v - 0.35) * 1.9)) * fall * alpha;
+    }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function glowTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const g = c.getContext("2d")!;
+  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, "rgba(255,255,255,1)");
+  grad.addColorStop(0.18, "rgba(255,255,255,.85)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+}
+
+function wallTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#c4c7ce";
+  g.fillRect(0, 0, 128, 128);
+  const img = g.getImageData(0, 0, 128, 128);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const n = (Math.random() - 0.5) * 22;
+    img.data[i] += n;
+    img.data[i + 1] += n;
+    img.data[i + 2] += n;
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+const smooth = (a: number, b: number, x: number) => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
+
+export function Ps2Boot({ onDone }: { onDone: () => void }) {
   const host = useRef<HTMLDivElement>(null);
-  const dust = useRef<HTMLCanvasElement>(null);
-  const [ready, setReady] = useState(false);
+  const [t, setT] = useState(0);
+  const done = useRef(onDone);
+  done.current = onDone;
 
   useEffect(() => {
-    const el = host.current!, dc = dust.current!;
-    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const el = host.current!;
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 1);
     el.appendChild(renderer.domElement);
     renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%";
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x0a1840, 0.05);
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    scene.fog = new THREE.Fog(0x000000, 120, 330);
+    const camera = new THREE.PerspectiveCamera(27, 16 / 9, 1, 800);
 
-    // Towers: stacked translucent blocks with bright edges, set round the middle.
-    const block = new THREE.BoxGeometry(0.9, 0.9, 0.9);
-    const edges = new THREE.EdgesGeometry(block);
-    const fill = new THREE.MeshBasicMaterial({ color: 0x9cc4ff, transparent: true, opacity: 0.16, depthWrite: false });
-    const line = new THREE.LineBasicMaterial({ color: 0xd8e8ff, transparent: true, opacity: 0.7 });
-    const cubes: { mesh: THREE.Object3D; at: number }[] = [];
-    const n = Math.max(1, towers.length);
-    towers.forEach((count, t) => {
-      const a = (t / n) * Math.PI * 2 + 0.6;
-      const r = n === 1 ? 2.4 : 2.6 + (t % 2) * 0.8;
-      const x = Math.cos(a) * r, z = Math.sin(a) * r;
-      for (let k = 0; k < count; k++) {
-        const g = new THREE.Group();
-        g.add(new THREE.Mesh(block, fill), new THREE.LineSegments(edges, line));
-        g.position.set(x, 0.45 + k * 0.95, z);
-        g.rotation.y = a;
-        scene.add(g);
-        cubes.push({ mesh: g, at: 250 + t * 180 + k * 70 }); // each block drops in, bottom first
+    // Light from above: tower tops bright, sides falling into shadow.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+    sun.position.set(0.3, 1, 0.2);
+    scene.add(sun);
+
+    // The tower field, standing on y = 0 and seen from above.
+    const wall = wallTexture();
+    const towerMat = new THREE.MeshLambertMaterial({ map: wall, color: 0xffffff });
+    const box = new THREE.BoxGeometry(HALF * 2, 1, HALF * 2);
+    box.translate(0, 0.5, 0);
+    const H = heights();
+    // On the console the memory card's play history decides which cells hold a
+    // tower; here a fixed hash fills a little under half of them, the same way
+    // on every visit.
+    const filled: [number, number][] = [];
+    for (let i = 0; i < COLS; i++)
+      for (let j = 0; j < ROWS; j++) {
+        const h = Math.sin(i * 127.1 + j * 311.7) * 43758.5453;
+        if (h - Math.floor(h) < 0.45) filled.push([i, j]);
       }
-    });
-
-    // Floor: a faint grid under the mist.
-    const grid = new THREE.GridHelper(40, 40, 0x2a4fa8, 0x16285c);
-    (grid.material as THREE.Material).transparent = true;
-    (grid.material as THREE.Material).opacity = 0.35;
-    scene.add(grid);
-
-    // Coloured dots circling the scene.
-    const dots = Array.from({ length: 46 }, (_, i) => {
-      const m = new THREE.Mesh(
-        new THREE.SphereGeometry(0.045 + (i % 3) * 0.015, 8, 8),
-        new THREE.MeshBasicMaterial({ color: DOT_COLORS[i % 4], transparent: true, opacity: 0.9, fog: false }),
+    const towers = new THREE.InstancedMesh(box, towerMat, filled.length);
+    const m = new THREE.Matrix4();
+    let k = 0;
+    for (const [i, j] of filled) {
+      m.compose(
+        new THREE.Vector3((i - COLS / 2 + 0.5) * PITCH, 0, (j - ROWS / 2 + 0.5) * PITCH),
+        new THREE.Quaternion(),
+        new THREE.Vector3(1, H[i][j], 1),
       );
-      scene.add(m);
-      return { m, r: 2.2 + ((i * 37) % 50) / 10, y: 0.5 + ((i * 53) % 70) / 10, sp: 0.15 + ((i * 17) % 10) / 40, ph: i * 1.7 };
+      towers.setMatrixAt(k++, m);
+    }
+    scene.add(towers);
+
+    // Blue fog: six additive noise layers stacked through the field, drifting.
+    const fog = Array.from({ length: 6 }, (_, l) => {
+      const tex = noiseCanvas(128, 31 + l * 7, [118, 146, 255], 0.9 - l * 0.08);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, opacity: 0.7 });
+      const plane = new THREE.Mesh(new THREE.PlaneGeometry(64, 64), mat);
+      plane.rotation.x = -Math.PI / 2;
+      plane.position.set(-4 + l * 0.6, 200 + l * 12, 1 - l * 0.5);
+      scene.add(plane);
+      return { plane, tex, speed: 0.004 + l * 0.0015 };
     });
+
+    // Five glass cubes tumbling between the camera and the towers.
+    const cubeGeo = new THREE.BoxGeometry(1, 1, 1);
+    const cubes = [
+      { p: [1, 300, -3], s: 6, tint: 0x8aa2ff, op: 0.62 },
+      { p: [-19, 296, -13], s: 6, tint: 0x30343e, op: 0.85 },
+      { p: [21, 300, -15], s: 6.5, tint: 0x30343e, op: 0.85 },
+      { p: [-17, 292, 13], s: 6.5, tint: 0x3a4152, op: 0.8 },
+      { p: [19, 298, 10], s: 5, tint: 0x3a4152, op: 0.8 },
+    ].map((c, i) => {
+      const mat = new THREE.MeshPhongMaterial({ color: c.tint, specular: 0xdfe8ff, shininess: 80, transparent: true, opacity: c.op, fog: false });
+      const mesh = new THREE.Mesh(cubeGeo, mat);
+      mesh.scale.setScalar(c.s);
+      mesh.position.set(c.p[0], c.p[1], c.p[2]);
+      const rim = new THREE.LineSegments(new THREE.EdgesGeometry(cubeGeo), new THREE.LineBasicMaterial({ color: 0xcfdcff, transparent: true, opacity: 0.35, fog: false }));
+      mesh.add(rim);
+      scene.add(mesh);
+      return { mesh, spin: new THREE.Vector3(0.21 + i * 0.05, 0.33 - i * 0.04, 0.17 + i * 0.03) };
+    });
+
+    // Comet lights with thin trails.
+    const glow = glowTexture();
+    const comets = [0xff6fae, 0x6dff8a, 0xc38cff, 0xff6f86].map((color, i) => {
+      const head = new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, color, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+      head.scale.setScalar(1.1);
+      scene.add(head);
+      const N = 36;
+      const pts = new Float32Array(N * 3);
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(pts, 3));
+      const cols = new Float32Array(N * 3);
+      const c = new THREE.Color(color);
+      for (let q = 0; q < N; q++) {
+        const f = 1 - q / N;
+        cols.set([c.r * f, c.g * f, c.b * f], q * 3);
+      }
+      geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
+      const trail = new THREE.Line(geo, new THREE.LineBasicMaterial({ vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, fog: false }));
+      scene.add(trail);
+      return { head, trail, pts, N, ph: i * 1.7, r: 9 + i * 3, y: 270 + i * 5 };
+    });
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const after = new AfterimagePass(0.625);
+    composer.addPass(after);
+    composer.addPass(new OutputPass());
 
     const resize = () => {
       const w = el.clientWidth, h = el.clientHeight;
       renderer.setSize(w, h, false);
+      composer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      dc.width = Math.round(w * Math.min(devicePixelRatio, 2));
-      dc.height = Math.round(h * Math.min(devicePixelRatio, 2));
     };
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(el);
 
-    // Blue dust that gathers into the word once the camera is in the mist.
-    const g2 = dc.getContext("2d")!;
-    let grains: { x: number; y: number; tx: number; ty: number; d: number }[] = [];
-    const makeDust = () => {
-      const W = dc.width, H = dc.height;
-      const off = document.createElement("canvas");
-      off.width = W;
-      off.height = H;
-      const o = off.getContext("2d")!;
-      const size = Math.min(W * 0.085, H * 0.16);
-      o.font = `600 ${size}px ui-sans-serif, system-ui, sans-serif`;
-      o.textAlign = "center";
-      o.textBaseline = "middle";
-      o.fillStyle = "#fff";
-      o.fillText(WORD.split("").join(String.fromCharCode(8202)), W / 2, H * 0.44);
-      const px = o.getImageData(0, 0, W, H).data;
-      const step = Math.max(3, Math.round(size / 18));
-      grains = [];
-      for (let y = 0; y < H; y += step)
-        for (let x = 0; x < W; x += step)
-          if (px[(y * W + x) * 4 + 3] > 128) {
-            const a = Math.random() * Math.PI * 2, rr = Math.max(W, H) * (0.4 + Math.random() * 0.5);
-            grains.push({ x: W / 2 + Math.cos(a) * rr, y: H / 2 + Math.sin(a) * rr, tx: x, ty: y, d: Math.random() * 500 });
-          }
-    };
+    const start = performance.now();
+    let raf = 0, finished = false;
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      const s = (now - start) / 1000;
+      setT(s);
+      if (s >= T.done && !finished) {
+        finished = true;
+        done.current();
+      }
+      if (s > T.black + 0.2) {
+        renderer.setClearColor(0x000000, 1);
+        renderer.clear();
+        return;
+      }
 
-    const t0 = performance.now();
-    let raf = 0, visible = true, shown = false;
-    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
-    io.observe(el);
-
-    const frame = (now: number) => {
-      raf = requestAnimationFrame(frame);
-      if (!visible) return;
-      const t = still ? ORBIT + PUSH + 2600 : now - t0;
+      // Camera: a slow drift with a gentle roll, then an accelerating fly-up into the field.
+      const drift = Math.max(0, s - T.sceneIn);
+      const fly = Math.max(0, s - T.fly);
+      // About 130 units above the tallest tops at rest, as measured from the reference frame.
+      const height = 350 - drift * 2.2 - fly * fly * 110;
+      camera.position.set(Math.sin(drift * 0.12) * 5, height, Math.cos(drift * 0.1) * 3 + 6);
+      camera.up.set(Math.sin(drift * 0.05 + fly * fly * 0.6), 0, -Math.cos(drift * 0.05 + fly * fly * 0.6));
+      // A slight forward tilt, so the near towers show their long sides.
+      camera.lookAt(camera.position.x * 0.3, 0, camera.position.z * 0.3 - 10);
 
       for (const c of cubes) {
-        const u = Math.min(1, Math.max(0, (t - c.at) / 600));
-        const e = 1 - (1 - u) ** 3;
-        c.mesh.scale.setScalar(Math.max(0.001, e));
-        c.mesh.rotation.y += still ? 0 : 0.002;
+        c.mesh.rotation.x += c.spin.x * 0.016;
+        c.mesh.rotation.y += c.spin.y * 0.016;
+        c.mesh.rotation.z += c.spin.z * 0.016;
       }
-      for (const d of dots) {
-        const a = d.ph + (t / 1000) * d.sp;
-        d.m.position.set(Math.cos(a) * d.r, d.y + Math.sin(a * 2) * 0.2, Math.sin(a) * d.r);
+      for (const f of fog) f.tex.offset.set(s * f.speed, s * f.speed * 0.6);
+      for (const c of comets) {
+        const a = c.ph + s * 1.1;
+        const x = Math.cos(a) * c.r + Math.sin(a * 2.3) * 6, z = Math.sin(a * 1.3) * c.r * 0.7, y = c.y + Math.sin(a * 0.7) * 6;
+        c.head.position.set(x, y, z);
+        c.pts.copyWithin(3, 0, (c.N - 1) * 3);
+        c.pts.set([x, y, z], 0);
+        if (s < 0.1) for (let q = 0; q < c.N; q++) c.pts.set([x, y, z], q * 3);
+        c.trail.geometry.attributes.position.needsUpdate = true;
       }
 
-      // Camera: a slow low orbit, then a push forward into the mist.
-      const orbit = Math.min(t, ORBIT) / ORBIT;
-      const push = Math.min(1, Math.max(0, (t - ORBIT) / PUSH));
-      const ease = push * push * (3 - 2 * push);
-      // Wide and low first, so the towers stand whole in frame; the push heads
-      // for the empty middle and stops short of the towers round it.
-      const ang = -1.15 + orbit * 0.7;
-      const dist = 19 - ease * 13;
-      camera.position.set(Math.cos(ang) * dist, 3.2 + orbit * 1.4 - ease * 1.2, Math.sin(ang) * dist);
-      camera.lookAt(0, 4.4 - ease * 0.8, 0);
-      (scene.fog as THREE.FogExp2).density = 0.05 + ease * 0.2;
-      renderer.render(scene, camera);
-
-      // The dust starts as the push ends.
-      const td = t - ORBIT - PUSH * 0.6;
-      g2.setTransform(1, 0, 0, 1, 0, 0);
-      g2.clearRect(0, 0, dc.width, dc.height);
-      if (td > 0) {
-        if (!grains.length) makeDust();
-        g2.fillStyle = "rgba(190, 215, 255, 0.95)";
-        g2.shadowColor = "rgba(120, 170, 255, 0.9)";
-        g2.shadowBlur = 6;
-        for (const p of grains) {
-          const u = Math.min(1, Math.max(0, (td - p.d) / 1400));
-          const e = 1 - (1 - u) ** 4;
-          const x = p.x + (p.tx - p.x) * e, y = p.y + (p.ty - p.y) * e;
-          g2.globalAlpha = 0.25 + 0.75 * e;
-          g2.fillRect(x, y, 2, 2);
-        }
-        g2.globalAlpha = 1;
-        if (!shown && td > 1700) {
-          shown = true;
-          setReady(true);
-        }
-      }
+      // Fade the whole scene in and out by dimming exposure.
+      const level = smooth(T.sceneIn, T.sceneIn + 1, s) * (1 - smooth(T.fly + 0.5, T.black, s));
+      renderer.toneMappingExposure = level;
+      renderer.toneMapping = THREE.LinearToneMapping;
+      composer.render();
     };
-    raf = requestAnimationFrame(frame);
+    raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      io.disconnect();
+      composer.dispose();
       renderer.dispose();
-      block.dispose();
-      edges.dispose();
+      box.dispose();
+      cubeGeo.dispose();
       el.removeChild(renderer.domElement);
     };
-  }, [towers]);
+  }, []);
+
+  const sce = smooth(T.textIn, T.textIn + 0.8, t) * (1 - smooth(T.textOut, T.textOut + 0.6, t));
+  const logo = smooth(T.logoIn, T.logoIn + 0.8, t) * (1 - smooth(T.logoOut, T.logoOut + 0.7, t));
 
   return (
-    <button
-      type="button"
-      onClick={onStart}
-      aria-label="Start the memory card"
-      className="ps2-boot relative block aspect-[16/10] w-full overflow-hidden rounded-[22px] text-left sm:aspect-[16/8]"
-    >
+    <div className="absolute inset-0 bg-black">
       <div ref={host} className="absolute inset-0" />
-      <canvas ref={dust} className="pointer-events-none absolute inset-0 size-full" aria-hidden />
-      <span
-        className="ps2-text absolute inset-x-0 bottom-[9%] text-center text-[12px] tracking-[.3em] uppercase transition-opacity duration-700"
-        style={{ opacity: ready ? 1 : 0, animation: ready ? "ps2-blink 1.6s ease-in-out infinite" : undefined }}
+      <p
+        className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[clamp(15px,2.6vw,26px)] font-semibold tracking-[.01em] text-white"
+        style={{ opacity: sce, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', textShadow: "0 0 12px rgba(255,255,255,.35)" }}
       >
-        press <span className="text-[#ff6b6b]">◯</span> to start
-      </span>
-    </button>
+        Sony Computer Entertainment
+      </p>
+      <p
+        className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-white"
+        style={{ opacity: logo, fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
+        aria-hidden
+      >
+        <span className="text-[clamp(18px,3.2vw,32px)] tracking-[-.01em]">PlayStation</span>
+        <span className="text-[clamp(10px,1.6vw,16px)]">.</span>
+        <span className="text-[clamp(24px,4.4vw,44px)] font-light">2</span>
+      </p>
+    </div>
   );
 }

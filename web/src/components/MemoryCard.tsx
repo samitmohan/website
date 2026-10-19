@@ -10,7 +10,7 @@ const CARD_KB = 8192; // an 8 MB memory card
 // three.js is heavy; the boot screen loads it only when the gallery is reached.
 const Ps2Boot = dynamic(() => import("./Ps2Boot").then((m) => m.Ps2Boot), {
   ssr: false,
-  loading: () => <div className="ps2-boot aspect-[16/10] w-full rounded-[22px] sm:aspect-[16/8]" />,
+  loading: () => <div className="absolute inset-0 bg-black" />,
 });
 
 /**
@@ -20,8 +20,11 @@ const Ps2Boot = dynamic(() => import("./Ps2Boot").then((m) => m.Ps2Boot), {
  * circle for next, triangle for back a photo, cross to leave.
  */
 export function MemoryCard({ trips }: { trips: Trip[] }) {
-  const [booted, setBooted] = useState(false);
-  const [flash, setFlash] = useState(false);
+  // off: the power screen · boot: the startup sequence · dash: the memory card.
+  // The boot layer stays mounted while the dashboard fades in over it, so the
+  // hand-over is one crossfade inside a screen that never changes size.
+  const [phase, setPhase] = useState<"off" | "boot" | "dash">("off");
+  const [bootLayer, setBootLayer] = useState(false);
   const [sel, setSel] = useState(0);
   const [open, setOpen] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,19 +54,46 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
 
   const trip = open === null ? null : trips[open];
 
-  const start = () => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return setBooted(true);
-    setFlash(true);
-    setTimeout(() => setBooted(true), 260);
-    setTimeout(() => setFlash(false), 700);
+  const power = () => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return setPhase("dash");
+    setBootLayer(true);
+    setPhase("boot");
   };
-
-  if (!booted) return <Ps2Boot towers={trips.map((t) => t.frames.length)} onStart={start} />;
+  const toDash = () => {
+    setPhase("dash");
+    setTimeout(() => setBootLayer(false), 1000);
+  };
 
   return (
     <>
-      <div className="ps2 relative animate-[ps2-on_.7s_ease-out_both] overflow-hidden rounded-[22px] px-5 pt-5 pb-6 sm:px-8 sm:pt-7" role="group" aria-label="Memory card">
-        {flash && <div className="pointer-events-none absolute inset-0 z-10 animate-[ps2-flash_.45s_ease-out_both] bg-white" />}
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[22px] bg-black sm:aspect-[4/3]">
+        {phase === "off" && (
+          <button
+            type="button"
+            onClick={power}
+            aria-label="Start the memory card"
+            className="absolute inset-0 grid place-items-center bg-[radial-gradient(70%_60%_at_50%_55%,#0b1633_0%,#000_75%)]"
+          >
+            <span className="ps2-text animate-[ps2-blink_1.8s_ease-in-out_infinite] text-[12px] tracking-[.3em] uppercase">
+              press <span className="text-[#ff6b6b]">◯</span> to start
+            </span>
+          </button>
+        )}
+        {bootLayer && (
+          <div className="absolute inset-0 transition-opacity duration-1000 ease-out" style={{ opacity: phase === "dash" ? 0 : 1 }}>
+            <Ps2Boot onDone={toDash} />
+            {phase === "boot" && (
+              <button type="button" onClick={toDash} className="absolute inset-0" aria-label="Skip to the memory card" />
+            )}
+          </div>
+        )}
+        {phase === "dash" && (
+      <div
+        className="ps2 absolute inset-0 animate-[ps2-on_1s_cubic-bezier(.16,1,.3,1)_both] overflow-y-auto px-5 pt-5 pb-6 sm:px-8 sm:pt-7"
+        role="group"
+        aria-label="Memory card"
+        data-lenis-prevent
+      >
         <Haze />
         <div className="relative flex items-start justify-between gap-4">
           <div>
@@ -129,6 +159,8 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
             <Glyph k="cross" /> back
           </span>
         </div>
+      </div>
+        )}
       </div>
 
       {trip && (

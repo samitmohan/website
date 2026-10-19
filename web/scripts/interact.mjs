@@ -128,7 +128,9 @@ await check("pick a card shows one with its caption", async (page) => {
 await check("gallery: a memory-card save opens and pages through photos", async (page) => {
   await page.goto(base + "/things");
   await page.getByRole("button", { name: "Start the memory card" }).click();
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1500);
+  await page.getByRole("button", { name: "Skip to the memory card" }).click();
+  await page.waitForTimeout(1200);
   await page.getByRole("button", { name: /^Goa, .* Open\.$/ }).click();
   const dialog = page.getByRole("dialog", { name: "Goa" });
   await dialog.waitFor({ timeout: 3000 });

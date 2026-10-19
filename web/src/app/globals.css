@@ -509,4 +509,4 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 .ps2-boot { background: radial-gradient(90% 80% at 50% 70%, #10275a 0%, #050b1c 55%, #010205 100%); }
 @keyframes ps2-blink { 50% { opacity: 0.25; } }
 @keyframes ps2-flash { from { opacity: 0.9; } to { opacity: 0; } }
-@keyframes ps2-on { from { opacity: 0; filter: brightness(1.8) blur(6px); } }
+@keyframes ps2-on { from { opacity: 0; transform: scale(1.03); filter: brightness(1.6) blur(8px); } }
