@@ -391,10 +391,3 @@ code[data-theme*=" "] { background-color: transparent !important; }
   }
 }
 
-/* Direction B: strict monochrome, one weight. */
-.mono { --bg: #ffffff; --ink: #000000; --body: #666666; --muted: #a0a0a0; --surface: #fafafa; --surface-2: #f2f2ef; --ghost: #cbcbcb; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .mono { --bg: #0a0a0a; --ink: #ededed; --body: #a1a1a1; --muted: #707070; --surface: #111111; --surface-2: #1a1a1a; --ghost: #565656; }
-}
-:root[data-theme="dark"] .mono { --bg: #0a0a0a; --ink: #ededed; --body: #a1a1a1; --muted: #707070; --surface: #111111; --surface-2: #1a1a1a; --ghost: #565656; }
-.mono { background: var(--bg); font-weight: 600; letter-spacing: -0.01em; }

@@ -24,7 +24,6 @@ function active(pathname: string, href: string) {
  */
 export function Nav() {
   const pathname = usePathname();
-  if (pathname === "/mocks/b" || pathname === "/mocks/c") return null;
   return (
     <nav aria-label="Main" className="fixed inset-x-0 top-5 z-50 flex justify-center px-4" data-no-theme>
       <svg width="0" height="0" className="absolute" aria-hidden>
