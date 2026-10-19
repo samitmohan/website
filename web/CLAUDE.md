@@ -8,6 +8,12 @@
     changes locally (`npm run dev`, `npm run build`) and hand the result back
     for review instead.
   </constraint>
+  <constraint added="2026-10-20">
+    Preview deploys are allowed: `vercel deploy` without `--prod`, which gives
+    a *.vercel.app URL. Production and the samitmohan.in domain stay off-limits
+    until Samit says to publish there. Never `vercel --prod`, never `vercel
+    promote`, never alias a deployment to samitmohan.in.
+  </constraint>
   <constraint added="2026-10-19">
     The site follows design direction A: shwn.design's calm 620px column and
     blur-in reveals, stympaul.com's warm paper and red ink, colehardik.in's
