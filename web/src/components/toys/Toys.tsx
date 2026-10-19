@@ -27,15 +27,15 @@ export function SoftmaxToy() {
       <div className="flex h-28 items-end gap-2">
         {probs.map((p, i) => (
           <div key={i} className="flex flex-1 flex-col items-center gap-1">
-            <span className="font-mono text-[9px] text-muted">{(p * 100).toFixed(0)}%</span>
+            <span className="font-mono text-[11px] text-muted">{(p * 100).toFixed(0)}%</span>
             <div className="w-full rounded-t-md bg-ink transition-[height] duration-200" style={{ height: `${Math.max(2, p * 96)}px`, opacity: 0.35 + p * 0.65 }} />
-            <span className="font-mono text-[10px] text-ink">{WORDS[i]}</span>
+            <span className="font-mono text-[11px] text-ink">{WORDS[i]}</span>
           </div>
         ))}
       </div>
-      <label className="mt-4 flex items-center gap-2 font-mono text-[10px] text-muted">
+      <label className="mt-4 flex items-center gap-2 font-mono text-[11px] text-muted">
         T
-        <input type="range" min={0.1} max={4} step={0.05} value={t} onChange={(e) => setT(+e.target.value)} className="flex-1 accent-[var(--accent)]" />
+        <input type="range" min={0.1} max={4} step={0.05} value={t} onChange={(e) => setT(+e.target.value)} className="h-6 flex-1 accent-[var(--accent)]" />
         <span className="w-8 text-right text-ink">{t.toFixed(2)}</span>
       </label>
     </div>
@@ -81,13 +81,13 @@ export function AttentionToy() {
             type="button"
             onPointerEnter={() => setQ(i)}
             onFocus={() => setQ(i)}
-            className={`w-[34px] rounded py-1 text-center font-mono text-[10px] transition-colors ${i === q ? "bg-ink text-bg" : "text-ink hover:bg-surface-2"}`}
+            className={`w-[34px] rounded py-1 text-center font-mono text-[11px] transition-colors ${i === q ? "bg-ink text-bg" : "text-ink hover:bg-surface-2"}`}
           >
             {w}
           </button>
         ))}
       </div>
-      <p className="mt-3 text-center font-mono text-[10px] text-muted">
+      <p className="mt-3 text-center font-mono text-[11px] text-muted">
         &ldquo;{SENT[q]}&rdquo; looks most at &ldquo;{SENT[ATTN[q].indexOf(Math.max(...ATTN[q]))]}&rdquo;
       </p>
     </div>
@@ -209,17 +209,17 @@ export function DropoutToy() {
           )),
         )}
       </svg>
-      <div className="flex w-full items-center gap-2 font-mono text-[10px] text-muted">
+      <div className="flex w-full items-center gap-2 font-mono text-[11px] text-muted">
         <label className="flex flex-1 items-center gap-2">
           p
-          <input type="range" min={0} max={0.9} step={0.05} value={p} onChange={(e) => setP(+e.target.value)} className="flex-1 accent-[var(--accent)]" aria-label="dropout rate" />
+          <input type="range" min={0} max={0.9} step={0.05} value={p} onChange={(e) => setP(+e.target.value)} className="h-6 flex-1 accent-[var(--accent)]" aria-label="dropout rate" />
         </label>
         <span className="w-8 text-ink">{p.toFixed(2)}</span>
         <button type="button" className={btn} onClick={() => setSeed((s) => s + 1)}>
           resample
         </button>
       </div>
-      <p className="font-mono text-[10px] text-muted">kept units scale by ×{(1 / (1 - p)).toFixed(2)}</p>
+      <p className="font-mono text-[11px] text-muted">kept units scale by ×{(1 / (1 - p)).toFixed(2)}</p>
     </div>
   );
 }
@@ -268,7 +268,7 @@ export function TokenizerToy() {
           </span>
         ))}
       </div>
-      <p className="mt-2 font-mono text-[10px] text-muted">
+      <p className="mt-2 font-mono text-[11px] text-muted">
         {toks.length} tokens · {text.length} chars
       </p>
     </div>
@@ -297,7 +297,7 @@ export function KvCacheToy() {
   const gib = bytes / 2 ** 30;
   const pct = Math.min(100, (gib / 80) * 100); // against one 80 GB H100
   return (
-    <div className="w-[250px] font-mono text-[10px] text-muted">
+    <div className="w-[250px] font-mono text-[11px] text-muted">
       <div className="flex flex-wrap gap-1.5">
         {(Object.keys(MODELS) as (keyof typeof MODELS)[]).map((k) => (
           <button key={k} type="button" className={`${btn} ${k === model ? "!bg-ink !text-bg" : ""}`} onClick={() => setModel(k)}>
@@ -307,12 +307,12 @@ export function KvCacheToy() {
       </div>
       <label className="mt-3 flex items-center gap-2">
         ctx
-        <input type="range" min={10} max={17} step={1} value={Math.log2(ctx)} onChange={(e) => setCtx(2 ** +e.target.value)} className="flex-1 accent-[var(--accent)]" />
+        <input type="range" min={10} max={17} step={1} value={Math.log2(ctx)} onChange={(e) => setCtx(2 ** +e.target.value)} className="h-6 flex-1 accent-[var(--accent)]" />
         <span className="w-12 text-right text-ink">{ctx >= 1024 ? `${ctx / 1024}k` : ctx}</span>
       </label>
       <label className="mt-1 flex items-center gap-2">
         batch
-        <input type="range" min={1} max={64} step={1} value={batch} onChange={(e) => setBatch(+e.target.value)} className="flex-1 accent-[var(--accent)]" />
+        <input type="range" min={1} max={64} step={1} value={batch} onChange={(e) => setBatch(+e.target.value)} className="h-6 flex-1 accent-[var(--accent)]" />
         <span className="w-12 text-right text-ink">{batch}</span>
       </label>
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-paper">
@@ -358,7 +358,7 @@ export function PositionalToy() {
           );
         })}
       </div>
-      <p className="mt-3 font-mono text-[10px] text-muted">
+      <p className="mt-3 font-mono text-[11px] text-muted">
         position <span className="text-ink">{pos}</span> · low dims spin fast, high dims barely move
       </p>
     </div>

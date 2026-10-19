@@ -168,7 +168,7 @@ function Board({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: str
               >
                 <span className="absolute -top-1.5 left-1/2 size-3 -translate-x-1/2 rounded-full bg-accent shadow" />
                 <span className="font-serif text-[17px] leading-tight italic">{post.title}</span>
-                <span className="mt-2 font-mono text-[10px] opacity-60">read the post →</span>
+                <span className="mt-2 font-mono text-[11px] opacity-60">read the post →</span>
               </Link>
             );
           }),

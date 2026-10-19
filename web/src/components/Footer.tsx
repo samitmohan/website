@@ -21,7 +21,7 @@ export function Footer() {
   return (
     <footer className="mt-24 flex items-center justify-between gap-4 border-t border-hairline pt-6">
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5" role="radiogroup" aria-label="Colour theme">
+        <div className="flex items-center" role="radiogroup" aria-label="Colour theme">
           {THEMES.map((t) => (
             <button
               key={t.id}
@@ -34,9 +34,13 @@ export function Footer() {
                 setAccent(t.id);
                 setState(t.id);
               }}
-              className="size-3.5 rounded-full transition-transform hover:scale-125 aria-checked:ring-2 aria-checked:ring-ink aria-checked:ring-offset-2 aria-checked:ring-offset-bg"
-              style={{ background: t.swatch }}
-            />
+              className="group grid size-6 place-items-center rounded-full"
+            >
+              <span
+                className="size-3.5 rounded-full transition-transform group-hover:scale-125 group-aria-checked:ring-2 group-aria-checked:ring-ink group-aria-checked:ring-offset-2 group-aria-checked:ring-offset-bg"
+                style={{ background: t.swatch }}
+              />
+            </button>
           ))}
         </div>
         <button

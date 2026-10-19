@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { LabGlyph } from "./LabGlyph";
 import { RunScripts } from "./RunScripts";
+import { WhenNear } from "./WhenNear";
 import { AttentionToy, ConvToy, DropoutToy, KvCacheToy, PositionalToy, SoftmaxToy, TokenizerToy } from "./toys/Toys";
 
 const TOYS = [
@@ -45,7 +46,7 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
       >
         {TOYS.map((t) => (
           <figure key={t.name} className="shrink-0">
-            <div className={card}>{t.el}</div>
+            <WhenNear className={card}>{t.el}</WhenNear>
             <figcaption className="mt-2 px-1 text-[13px] text-ink">{t.name}</figcaption>
           </figure>
         ))}

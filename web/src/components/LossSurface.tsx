@@ -83,7 +83,7 @@ export function LossSurface({ className = "" }: { className?: string }) {
     scene.add(pivot);
 
     // Filled surface: paints the background colour so far grid lines are hidden.
-    const N = 72;
+    const N = 48;
     const geo = new THREE.PlaneGeometry(2 * S, 2 * S, N, N);
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position as THREE.BufferAttribute;
@@ -91,7 +91,6 @@ export function LossSurface({ className = "" }: { className?: string }) {
       const x = (pos.getX(i) / S) * R, y = (pos.getZ(i) / S) * R;
       pos.setY(i, loss(x, y) * H);
     }
-    geo.computeVertexNormals();
     const fill = new THREE.MeshBasicMaterial({ polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
     const surface = new THREE.Mesh(geo, fill);
     pivot.add(surface);
@@ -99,7 +98,7 @@ export function LossSurface({ className = "" }: { className?: string }) {
     // Grid lines every few vertices, in ink.
     const lineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 });
     const gridPts: THREE.Vector3[] = [];
-    const G = 36;
+    const G = 28;
     for (let i = 0; i <= G; i++) {
       for (let j = 0; j < G; j++) {
         const u = -R + (2 * R * i) / G, a = -R + (2 * R * j) / G, b = -R + (2 * R * (j + 1)) / G;
