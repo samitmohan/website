@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-export type Pick = { title: string; by?: string; url?: string; placeholder?: boolean };
+export type Pick = { title: string; by?: string; url?: string; img?: string; placeholder?: boolean };
 export type Top4 = { books: Pick[]; videos: Pick[]; movies: Pick[]; artists: Pick[] };
 
 export function getTop4(): Top4 {

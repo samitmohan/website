@@ -12,7 +12,15 @@ const TABS = [
 
 const TILT = [-2.2, 1.6, -1.2, 2.4];
 
-/** Four picks per category as ranked tiles that deal in when the category changes. */
+/** Tile shape follows the medium: posters stand tall, records are square, videos are wide. */
+const SHAPE = {
+  books: { aspect: "aspect-[2/3]", cols: "grid-cols-2 sm:grid-cols-4" },
+  movies: { aspect: "aspect-[2/3]", cols: "grid-cols-2 sm:grid-cols-4" },
+  artists: { aspect: "aspect-square", cols: "grid-cols-2 sm:grid-cols-4" },
+  videos: { aspect: "aspect-video", cols: "grid-cols-2" },
+} as const;
+
+/** Four picks per category, as covers with their rank, dealt in when the category changes. */
 export function Top4({ data }: { data: Data }) {
   const [tab, setTab] = useState<(typeof TABS)[number][0]>("books");
   return (
@@ -32,19 +40,25 @@ export function Top4({ data }: { data: Data }) {
           </button>
         ))}
       </div>
-      <ol className="mt-8 grid grid-cols-2 gap-3 sm:gap-4" key={tab}>
+      <ol className={`mt-8 grid gap-x-3 gap-y-6 sm:gap-x-4 ${SHAPE[tab].cols}`} key={tab}>
         {data[tab].map((p, i) => {
           const body = (
             <>
-              <span className="font-serif text-[clamp(56px,10vw,88px)] leading-[.8] text-accent">{i + 1}</span>
-              <span className="mt-auto block">
-                <span className="block font-serif text-[clamp(19px,2.6vw,24px)] leading-tight text-ink italic">{p.title}</span>
-                {p.by && <span className="mt-1 block text-[13px]">{p.by}</span>}
+              <span className={`relative block overflow-hidden rounded-[14px] bg-surface shadow-[var(--shadow-card)] ${SHAPE[tab].aspect}`}>
+                {p.img && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                )}
+                <span className="absolute top-2 left-2 grid size-7 place-items-center rounded-full bg-black/70 font-serif text-[17px] leading-none text-white backdrop-blur-sm">
+                  {i + 1}
+                </span>
+              </span>
+              <span className="mt-2 block px-0.5">
+                <span className="line-clamp-2 block font-serif text-[17px] leading-tight text-ink italic transition-colors group-hover:text-accent">{p.title}</span>
+                {p.by && <span className="mt-0.5 block text-[12px]">{p.by}</span>}
               </span>
             </>
           );
-          const cls =
-            "flex aspect-[5/4] flex-col rounded-[22px] bg-surface p-4 transition-transform duration-300 hover:-translate-y-1 hover:rotate-0 sm:p-5";
           return (
             <li
               key={i}
@@ -52,11 +66,11 @@ export function Top4({ data }: { data: Data }) {
               style={{ animationDelay: `${i * 80}ms`, rotate: `${TILT[i]}deg` }}
             >
               {p.url ? (
-                <a href={p.url} className={`${cls} hover:text-accent`}>
+                <a href={p.url} target="_blank" rel="noopener noreferrer" className="group block transition-transform duration-300 hover:-translate-y-1 hover:rotate-0">
                   {body}
                 </a>
               ) : (
-                <div className={cls}>{body}</div>
+                <div className="group block transition-transform duration-300 hover:-translate-y-1">{body}</div>
               )}
             </li>
           );

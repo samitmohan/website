@@ -8,7 +8,7 @@ import { inlineSvg } from "@/lib/inline-svg";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Things built from scratch to understand them: a small GPT, an autograd engine, a ResNet reproduction, YOLO, a coding agent, and more.",
+  description: "Things built from scratch to understand them: a small GPT, an autograd engine, YOLO, a coding agent, and more.",
   alternates: { canonical: "/projects" },
   openGraph: { images: ["/og/projects.png"] },
 };

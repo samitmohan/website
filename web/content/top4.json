@@ -1,26 +1,98 @@
 {
   "books": [
-    { "title": "Fantastic Mr. Fox", "by": "Roald Dahl" },
-    { "title": "Book two", "by": "author", "placeholder": true },
-    { "title": "Book three", "by": "author", "placeholder": true },
-    { "title": "Book four", "by": "author", "placeholder": true }
+    {
+      "title": "Fantastic Mr. Fox",
+      "by": "Roald Dahl",
+      "img": "/top4/book-fantastic-mr-fox.webp"
+    },
+    {
+      "title": "Illusions",
+      "by": "Richard Bach",
+      "img": "/top4/book-illusions.webp"
+    },
+    {
+      "title": "The Perks of Being a Wallflower",
+      "by": "Stephen Chbosky",
+      "img": "/top4/book-perks.webp"
+    },
+    {
+      "title": "The Metamorphosis of Prime Intellect",
+      "by": "Roger Williams",
+      "img": "/top4/book-prime-intellect.webp"
+    }
   ],
   "videos": [
-    { "title": "Pokémon theme", "url": "https://www.youtube.com/watch?v=JuYeHPFR3f0", "placeholder": true },
-    { "title": "Video two", "by": "channel", "placeholder": true },
-    { "title": "Video three", "by": "channel", "placeholder": true },
-    { "title": "Video four", "by": "channel", "placeholder": true }
+    {
+      "title": "Clairo, “Juna” Live",
+      "by": "puremath",
+      "url": "https://www.youtube.com/watch?v=B5uacwzOXmY",
+      "img": "/top4/yt-B5uacwzOXmY.webp"
+    },
+    {
+      "title": "kim stop taking selfies your sister is going to jail",
+      "by": "Average Frog",
+      "url": "https://www.youtube.com/watch?v=KcDr83kxakg",
+      "img": "/top4/yt-KcDr83kxakg.webp"
+    },
+    {
+      "title": "Jailbreaking the Simulation with George Hotz",
+      "by": "SXSW 2019",
+      "url": "https://www.youtube.com/watch?v=ESXOAJRdcwQ&t=1588s",
+      "img": "/top4/yt-ESXOAJRdcwQ.webp"
+    },
+    {
+      "title": "Action Bronson Eats with NYC Mayor Zohran Mamdani",
+      "by": "Action Bronson",
+      "url": "https://www.youtube.com/watch?v=JSYjv7QprJw",
+      "img": "/top4/yt-JSYjv7QprJw.webp"
+    }
   ],
   "movies": [
-    { "title": "Movie one", "by": "director", "placeholder": true },
-    { "title": "Movie two", "by": "director", "placeholder": true },
-    { "title": "Movie three", "by": "director", "placeholder": true },
-    { "title": "Movie four", "by": "director", "placeholder": true }
+    {
+      "title": "Uncut Gems",
+      "by": "Josh & Benny Safdie",
+      "img": "/top4/movie-uncut-gems.webp"
+    },
+    {
+      "title": "Heat",
+      "by": "Michael Mann",
+      "img": "/top4/movie-heat.webp"
+    },
+    {
+      "title": "Udaan",
+      "by": "Vikramaditya Motwane",
+      "img": "/top4/movie-udaan.webp"
+    },
+    {
+      "title": "Gangs of Wasseypur",
+      "by": "Anurag Kashyap",
+      "img": "/top4/movie-gangs-of-wasseypur.webp"
+    }
   ],
   "artists": [
-    { "title": "Black Sabbath" },
-    { "title": "Jimi Hendrix" },
-    { "title": "Artist three", "by": "genre", "placeholder": true },
-    { "title": "Artist four", "by": "genre", "placeholder": true }
+    {
+      "title": "Jimi Hendrix",
+      "by": "Axis: Bold as Love",
+      "url": "https://open.spotify.com/search/Axis%3A%20Bold%20as%20Love%20Jimi%20Hendrix",
+      "img": "/top4/music-hendrix.webp"
+    },
+    {
+      "title": "Bob Dylan",
+      "by": "Blood on the Tracks",
+      "url": "https://open.spotify.com/search/Blood%20on%20the%20Tracks%20Bob%20Dylan",
+      "img": "/top4/music-dylan.webp"
+    },
+    {
+      "title": "Clairo",
+      "by": "Charm",
+      "url": "https://open.spotify.com/search/Charm%20Clairo",
+      "img": "/top4/music-clairo.webp"
+    },
+    {
+      "title": "Pink Floyd",
+      "by": "Animals",
+      "url": "https://open.spotify.com/search/Animals%20Pink%20Floyd",
+      "img": "/top4/music-pink-floyd.webp"
+    }
   ]
 }

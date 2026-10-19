@@ -21,7 +21,7 @@ export type BoardProject = {
 // Board coordinates. The canvas is larger than the viewport and pans by drag.
 // Cards sit four to a row with a little jitter; each card's notes hang below it.
 const CARD = 300;
-const COLS = 4;
+const COLS = 3;
 const ROW_H = 640;
 const W = 90 + COLS * 450;
 const spot = (i: number) => {
