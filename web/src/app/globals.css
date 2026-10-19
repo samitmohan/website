@@ -403,15 +403,18 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 :root[data-accent="butter"][data-theme="dark"] { --bg: #0d0c07; --accent: #ecc95e; --accent-soft: rgba(236, 201, 94, 0.16); }
 
 /* Page entrance: every block sharpens from a blur, in slot order. */
+/* backwards, not both: a filling transform animation makes the element the
+   containing block for position:fixed children, which trapped every dialog
+   inside its section. */
 .reveal {
-  animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
   animation-delay: calc(var(--slot, 0) * 0.1s);
 }
 @keyframes reveal {
   from { opacity: 0; filter: blur(20px); transform: scale(1.1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .reveal { animation: reveal-fade 0.3s both; }
+  .reveal { animation: reveal-fade 0.3s backwards; }
   @keyframes reveal-fade { from { opacity: 0; } }
 }
 @keyframes fade-in { from { opacity: 0; } }
@@ -459,7 +462,47 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
   100% { transform: none; }
 }
 
-/* Gallery: the record slides out of its sleeve. */
-@keyframes record-out {
-  from { transform: translateX(-62%) rotate(-30deg); }
+@keyframes snap-in { from { opacity: 0; transform: translateY(24px) scale(.8) rotate(0deg); } }
+
+/* Gallery: the PS2 memory card browser. Fixed colours: it is a screen, not the page. */
+.ps2 {
+  background: radial-gradient(120% 90% at 50% 0%, #1b2f5c 0%, #0a1226 55%, #04060d 100%);
+  color: #dbe8ff;
+  font-family: var(--font-sans);
 }
+.ps2-text { color: #e8f0ff; text-shadow: 0 0 10px rgba(140, 180, 255, 0.55); }
+.ps2-dim { color: #9fb4dc; }
+.ps2-fog {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+}
+.ps2-fog--a { left: -10%; top: 10%; background: #2b5fd9; animation: ps2-drift 18s ease-in-out infinite alternate; }
+.ps2-fog--b { right: -15%; bottom: -20%; background: #7a3fd1; opacity: 0.25; animation: ps2-drift 24s ease-in-out infinite alternate-reverse; }
+@keyframes ps2-drift { to { transform: translate(18%, -12%) scale(1.15); } }
+.ps2-icon {
+  transform: perspective(500px) rotateY(-18deg);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s;
+  filter: saturate(0.75) brightness(0.8);
+}
+.ps2-icon--on {
+  filter: none;
+  animation: ps2-spin 4s ease-in-out infinite;
+  box-shadow: 0 0 34px rgba(140, 180, 255, 0.45);
+  border-radius: 10px;
+}
+@keyframes ps2-spin {
+  0%, 100% { transform: perspective(500px) rotateY(-24deg) translateY(0); }
+  50% { transform: perspective(500px) rotateY(24deg) translateY(-6px); }
+}
+.ps2-reflect {
+  opacity: 0.25;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+  mask-image: linear-gradient(to bottom, #000, transparent);
+  transform: perspective(500px) rotateY(-18deg);
+}
+@keyframes ps2-load { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+@keyframes ps2-photo { from { opacity: 0; transform: scale(0.96); filter: blur(6px); } }

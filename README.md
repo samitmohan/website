@@ -46,16 +46,20 @@ navigation as well as a fresh load. The lab on `/things` mounts the same widgets
 **Mock content is flagged.** Anything in `content/shelf/*.json` with
 `"placeholder": true` is a stand-in until the real list replaces it.
 
-**Photos are folders.** The gallery on `/things` is a crate of records, one per
-folder listed in `ROLLS` in `src/lib/things.ts`; every `.webp` in the folder
-(minus `-poster` frames) is a track. "Things I like" is a deck of cards built
-from the bullets of the things-i-like post, each matched to a drawing in
-`src/components/things-art.tsx`; give a bullet a cut-out photo in
-`THING_PHOTOS` and it replaces the drawing.
+**Photos are folders.** The gallery on `/things` is a PS2 memory card: each
+folder listed in `ROLLS` in `src/lib/things.ts` is a save, its size is the real
+bytes on disk, and every `.webp` in it (minus `-poster` frames) is a photo. The
+trip's blog post sets the cover: its frontmatter `thumbnail` is the save icon
+and photo one. "Things I like" is a deck of cards built from the bullets of the
+things-i-like post, each matched to a drawing in `src/components/things-art.tsx`.
+`THING_PHOTOS` swaps a drawing for a cut-out photo; `THING_SNAPS` adds up to
+three small photos around a card when it is opened.
 
 **The footer is a garden.** `components/Garden.tsx` draws the name sticker on a
-canvas and grows flowers or a network from its edges under the pointer. It
-mounts only near the viewport, and its colours follow the theme swatches.
+canvas; moving over it grows flowering stems from its edges, clicking calls in
+a butterfly, and the lines boil like a hand-drawn loop. Ten palettes named after
+Bangalore (`PALETTES`) recolour the whole band; the choice is remembered. It
+mounts near the viewport and only animates while on screen.
 
 **three.js loads after first paint.** `LossSurfaceLazy` keeps the 135 KB
 gzipped chunk out of the home page's critical path.
@@ -68,7 +72,7 @@ URLs 404 under `next dev`. Run the checks against the export:
 npx serve out -l 3211 &
 node scripts/smoke.mjs http://localhost:3211 shots   # every sitemap route, 1440 + 390 px
 node scripts/smoke.mjs http://localhost:3211 shots --dark
-node scripts/interact.mjs                           # theme, widgets, write-up, deck, crate, garden
+node scripts/interact.mjs                           # theme, widgets, write-up, deck, memory card, garden
 ```
 
 **The CV has one home:** `web/public/samit-resume.pdf`. Do not keep a second

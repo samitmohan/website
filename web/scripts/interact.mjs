@@ -86,20 +86,21 @@ await check("post widget opens in a sheet and mounts", async (page) => {
   await page.waitForFunction(() => (document.querySelector('[role="dialog"] [id]')?.children.length ?? 0) > 0, null, { timeout: 5000 });
 });
 
-await check("deck: a card turns over, shuffle deals a new hand", async (page) => {
+await check("deck: clicking a card turns it over and opens it; shuffle deals a new hand", async (page) => {
   await page.goto(base + "/things");
-  const deck = page.getByRole("heading", { name: "Things I like" });
-  await deck.scrollIntoViewIfNeeded();
+  await page.getByRole("heading", { name: "Things I like" }).scrollIntoViewIfNeeded();
   await page.waitForTimeout(1200);
-  await page.getByRole("button", { name: /card 1, face down/ }).click();
-  await page.waitForTimeout(700);
-  const first = await page.locator(".deck-card[aria-label]").first().getAttribute("aria-label");
-  expect(first && !first.includes("face down"), `card did not turn over: ${first}`);
+  await page.getByRole("button", { name: /card 7, face down/ }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.waitFor({ timeout: 3000 });
+  const name = await dialog.getAttribute("aria-label");
+  await page.keyboard.press("Escape");
+  await dialog.waitFor({ state: "detached", timeout: 3000 });
   await page.getByRole("button", { name: "shuffle" }).click();
   await page.waitForTimeout(2400);
   const down = await page.getByRole("button", { name: /face down/ }).count();
   expect(down === 7, `expected a fresh face-down hand of 7, saw ${down}`);
-  return `"${first}"`;
+  return `"${name}"`;
 });
 
 await check("pick a card shows one with its caption", async (page) => {
@@ -109,20 +110,27 @@ await check("pick a card shows one with its caption", async (page) => {
   await page.getByRole("button", { name: "pick a card" }).click();
   const dialog = page.getByRole("dialog");
   await dialog.waitFor({ timeout: 3000 });
+  // The backdrop must cover the whole viewport, not just the section it lives in.
+  const cover = await dialog.evaluate((d) => {
+    const r = d.parentElement.getBoundingClientRect();
+    return [Math.round(r.width), innerWidth, Math.round(r.height), innerHeight];
+  });
+  expect(cover[0] === cover[1] && cover[2] === cover[3], `backdrop ${cover[0]}x${cover[2]} in a ${cover[1]}x${cover[3]} viewport`);
   return `"${await dialog.getAttribute("aria-label")}"`;
 });
 
-await check("gallery: a record opens, tracks change the photo", async (page) => {
+await check("gallery: a memory-card save opens and pages through photos", async (page) => {
   await page.goto(base + "/things");
-  await page.getByRole("button", { name: /^Open Goa/ }).click();
+  await page.getByRole("button", { name: /^Goa, .* Open\.$/ }).click();
   const dialog = page.getByRole("dialog", { name: "Goa" });
   await dialog.waitFor({ timeout: 3000 });
-  const big = () => dialog.locator("figure img").getAttribute("src");
-  const before = await big();
-  await dialog.locator("ol button").nth(2).click();
+  await page.waitForTimeout(900); // the loading bar
+  const shown = () => dialog.locator("img").getAttribute("src");
+  const before = await shown();
+  await page.keyboard.press("ArrowRight");
   await page.waitForTimeout(300);
-  const after = await big();
-  expect(before !== after, "photo did not change with the track");
+  const after = await shown();
+  expect(before && after && before !== after, `photo did not change: ${before} -> ${after}`);
   await page.keyboard.press("Escape");
   await dialog.waitFor({ state: "detached", timeout: 3000 });
 });
@@ -133,10 +141,12 @@ await check("footer garden grows under the pointer and clears", async (page) => 
   await page.waitForTimeout(800);
   const canvas = page.locator("footer canvas");
   const box = await canvas.boundingBox();
+  // Pixels that are not the background colour (sampled at the corner): sticker plus growth.
   const ink = () => canvas.evaluate((c) => {
     const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+    const [r, g, b] = [d[0], d[1], d[2]];
     let n = 0;
-    for (let i = 3; i < d.length; i += 16) if (d[i] > 0) n++;
+    for (let i = 0; i < d.length; i += 16) if (Math.abs(d[i] - r) + Math.abs(d[i + 1] - g) + Math.abs(d[i + 2] - b) > 30) n++;
     return n;
   });
   const sticker = await ink();
@@ -144,10 +154,14 @@ await check("footer garden grows under the pointer and clears", async (page) => 
   await page.waitForTimeout(1200);
   const grown = await ink();
   expect(grown > sticker * 1.1, `no growth: ${sticker} -> ${grown}`);
+  await page.getByRole("radio", { name: "jacaranda" }).click();
+  await page.waitForTimeout(700); // the band fades over 500ms
+  const bg = await page.locator("footer").evaluate((f) => getComputedStyle(f).backgroundColor);
+  expect(bg === "rgb(239, 234, 246)", `palette did not repaint the band: ${bg}`);
   await page.getByRole("button", { name: "clear" }).click();
-  await page.waitForTimeout(200);
+  await page.waitForTimeout(300);
   const cleared = await ink();
-  expect(cleared === sticker, `clear left ${cleared - sticker} extra pixels`);
+  expect(cleared <= sticker * 1.02, `clear left growth behind: ${sticker} vs ${cleared}`);
   return `${sticker} -> ${grown} -> ${cleared}`;
 });
 

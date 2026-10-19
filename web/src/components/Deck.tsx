@@ -22,7 +22,7 @@ type Phase = "idle" | "gather" | "riffle" | "deal";
  * riffles, and deals the next seven, so the whole deck comes round before
  * anything repeats. "Pick a card" pulls one at random and shows it off.
  */
-export function Deck({ things, photos = {} }: { things: string[]; photos?: Record<string, string> }) {
+export function Deck({ things, photos = {}, snaps = {} }: { things: string[]; photos?: Record<string, string>; snaps?: Record<string, string[]> }) {
   const deck = useMemo<Card[]>(
     () =>
       things.map((text, i) => {
@@ -53,6 +53,13 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
 
   const hands = Math.ceil(deck.length / HAND);
   const hand = Array.from({ length: HAND }, (_, i) => deck[order[((round % hands) * HAND + i) % deck.length]]);
+
+  useEffect(() => {
+    if (!picked) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPicked(null);
+    addEventListener("keydown", onKey);
+    return () => removeEventListener("keydown", onKey);
+  }, [picked]);
 
   useEffect(() => {
     still.current = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -90,15 +97,13 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
 
   const flip = (i: number) => {
     if (phase !== "idle") return;
-    setUp((s) => {
-      const n = new Set(s);
-      if (n.has(i)) n.delete(i);
-      else {
-        n.add(i);
-        setLive(hand[i].text);
-      }
-      return n;
-    });
+    if (up.has(i)) {
+      setPicked(hand[i]);
+      return;
+    }
+    setUp((s) => new Set(s).add(i));
+    setLive(hand[i].text);
+    later(() => setPicked(hand[i]), 520);
   };
 
   // Fan geometry: an arc of seven, centred, gathered to one stack between hands.
@@ -112,7 +117,6 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
     <div className="relative">
       <div className="text-center">
         <h2 className="font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">Things I like</h2>
-        <p className="mt-2 font-serif text-[15px] text-muted italic">a deck of {deck.length}. turn one over.</p>
       </div>
 
       <div className="relative mx-auto mt-8 h-[330px] max-w-[620px] [--spread:30px] [--tilt:5deg] sm:h-[360px] sm:[--spread:64px] sm:[--tilt:7deg]" style={{ perspective: "1400px" }}>
@@ -179,8 +183,11 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
       {picked && (
         <div className="fixed inset-0 z-[70] grid animate-[fade-in_.2s_both] place-items-center bg-black/35 p-6 backdrop-blur-[2px]" onClick={() => setPicked(null)}>
           <div className="flex flex-col items-center gap-5" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={picked.text}>
-            <div className="deck-card deck-card--big animate-[card-reveal_.9s_cubic-bezier(.16,1,.3,1)_both]">
-              <Face c={picked} />
+            <div className="relative">
+              <div className="deck-card deck-card--big animate-[card-reveal_.9s_cubic-bezier(.16,1,.3,1)_both]">
+                <Face c={picked} />
+              </div>
+              <Snaps list={snaps[picked.text] ?? []} />
             </div>
             <div className="flex gap-2">
               <button type="button" className="pill" onClick={pick} autoFocus>
@@ -224,5 +231,37 @@ function Face({ c }: { c: Card }) {
       <p className="mt-auto line-clamp-4 font-serif text-[12.5px] leading-tight text-[#141414] italic">{c.text}</p>
       <span className={`absolute right-2 bottom-2 rotate-180 font-serif text-[15px] leading-none ${ink} opacity-0`}>{c.suit}</span>
     </div>
+  );
+}
+
+/**
+ * Little taped photos around an open card. Until a thing has photos in
+ * THING_SNAPS, two empty frames show where they will go.
+ */
+function Snaps({ list }: { list: string[] }) {
+  const spots = [
+    "-left-28 top-6 -rotate-[8deg] sm:-left-36",
+    "-right-28 top-24 rotate-[6deg] sm:-right-36",
+    "-left-24 bottom-4 rotate-[5deg] sm:-left-32",
+  ];
+  const items = list.length ? list.slice(0, 3) : [null, null];
+  return (
+    <>
+      {items.map((src, i) => (
+        <figure
+          key={i}
+          className={`absolute w-24 animate-[snap-in_.7s_cubic-bezier(.16,1,.3,1)_both] bg-[#fbf8f2] p-1.5 pb-4 shadow-[0_8px_18px_-8px_rgba(0,0,0,.5)] sm:w-28 ${spots[i]}`}
+          style={{ animationDelay: `${0.35 + i * 0.12}s` }}
+        >
+          <span className="absolute -top-2 left-1/2 h-4 w-10 -translate-x-1/2 rotate-[-3deg] bg-[#f2e3c6]/80" />
+          {src ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={src} alt="" className="aspect-square w-full object-cover" />
+          ) : (
+            <div className="grid aspect-square w-full place-items-center border border-dashed border-[#c9bfae] font-mono text-[10px] text-[#8d8b85]">photo</div>
+          )}
+        </figure>
+      ))}
+    </>
   );
 }

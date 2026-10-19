@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Crate } from "@/components/Crate";
+import { MemoryCard } from "@/components/MemoryCard";
 import { LabCards } from "@/components/LabCards";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { Deck } from "@/components/Deck";
-import { LAB, THING_PHOTOS } from "@/content/site";
+import { LAB, THING_PHOTOS, THING_SNAPS } from "@/content/site";
 import { deferScripts } from "@/lib/defer-scripts";
 import { getTop4 } from "@/lib/top4";
 import { records, thingsILike } from "@/lib/things";
@@ -38,7 +38,7 @@ export default function Things() {
       </Reveal>
 
       <Reveal slot={2} as="section" className="mt-24">
-        <Deck things={list} photos={THING_PHOTOS} />
+        <Deck things={list} photos={THING_PHOTOS} snaps={THING_SNAPS} />
         {list.length > 0 && (
           <details className="group mt-6">
             <summary className="meta cursor-pointer list-none text-center hover:text-accent">
@@ -59,7 +59,7 @@ export default function Things() {
       <section id="gallery" className="mt-28">
         <h2 className="text-center font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">Gallery</h2>
         <div className="mt-10">
-          <Crate records={records()} />
+          <MemoryCard trips={records()} />
         </div>
       </section>
 

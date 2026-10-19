@@ -14,6 +14,12 @@ export const EMAIL = "samitmohan@gmail.com";
  */
 export const THING_PHOTOS: Record<string, string> = {};
 
+/**
+ * Small photos shown around a card when it is opened, keyed by the exact
+ * bullet text. Up to three each.
+ */
+export const THING_SNAPS: Record<string, string[]> = {};
+
 /** The live widgets in public/widgets, and the posts they were built for. */
 export const LAB = [
   { id: "microgpt-stepper", name: "microGPT stepper", blurb: "Step a tiny GPT one token at a time.", post: "microgpt" },
