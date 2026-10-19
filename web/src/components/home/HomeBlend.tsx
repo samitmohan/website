@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LossSurface } from "@/components/LossSurface";
+import { LossSurfaceLazy as LossSurface } from "@/components/LossSurfaceLazy";
 import { Page } from "@/components/Page";
 import { Reveal } from "@/components/Reveal";
 import { ThingsILike } from "@/components/ThingsILike";
