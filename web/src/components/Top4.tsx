@@ -25,7 +25,7 @@ export function Top4({ data }: { data: Data }) {
   const [tab, setTab] = useState<(typeof TABS)[number][0]>("books");
   return (
     <div>
-      <h2 className="text-center font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">#top4</h2>
+      <h2 className="text-center font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">#Top4</h2>
       <div className="mt-6 flex flex-wrap justify-center gap-2" role="tablist" aria-label="Category">
         {TABS.map(([key, label]) => (
           <button

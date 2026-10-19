@@ -45,4 +45,6 @@
 
 Before calling a change done, build and run the checks against the export:
 `npm run build`, `npx serve out -l 3211`, `node scripts/smoke.mjs
-http://localhost:3211 shots`, `node scripts/interact.mjs`.
+http://localhost:3211 shots`, `node scripts/interact.mjs`,
+`node scripts/mobile.mjs http://localhost:3211` (must report 0 issues at 360
+and 390px).

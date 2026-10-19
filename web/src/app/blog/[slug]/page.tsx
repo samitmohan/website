@@ -64,7 +64,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       {post.readingTime >= 10 && <div className="read-progress" aria-hidden />}
       {toc.length > 0 && <TocRail toc={toc} />}
       <Reveal slot={0} as="header">
-        <Link href={post.hidden ? "/blog/personal" : "/blog"} className="meta hover:text-accent">
+        <Link href={post.hidden ? "/blog/personal" : "/blog"} className="meta -my-1 inline-block py-1 hover:text-accent">
           ← {post.hidden ? "personal" : "writing"}
         </Link>
         <h1 className="mt-4 text-[28px] leading-tight">{post.title}</h1>
@@ -81,7 +81,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             {toc.map((h, n) => (
               <li key={h.id} className="flex gap-3">
                 <span className="meta w-5">{n + 1}</span>
-                <a href={`#${h.id}`} className="text-ink hover:text-accent">{h.text}</a>
+                <a href={`#${h.id}`} className="inline-block py-0.5 text-ink hover:text-accent">{h.text}</a>
               </li>
             ))}
           </ol>

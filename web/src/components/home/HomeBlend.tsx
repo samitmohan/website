@@ -69,7 +69,7 @@ function SectionHead({ title, href, more }: { title: string; href: string; more:
   return (
     <div className="flex items-baseline justify-between">
       <h2 className="text-[15px]">{title}</h2>
-      <Link href={href} className="meta hover:text-accent">
+      <Link href={href} className="meta -my-1 inline-block py-1 hover:text-accent">
         {more} →
       </Link>
     </div>

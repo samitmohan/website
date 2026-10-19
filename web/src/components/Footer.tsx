@@ -33,7 +33,7 @@ export function Footer() {
       </div>
 
       <div className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 pt-2 pb-6">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div
             className="flex items-center gap-1 rounded-full px-1.5 py-1"
             style={{ border: `1px solid color-mix(in srgb, ${ink} 35%, transparent)` }}

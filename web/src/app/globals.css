@@ -456,8 +456,12 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 /* Things I like: a deck of cards. */
 .deck-card { width: 112px; height: 160px; }
 .deck-card p { font-size: 11px; }
-.deck-card--big { width: 220px; height: 312px; }
-.deck-card--big p { font-size: 17px; }
+/* The open card fills most of the screen: whichever runs out first of width or height. */
+.deck-card.deck-card--big { width: min(86vw, 46svh, 440px); height: auto; aspect-ratio: 150 / 214; container-type: inline-size; }
+.deck-card--big > div { border-radius: 4cqw; padding: 5cqw; }
+.deck-card--big .card-rank { font-size: 9cqw; }
+.deck-card--big .card-art { width: 80%; margin-top: 0; }
+.deck-card--big .card-text { font-size: 7.4cqw; line-height: 1.15; -webkit-line-clamp: unset; }
 @media (min-width: 640px) { .deck-card { width: 150px; height: 214px; } .deck-card p { font-size: 12.5px; } }
 @keyframes deal-in {
   from { transform: translate(-50%, -40px) rotate(-8deg) scale(.9); opacity: 0; }
@@ -529,3 +533,6 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 @keyframes ps2-flash { from { opacity: 0.9; } to { opacity: 0; } }
 @keyframes ps2-on { from { opacity: 0; transform: scale(1.03); filter: brightness(1.6) blur(8px); } }
 @keyframes top4-in { from { opacity: 0; transform: translateY(26px) rotate(-6deg) scale(.94); } }
+
+/* Post sliders: a 24px touch target, the browser default is 16px. */
+.prose input[type="range"] { min-height: 24px; }

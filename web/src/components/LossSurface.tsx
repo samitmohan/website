@@ -246,7 +246,7 @@ export function LossSurface({ className = "" }: { className?: string }) {
         <button
           type="button"
           onClick={() => api.current?.reset()}
-          className="meta pointer-events-auto rounded-full bg-surface px-2 py-0.5 hover:text-ink"
+          className="meta pointer-events-auto rounded-full bg-surface px-2.5 py-1 hover:text-ink"
         >
           reset
         </button>

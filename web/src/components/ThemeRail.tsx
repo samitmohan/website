@@ -46,7 +46,7 @@ export function ThemeRail() {
     >
       <div
         className="flex items-center transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)]"
-        style={{ transform: open ? "translateX(0)" : "translateX(calc(-100% + 22px))" }}
+        style={{ transform: open ? "translateX(0)" : "translateX(calc(-100% + 26px))" }}
       >
         <div
           className="flex flex-col items-center gap-1 rounded-r-2xl bg-surface py-2.5 pr-1.5 pl-2 shadow-[var(--shadow-card)] transition-opacity duration-300"
@@ -103,7 +103,7 @@ export function ThemeRail() {
           aria-expanded={open}
           // A mouse has already opened the rail by hovering, so its click only keeps it open; a tap toggles.
           onClick={(e) => setOpen((o) => ((e.nativeEvent as PointerEvent).pointerType === "mouse" ? true : !o))}
-          className="-ml-px grid h-14 w-[22px] place-items-center rounded-r-xl bg-surface shadow-[var(--shadow-card)]"
+          className="-ml-px grid h-14 w-[26px] place-items-center rounded-r-xl bg-surface shadow-[var(--shadow-card)]"
         >
           <span className="h-6 w-1.5 rounded-full" style={{ background: current.swatch }} />
         </button>

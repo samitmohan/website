@@ -119,7 +119,7 @@ export function Deck({ things, photos = {}, snaps = {} }: { things: string[]; ph
         <h2 className="font-serif text-[clamp(40px,7vw,64px)] leading-none font-normal">Things I like</h2>
       </div>
 
-      <div className="relative mx-auto mt-8 h-[330px] max-w-[620px] [--spread:30px] [--tilt:5deg] sm:h-[360px] sm:[--spread:64px] sm:[--tilt:7deg]" style={{ perspective: "1400px" }}>
+      <div className="relative mx-auto mt-8 h-[330px] max-w-[620px] [--spread:min(30px,calc((100vw_-_198px)_/_6))] [--tilt:5deg] max-[379px]:[--tilt:3.5deg] sm:h-[360px] sm:[--spread:64px] sm:[--tilt:7deg]" style={{ perspective: "1400px" }}>
         {/* the riffle: two half-stacks that split apart and fall back together */}
         {phase === "riffle" &&
           Array.from({ length: 12 }, (_, j) => (
@@ -181,7 +181,7 @@ export function Deck({ things, photos = {}, snaps = {} }: { things: string[]; ph
       </p>
 
       {picked && (
-        <div className="fixed inset-0 z-[70] grid animate-[fade-in_.2s_both] place-items-center bg-black/35 p-6 backdrop-blur-[2px]" onClick={() => setPicked(null)}>
+        <div className="fixed inset-0 z-[70] grid animate-[fade-in_.2s_both] place-items-center overflow-y-auto bg-black/35 p-4 backdrop-blur-[2px]" onClick={() => setPicked(null)}>
           <div className="flex flex-col items-center gap-5" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={picked.text}>
             <div className="relative">
               <div className="deck-card deck-card--big animate-[card-reveal_.9s_cubic-bezier(.16,1,.3,1)_both]">
@@ -219,16 +219,16 @@ function Face({ c }: { c: Card }) {
   const ink = c.red ? "text-[#c8202a]" : "text-[#141414]";
   return (
     <div className="relative flex size-full flex-col rounded-[10px] bg-[#fbf8f2] p-2 text-left shadow-[0_8px_18px_-8px_rgba(0,0,0,.45)]">
-      <span className={`font-serif text-[15px] leading-none ${ink}`}>
+      <span className={`card-rank font-serif text-[15px] leading-none ${ink}`}>
         {c.rank}
         <br />
         {c.suit}
       </span>
-      <div className="mx-auto -mt-2 w-[64%] [&>svg]:w-full">
+      <div className="card-art mx-auto -mt-2 w-[64%] [&>svg]:w-full">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {c.img ? <img src={c.img} alt="" className="w-full" /> : c.art ? ART[c.art] : null}
       </div>
-      <p className="mt-auto line-clamp-4 font-serif text-[12.5px] leading-tight text-[#141414] italic">{c.text}</p>
+      <p className="card-text mt-auto line-clamp-4 font-serif text-[12.5px] leading-tight text-[#141414] italic">{c.text}</p>
       <span className={`absolute right-2 bottom-2 rotate-180 font-serif text-[15px] leading-none ${ink} opacity-0`}>{c.suit}</span>
     </div>
   );
@@ -240,9 +240,10 @@ function Face({ c }: { c: Card }) {
  */
 function Snaps({ list }: { list: string[] }) {
   const spots = [
-    "-left-28 top-6 -rotate-[8deg] sm:-left-36",
-    "-right-28 top-24 rotate-[6deg] sm:-right-36",
-    "-left-24 bottom-4 rotate-[5deg] sm:-left-32",
+    // Phones tape them over the card's edges, clear of the corner index; wider screens beside it.
+    "-right-3 -top-6 rotate-[6deg] sm:right-auto sm:-left-40 sm:top-8 sm:-rotate-[8deg]",
+    "-left-3 top-[30%] -rotate-[7deg] sm:left-auto sm:-right-40 sm:top-28 sm:rotate-[6deg]",
+    "-right-3 top-[52%] rotate-[5deg] sm:right-auto sm:-left-36 sm:top-auto sm:bottom-6",
   ];
   const items = list.length ? list.slice(0, 3) : [null, null];
   return (
@@ -250,7 +251,7 @@ function Snaps({ list }: { list: string[] }) {
       {items.map((src, i) => (
         <figure
           key={i}
-          className={`absolute w-24 animate-[snap-in_.7s_cubic-bezier(.16,1,.3,1)_both] bg-[#fbf8f2] p-1.5 pb-4 shadow-[0_8px_18px_-8px_rgba(0,0,0,.5)] sm:w-28 ${spots[i]}`}
+          className={`absolute w-20 animate-[snap-in_.7s_cubic-bezier(.16,1,.3,1)_both] bg-[#fbf8f2] p-1.5 pb-4 shadow-[0_8px_18px_-8px_rgba(0,0,0,.5)] sm:w-36 ${spots[i]}`}
           style={{ animationDelay: `${0.35 + i * 0.12}s` }}
         >
           <span className="absolute -top-2 left-1/2 h-4 w-10 -translate-x-1/2 rotate-[-3deg] bg-[#f2e3c6]/80" />
