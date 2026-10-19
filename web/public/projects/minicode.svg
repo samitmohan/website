@@ -15,8 +15,8 @@
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
   .mc-win { fill:none; stroke:var(--soft); stroke-width:1.1; }
   .mc-dot { fill:var(--soft); }
-  .mc-t { font-size:9.7px; fill:var(--ink); }
-  .mc-d { font-size:9.7px; fill:var(--grey); }
+  .mc-t { font-size:12px; fill:var(--ink); }
+  .mc-d { font-size:12px; fill:var(--grey); }
   .mc-chip { fill:none; stroke:var(--grey); stroke-width:1; }
 
   /* The whole transcript, shown at once. The lines used to land one after

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { playBootSound } from "@/lib/ps2-sound";
 
 export type Trip = { title: string; kb: number; frames: { src: string; thumb: string }[] };
 
@@ -26,6 +27,22 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
   // hand-over is one crossfade inside a screen that never changes size.
   const [phase, setPhase] = useState<"off" | "boot" | "dash">("off");
   const [bootLayer, setBootLayer] = useState(false);
+  // Sound is opt-in; the choice is remembered.
+  const [sound, setSound] = useState(false);
+  const stopSound = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    try {
+      setSound(localStorage.getItem("ps2-sound") === "on");
+    } catch {}
+    return () => stopSound.current?.();
+  }, []);
+  const toggleSound = () =>
+    setSound((on) => {
+      try {
+        localStorage.setItem("ps2-sound", on ? "off" : "on");
+      } catch {}
+      return !on;
+    });
   const [sel, setSel] = useState(0);
   const [open, setOpen] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,8 +76,12 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return setPhase("dash");
     setBootLayer(true);
     setPhase("boot");
+    // The click that powers on is the gesture browsers require before audio.
+    if (sound) stopSound.current = playBootSound();
   };
   const toDash = () => {
+    stopSound.current?.();
+    stopSound.current = null;
     setPhase("dash");
     setTimeout(() => setBootLayer(false), 1000);
   };
@@ -78,6 +99,26 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
             <span className="ps2-text animate-[ps2-blink_1.8s_ease-in-out_infinite] text-[12px] tracking-[.3em] uppercase">
               press <span className="text-[#ff6b6b]">◯</span> to start
             </span>
+          </button>
+        )}
+        {phase === "off" && (
+          <button
+            type="button"
+            onClick={toggleSound}
+            aria-pressed={sound}
+            aria-label={sound ? "Sound on" : "Sound off"}
+            title={sound ? "sound on" : "sound off"}
+            className="ps2-dim absolute top-4 right-4 z-10 flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 font-mono text-[11px] tracking-[.12em] uppercase hover:text-white"
+          >
+            <svg viewBox="0 0 16 16" className="size-3.5" aria-hidden>
+              <path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor" />
+              {sound ? (
+                <path d="M11 5.5c1.2 1.4 1.2 3.6 0 5M12.8 3.8c2.1 2.4 2.1 6 0 8.4" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" />
+              ) : (
+                <path d="M11 6l4 4M15 6l-4 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+              )}
+            </svg>
+            {sound ? "on" : "off"}
           </button>
         )}
         {bootLayer && (

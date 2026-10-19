@@ -9,8 +9,8 @@
   .rg-hit { fill:var(--accent,#d9261c); }
   .rg-dot { fill:var(--ink); }
   .rg-box { fill:none; stroke:var(--ink); stroke-width:1.2; }
-  .rg-lab { font-size:9.5px; fill:var(--ink); text-anchor:middle; }
-  .rg-cap { font-size:9px; fill:var(--grey); text-anchor:middle; }
+  .rg-lab { font-size:12px; fill:var(--ink); text-anchor:middle; }
+  .rg-cap { font-size:12px; fill:var(--grey); text-anchor:middle; }
   .rg-edge { fill:none; stroke:var(--grey); stroke-width:1; }
   .rg-q { fill:none; stroke:var(--ink); stroke-width:1.1; }
   @media (prefers-reduced-motion: no-preference) {
@@ -55,5 +55,5 @@
   <text class="rg-lab" x="300" y="107" style="text-anchor:start">[1] [2]</text>
 </g>
 <text class="rg-cap" x="316" y="136">cited answer</text>
-<text class="rg-cap" x="190" y="176">public: retrieval only · local: Qwen 2.5 7B via Ollama</text>
+<text class="rg-cap" x="190" y="176">public: retrieval · local: Qwen 2.5 7B</text>
 </svg>

@@ -4,8 +4,8 @@
 <style><![CDATA[
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
   .rn-box { fill:none; stroke:var(--grey); stroke-width:1.1; }
-  .rn-lab { font-size:9.5px; fill:var(--ink); text-anchor:middle; }
-  .rn-cap { font-size:9px; fill:var(--grey); }
+  .rn-lab { font-size:12px; fill:var(--ink); text-anchor:middle; }
+  .rn-cap { font-size:12px; fill:var(--grey); }
   .rn-wire { fill:none; stroke:var(--ink); stroke-width:1.2; stroke-linecap:round; }
   .rn-skip { fill:none; stroke:var(--accent,#d9261c); stroke-width:1.5; stroke-linecap:round; }
   .rn-axis { stroke:var(--grey); stroke-width:1; }
@@ -46,7 +46,7 @@
 <text class="rn-cap" x="320" y="184">56</text>
 <path class="rn-plain" d="M225 117 L350 47"/>
 <circle class="rn-pdot" cx="225" cy="117" r="2.5"/><circle class="rn-pdot" cx="350" cy="47" r="2.5"/>
-<text class="rn-cap" x="300" y="56">plain 13.58%</text>
+<text class="rn-cap" x="262" y="44">plain 13.58%</text>
 <path class="rn-res" pathLength="1" d="M225 127 L350 146"/>
 <circle class="rn-dot" cx="225" cy="127" r="2.5"/><circle class="rn-dot" cx="350" cy="146" r="2.5"/>
 <text class="rn-lab" x="324" y="161" style="text-anchor:start">7.47%</text>

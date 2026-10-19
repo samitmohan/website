@@ -14,9 +14,9 @@
      resolve the variable loses the typeface and not the text size. */
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
   .ml-stage { fill:none; stroke:var(--soft); stroke-width:1.1; }
-  .ml-lab { font-size:9.2px;
+  .ml-lab { font-size:12px;
             fill:var(--grey); text-anchor:middle; }
-  .ml-cap { font-size:9.2px;
+  .ml-cap { font-size:12px;
             fill:var(--grey); }
   .ml-tick { stroke:var(--soft); stroke-width:1; }
 

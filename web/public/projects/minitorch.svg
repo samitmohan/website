@@ -24,11 +24,11 @@
      resolve the variable loses the typeface and not the text size. */
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
   .mt-box { fill:none; stroke:var(--grey); stroke-width:1.1; }
-  .mt-lab { font-size:10px;
+  .mt-lab { font-size:12px;
             fill:var(--ink); text-anchor:middle; }
-  .mt-sub { font-size:9.2px;
+  .mt-sub { font-size:11px;
             fill:var(--grey); text-anchor:middle; }
-  .mt-cap { font-size:9.2px;
+  .mt-cap { font-size:12px;
             fill:var(--grey); }
 
   /* Forward edges, in ink. */

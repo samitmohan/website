@@ -9,8 +9,8 @@
   .yo-b1 { fill:none; stroke:var(--accent,#d9261c); stroke-width:1.6; }
   .yo-b2 { fill:none; stroke:var(--ink); stroke-width:1.2; stroke-dasharray:3 2; }
   .yo-c { fill:var(--accent,#d9261c); }
-  .yo-lab { font-size:9.5px; fill:var(--ink); }
-  .yo-cap { font-size:9px; fill:var(--grey); }
+  .yo-lab { font-size:12px; fill:var(--ink); }
+  .yo-cap { font-size:12px; fill:var(--grey); }
   .yo-cube { fill:var(--soft); stroke:var(--ink); stroke-width:1; }
   .yo-arrow { fill:none; stroke:var(--grey); stroke-width:1; }
   @media (prefers-reduced-motion: no-preference) {

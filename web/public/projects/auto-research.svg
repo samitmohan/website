@@ -5,8 +5,8 @@
   svg { font-family:var(--font-mono,ui-monospace),SFMono-Regular,Menlo,monospace; --grey:var(--muted,#877F70); --soft:var(--surface-2,#D5CFC0); }
   .ar-node { fill:var(--paper,#fff); stroke:var(--grey); stroke-width:1.1; }
   .ar-on { fill:none; stroke:var(--ink); stroke-width:1.6; opacity:0; }
-  .ar-lab { font-size:9.5px; fill:var(--ink); text-anchor:middle; }
-  .ar-cap { font-size:9px; fill:var(--grey); }
+  .ar-lab { font-size:12px; fill:var(--ink); text-anchor:middle; }
+  .ar-cap { font-size:12px; fill:var(--grey); }
   .ar-edge { fill:none; stroke:var(--grey); stroke-width:1; }
   .ar-bar { fill:var(--ink); }
   .ar-best { fill:var(--accent,#d9261c); }
@@ -24,7 +24,7 @@
 <rect class="ar-node" x="120" y="30" width="80" height="28" rx="7"/><rect class="ar-on" style="--i:1" x="120" y="30" width="80" height="28" rx="7"/>
 <text class="ar-lab" x="160" y="48">validate</text>
 <rect class="ar-node" x="120" y="120" width="80" height="28" rx="7"/><rect class="ar-on" style="--i:2" x="120" y="120" width="80" height="28" rx="7"/>
-<text class="ar-lab" x="160" y="138">run x2 seeds</text>
+<text class="ar-lab" x="160" y="138">2 seeds</text>
 <rect class="ar-node" x="20" y="120" width="80" height="28" rx="7"/><rect class="ar-on" style="--i:3" x="20" y="120" width="80" height="28" rx="7"/>
 <text class="ar-lab" x="60" y="138">keep / drop</text>
 <path class="ar-edge" d="M100 44 H118 M113 40 L118 44 L113 48"/>

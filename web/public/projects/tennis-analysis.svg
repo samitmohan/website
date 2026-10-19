@@ -33,9 +33,9 @@
   .tn-inner { fill:none; stroke:var(--soft); stroke-width:1; }
   .tn-net   { stroke:var(--grey); stroke-width:1; }
   .tn-mesh  { stroke:var(--soft); stroke-width:.6; }
-  .tn-lab   { font-size:9.2px;
+  .tn-lab   { font-size:12px;
               fill:var(--grey); }
-  .tn-cap   { font-size:9.2px;
+  .tn-cap   { font-size:12px;
               fill:var(--grey); }
 
   /* Keypoints, all found. They used to pop on one at a time over the first
