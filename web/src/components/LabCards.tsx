@@ -48,7 +48,7 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
         }}
         // The fade at the right edge says there is more; it lifts at the end of the row.
         style={atEnd ? undefined : { maskImage: "linear-gradient(to right, #000 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, #000 85%, transparent)" }}
-        data-lenis-prevent
+        data-scroll-contain
       >
         {TOYS.map((t) => (
           <figure key={t.name} className="shrink-0 snap-start">
@@ -83,7 +83,7 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
         <div
           className="fixed inset-0 z-[70] flex animate-[fade-in_.25s_both] items-end justify-center bg-black/30 backdrop-blur-[2px] sm:items-center sm:p-6"
           onClick={() => setOpen(null)}
-          data-lenis-prevent
+          data-scroll-contain
         >
           <div
             role="dialog"

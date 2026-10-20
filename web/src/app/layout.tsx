@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist_Mono, Instrument_Serif, Inter_Tight } from "next/font/google";
 import { GridLines } from "@/components/GridLines";
 import { Nav } from "@/components/Nav";
-import { SmoothScroll } from "@/components/SmoothScroll";
 import { ThemeController } from "@/components/ThemeController";
 import { ThemeRail } from "@/components/ThemeRail";
 import "./globals.css";
@@ -33,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <GridLines />
         <ThemeController />
-        <SmoothScroll />
         <Nav />
         <ThemeRail />
         {children}

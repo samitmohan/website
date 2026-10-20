@@ -158,7 +158,7 @@ function Board({ projects, onOpen }: { projects: BoardProject[]; onOpen: (s: str
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
-      data-lenis-prevent
+      data-scroll-contain
     >
       <motion.div className="absolute top-0 left-0 origin-top-left" style={{ width: W, height: H, x, y, scale }}>
         <svg className="pointer-events-none absolute inset-0" width={W} height={H} aria-hidden>
@@ -263,7 +263,7 @@ function WriteUp({ p, onClose }: { p: BoardProject; onClose: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      data-lenis-prevent
+      data-scroll-contain
     >
       <motion.article
         role="dialog"

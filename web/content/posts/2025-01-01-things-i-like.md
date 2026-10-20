@@ -5,7 +5,7 @@ date:   2025-01-01 14:06:04 +0530
 categories: fun
 tokens: "~150"
 published: true
-description: "a list of small things, in no particular order."
+description: "list of things i like"
 tags: [fun]
 hidden: true
 ---
@@ -46,3 +46,7 @@ in no particular order,
 - first sip of beer; goes straight to heart
 - davidoff espresso 57 in the morning; yum
 - sitting in other people's living rooms
+- stealing coasters
+- lamps
+- zippo lighters
+- anticipation of charming someone and being charmed

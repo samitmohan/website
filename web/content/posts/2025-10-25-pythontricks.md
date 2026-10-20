@@ -4,7 +4,7 @@ title: "Some Python tricks"
 date:   2025-10-25 14:06:04 +0530
 categories: tech
 tokens: "~2k"
-description: "Random Python tricks I've picked up."
+description: "Random Python tricks I've learned."
 published: true
 tags: [python]
 ---
@@ -15,7 +15,7 @@ How to write more pythonic (god I hate this word) code.
 
 ## \*args and \*\*kwargs
 
-Useful when you don't know how many arguments are going to be passed to your function at runtime.
+Use them when you don't know how many arguments the caller passes to your function at runtime.
 
 ```python
 def add(*args):
@@ -49,9 +49,9 @@ result = dispatch("mul", 2, 8)  # 16
 
 ### lru_cache: dynamic programming what??
 
-#### pre-requisite: decorators
+#### prerequisite: decorators
 
-Decorators wrap a function through a closure, modifying its behavior without changing the source.
+A decorator wraps a function in a closure. The closure changes what the function does, and the source code stays the same.
 
 ```python
 def uppercase(func):
@@ -69,9 +69,9 @@ print(greet())  # "YO"
 <video autoplay loop muted playsinline style="max-width:100%" preload="none" poster="/assets/images/python/decorators_poster.jpg">
   <source src="/assets/images/python/decorators.mp4" type="video/mp4">
 </video>
-*The decorator wraps greet(), intercepts the return value, transforms "yo" to "YO".*
+*The decorator wraps `greet()` and gets its return value. Then it changes "yo" to "YO".*
 
-`@lru_cache` is memoization for free:
+`@lru_cache` adds memoization to a function with one line:
 
 ```python
 from functools import lru_cache
@@ -93,9 +93,9 @@ print(fib_fast(40))  # instant
 <video autoplay loop muted playsinline style="max-width:100%" preload="none" poster="/assets/images/python/lru_cache_poster.jpg">
   <source src="/assets/images/python/lru_cache.mp4" type="video/mp4">
 </video>
-*Left: naive fib explodes into duplicate calls. Right: cached fib computes each value once.*
+*The left side shows `fib_slow`, which makes the same calls many times. The right side shows `fib_fast`, which computes each value once.*
 
-Play with `n`. Toggle `@lru_cache`. Watch the tree collapse from O(2ⁿ) to O(n).
+Change `n`. Toggle `@lru_cache`. Watch the call tree go from O(2ⁿ) to O(n).
 
 <link rel="stylesheet" href="/widgets/lru-fib.css">
 <div id="lru-fib"></div>
@@ -136,7 +136,7 @@ for a, b, c in product(list_a, list_b, list_c):
 
 ### generators
 
-No need to store the entire sequence in memory.
+A generator does not keep the full sequence in memory.
 
 ```python
 # loads the whole file
@@ -163,12 +163,12 @@ import copy
 xs = [[1, 2, 3], [4, 5, 6]]
 ys = list(xs)         # shallow: inner lists are shared
 xs[1][0] = "X"
-print(ys)             # [[1, 2, 3], ['X', 6]] -- ys changed too
+print(ys)             # [[1, 2, 3], ['X', 5, 6]] -- ys changed too
 
 zs = copy.deepcopy(xs)  # independent copy, no shared references
 ```
 
-### defaultdict: no key checking
+### defaultdict: no check for missing keys
 
 ```python
 from collections import defaultdict
@@ -180,7 +180,7 @@ for word in ["apple", "banana", "apple"]:
 
 ### binary search with bisect
 
-Use `bisect` for searching in sorted arrays or maintaining sorted order.
+Use `bisect` to search a sorted list. You can also use it to insert an item and keep the list sorted.
 
 ```python
 import bisect
@@ -222,7 +222,7 @@ list(itertools.chain.from_iterable([[1, 2], [3, 4], [5, 6]]))  # [1, 2, 3, 4, 5,
 
 ### package management
 
-Stop using `pip` directly for project management. Use `uv`:
+Use `uv` instead of `pip` to manage the dependencies of a project:
 
 ```bash
 # old way
@@ -234,11 +234,11 @@ uv add requests
 uv sync
 ```
 
-- [uv Documentation](https://github.com/astral-sh/uv)
+- [uv on GitHub](https://github.com/astral-sh/uv)
 
 ### tuples vs lists, under the hood
 
-The `dis` module shows the bytecode. Tuples are baked in at compile time, lists are built at runtime.
+The `dis` module shows the bytecode. The compiler stores a constant tuple as one constant. The interpreter builds a list at runtime.
 
 ```python
 import dis
@@ -255,4 +255,4 @@ dis.dis(compile("[28, 's', 'a', 'm']", "", "eval"))
 #   RETURN_VALUE
 ```
 
-That's why a constant tuple is faster than the equivalent list literal.
+That's why Python creates a constant tuple faster than the equivalent list literal.

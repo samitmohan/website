@@ -125,9 +125,8 @@ p { text-wrap: pretty; }
 }
 
 /* Lenis */
-html.lenis, html.lenis body { height: auto; }
-.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
-.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+/* Scrollable widgets keep their scroll to themselves instead of spilling into the page. */
+[data-scroll-contain] { overscroll-behavior: contain; }
 
 /* Theme switch: the new snapshot grows as a circle from the click point. */
 ::view-transition-old(root),

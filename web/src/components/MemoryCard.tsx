@@ -139,7 +139,7 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
         className="ps2 absolute inset-0 animate-[ps2-on_1s_cubic-bezier(.16,1,.3,1)_backwards] overflow-y-auto px-5 pt-5 pb-6 sm:px-8 sm:pt-7"
         role="group"
         aria-label="Memory card"
-        data-lenis-prevent
+        data-scroll-contain
       >
         <Haze />
         <div className="relative flex items-start justify-between gap-4">
@@ -212,7 +212,7 @@ export function MemoryCard({ trips }: { trips: Trip[] }) {
 
       {/* A portal, so no transformed ancestor can trap the fixed viewer inside the panel. */}
       {trip && createPortal(
-        <div className="ps2 fixed inset-0 z-[70] flex animate-[fade-in_.3s_both] flex-col" role="dialog" aria-modal="true" aria-label={trip.title} data-lenis-prevent>
+        <div className="ps2 fixed inset-0 z-[70] flex animate-[fade-in_.3s_both] flex-col" role="dialog" aria-modal="true" aria-label={trip.title} data-scroll-contain>
           <Haze />
           <div className="relative flex items-center justify-between px-5 pt-5 sm:px-8">
             <p className="ps2-text text-[12px] tracking-[.2em] uppercase sm:text-[13px]">

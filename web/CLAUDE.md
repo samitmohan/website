@@ -31,6 +31,14 @@
     `placeholder: true` in the data. The things-I-like captions are read
     straight from the bullets of content/posts/2025-01-01-things-i-like.md.
   </constraint>
+  <constraint added="2026-10-20">
+    Technical post prose (content/posts) follows ASD-STE100 Simplified
+    Technical English: short sentences, active voice, simple approved words,
+    one idea per sentence. No AI slop (see ~/.claude/skills/stop-slop). Keep
+    Samit's voice and facts; never invent content. Leave his slang,
+    profanity, rhetorical setups ("How? Calculus."), contractions, and
+    deliberate double periods or double spaces as they are.
+  </constraint>
   <constraint added="2026-10-19">
     Facts: beltech.ai runs inference on 300 cameras for 24/7 surveillance and
     monitoring. Not 60k.
