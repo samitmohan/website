@@ -32,7 +32,7 @@ const expect = (cond, msg) => {
 
 await check("double-click switches theme and it survives a reload", async (page) => {
   await page.goto(base + "/about");
-  const before = await page.evaluate(() => matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const before = await page.getAttribute("html", "data-theme");
   await page.mouse.dblclick(1300, 600);
   await page.waitForTimeout(800);
   const after = await page.getAttribute("html", "data-theme");
@@ -196,6 +196,24 @@ await check("footer garden grows under the pointer and clears", async (page) => 
   expect(cleared <= sticker * 1.02, `clear left growth behind: ${sticker} vs ${cleared}`);
   return `${sticker} -> ${grown} -> ${cleared}`;
 });
+
+await check("first visit is dark; the double-click note shows and retires after a flip", async (page) => {
+  await page.goto(base + "/about");
+  const theme = () => page.getAttribute("html", "data-theme");
+  expect((await theme()) === "dark", `first visit on a light-mode OS got ${await theme()}`);
+  const note = page.getByText("double-click anywhere to flip black and white");
+  await page.waitForTimeout(400);
+  const shown = await note.evaluate((el) => +getComputedStyle(el).opacity);
+  expect(shown === 1, `note opacity ${shown} on a first visit`);
+  await page.mouse.dblclick(1200, 300);
+  await page.waitForTimeout(900);
+  expect((await theme()) === "light", "double-click did not flip to light");
+  await page.reload();
+  await page.waitForTimeout(400);
+  const after = await note.evaluate((el) => +getComputedStyle(el).opacity);
+  expect(after === 0 && (await theme()) === "light", `after a flip: note ${after}, theme ${await theme()}`);
+  return "dark -> light, note retired";
+}, { colorScheme: "light" });
 
 await check("left rail: a colour changes the accent and it survives a reload", async (page) => {
   await page.goto(base + "/about");
