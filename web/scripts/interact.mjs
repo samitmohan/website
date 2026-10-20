@@ -167,7 +167,9 @@ await check("gallery: a memory-card save opens and pages through photos", async 
 
 await check("footer garden grows under the pointer and clears", async (page) => {
   await page.goto(base + "/about");
-  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
+  // Instant: the site's CSS smooth scrolling would otherwise still be gliding when the baseline is read.
+  await page.evaluate(() => scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(800);
   const canvas = page.locator("footer canvas");
   const box = await canvas.boundingBox();

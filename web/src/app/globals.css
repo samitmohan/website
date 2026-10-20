@@ -9,6 +9,7 @@
   --bg: #fbfaf7;
   --ink: #111111;
   --body: #5c5b57; /* >= 5.5:1 on every light background, cards and theme tints included */
+  --prose: #2b2a27; /* post body text: darker than --body for long reading */
   --muted: #696762; /* >= 4.6:1, the AA floor for 12px meta text */
   --surface: #f2f1ed;
   --surface-2: #eae8e2;
@@ -47,6 +48,7 @@
     --bg: #0a0a0a;
     --ink: #ededed;
     --body: #a1a1a1;
+    --prose: #d4d4d4;
     --muted: #858585;
     --surface: #141414;
     --surface-2: #1c1c1c;
@@ -63,6 +65,7 @@
   --bg: #0a0a0a;
   --ink: #ededed;
   --body: #a1a1a1;
+  --prose: #d4d4d4;
   --muted: #858585;
   --surface: #141414;
   --surface-2: #1c1c1c;
@@ -125,6 +128,9 @@ p { text-wrap: pretty; }
 }
 
 /* Lenis */
+/* In-page jumps (contents links, footnotes) glide; Next turns this off for page navigation. */
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
 /* Scrollable widgets keep their scroll to themselves instead of spilling into the page. */
 [data-scroll-contain] { overscroll-behavior: contain; }
 
@@ -230,9 +236,9 @@ p { text-wrap: pretty; }
    ------------------------------------------------------------------ */
 
 .prose {
-  color: var(--body);
-  font-size: 16px;
-  line-height: 1.75;
+  color: var(--prose);
+  font-size: 17px;
+  line-height: 1.7;
 }
 .prose > * + * { margin-top: 1.15em; }
 .prose h2 { font-size: 22px; margin-top: 2.2em; line-height: 1.25; scroll-margin-top: 96px; }
