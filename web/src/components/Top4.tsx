@@ -40,42 +40,59 @@ export function Top4({ data }: { data: Data }) {
           </button>
         ))}
       </div>
-      <ol className={`mt-8 grid gap-x-3 gap-y-6 sm:gap-x-4 ${SHAPE[tab].cols}`} key={tab}>
-        {data[tab].map((p, i) => {
-          const body = (
-            <>
-              <span className={`relative block overflow-hidden rounded-[14px] bg-surface shadow-[var(--shadow-card)] ${SHAPE[tab].aspect}`}>
-                {p.img && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                )}
-                <span className="absolute top-2 left-2 grid size-7 place-items-center rounded-full bg-black/70 font-serif text-[17px] leading-none text-white backdrop-blur-sm">
-                  {i + 1}
-                </span>
-              </span>
-              <span className="mt-2 block px-0.5">
-                <span className="line-clamp-2 block font-serif text-[17px] leading-tight text-ink italic transition-colors group-hover:text-accent">{p.title}</span>
-                {p.by && <span className="mt-0.5 block text-[12px]">{p.by}</span>}
-              </span>
-            </>
-          );
-          return (
-            <li
-              key={i}
-              className="animate-[top4-in_.6s_cubic-bezier(.16,1,.3,1)_backwards]"
-              style={{ animationDelay: `${i * 80}ms`, rotate: `${TILT[i]}deg` }}
-            >
-              {p.url ? (
-                <a href={p.url} target="_blank" rel="noopener noreferrer" className="group block transition-transform duration-300 hover:-translate-y-1 hover:rotate-0">
-                  {body}
-                </a>
-              ) : (
-                <div className="group block transition-transform duration-300 hover:-translate-y-1">{body}</div>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+      {/* Every category is laid out in the same cell, only the chosen one visible, so the block is
+          always as tall as the tallest category and switching never moves the page below it. */}
+      <div className="mt-8 grid">
+        {TABS.map(([cat]) => (
+          <Panel key={cat} cat={cat} on={tab === cat} data={data} />
+        ))}
+      </div>
     </div>
+  );
+}
+
+function Panel({ cat, on, data }: { cat: (typeof TABS)[number][0]; on: boolean; data: Data }) {
+  return (
+    <ol
+      key={on ? `${cat}-on` : cat}
+      aria-hidden={!on}
+      inert={!on}
+      className={`grid gap-x-3 gap-y-6 sm:gap-x-4 ${SHAPE[cat].cols} [grid-area:1/1] ${on ? "" : "invisible pointer-events-none"}`}
+    >
+      {data[cat].map((p, i) => {
+        const body = (
+          <>
+            <span className={`relative block overflow-hidden rounded-[14px] bg-surface shadow-[var(--shadow-card)] ${SHAPE[cat].aspect}`}>
+              {p.img && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.img} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              )}
+              <span className="absolute top-2 left-2 grid size-7 place-items-center rounded-full bg-black/70 font-serif text-[17px] leading-none text-white backdrop-blur-sm">
+                {i + 1}
+              </span>
+            </span>
+            <span className="mt-2 block px-0.5">
+              <span className="line-clamp-2 block font-serif text-[17px] leading-tight text-ink italic transition-colors group-hover:text-accent">{p.title}</span>
+              {p.by && <span className="mt-0.5 block text-[12px]">{p.by}</span>}
+            </span>
+          </>
+        );
+        return (
+          <li
+            key={i}
+            className="animate-[top4-in_.6s_cubic-bezier(.16,1,.3,1)_backwards]"
+            style={{ animationDelay: `${i * 80}ms`, rotate: `${TILT[i]}deg` }}
+          >
+            {p.url ? (
+              <a href={p.url} target="_blank" rel="noopener noreferrer" className="group block transition-transform duration-300 hover:-translate-y-1 hover:rotate-0">
+                {body}
+              </a>
+            ) : (
+              <div className="group block transition-transform duration-300 hover:-translate-y-1">{body}</div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
   );
 }

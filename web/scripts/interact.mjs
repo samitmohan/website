@@ -303,6 +303,26 @@ await check("interviews: noindex, search and level filter narrow the list, a que
   return `${all} questions, "kv cache" -> ${searched}, hard -> ${hard}`;
 });
 
+for (const [w, h] of [[1440, 900], [390, 844]]) {
+  await check(`#Top4 at ${w}px: switching tabs never moves the footer; hidden panels take no clicks or focus`, async (page) => {
+    await page.goto(base + "/things");
+    await page.locator("#top4").scrollIntoViewIfNeeded();
+    const where = () => page.evaluate(() => [Math.round(document.querySelector("#top4").getBoundingClientRect().height), Math.round(document.querySelector("footer").getBoundingClientRect().top + scrollY)]);
+    const seen = new Map();
+    for (const tab of ["youtube", "movies", "artists", "books"]) {
+      await page.getByRole("tab", { name: tab }).click();
+      await page.waitForTimeout(700);
+      seen.set(tab, await where());
+      const live = await page.locator('#top4 ol:not([aria-hidden="true"]) li').count();
+      const hiddenFocusable = await page.locator('#top4 ol[aria-hidden="true"]').evaluateAll((ols) => ols.every((o) => o.inert));
+      expect(live === 4 && hiddenFocusable, `${tab}: ${live} visible picks, hidden panels inert: ${hiddenFocusable}`);
+    }
+    const tops = new Set([...seen.values()].map((v) => v[1]));
+    expect(tops.size === 1, `footer top moved across tabs: ${[...seen].map(([k, v]) => `${k} ${v[1]}`).join(", ")}`);
+    return `#Top4 ${[...seen.values()][0][0]}px tall on every tab, footer at ${[...tops][0]}px`;
+  }, { viewport: { width: w, height: h } });
+}
+
 await check("left rail: a colour changes the accent and it survives a reload", async (page) => {
   await page.goto(base + "/about");
   const accent = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
