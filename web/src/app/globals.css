@@ -551,6 +551,8 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
   font-family: var(--font-mono); font-size: 10.5px; line-height: 1.4; background: var(--surface); color: var(--muted);
 }
 .iv-hard { background: var(--accent-soft); color: var(--accent); }
+/* Labels inside answers (e.g. which job a resume question is about). */
+.iv-tag { display: inline-block; margin-bottom: 8px; padding: 2px 9px; border-radius: 999px; background: var(--surface); color: var(--muted); font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; }
 .iv-answer > div > * + * { margin-top: 0.9em; }
 .iv-answer { font-size: 15px; }
 .iv-answer [data-rehype-pretty-code-figure] { margin-block: 1em 0; }
