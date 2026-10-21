@@ -50,6 +50,9 @@ export const THING_PHOTOS: Record<string, string> = {
   "first sip of beer; goes straight to heart": "/things/beer.webp",
   "davidoff espresso 57 in the morning; yum": "/things/espresso-57.webp",
   "sitting in other people's living rooms": "/things/sitting-in-living-room.webp",
+  "stealing coasters": "/things/stealing-coasters.webp",
+  "lamps": "/things/lamps.webp",
+  "zippo lighters": "/things/zippo-lighters.webp",
 };
 
 /** The live widgets in public/widgets, and the posts they were built for. */
