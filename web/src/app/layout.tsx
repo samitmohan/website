@@ -7,8 +7,10 @@ import { ThemeRail } from "@/components/ThemeRail";
 import "./globals.css";
 
 const sans = Inter_Tight({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-inter-tight" });
-const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument" });
-const mono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-geist-mono" });
+// Only the body font is preloaded: preloads share the first round trips with the stylesheet,
+// and these two swap in a moment later without blocking paint.
+const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument", preload: false });
+const mono = Geist_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-geist-mono", preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://samitmohan.in"),

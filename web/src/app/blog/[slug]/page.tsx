@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -27,17 +28,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+/** Drops a hand-written "## index" / "## table of contents" section; the rail and contents box replace it. */
+function withoutOwnIndex(md: string): string {
+  const lines = md.split("\n");
+  const start = lines.findIndex((l) => /^##\s+(index|contents|table of contents)\s*$/i.test(l));
+  if (start < 0) return md;
+  const len = lines.slice(start + 1).findIndex((l) => /^(#{1,6}\s|---\s*$)/.test(l));
+  lines.splice(start, len < 0 ? lines.length - start : len + 1);
+  return lines.join("\n");
+}
+
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) notFound();
 
   const headings: Heading[] = [];
-  const html = deferScripts(await markdownToHtml(post.content, post.math, headings));
+  const content = withoutOwnIndex(post.content);
+  const html = deferScripts(await markdownToHtml(content, post.math, headings));
 
-  // A contents list only earns its space on a long post with real sections.
-  const ownIndex = /^(index|contents|table of contents)$/i.test(headings[0]?.text ?? "");
-  const toc = post.readingTime >= 10 && headings.length >= 4 && !ownIndex ? headings : [];
+  // A contents list only earns its space on a long post with real sections, or where the author wrote one.
+  const ownIndex = content !== post.content;
+  const toc = (post.readingTime >= 10 || ownIndex) && headings.length >= 4 ? headings : [];
 
   const siblings = post.hidden ? getPersonalPosts() : getAllPosts();
   const i = siblings.findIndex((p) => p.slug === slug);
@@ -46,6 +58,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const related = post.hidden
     ? []
     : siblings.filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t))).slice(0, 3);
+
+  // KaTeX hides maths until its fonts load (font-display: block, so glyphs never land in the wrong
+  // font); fetching the two that most equations use alongside the stylesheet shortens that wait.
+  if (post.math)
+    for (const f of ["KaTeX_Main-Regular", "KaTeX_Math-Italic"])
+      preload(`/katex/fonts/${f}.woff2`, { as: "font", type: "font/woff2", crossOrigin: "" });
 
   const schema = {
     "@context": "https://schema.org",

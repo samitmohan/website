@@ -150,7 +150,8 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
                     <Back />
                   </div>
                   <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                    <Face c={c} />
+                    {/* A face-down card has nothing to show yet, so its photo waits until it turns over. */}
+                    {up.has(i) && <Face c={c} />}
                   </div>
                 </div>
               </div>

@@ -240,7 +240,14 @@ await check("things I like cards are the post's own bullets", async (page) => {
   await page.waitForTimeout(1200);
   const seen = new Set();
   for (let r = 0; r < Math.ceil(bullets / 7); r++) {
-    for (const t of await page.locator(".deck-card p").allInnerTexts()) {
+    // Faces render only once a card is turned over, so turn the whole hand first.
+    // dispatchEvent skips hit-testing: the fanned cards overlap each other.
+    for (let i = 1; i <= 7; i++) {
+      await page.getByRole("button", { name: `card ${i}, face down` }).dispatchEvent("click");
+      await page.waitForTimeout(650);
+      await page.keyboard.press("Escape");
+    }
+    for (const t of await page.locator("button.deck-card p").allInnerTexts()) {
       expect(post.includes(t), `card text not in the post: "${t}"`);
       seen.add(t);
     }
