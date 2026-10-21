@@ -32,7 +32,7 @@
       "permanent": true
     },
     {
-      "source": "/interviews/:path*",
+      "source": "/interviews/:path+",
       "destination": "/interviews",
       "permanent": true
     },
