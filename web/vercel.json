@@ -32,13 +32,8 @@
       "permanent": true
     },
     {
-      "source": "/interviews",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/interviews/:path*",
-      "destination": "/",
+      "destination": "/interviews",
       "permanent": true
     },
     {

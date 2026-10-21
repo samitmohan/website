@@ -215,6 +215,28 @@ await check("first visit is dark; the double-click note shows and retires after 
   return "dark -> light, note retired";
 }, { colorScheme: "light" });
 
+await check("interviews: noindex, search and level filter narrow the list, a question link opens it", async (page) => {
+  await page.goto(base + "/interviews");
+  const robots = await page.getAttribute('meta[name="robots"]', "content");
+  expect(/noindex/.test(robots ?? ""), `robots meta is ${robots}`);
+  const count = () => page.locator("[data-iv-q][data-d]:not([hidden])").count();
+  const all = await count();
+  await page.getByRole("searchbox", { name: "Search the interview guide" }).fill("kv cache");
+  await page.waitForTimeout(200);
+  const searched = await count();
+  expect(searched > 0 && searched < all, `search "kv cache" left ${searched} of ${all}`);
+  await page.getByRole("searchbox", { name: "Search the interview guide" }).fill("");
+  await page.getByRole("button", { name: "hard", exact: true }).click();
+  const hard = await count();
+  const wrong = await page.locator('[data-iv-q][data-d]:not([hidden]):not([data-d="hard"])').count();
+  expect(hard > 0 && hard < all && wrong === 0, `hard filter: ${hard} shown, ${wrong} not hard`);
+  const id = await page.locator("details[id]").nth(5).getAttribute("id");
+  await page.goto(base + "/interviews#" + id);
+  await page.waitForTimeout(400);
+  expect(await page.locator(`details[id="${id}"]`).evaluate((d) => d.open), `#${id} did not open`);
+  return `${all} questions, "kv cache" -> ${searched}, hard -> ${hard}`;
+});
+
 await check("left rail: a colour changes the accent and it survives a reload", async (page) => {
   await page.goto(base + "/about");
   const accent = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
