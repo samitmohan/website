@@ -33,21 +33,6 @@ export default function Things() {
 
       <Reveal slot={1} as="section" className="mt-14">
         <Deck things={list} photos={THING_PHOTOS} />
-        {list.length > 0 && (
-          <details className="group mt-6">
-            <summary className="meta cursor-pointer list-none text-center hover:text-accent">
-              <span className="group-open:hidden">all {list.length} as a list ↓</span>
-              <span className="hidden group-open:inline">close the list ↑</span>
-            </summary>
-            <ul className="mt-6 columns-1 gap-8 text-[14px] sm:columns-2">
-              {list.map((t) => (
-                <li key={t} className="mb-2 break-inside-avoid">
-                  <span className="text-accent">·</span> {t}
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
       </Reveal>
 
       <section id="gallery" className="mt-28">

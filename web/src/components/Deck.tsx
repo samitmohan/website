@@ -34,6 +34,12 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
   }, [deck]);
 
   const [round, setRound] = useState(0);
+  // The hand as card indices. The first hand comes from the fixed order; later ones are drawn.
+  const [hand, setHand] = useState<number[]>(() => order.slice(0, HAND));
+  // Undealt cards, and cards not yet shown by "another". Each refills with a fresh random order
+  // once empty, so every card comes round before any repeats.
+  const pile = useRef<number[]>(order.slice(HAND).reverse());
+  const pickPile = useRef<number[]>([]);
   const [phase, setPhase] = useState<Phase>("deal");
   const [up, setUp] = useState<Set<number>>(new Set());
   const [picked, setPicked] = useState<Card | null>(null);
@@ -41,8 +47,7 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const still = useRef(false);
 
-  const hands = Math.ceil(deck.length / HAND);
-  const hand = Array.from({ length: HAND }, (_, i) => deck[order[((round % hands) * HAND + i) % deck.length]]);
+  const cards = hand.map((i) => deck[i]);
 
   useEffect(() => {
     if (!picked) return;
@@ -62,6 +67,17 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
 
   const later = (fn: () => void, ms: number) => timers.current.push(setTimeout(fn, still.current ? 0 : ms));
 
+  /** Take `n` distinct cards from a pile, skipping `skip`; an empty pile refills in a new random order. */
+  const draw = (from: { current: number[] }, n: number, skip: Set<number>) => {
+    const out: number[] = [];
+    for (let tries = 0; out.length < Math.min(n, deck.length - skip.size) && tries < deck.length * 4; tries++) {
+      if (!from.current.length) from.current = randomOrder(deck.length);
+      const i = from.current.pop()!;
+      if (!skip.has(i) && !out.includes(i)) out.push(i);
+    }
+    return out;
+  };
+
   const shuffle = () => {
     if (phase !== "idle") return;
     setPicked(null);
@@ -69,31 +85,33 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
     later(() => setPhase("riffle"), 380);
     later(() => {
       setUp(new Set());
+      // None of the cards just on the table come back in the next hand.
+      setHand((h) => draw(pile, HAND, new Set(h)));
       setRound((r) => r + 1);
       setPhase("deal");
     }, 1250);
     later(() => setPhase("idle"), 2150);
   };
 
+  const open = (c: Card) => {
+    setPicked(c);
+    setLive(c.text);
+  };
+
   const pick = () => {
     if (phase !== "idle") return;
-    const c = deck[Math.floor(Math.random() * deck.length)];
+    // Never the card already showing.
+    const c = deck[draw(pickPile, 1, new Set(picked ? [deck.indexOf(picked)] : []))[0]];
     setPicked(null);
-    later(() => {
-      setPicked(c);
-      setLive(c.text);
-    }, 60);
+    later(() => open(c), 60);
   };
 
   const flip = (i: number) => {
     if (phase !== "idle") return;
-    if (up.has(i)) {
-      setPicked(hand[i]);
-      return;
-    }
+    if (up.has(i)) return open(cards[i]);
     setUp((s) => new Set(s).add(i));
-    setLive(hand[i].text);
-    later(() => setPicked(hand[i]), 520);
+    setLive(cards[i].text);
+    later(() => setPicked(cards[i]), 520);
   };
 
   // Fan geometry: an arc of seven, centred, gathered to one stack between hands.
@@ -127,7 +145,7 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
           ))}
 
         {phase !== "riffle" &&
-          hand.map((c, i) => (
+          cards.map((c, i) => (
             <button
               key={`${round}-${i}`}
               type="button"
@@ -167,6 +185,21 @@ export function Deck({ things, photos = {} }: { things: string[]; photos?: Recor
           pick a card
         </button>
       </div>
+      <details className="group mt-6">
+        <summary className="meta cursor-pointer list-none text-center hover:text-accent">
+          <span className="group-open:hidden">all {deck.length} as a list ↓</span>
+          <span className="hidden group-open:inline">close the list ↑</span>
+        </summary>
+        <ul className="mt-6 columns-1 gap-8 text-[14px] sm:columns-2">
+          {deck.map((c) => (
+            <li key={c.text} className="mb-1 break-inside-avoid">
+              <button type="button" onClick={() => open(c)} className="-mx-1 rounded-md px-1 py-0.5 text-left hover:bg-surface hover:text-ink">
+                <span className="text-accent">·</span> {c.text}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </details>
       <p className="sr-only" aria-live="polite">
         {live}
       </p>
@@ -211,8 +244,9 @@ function Face({ c, big = false }: { c: Card; big?: boolean }) {
     <div className="flex size-full flex-col gap-1.5 rounded-[10px] bg-[#fbf8f2] p-1.5 text-left shadow-[0_8px_18px_-8px_rgba(0,0,0,.45)]">
       <div className="card-photo relative min-h-0 flex-1 overflow-hidden rounded-[6px] bg-[#ece6da]">
         {src ? (
+          // Absolutely placed, so a tall photo crops to the frame instead of stretching the card.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt="" loading="lazy" className="size-full object-cover" />
+          <img src={src} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
         ) : (
           c.art && <div className="grid size-full place-items-center p-3 [&>svg]:w-[80%]">{ART[c.art]}</div>
         )}
@@ -220,4 +254,14 @@ function Face({ c, big = false }: { c: Card; big?: boolean }) {
       <p className="card-text line-clamp-3 px-0.5 pb-0.5 font-serif text-[12.5px] leading-tight text-[#141414] italic">{c.text}</p>
     </div>
   );
+}
+
+/** 0..n-1 in a random order. */
+function randomOrder(n: number) {
+  const a = Array.from({ length: n }, (_, i) => i);
+  for (let i = n - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }

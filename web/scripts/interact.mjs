@@ -114,6 +114,72 @@ await check("deck: clicking a card turns it over and opens its photo; shuffle de
   return `"${name}"`;
 });
 
+await check("deck: every opened card is one size, its photo fills one frame, and a list line opens its card", async (page) => {
+  await page.goto(base + "/things");
+  await page.getByText(/all \d+ as a list/).click();
+  const lines = page.locator("details ul button");
+  const n = await lines.count();
+  const sizes = new Set(), frames = new Set(), unfilled = [];
+  for (let i = 0; i < n; i++) {
+    const want = (await lines.nth(i).innerText()).replace(/^·\s*/, "").trim();
+    await lines.nth(i).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.waitFor({ timeout: 3000 });
+    expect((await dialog.getAttribute("aria-label")) === want, `list line "${want}" opened "${await dialog.getAttribute("aria-label")}"`);
+    await page.waitForTimeout(950); // the card's reveal scales it in
+    const m = await dialog.evaluate(async (d) => {
+      const card = d.querySelector(".deck-card--big"), img = card.querySelector("img");
+      if (img && !img.complete) await new Promise((r) => (img.onload = img.onerror = r));
+      const R = (e) => { const x = e.getBoundingClientRect(); return `${Math.round(x.width)}x${Math.round(x.height)}`; };
+      return { card: R(card), frame: img ? R(img.parentElement) : null, img: img ? R(img) : null };
+    });
+    sizes.add(m.card);
+    if (m.frame) { frames.add(m.frame); if (m.img !== m.frame) unfilled.push(want); }
+    await page.keyboard.press("Escape");
+    await dialog.waitFor({ state: "detached", timeout: 3000 });
+  }
+  expect(sizes.size === 1, `opened cards come in ${sizes.size} sizes: ${[...sizes].join(", ")}`);
+  expect(frames.size === 1, `photo frames come in ${frames.size} sizes: ${[...frames].join(", ")}`);
+  expect(unfilled.length === 0, `photos not filling the frame: ${unfilled.join("; ")}`);
+  return `${n} cards opened from the list, all ${[...sizes][0]}, frame ${[...frames][0]}`;
+});
+
+await check("deck: shuffle deals seven cards not in the last hand; another never repeats until all have shown", async (page) => {
+  await page.goto(base + "/things");
+  await page.getByRole("heading", { name: "Things I like" }).scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1200);
+  // The hand's identities, read from each card's turned-over face.
+  const handNow = async () => {
+    for (let i = 1; i <= 7; i++) {
+      await page.getByRole("button", { name: `card ${i}, face down` }).dispatchEvent("click");
+      await page.waitForTimeout(600);
+      await page.keyboard.press("Escape");
+    }
+    return new Set(await page.locator("button.deck-card p").allInnerTexts());
+  };
+  let prev = await handNow();
+  for (let r = 0; r < 5; r++) {
+    await page.getByRole("button", { name: "shuffle" }).click();
+    await page.waitForTimeout(2400);
+    const next = await handNow();
+    const kept = [...next].filter((t) => prev.has(t));
+    expect(next.size === 7 && kept.length === 0, `shuffle ${r + 1}: ${next.size} cards, ${kept.length} carried over (${kept.join("; ")})`);
+    prev = next;
+  }
+  await page.getByRole("button", { name: "pick a card" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.waitFor({ timeout: 3000 });
+  const total = await page.locator("details ul button").count();
+  const seen = [await dialog.getAttribute("aria-label")];
+  for (let k = 1; k < total; k++) {
+    await dialog.getByRole("button", { name: "another" }).click();
+    await page.waitForFunction((last) => document.querySelector("[role=dialog]")?.getAttribute("aria-label") !== last, seen.at(-1), { timeout: 3000 });
+    seen.push(await dialog.getAttribute("aria-label"));
+  }
+  expect(new Set(seen).size === total, `${total} picks showed ${new Set(seen).size} different cards`);
+  return `5 shuffles with no carry-over; ${total} picks, all different`;
+});
+
 await check("pick a card shows one with its caption", async (page) => {
   await page.goto(base + "/things");
   await page.getByRole("heading", { name: "Things I like" }).scrollIntoViewIfNeeded();

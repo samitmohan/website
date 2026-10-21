@@ -462,10 +462,13 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 .deck-card { width: 112px; height: 160px; }
 .deck-card p { font-size: 11px; }
 /* The open card fills most of the screen: whichever runs out first of width or height. */
-.deck-card.deck-card--big { width: min(86vw, 46svh, 440px); height: auto; aspect-ratio: 150 / 214; container-type: inline-size; }
+.deck-card.deck-card--big { width: min(86vw, 46svh, 440px); height: auto; aspect-ratio: 150 / 214; container-type: inline-size; overflow: hidden; }
 .deck-card--big > div { border-radius: 4cqw; padding: 3.2cqw; gap: 3cqw; }
 .deck-card--big .card-photo { border-radius: 2.4cqw; }
 .deck-card--big .card-text { font-size: 6.4cqw; line-height: 1.15; padding: 0 1.5cqw 1.5cqw; -webkit-line-clamp: unset; }
+/* Room for three lines of caption on every card, so every photo frame is the same size. */
+.deck-card--big .card-text { min-height: calc(6.4cqw * 1.15 * 3 + 1.5cqw); }
+.deck-card .card-text { min-height: calc(3 * 1.25em + 2px); }
 @media (min-width: 640px) { .deck-card { width: 150px; height: 214px; } .deck-card p { font-size: 12.5px; } }
 @keyframes deal-in {
   from { transform: translate(-50%, -40px) rotate(-8deg) scale(.9); opacity: 0; }
