@@ -1,7 +1,9 @@
 /**
  * The left rail's colour themes. `swatch` is the colour itself, as named; the
- * CSS holds the readable accent shade for each. The first entry is the default
- * and sets no data-accent attribute.
+ * CSS holds the readable accent shade for each. The first entry is the base
+ * palette in the CSS and sets no data-accent attribute. The site's default is
+ * "blonde": <html> ships with data-accent="blonde", and the boot script in
+ * layout.tsx removes it when a visitor has saved crimson.
  */
 export const THEMES = [
   { id: "crimson", label: "crimson red", swatch: "#dc143c" },

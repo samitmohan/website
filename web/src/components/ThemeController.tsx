@@ -10,7 +10,7 @@ function current(): Theme {
   return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-/** Flip the theme, revealing the new one as a circle grown from (x, y). */
+/** Flip the theme, revealing the new one as a circle grown from (x, y). Resolves when the reveal ends. */
 export function toggleTheme(x = innerWidth / 2, y = innerHeight / 2) {
   const next: Theme = current() === "dark" ? "light" : "dark";
   const apply = () => {
@@ -26,7 +26,7 @@ export function toggleTheme(x = innerWidth / 2, y = innerHeight / 2) {
   root.setProperty("--vt-x", `${x}px`);
   root.setProperty("--vt-y", `${y}px`);
   root.setProperty("--vt-r", `${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px`);
-  document.startViewTransition(apply);
+  return document.startViewTransition(apply).finished;
 }
 
 /** Double-click anywhere that is not a control or text the visitor is selecting. */

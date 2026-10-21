@@ -34,6 +34,9 @@ export function ThemeRail() {
   const [open, setOpen] = useState(false);
   const [hint, setHint] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  // The light switch's reveal briefly covers the page with a snapshot; the browser reports that as the
+  // pointer leaving the wheel. Ignore leave and blur until the reveal ends.
+  const flipping = useRef(false);
 
   useEffect(() => {
     // A theme saved under an older palette falls back to the default.
@@ -73,9 +76,9 @@ export function ThemeRail() {
       data-no-theme
       className="fixed top-1/2 left-0 z-40 size-0"
       onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(true)}
-      onPointerLeave={(e) => e.pointerType === "mouse" && setOpen(false)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && !flipping.current && setOpen(false)}
       onFocus={() => setOpen(true)}
-      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && setOpen(false)}
+      onBlur={(e) => !flipping.current && !e.currentTarget.contains(e.relatedTarget as Node) && setOpen(false)}
     >
       {/* the disc the wheel sits on; it also keeps the hover alive between swatches */}
       <div
@@ -116,7 +119,10 @@ export function ThemeRail() {
       </div>
       <button
         type="button"
-        onClick={(e) => toggleTheme(e.clientX, e.clientY)}
+        onClick={(e) => {
+          flipping.current = true;
+          Promise.resolve(toggleTheme(e.clientX, e.clientY)).finally(() => (flipping.current = false));
+        }}
         aria-label="switch light and dark"
         title="lights (or double-click anywhere)"
         tabIndex={open ? 0 : -1}

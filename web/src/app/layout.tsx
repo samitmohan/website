@@ -23,11 +23,11 @@ export const metadata: Metadata = {
 };
 
 // Runs before first paint so a saved theme never flashes the other one.
-const themeBoot = `try{var d=document.documentElement,t=localStorage.getItem("theme"),a=localStorage.getItem("accent");if(t==="light")d.dataset.theme=t;if(["light-green","ubuntu","vader","blonde"].indexOf(a)>-1)d.dataset.accent=a}catch(e){}`;
+const themeBoot = `try{var d=document.documentElement,t=localStorage.getItem("theme"),a=localStorage.getItem("accent");if(t==="light")d.dataset.theme=t;if(a==="crimson")delete d.dataset.accent;else if(["light-green","ubuntu","vader","blonde"].indexOf(a)>-1)d.dataset.accent=a}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="dark" data-scroll-behavior="smooth" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" data-theme="dark" data-accent="blonde" data-scroll-behavior="smooth" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
       </head>

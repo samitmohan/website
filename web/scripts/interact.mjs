@@ -323,6 +323,26 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   }, { viewport: { width: w, height: h } });
 }
 
+await check("default accent is frank ocean's head; choosing crimson sticks after a reload", async (page) => {
+  await page.goto(base + "/about");
+  const state = () => page.evaluate(() => [document.documentElement.dataset.accent ?? "none", getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()]);
+  const [attr, dark] = await state();
+  expect(attr === "blonde" && dark === "#b9e85c", `first visit: data-accent ${attr}, accent ${dark}`);
+  await page.getByRole("button", { name: "colour and light switches" }).click();
+  await page.waitForTimeout(600);
+  const checked = await page.getByRole("radio", { name: "site colour: frank ocean's head" }).getAttribute("aria-checked");
+  expect(checked === "true", `wheel shows frank ocean's head checked: ${checked}`);
+  await page.getByRole("button", { name: "switch light and dark" }).click();
+  await page.waitForTimeout(800);
+  const [, light] = await state();
+  expect(light === "#4b6d00", `light-mode accent ${light}`);
+  await page.getByRole("radio", { name: "site colour: crimson red" }).click();
+  await page.reload();
+  const [after, red] = await state();
+  expect(after === "none" && red === "#c8102e", `after choosing crimson and reloading: data-accent ${after}, accent ${red}`);
+  return `blonde ${dark} dark / ${light} light; crimson kept as ${red}`;
+});
+
 await check("left rail: a colour changes the accent and it survives a reload", async (page) => {
   await page.goto(base + "/about");
   const accent = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim());
