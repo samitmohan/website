@@ -543,6 +543,9 @@ nav[aria-label="Main"] { transition: opacity 0.3s; }
 /* Post sliders: a 24px touch target, the browser default is 16px. */
 .prose input[type="range"] { min-height: 24px; }
 
+/* The theme hint sits where a long contents rail runs; the rail wins where it shows (xl). Unlayered, so it beats lg:block. */
+@media (min-width: 80rem) { body:has(aside[aria-label="Contents"]) .theme-hint { display: none; } }
+
 /* ------------------------------------------------------------------
    Interviews page
    ------------------------------------------------------------------ */

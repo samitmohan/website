@@ -53,6 +53,11 @@ function readingTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+/** Display math outside code turns KaTeX on, so a post that forgets `math: true` cannot ship raw $$. */
+function hasDisplayMath(content: string): boolean {
+  return /\$\$[\s\S]+?\$\$/.test(content.replace(/```[\s\S]*?```/g, ""));
+}
+
 function formatDate(raw: string): string {
   const d = new Date(raw);
   return d.toLocaleDateString("en-US", {
@@ -82,7 +87,7 @@ function readAllPosts() {
         title: (data.title as string) || slug,
         date: dateStr,
         description: (data.description as string) || "",
-        math: Boolean(data.math),
+        math: Boolean(data.math) || hasDisplayMath(content),
         readingTime: readingTime(content),
         tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
         thumbnail: (data.thumbnail as string) || undefined,
@@ -145,7 +150,7 @@ export function getPost(slug: string): Post | null {
     title: (data.title as string) || slug,
     date: dateStr,
     description: (data.description as string) || "",
-    math: Boolean(data.math),
+    math: Boolean(data.math) || hasDisplayMath(content),
     readingTime: readingTime(content),
     tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
     thumbnail: (data.thumbnail as string) || undefined,

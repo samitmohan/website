@@ -150,7 +150,7 @@ export function ThemeRail() {
       {/* Mouse and trackpad only: double-tap on phones is not a dependable gesture. */}
       <p
         aria-hidden
-        className={`pointer-events-none absolute top-9 left-10 hidden w-40 -rotate-3 font-serif text-[15px] leading-tight text-muted italic transition-opacity duration-300 lg:block [@media(pointer:coarse)]:!hidden ${hint && !open ? "opacity-100" : "opacity-0"}`}
+        className={`theme-hint pointer-events-none absolute top-9 left-10 hidden w-40 -rotate-3 font-serif text-[15px] leading-tight text-muted italic transition-opacity duration-300 lg:block [@media(pointer:coarse)]:!hidden ${hint && !open ? "opacity-100" : "opacity-0"}`}
       >
         <svg viewBox="0 0 40 24" className="mb-1 -ml-4 h-5 w-9 text-muted" aria-hidden>
           <path d="M38 22C26 22 12 18 4 4M4 4l1 7M4 4l7 2" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />

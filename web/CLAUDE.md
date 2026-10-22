@@ -39,6 +39,25 @@
     profanity, rhetorical setups ("How? Calculus."), contractions, and
     deliberate double periods or double spaces as they are.
   </constraint>
+  <constraint added="2026-10-21">
+    Blog check rules for technical posts. Every review of a post checks all of:
+    1. ASD-STE100 language and no AI slop (constraint above).
+    2. Facts: verify claims, numbers and arithmetic; fix wrong ones, flag the
+       ones that cannot be verified.
+    3. Flow of the data: the post explains a term, model or step before any
+       text, table or figure uses it. Overview figures, summary tables and
+       comparisons that depend on later sections go after those sections,
+       never at the top (e.g. the YOLO pipeline figure and metrics table sit
+       after post-processing, not before "before YOLO"). A term explained in
+       another post links there on first use, e.g. "CNN" in the YOLO post
+       links to /blog/nn#mnist-from-minitorch-custom-implementation-of-pytorch.
+    4. Navigation: a post with a hand-written index gets the side contents
+       rail (page.tsx strips the index at render time); every in-page link
+       resolves to a real heading id in the build.
+    Fixes under rules 1-4 are applied directly. Removing sections, moving
+    content around, or adding new voice/style material (e.g. George Hotz
+    style openings) is suggested first and applied only after Samit approves.
+  </constraint>
   <constraint added="2026-10-19">
     Facts: beltech.ai runs inference on 300 cameras for 24/7 surveillance and
     monitoring. Not 60k.
@@ -61,4 +80,7 @@ Before calling a change done, build and run the checks against the export:
 `npm run build`, `npx serve out -l 3211`, `node scripts/smoke.mjs
 http://localhost:3211 shots`, `node scripts/interact.mjs`,
 `node scripts/mobile.mjs http://localhost:3211` (must report 0 issues at 360
-and 390px).
+and 390px), `node scripts/svg-blocks.mjs` (no blank lines inside inline SVGs
+in posts; a blank line silently cuts the rest of the figure out of the SVG),
+`node scripts/math-blocks.mjs` (display math needs $$ on their own lines;
+single-line $$...$$ silently renders as inline math).

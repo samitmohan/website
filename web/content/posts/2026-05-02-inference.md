@@ -1,11 +1,12 @@
 ---
 layout: post
-title: "Inference engineering"
+title: "Inference Engineering"
 date: 2026-05-02 00:00:00 +0530
 categories: [tech]
 tokens: "~15k"
 math: true
-description: "Your GPU is mostly idle during text generation. The entire inference stack exists to fix that."
+description: "Skimmed through the inference engineering book over a long flight, my notes"
+
 tags: [llm]
 ---
 
@@ -284,13 +285,17 @@ Naively, you'd recompute K and V for every previous token at every step. Generat
 
 The KV cache grows with every token. The formula:
 
-$$\text{KV size} = 2 \times B \times L \times H_{kv} \times d \times N \times \text{bytes}$$
+$$
+\text{KV size} = 2 \times B \times L \times H_{kv} \times d \times N \times \text{bytes}
+$$
 
 B=batch, L=layers, $H_{kv}$=KV heads, d=head dim, N=seq len. The **2** is for storing both K and V.
 
 Plug in Llama 70B (L=80, $H_{kv}$=8, d=128) at FP16, one user, 4K context:
 
-$$2 \times 1 \times 80 \times 8 \times 128 \times 4096 \times 2 = \textbf{10.7 GB}$$
+$$
+2 \times 1 \times 80 \times 8 \times 128 \times 4096 \times 2 = \textbf{10.7 GB}
+$$
 
 That's per user. Bump to batch=32: **342 GB**. Llama 70B itself is only 140 GB.
 
@@ -538,8 +543,6 @@ Three flag flips. ~5x over raw `.generate()`. These are table stakes.
 ---
 
 ## 8. quantization
-
-The single biggest lever you have.
 
 ### why it works
 
@@ -802,32 +805,3 @@ Latency bad. Throughput bad. Bill bad. Where to start? This order:
 </div>
 
 ---
-
-## 12. watching the real ceiling
-
-The playbook tells you what to turn on. This tells you when you've hit the wall.
-
-Compute is almost never the limit. The KV cache is. 80GB A100, 7B model, 4K context: FLOPS cover ~141 concurrent requests, KV cache runs out at ~13. Order of magnitude. ([source](https://trunghjieu2506.github.io/writing/llm-inference-throughput.html))
-
-<div class="inf-insight">
-<strong>arithmetic intensity:</strong> prefill ~4500 FLOPs/byte (compute-bound), decode ~1 FLOP/byte. A100 roofline crossover is ~156. Decode leaves the cores idle.
-</div>
-
-### preemption: the cliff
-
-vLLM admits requests until the KV cache fills. Past 100%, it evicts running requests: their KV gets dropped, recomputed on resume, latency roughly doubles. Sweet spot sits just under 100% - full enough to keep the batch busy, not so full a burst tips you over.
-
-<div class="inf-card" style="border-color: var(--inf-red);">
-<strong>two numbers in vLLM's <code>/metrics</code>:</strong><br>
-- <code>kv_cache_usage_pct</code> - headroom. Tune <code>--max-num-seqs</code> so this sits high but stable.<br>
-- <code>num_preemptions</code> - should be near zero. Climbing means you crossed the line.
-</div>
-
-MLP is ~71% of the compute across both phases. Optimizing a kernel? Start there, not attention.
-
-<div class="inf-card" style="border-color: var(--inf-blue);">
-<strong>further reading:</strong><br>
-- <a href="https://trunghjieu2506.github.io/writing/llm-inference-throughput.html">LLM inference throughput</a> - the math above, worked out.<br>
-- <a href="https://www.aleksagordic.com/blog/vllm">inside vLLM</a> - scheduler, paged attention, prefix caching at source level.<br>
-- <a href="https://www.aleksagordic.com/blog/matmul">fast matmul</a> - coalesced loads, SMEM tiling, tensor cores, wave quantization.
-</div>

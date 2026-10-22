@@ -53,12 +53,12 @@ export const THING_PHOTOS: Record<string, string> = {
   "stealing coasters": "/things/stealing-coasters.webp",
   "lamps": "/things/lamps.webp",
   "zippo lighters": "/things/zippo-lighters.webp",
+  "anticipation of charming someone and being charmed": "/things/anticipation.webp"
 };
 
 /** The live widgets in public/widgets, and the posts they were built for. */
 export const LAB = [
   { id: "microgpt-stepper", name: "microGPT stepper", blurb: "Step a tiny GPT one token at a time.", post: "microgpt" },
   { id: "vllm-batching", name: "continuous batching", blurb: "Watch vLLM pack requests into a batch.", post: "inference" },
-  { id: "residual-growth", name: "residual growth", blurb: "How the residual stream norm grows with depth.", post: "attention-residuals" },
   { id: "lru-fib", name: "lru_cache vs fib", blurb: "The recursion tree, with and without the cache.", post: "pythontricks" },
 ];

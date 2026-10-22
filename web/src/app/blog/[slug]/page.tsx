@@ -44,12 +44,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!post) notFound();
 
   const headings: Heading[] = [];
-  const content = withoutOwnIndex(post.content);
-  const html = deferScripts(await markdownToHtml(content, post.math, headings));
+  const html = deferScripts(await markdownToHtml(withoutOwnIndex(post.content), post.math, headings));
 
-  // A contents list only earns its space on a long post with real sections, or where the author wrote one.
-  const ownIndex = content !== post.content;
-  const toc = (post.readingTime >= 10 || ownIndex) && headings.length >= 4 ? headings : [];
+  // A contents list only earns its space on a post with real sections.
+  const toc = headings.length >= 4 ? headings : [];
 
   const siblings = post.hidden ? getPersonalPosts() : getAllPosts();
   const i = siblings.findIndex((p) => p.slug === slug);

@@ -56,10 +56,10 @@ export function LabCards({ widgets }: { widgets: PostWidget[] }) {
             <figcaption className="mt-2 px-1 text-[13px] text-ink">{t.name}</figcaption>
           </figure>
         ))}
-        {widgets.map((w, i) => (
+        {widgets.map((w) => (
           <figure key={w.id} className="shrink-0 snap-start">
             <button type="button" onClick={() => setOpen(w)} className={`${card} group text-left`}>
-              <LabGlyph i={i} />
+              <LabGlyph id={w.id} />
               <span className="absolute inset-x-6 bottom-6">
                 <span className="block text-[13px]">{w.blurb}</span>
                 <span className="meta mt-2 inline-block rounded-full bg-paper px-2.5 py-1 text-ink transition-colors group-hover:text-accent">open it →</span>
